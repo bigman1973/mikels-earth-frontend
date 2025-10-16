@@ -81,36 +81,48 @@ const Header = () => {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-14">
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-8 mx-auto">
+            <div className="hidden md:flex items-center space-x-6 mx-auto">
               <Link 
-                to="/" 
+                to="/la-familia" 
                 className="text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
               >
-                Inicio
+                La Familia
               </Link>
               <Link 
-                to="/familia" 
+                to="/nuestra-tierra" 
                 className="text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
               >
-                La Família
+                Nuestra Tierra
               </Link>
               <Link 
-                to="/productos" 
+                to="/el-obrador" 
                 className="text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
               >
-                Productos
+                El Obrador
               </Link>
               <Link 
-                to="/blog" 
+                to="/nuestras-joyas" 
                 className="text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
               >
-                Blog
+                Nuestras Joyas
               </Link>
               <Link 
-                to="/contacto" 
+                to="/experiencias" 
                 className="text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
               >
-                Contacto
+                Experiencias
+              </Link>
+              <Link 
+                to="/recetario" 
+                className="text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
+              >
+                Recetario
+              </Link>
+              <Link 
+                to="/tienda" 
+                className="text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
+              >
+                Tienda
               </Link>
             </div>
 
@@ -158,39 +170,53 @@ const Header = () => {
             <div className="md:hidden py-4 border-t border-white/10">
               <div className="flex flex-col space-y-3">
                 <Link 
-                  to="/" 
+                  to="/la-familia" 
                   className="text-sm font-medium hover:text-secondary transition-colors uppercase"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Inicio
+                  La Familia
                 </Link>
                 <Link 
-                  to="/familia" 
+                  to="/nuestra-tierra" 
                   className="text-sm font-medium hover:text-secondary transition-colors uppercase"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  La Família
+                  Nuestra Tierra
                 </Link>
                 <Link 
-                  to="/productos" 
+                  to="/el-obrador" 
                   className="text-sm font-medium hover:text-secondary transition-colors uppercase"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Productos
+                  El Obrador
                 </Link>
                 <Link 
-                  to="/blog" 
+                  to="/nuestras-joyas" 
                   className="text-sm font-medium hover:text-secondary transition-colors uppercase"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Blog
+                  Nuestras Joyas
                 </Link>
                 <Link 
-                  to="/contacto" 
+                  to="/experiencias" 
                   className="text-sm font-medium hover:text-secondary transition-colors uppercase"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Contacto
+                  Experiencias
+                </Link>
+                <Link 
+                  to="/recetario" 
+                  className="text-sm font-medium hover:text-secondary transition-colors uppercase"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Recetario
+                </Link>
+                <Link 
+                  to="/tienda" 
+                  className="text-sm font-medium hover:text-secondary transition-colors uppercase"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Tienda
                 </Link>
                 <div className="flex items-center gap-4 pt-3 border-t border-white/10">
                   <button aria-label="Buscar">

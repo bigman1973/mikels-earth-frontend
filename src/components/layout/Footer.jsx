@@ -1,10 +1,16 @@
 import { Link } from 'react-router-dom';
+import Newsletter from '../common/Newsletter';
 
 const Footer = () => {
   return (
     <footer className="bg-white border-t border-gray-200">
-      {/* Main footer content */}
+      {/* Newsletter Section */}
       <div className="container mx-auto px-4 py-12">
+        <Newsletter variant="footer" />
+      </div>
+
+      {/* Main footer content */}
+      <div className="container mx-auto px-4 py-12 pt-0">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Navigation links */}
           <div>
@@ -80,7 +86,7 @@ const Footer = () => {
                 </svg>
               </a>
               <a 
-                href="https://www.instagram.com" 
+                href="https://www.instagram.com/mikelsearth" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-gray-600 hover:text-primary transition-colors"
@@ -91,7 +97,7 @@ const Footer = () => {
                 </svg>
               </a>
               <a 
-                href="https://www.tiktok.com" 
+                href="https://www.tiktok.com/@mikelsearth" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-gray-600 hover:text-primary transition-colors"
