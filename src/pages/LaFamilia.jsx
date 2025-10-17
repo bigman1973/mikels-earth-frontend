@@ -189,13 +189,13 @@ const LaFamilia = () => {
               <h2 className="text-4xl font-bold mb-6" style={{color: 'var(--mikels-green)'}}>
                 Jordi Giró - Séptima Generación
               </h2>
-              <p className="text-xl mb-8" style={{color: 'var(--mikels-green)'}}>
+              <p className="text-xl mb-8 text-white">
                 "Soy el guardián de un legado de más de 200 años. Cada día que entro 
                 al obrador, siento el peso de la responsabilidad y el orgullo de continuar 
                 lo que mis ancestros comenzaron. Mi misión es simple: honrar su trabajo 
                 haciendo productos que ellos estarían orgullosos de probar."
               </p>
-              <p className="text-lg" style={{color: 'var(--mikels-green)'}}>
+              <p className="text-lg text-white">
                 Desde Alcarràs y Córdoba, comparto nuestra historia con el mundo. 
                 Porque creo que en un mundo de productos industriales y sin alma, 
                 la gente merece saber que todavía existen familias como la nuestra, 
