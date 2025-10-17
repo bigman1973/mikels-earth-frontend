@@ -11,7 +11,7 @@ const Header = () => {
   return (
     <header className="w-full">
       {/* Top bar con redes sociales */}
-      <div className="bg-black text-white py-2">
+      <div className="bg-mikels-dark text-white py-2" style={{backgroundColor: 'var(--mikels-gray-dark)'}}>
         <div className="container mx-auto px-4 flex justify-between items-center">
           <div className="flex gap-3">
             <a 
@@ -63,13 +63,13 @@ const Header = () => {
       </div>
 
       {/* Logo section */}
-      <div className="bg-accent py-6">
+      <div className="py-6" style={{backgroundColor: 'var(--mikels-sun-light)'}}>
         <div className="container mx-auto px-4 flex justify-center">
           <Link to="/" className="flex flex-col items-center">
-            <h1 className="text-4xl md:text-5xl font-script text-primary">
+            <h1 className="text-4xl md:text-5xl font-script" style={{color: 'var(--mikels-red)'}}>
               Mikel's Earth
             </h1>
-            <p className="text-xs text-primary/70 tracking-wider mt-1">
+            <p className="text-xs tracking-wider mt-1" style={{color: 'var(--mikels-gray-medium)'}}>
               Since 1819
             </p>
           </Link>
@@ -77,7 +77,7 @@ const Header = () => {
       </div>
 
       {/* Navigation */}
-      <nav className="bg-black text-white">
+      <nav className="text-white" style={{backgroundColor: 'var(--mikels-gray-dark)'}}>
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-14">
             {/* Desktop Navigation */}

@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Importar tipografías de Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&display=swap');
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -43,71 +46,135 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.35 0.05 45); /* Marrón oscuro */
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.92 0.12 110); /* Amarillo verdoso */
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.95 0.08 350); /* Rosa pastel */
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  
+  /* ============================================
+     COLORES CORPORATIVOS MIKEL'S FRUIT
+     Solo estos colores deben usarse en la web
+     ============================================ */
+  
+  /* Colores Principales */
+  --mikels-red: #CD545B;        /* Pantone 7418 - Rojo corporativo */
+  --mikels-green: #B7BF10;      /* Pantone 583 - Verde corporativo */
+  
+  /* Degradados del Rojo (Pantone 7418) */
+  --mikels-red-90: rgba(205, 84, 91, 0.9);
+  --mikels-red-80: rgba(205, 84, 91, 0.8);
+  --mikels-red-70: rgba(205, 84, 91, 0.7);
+  --mikels-red-60: rgba(205, 84, 91, 0.6);
+  --mikels-red-50: rgba(205, 84, 91, 0.5);
+  --mikels-red-40: rgba(205, 84, 91, 0.4);
+  --mikels-red-30: rgba(205, 84, 91, 0.3);
+  --mikels-red-20: rgba(205, 84, 91, 0.2);
+  --mikels-red-10: rgba(205, 84, 91, 0.1);
+  
+  /* Degradados del Verde (Pantone 583) */
+  --mikels-green-90: rgba(183, 191, 16, 0.9);
+  --mikels-green-80: rgba(183, 191, 16, 0.8);
+  --mikels-green-70: rgba(183, 191, 16, 0.7);
+  --mikels-green-60: rgba(183, 191, 16, 0.6);
+  --mikels-green-50: rgba(183, 191, 16, 0.5);
+  --mikels-green-40: rgba(183, 191, 16, 0.4);
+  --mikels-green-30: rgba(183, 191, 16, 0.3);
+  --mikels-green-20: rgba(183, 191, 16, 0.2);
+  --mikels-green-10: rgba(183, 191, 16, 0.1);
+  
+  /* Colores de la Ilustración del Personaje */
+  --mikels-skin-line: #bd8477;       /* Línea Piel */
+  --mikels-skin-fill: #e4dad5;       /* Relleno Piel */
+  --mikels-clothes-dark: #4a4d3d;    /* Línea Peto y Sombrero (verde oscuro) */
+  --mikels-clothes-light: #797764;   /* Relleno Peto y Sombrero */
+  --mikels-shirt-line: #9c9b9b;      /* Línea Camisa */
+  --mikels-shirt-fill: #ececec;      /* Relleno Camisa */
+  --mikels-details: #c3ae78;         /* Relleno Detalles (Banda y Botones) */
+  --mikels-sun-dark: #e3be94;        /* Sol Degradado */
+  --mikels-sun-light: #f0e4c0;       /* Sol Claro */
+  
+  /* Grises Neutros (para reemplazar negro) */
+  --mikels-gray-dark: #4a4d3d;       /* Gris oscuro (del peto) - reemplaza negro */
+  --mikels-gray-medium: #797764;     /* Gris medio */
+  --mikels-gray-light: #9c9b9b;      /* Gris claro */
+  --mikels-gray-lighter: #ececec;    /* Gris muy claro */
+  
+  /* ============================================
+     TEMA BASE - SOLO COLORES DEL MANUAL
+     ============================================ */
+  
+  --background: #ffffff;                    /* Blanco puro */
+  --foreground: var(--mikels-gray-dark);    /* Gris oscuro en lugar de negro */
+  --card: #ffffff;
+  --card-foreground: var(--mikels-gray-dark);
+  --popover: #ffffff;
+  --popover-foreground: var(--mikels-gray-dark);
+  
+  /* Primary: Rojo Mikel's */
+  --primary: var(--mikels-red);
+  --primary-foreground: #ffffff;
+  
+  /* Secondary: Verde Mikel's */
+  --secondary: var(--mikels-green);
+  --secondary-foreground: var(--mikels-gray-dark);
+  
+  /* Accent: Degradado del rojo al 70% */
+  --accent: var(--mikels-red-70);
+  --accent-foreground: #ffffff;
+  
+  --muted: var(--mikels-gray-lighter);
+  --muted-foreground: var(--mikels-gray-medium);
+  --destructive: var(--mikels-red);
+  --border: var(--mikels-gray-light);
+  --input: var(--mikels-gray-lighter);
+  --ring: var(--mikels-red-50);
+  
+  /* Charts con colores corporativos */
+  --chart-1: var(--mikels-red);
+  --chart-2: var(--mikels-green);
+  --chart-3: var(--mikels-red-70);
+  --chart-4: var(--mikels-green-70);
+  --chart-5: var(--mikels-details);
+  
+  /* Sidebar */
+  --sidebar: #ffffff;
+  --sidebar-foreground: var(--mikels-gray-dark);
+  --sidebar-primary: var(--mikels-red);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--mikels-gray-lighter);
+  --sidebar-accent-foreground: var(--mikels-gray-dark);
+  --sidebar-border: var(--mikels-gray-light);
+  --sidebar-ring: var(--mikels-red-50);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: var(--mikels-gray-dark);
+  --foreground: #ffffff;
+  --card: var(--mikels-clothes-light);
+  --card-foreground: #ffffff;
+  --popover: var(--mikels-clothes-light);
+  --popover-foreground: #ffffff;
+  --primary: var(--mikels-red);
+  --primary-foreground: #ffffff;
+  --secondary: var(--mikels-green);
+  --secondary-foreground: var(--mikels-gray-dark);
+  --muted: var(--mikels-clothes-light);
+  --muted-foreground: var(--mikels-gray-light);
+  --accent: var(--mikels-red-70);
+  --accent-foreground: #ffffff;
+  --destructive: var(--mikels-red);
+  --border: var(--mikels-gray-medium);
+  --input: var(--mikels-clothes-light);
+  --ring: var(--mikels-red-50);
+  --chart-1: var(--mikels-red);
+  --chart-2: var(--mikels-green);
+  --chart-3: var(--mikels-red-70);
+  --chart-4: var(--mikels-green-70);
+  --chart-5: var(--mikels-details);
+  --sidebar: var(--mikels-gray-dark);
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: var(--mikels-red);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: var(--mikels-clothes-light);
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: var(--mikels-gray-medium);
+  --sidebar-ring: var(--mikels-red-50);
 }
 
 @layer base {
@@ -116,13 +183,97 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  
+  /* Tipografía para títulos - Georgia Bold Italic como alternativa web a Bookmania */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 700;
+    font-style: italic;
+    color: var(--mikels-red); /* Títulos en rojo corporativo */
+  }
+  
+  /* Montserrat para textos de cuerpo */
+  p, span, div, a, button, input, textarea, select {
+    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  
+  /* Evitar negro puro en todo */
+  * {
+    color: inherit;
   }
 }
 
+/* ============================================
+   CLASES UTILITY - SOLO COLORES DEL MANUAL
+   ============================================ */
 
-/* Custom font for logo */
+/* Fondos corporativos */
+.bg-mikels-red { background-color: var(--mikels-red); }
+.bg-mikels-green { background-color: var(--mikels-green); }
+.bg-mikels-red-10 { background-color: var(--mikels-red-10); }
+.bg-mikels-red-20 { background-color: var(--mikels-red-20); }
+.bg-mikels-red-30 { background-color: var(--mikels-red-30); }
+.bg-mikels-green-10 { background-color: var(--mikels-green-10); }
+.bg-mikels-green-20 { background-color: var(--mikels-green-20); }
+.bg-mikels-green-30 { background-color: var(--mikels-green-30); }
+
+/* Fondos de la ilustración */
+.bg-mikels-skin { background-color: var(--mikels-skin-fill); }
+.bg-mikels-sun-light { background-color: var(--mikels-sun-light); }
+.bg-mikels-sun-dark { background-color: var(--mikels-sun-dark); }
+.bg-mikels-details { background-color: var(--mikels-details); }
+
+/* Textos corporativos */
+.text-mikels-red { color: var(--mikels-red); }
+.text-mikels-green { color: var(--mikels-green); }
+.text-mikels-dark { color: var(--mikels-gray-dark); }
+.text-mikels-medium { color: var(--mikels-gray-medium); }
+
+/* Bordes corporativos */
+.border-mikels-red { border-color: var(--mikels-red); }
+.border-mikels-green { border-color: var(--mikels-green); }
+.border-mikels-gray { border-color: var(--mikels-gray-light); }
+
+/* Gradientes corporativos */
+.bg-gradient-mikels-red {
+  background: linear-gradient(135deg, var(--mikels-red) 0%, var(--mikels-red-70) 100%);
+}
+
+.bg-gradient-mikels-green {
+  background: linear-gradient(135deg, var(--mikels-green) 0%, var(--mikels-green-70) 100%);
+}
+
+.bg-gradient-mikels-dual {
+  background: linear-gradient(135deg, var(--mikels-red) 0%, var(--mikels-green) 100%);
+}
+
+.bg-gradient-mikels-sun {
+  background: linear-gradient(135deg, var(--mikels-sun-light) 0%, var(--mikels-sun-dark) 100%);
+}
+
+.bg-gradient-mikels-red-soft {
+  background: linear-gradient(135deg, var(--mikels-red-20) 0%, var(--mikels-red-10) 100%);
+}
+
+.bg-gradient-mikels-green-soft {
+  background: linear-gradient(135deg, var(--mikels-green-20) 0%, var(--mikels-green-10) 100%);
+}
+
+/* Custom font classes */
 .font-script {
   font-family: 'Dancing Script', cursive;
+}
+
+.font-bookmania {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.font-montserrat {
+  font-family: 'Montserrat', sans-serif;
 }
 
 /* Smooth scrolling */
@@ -144,5 +295,33 @@ html {
 
 .animate-fadeIn {
   animation: fadeIn 0.6s ease-out;
+}
+
+/* Hover effects con colores corporativos */
+.hover-mikels-red {
+  transition: all 0.3s ease;
+}
+
+.hover-mikels-red:hover {
+  background-color: var(--mikels-red);
+  color: white;
+}
+
+.hover-mikels-green {
+  transition: all 0.3s ease;
+}
+
+.hover-mikels-green:hover {
+  background-color: var(--mikels-green);
+  color: white;
+}
+
+/* Sombras con colores corporativos */
+.shadow-mikels-red {
+  box-shadow: 0 4px 6px -1px var(--mikels-red-30), 0 2px 4px -1px var(--mikels-red-20);
+}
+
+.shadow-mikels-green {
+  box-shadow: 0 4px 6px -1px var(--mikels-green-30), 0 2px 4px -1px var(--mikels-green-20);
 }
 
