@@ -199,7 +199,7 @@ const Home = () => {
                   image: "/images/products/aceite-temprano-hero.jpg"
                 },
                 {
-                  name: "Pack Degustación",
+                  name: "Pack Degustaci\u00f3n 360",
                   tagline: "El Regalo Perfecto",
                   description: "Descubre toda nuestra historia en un pack cuidadosamente seleccionado.",
                   image: "/images/products/pack-productos.jpg"
