@@ -217,7 +217,7 @@ const Home = () => {
                     <img 
                       src={product.image} 
                       alt={product.name}
-                      className="h-full w-auto object-contain group-hover:scale-110 transition-transform duration-500 p-4"
+                      className="h-full w-auto object-contain group-hover:scale-110 transition-transform duration-500 p-2"
                     />
                   </div>
                   <div className="p-8">
