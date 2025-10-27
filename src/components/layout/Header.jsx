@@ -65,13 +65,12 @@ const Header = () => {
       {/* Logo section */}
       <div className="py-6" style={{backgroundColor: 'var(--mikels-sun-light)'}}>
         <div className="container mx-auto px-4 flex justify-center">
-          <Link to="/" className="flex flex-col items-center">
-            <h1 className="text-4xl md:text-5xl font-script" style={{color: 'var(--mikels-red)'}}>
-              Mikel's Earth
-            </h1>
-            <p className="text-xs tracking-wider mt-1" style={{color: 'var(--mikels-gray-medium)'}}>
-              Since 1819
-            </p>
+          <Link to="/" className="flex items-center">
+            <img 
+              src="/logo-mikels-earth.svg" 
+              alt="Mikel's Earth - Since 1819" 
+              className="h-20 md:h-24 w-auto"
+            />
           </Link>
         </div>
       </div>
