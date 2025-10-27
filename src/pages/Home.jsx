@@ -267,13 +267,16 @@ const Home = () => {
                 Nuestro Compromiso va Más Allá
               </h2>
               <p className="text-2xl mb-8 text-white/90 leading-relaxed">
-                Parte de nuestros beneficios van destinados a la Fundación Mikel's, 
-                que trabaja para mejorar la vida de las personas con discapacidad 
-                en nuestra comunidad.
+                Parte de nuestros beneficios van destinados a causas que nos llenan el corazón. 
+                Colaboramos con <strong>Ileris</strong>, un centro de personas especiales que nos ayudan 
+                a empaquetar nuestros productos con dedicación y cariño. También apoyamos a la 
+                <strong> Fundación Agonlinhossouyetokandji</strong> en Benín, que trabaja incansablemente 
+                para mejorar la vida de niños huérfanos y ancianos.
               </p>
               <p className="text-xl text-white/80 leading-relaxed mb-8">
-                Porque creemos que el éxito solo tiene sentido si se comparte. 
-                Porque la tierra nos ha dado mucho, y es hora de devolver.
+                Porque creemos que el éxito solo tiene sentido si se comparte. Porque la tierra nos ha 
+                dado mucho, y es hora de devolver. Cada producto que compras ayuda a construir un mundo 
+                más justo y solidario.
               </p>
               <div className="bg-white/10 p-8 rounded-lg inline-block">
                 <p className="text-3xl font-script text-secondary mb-2">
