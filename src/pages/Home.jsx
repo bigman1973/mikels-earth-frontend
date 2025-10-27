@@ -190,7 +190,7 @@ const Home = () => {
                   name: "Paraguayo en Alm\u00edbar",
                   tagline: "La Joya de Alcarr\u00e0s",
                   description: "El melocot\u00f3n plano que nos enamor\u00f3 hace m\u00e1s de un siglo. Dulce, arom\u00e1tico, perfecto.",
-                  image: "/images/products/paraguayo-almibar-hero.png"
+                  image: "/images/products/paraguayo-almibar-hero.jpg"
                 },
                 {
                   name: "Aceite Temprano",
@@ -213,11 +213,11 @@ const Home = () => {
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   className="bg-gradient-to-b from-accent/20 to-white rounded-xl shadow-lg hover:shadow-2xl transition-shadow overflow-hidden group"
                 >
-                  <div className="h-64 overflow-hidden flex items-center justify-center bg-gradient-to-br from-accent/10 via-white to-primary/5">
+                  <div className="h-64 overflow-hidden flex items-center justify-center">
                     <img 
                       src={product.image} 
                       alt={product.name}
-                      className="h-full w-auto object-contain group-hover:scale-110 transition-transform duration-500 p-2"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                   </div>
                   <div className="p-8">
