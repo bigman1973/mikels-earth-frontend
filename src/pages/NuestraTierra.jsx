@@ -152,7 +152,7 @@ const NuestraTierra = () => {
                 </p>
                 
                 <p className="text-lg text-gray-700">
-                  Trabajamos con tres variedades: Arbequina, Picual y Hojiblanca. Cada una 
+                  Trabajamos con tres variedades en la finca de la Moncloa: Arbequina, Picual y Hojiblanca. Cada una 
                   con su personalidad, su carácter, su momento perfecto de cosecha. Y todas 
                   con algo en común: se recogen a mano, se prensan en frío, se embotellan 
                   sin filtrar para preservar todos sus aromas y propiedades.
