@@ -11,9 +11,10 @@ const NuestrasJoyas = () => {
       icon: <Sparkles className="text-secondary" size={48} />,
       description: 'El melocotón plano que conquistó nuestros corazones hace más de un siglo. Cultivado en Alcarràs, seleccionado a mano, cocido con paciencia y envasado con amor.',
       features: [
-        'Melocotón plano de Alcarràs',
-        'Cosecha manual en punto óptimo',
-        'Cocción artesanal lenta',
+        'Melocot\u00f3n plano de Alcarr\u00e0s',
+        'Cosecha manual en punto \u00f3ptimo',
+        'Pelado y deshuesado a mano',
+        'Cocci\u00f3n milim\u00e9trica',
         'Sin conservantes ni colorantes',
         'Vegano y sin gluten'
       ],
