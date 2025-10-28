@@ -31,19 +31,31 @@ const ElObrador = () => {
             transition={{ duration: 0.8 }}
           >
             <h2 className="text-4xl font-bold text-primary mb-6">
-              Transparencia Total: Nuestro Proceso al Descubierto
+              Transparencia Total: De la Masía al Mundo
             </h2>
-            <p className="text-xl text-gray-700 leading-relaxed mb-8">
-              En un mundo donde los alimentos se producen en fábricas gigantes, 
-              donde las máquinas han reemplazado a las manos, donde la velocidad 
-              importa más que la calidad... nosotros elegimos un camino diferente.
-            </p>
-            <p className="text-lg text-gray-700 leading-relaxed">
-              Nuestro obrador es pequeño. Nuestro proceso es lento. Nuestras manos 
-              tocan cada frasco. Y estamos orgullosos de ello. Porque creemos que 
-              la artesanía verdadera no se puede automatizar, no se puede acelerar, 
-              no se puede falsificar.
-            </p>
+            <div className="space-y-6 text-lg text-gray-700 leading-relaxed">
+              <p>
+                Todo comenzó en nuestra masía. Entre muros de piedra centenarios, nuestras manos creaban cada receta, llenaban cada frasco. No era un negocio. Era una pasión.
+              </p>
+              <p>
+                Cuando la demanda creció, nos enfrentamos a una decisión: ¿industrializarnos o mantener nuestra esencia?
+              </p>
+              <p className="font-semibold text-primary">
+                Elegimos el camino difícil.
+              </p>
+              <p>
+                En un mundo donde los alimentos se producen en fábricas gigantes, donde las máquinas han reemplazado a las manos, donde la velocidad importa más que la calidad... nosotros buscamos artesanos que compartieran nuestra filosofía.
+              </p>
+              <p>
+                Hoy trabajamos con un obrador pequeño, como el nuestro. Un proceso lento, como siempre lo fue. Manos expertas que tocan cada frasco, como nosotros lo hacíamos.
+              </p>
+              <p>
+                Nuestras recetas siguen siendo las mismas. Los ingredientes, seleccionados con el mismo criterio. El proceso, supervisado con la misma obsesión por la calidad.
+              </p>
+              <p className="font-semibold text-primary">
+                Hemos crecido sin traicionar nuestros orígenes. Porque la masía no era solo un lugar. Era una promesa. Y esa promesa sigue viva en cada frasco.
+              </p>
+            </div>
           </motion.div>
         </div>
       </section>
