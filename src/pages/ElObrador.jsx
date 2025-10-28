@@ -77,7 +77,7 @@ const ElObrador = () => {
                 content: [
                   "Cada fruta es seleccionada a mano en su punto óptimo de maduración. No antes, cuando aún le falta sabor. No después, cuando ya ha perdido textura. Justo en el momento perfecto.",
                   "Nuestros recolectores conocen cada árbol. Saben cuáles maduran primero, cuáles necesitan más tiempo. Es un conocimiento que se adquiere con años, con experiencia, con pasión.",
-                  "Una máquina recoge todo. Nosotros seleccionamos. Y esa diferencia se nota en cada bocado."
+                  "Durante la recolecci\u00f3n, seleccionamos el fruto. Y esa diferencia se nota en cada bocado."
                 ],
                 highlight: "Solo el 60% de la fruta pasa nuestro control de calidad"
               },
