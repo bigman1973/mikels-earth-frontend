@@ -116,17 +116,17 @@ const Recetario = () => {
     },
     {
       id: 'pasta-picual',
-      name: 'Pasta Aglio e Olio con Picual',
+      name: 'Pasta Aglio e Olio con Ecol\u00f3gico',
       category: 'Principal',
       difficulty: 'Fácil',
       time: '20 min',
       servings: '4',
-      image: '🍝',
-      description: 'La receta italiana más simple, elevada con nuestro Picual. Cuando menos es más.',
+      image: '\ud83c\udf5d',
+      description: 'La receta italiana m\u00e1s simple, elevada con nuestro ecol\u00f3gico. Cuando menos es m\u00e1s.',
       ingredients: [
         '400g de espaguetis',
         '6 dientes de ajo',
-        '100ml de Aceite Picual',
+        '100ml de Aceite Ecol\u00f3gico',
         'Guindilla seca',
         'Perejil fresco',
         'Sal',
@@ -135,13 +135,13 @@ const Recetario = () => {
       steps: [
         'Cuece la pasta al dente',
         'Lamina el ajo finamente',
-        'Calienta el aceite Picual a fuego bajo',
+        'Calienta el aceite ecol\u00f3gico a fuego bajo',
         'Dora el ajo sin que se queme',
         'Añade la guindilla',
         'Mezcla con la pasta y agua de cocción',
         'Espolvorea perejil y sirve'
       ],
-      tips: 'El Picual aporta el picante perfecto. No dejes que el ajo se queme o amargará. El agua de cocción emulsiona el aceite creando una salsa cremosa.'
+      tips: 'Nuestro ecol\u00f3gico aporta el picante perfecto. No dejes que el ajo se queme o amargar\u00e1. El agua de cocci\u00f3n emulsiona el aceite creando una salsa cremosa.'
     },
     {
       id: 'yogur-paraguayo',
