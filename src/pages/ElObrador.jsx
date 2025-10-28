@@ -83,15 +83,18 @@ const ElObrador = () => {
               },
               {
                 step: "02",
-                title: "La Elaboración Artesanal",
-                subtitle: "Cocciones Lentas, Sin Prisas, Sin Atajos",
+                title: "La Elaboraci\u00f3n Artesanal",
+                subtitle: "El Punto Exacto, No el Camino F\u00e1cil",
                 icon: <Clock className="text-secondary" size={48} />,
                 content: [
-                  "En nuestro obrador, el tiempo se detiene. Las ollas hierven a fuego lento. El almíbar se cocina durante horas, removiéndose con paciencia, esperando el punto exacto.",
-                  "No usamos espesantes. No añadimos conservantes. No aceleramos el proceso. Solo fruta, un poco de azúcar, y el saber hacer de generaciones.",
-                  "El resultado es un producto que sabe a fruta de verdad. Porque es fruta de verdad."
+                  "En las f\u00e1bricas industriales, la fruta se cuece durante horas hasta convertirse en una masa homog\u00e9nea. Luego a\u00f1aden espesantes para darle textura, conservantes para alargar su vida, y aromas para recuperar lo que el exceso de calor destruy\u00f3.",
+                  "Nosotros hacemos lo contrario.",
+                  "En nuestro obrador, cada lote se cocina solo hasta alcanzar su punto \u00f3ptimo. Ni un minuto m\u00e1s, ni uno menos. La pasteurizaci\u00f3n se controla con precisi\u00f3n milim\u00e9trica: el tiempo exacto para conservar la fruta como si acabara de cosecharse, sin cocinarla hasta la muerte.",
+                  "No usamos espesantes. No a\u00f1adimos conservantes. No compensamos con qu\u00edmica lo que el proceso industrial destruye.",
+                  "Solo fruta, un poco de az\u00facar, y el conocimiento de cu\u00e1ndo detenerse.",
+                  "El resultado es un producto que conserva el sabor, la textura y el color de la fruta fresca. Porque la tratamos con el respeto que merece."
                 ],
-                highlight: "Hasta 6 horas de cocción para algunas recetas"
+                highlight: "La diferencia est\u00e1 en lo que NO hacemos."
               },
               {
                 step: "03",
