@@ -75,17 +75,17 @@ const LaFamilia = () => {
               {
                 year: "1819",
                 title: "Los Primeros Pasos",
-                text: "Nuestra familia comienza a cultivar olivos en las tierras de Lleida. La pasión por la tierra y el trabajo artesanal se convierte en el ADN de nuestra familia."
+                text: "1819 comienza a cultivar las tierras en Alcarr\u00e0s, Lleida. La pasi\u00f3n por la tierra y el trabajo artesanal se convierte en el ADN de nuestra familia."
               },
               {
                 year: "1920",
                 title: "El Descubrimiento del Paraguayo",
-                text: "La cuarta generación descubre el melocotón plano en Alcarràs. Su sabor único y su textura perfecta nos inspiran a crear nuestra primera conserva artesanal."
+                text: "El obrador familiar se alz\u00f3 con el mas, donde pasaban los veranos y transformaban los frutos a conserva para pasar el invierno. La cuarta generaci\u00f3n descubre el melocot\u00f3n plano en Alcarr\u00e0s."
               },
               {
                 year: "1975",
                 title: "El Obrador Familiar",
-                text: "Construimos nuestro obrador, donde cada frasco se llena a mano. La tradición se encuentra con la dedicación para crear productos únicos."
+                text: "La quinta generaci\u00f3n descubre el melocot\u00f3n plano en Alcarr\u00e0s. Construimos nuestro obrador, donde cada frasco se llena a mano. La tradici\u00f3n se encuentra con la dedicaci\u00f3n para crear productos \u00fanicos."
               },
               {
                 year: "2010",
