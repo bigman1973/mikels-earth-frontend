@@ -35,7 +35,7 @@ const NuestrasJoyas = () => {
         'Certificación ecológica'
       ],
       story: 'Los olivares de Córdoba son nuestro segundo hogar. Árboles centenarios que han visto pasar generaciones, que producen aceitunas de una calidad excepcional. Cada variedad tiene su momento, su carácter, su historia. Y todas comparten nuestra obsesión por la calidad.',
-      uses: 'Arbequina para ensaladas delicadas, Picual para guisos potentes, Hojiblanca para todo. Cada uno brilla en su momento.'
+      uses: 'Nuestro Temprano, sin filtrar para ensaladas, verduras. El ecol\u00f3gico para guisos potentes. Nuestro convencional para todo tipo de platos.'
     },
     {
       id: 'temprano',
