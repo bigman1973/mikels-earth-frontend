@@ -36,8 +36,8 @@ export const products = [
     slug: "nectarina-almibar",
     description: "Nectarina cultivada en Alcarrás y preparada a mano. Sin aditivos artificiales, 100% natural y vegano.",
     longDescription: "Nuestra nectarina en almíbar captura la esencia del verano mediterráneo. Cultivada en los campos de Alcarrás, cada fruta es seleccionada en su punto óptimo de maduración y preparada siguiendo métodos artesanales. El proceso de elaboración respeta los tiempos naturales de la fruta, conservando su sabor auténtico y propiedades nutritivas. Sin conservantes, sin colorantes, solo fruta de calidad y almíbar natural.",
-    price: null, // Precio pendiente de confirmar
-    priceSubscription: null, // Precio suscripción pendiente de confirmar
+    price: 8.50, // Precio temporal (pendiente de confirmar)
+    priceSubscription: 7.50, // Precio suscripción temporal (pendiente de confirmar)
     currency: "EUR",
     image: "/images/nectarina-almibar.jpg",
     category: "Conservas",
@@ -53,7 +53,7 @@ export const products = [
       fiber: "1.2g"
     },
     subscriptionAvailable: true,
-    subscriptionDiscount: null, // Pendiente de confirmar
+    subscriptionDiscount: 12, // Temporal - Pendiente de confirmar
     subscriptionFrequencies: [
       { value: "weekly", label: "Semanal", discount: 15 },
       { value: "biweekly", label: "Quincenal", discount: 12 },

@@ -17,8 +17,14 @@ const Products = () => {
       case 'name':
         return a.name.localeCompare(b.name);
       case 'price-asc':
+        // Productos sin precio van al final
+        if (a.price === null) return 1;
+        if (b.price === null) return -1;
         return a.price - b.price;
       case 'price-desc':
+        // Productos sin precio van al final
+        if (a.price === null) return 1;
+        if (b.price === null) return -1;
         return b.price - a.price;
       default:
         return 0;
