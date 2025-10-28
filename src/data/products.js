@@ -1,4 +1,4 @@
-// Mock data de productos para Mikel's Earth
+// Catálogo oficial de productos de Mikel's Earth
 export const products = [
   {
     id: 1,
@@ -23,6 +23,7 @@ export const products = [
       fiber: "1.2g"
     },
     subscriptionAvailable: true,
+    subscriptionDiscount: 12,
     subscriptionFrequencies: [
       { value: "weekly", label: "Semanal", discount: 15 },
       { value: "biweekly", label: "Quincenal", discount: 12 },
@@ -31,47 +32,49 @@ export const products = [
   },
   {
     id: 2,
-    name: "Aceite de Oliva Virgen Extra - Arbequina",
-    slug: "aceite-oliva-arbequina",
-    description: "Aceite de oliva virgen extra de variedad Arbequina. Suave, afrutado y perfecto para ensaladas.",
-    longDescription: "Nuestro aceite de oliva virgen extra Arbequina se obtiene de aceitunas cultivadas en nuestros olivares de Lleida. La variedad Arbequina es conocida por su sabor suave y afrutado, con notas de almendra y manzana verde. Prensado en frío para preservar todas sus propiedades antioxidantes y su perfil organoléptico excepcional. Ideal para aliñar ensaladas, carpaccios y platos delicados.",
-    price: 12.90,
-    priceSubscription: 11.50,
+    name: "Nectarina en Almíbar",
+    slug: "nectarina-almibar",
+    description: "Nectarina cultivada en Alcarrás y preparada a mano. Sin aditivos artificiales, 100% natural y vegano.",
+    longDescription: "Nuestra nectarina en almíbar captura la esencia del verano mediterráneo. Cultivada en los campos de Alcarrás, cada fruta es seleccionada en su punto óptimo de maduración y preparada siguiendo métodos artesanales. El proceso de elaboración respeta los tiempos naturales de la fruta, conservando su sabor auténtico y propiedades nutritivas. Sin conservantes, sin colorantes, solo fruta de calidad y almíbar natural.",
+    price: null, // Precio pendiente de confirmar
+    priceSubscription: null, // Precio suscripción pendiente de confirmar
     currency: "EUR",
-    image: "/images/aceite-arbequina.jpg",
-    category: "Aceites",
-    tags: ["Vegano", "Sin Gluten", "Prensado en Frío", "DOP"],
-    stock: 32,
-    weight: "500ml",
-    ingredients: "Aceite de oliva virgen extra 100% Arbequina",
+    image: "/images/nectarina-almibar.jpg",
+    category: "Conservas",
+    tags: ["Vegano", "Sin Gluten", "Artesanal", "Local"],
+    stock: 0, // Pendiente de stock
+    weight: "720g",
+    ingredients: "Nectarina, agua, azúcar de caña",
     nutritionalInfo: {
-      calories: "884 kcal/100ml",
-      carbs: "0g",
-      protein: "0g",
-      fat: "100g",
-      saturated: "14g"
+      calories: "85 kcal",
+      carbs: "21g",
+      protein: "0.5g",
+      fat: "0.1g",
+      fiber: "1.2g"
     },
     subscriptionAvailable: true,
+    subscriptionDiscount: null, // Pendiente de confirmar
     subscriptionFrequencies: [
-      { value: "monthly", label: "Mensual", discount: 10 },
-      { value: "bimonthly", label: "Bimensual", discount: 8 }
+      { value: "weekly", label: "Semanal", discount: 15 },
+      { value: "biweekly", label: "Quincenal", discount: 12 },
+      { value: "monthly", label: "Mensual", discount: 10 }
     ]
   },
   {
     id: 3,
-    name: "Aceite de Oliva Virgen Extra - Picual",
-    slug: "aceite-oliva-picual",
-    description: "Aceite de oliva virgen extra de variedad Picual. Intenso, robusto y con carácter.",
-    longDescription: "El aceite Picual es para los amantes de los sabores intensos. Con un perfil más robusto y un toque picante característico, este aceite es perfecto para guisos, carnes y platos que requieren un aceite con personalidad. Rico en polifenoles y antioxidantes naturales, es uno de los aceites más estables y saludables del mercado.",
-    price: 13.50,
-    priceSubscription: 12.00,
+    name: "Aceite de Oliva Virgen Extra Mikel's Fruit (Equilibrado)",
+    slug: "aceite-oliva-equilibrado",
+    description: "Aceite de oliva virgen extra equilibrado. Versátil y perfecto para todo tipo de platos.",
+    longDescription: "Nuestro aceite de oliva virgen extra equilibrado es el todoterreno de la cocina. Con un perfil organoléptico balanceado entre suavidad e intensidad, es perfecto tanto para cocinar como para aliñar. Prensado en frío para preservar todas sus propiedades antioxidantes y su perfil excepcional. Ideal para el uso diario en cualquier preparación culinaria.",
+    price: 10.00,
+    priceSubscription: 9.00,
     currency: "EUR",
-    image: "/images/aceite-picual.jpg",
+    image: "/images/aceite-equilibrado.jpg",
     category: "Aceites",
-    tags: ["Vegano", "Sin Gluten", "Prensado en Frío", "Alto en Polifenoles"],
-    stock: 28,
+    tags: ["Vegano", "Sin Gluten", "Prensado en Frío", "Versátil"],
+    stock: 35,
     weight: "500ml",
-    ingredients: "Aceite de oliva virgen extra 100% Picual",
+    ingredients: "Aceite de oliva virgen extra",
     nutritionalInfo: {
       calories: "884 kcal/100ml",
       carbs: "0g",
@@ -80,6 +83,7 @@ export const products = [
       saturated: "14g"
     },
     subscriptionAvailable: true,
+    subscriptionDiscount: 10,
     subscriptionFrequencies: [
       { value: "monthly", label: "Mensual", discount: 10 },
       { value: "bimonthly", label: "Bimensual", discount: 8 }
@@ -87,19 +91,19 @@ export const products = [
   },
   {
     id: 4,
-    name: "Aceite de Oliva Virgen Extra - Hojiblanca",
-    slug: "aceite-oliva-hojiblanca",
-    description: "Aceite de oliva virgen extra de variedad Hojiblanca. Equilibrado y versátil.",
-    longDescription: "La variedad Hojiblanca ofrece un equilibrio perfecto entre suavidad e intensidad. Con notas herbáceas y un ligero amargor equilibrado, este aceite es extremadamente versátil en la cocina. Perfecto tanto para cocinar como para aliñar, es el aceite todoterreno que no puede faltar en tu despensa.",
-    price: 13.20,
-    priceSubscription: 11.80,
+    name: "Aceite de Oliva Virgen Extra Ecológico Mikel's Fruit",
+    slug: "aceite-oliva-ecologico",
+    description: "Aceite de oliva virgen extra ecológico premiado. Intenso, robusto y con carácter.",
+    longDescription: "Nuestro aceite ecológico es para los amantes de los sabores intensos. Con un perfil más robusto y un toque picante característico, este aceite es perfecto para guisos, carnes y platos que requieren un aceite con personalidad. Rico en polifenoles y antioxidantes naturales, es uno de los aceites más estables y saludables del mercado. Premiado por su calidad excepcional.",
+    price: 13.50,
+    priceSubscription: 12.00,
     currency: "EUR",
-    image: "/images/aceite-hojiblanca.jpg",
+    image: "/images/aceite-ecologico.jpg",
     category: "Aceites",
-    tags: ["Vegano", "Sin Gluten", "Prensado en Frío", "Versátil"],
-    stock: 35,
+    tags: ["Vegano", "Sin Gluten", "Prensado en Frío", "Ecológico", "Premiado", "Alto en Polifenoles"],
+    stock: 28,
     weight: "500ml",
-    ingredients: "Aceite de oliva virgen extra 100% Hojiblanca",
+    ingredients: "Aceite de oliva virgen extra ecológico 100%",
     nutritionalInfo: {
       calories: "884 kcal/100ml",
       carbs: "0g",
@@ -108,63 +112,38 @@ export const products = [
       saturated: "14g"
     },
     subscriptionAvailable: true,
+    subscriptionDiscount: 11,
     subscriptionFrequencies: [
-      { value: "monthly", label: "Mensual", discount: 10 },
-      { value: "bimonthly", label: "Bimensual", discount: 8 }
-    ]
+      { value: "monthly", label: "Mensual", discount: 11 },
+      { value: "bimonthly", label: "Bimensual", discount: 9 }
+    ],
+    featured: true,
+    award: "Premiado"
   },
   {
     id: 5,
-    name: "Pack Degustación de Aceites",
-    slug: "pack-degustacion-aceites",
-    description: "Pack con las tres variedades de aceite de oliva virgen extra en formato 250ml cada uno.",
-    longDescription: "¿No sabes cuál elegir? Este pack de degustación incluye nuestras tres variedades de aceite de oliva virgen extra: Arbequina, Picual y Hojiblanca. Cada botella de 250ml te permitirá descubrir los matices únicos de cada variedad y encontrar tu favorito. También es un regalo perfecto para los amantes de la gastronomía.",
+    name: "Pack Mermelada & Aceites Premium",
+    slug: "pack-mermelada-aceites",
+    description: "Pack premium con paraguayo en almíbar y nuestros dos aceites de oliva virgen extra.",
+    longDescription: "¿Quieres probar lo mejor de Mikel's Earth? Este pack premium incluye nuestro paraguayo en almíbar estrella y nuestros dos aceites de oliva virgen extra: el equilibrado y el ecológico premiado. Una combinación perfecta que te permitirá descubrir los sabores únicos de nuestros productos artesanales. También es un regalo perfecto para los amantes de la gastronomía de calidad.",
     price: 28.00,
     priceSubscription: null,
     currency: "EUR",
-    image: "/images/pack-aceites.jpg",
+    image: "/images/pack-productos.jpg",
     category: "Packs",
-    tags: ["Vegano", "Sin Gluten", "Regalo", "Degustación"],
+    tags: ["Vegano", "Sin Gluten", "Regalo", "Premium", "Degustación"],
     stock: 20,
-    weight: "750ml (3x250ml)",
-    ingredients: "Aceite de oliva virgen extra Arbequina, Picual y Hojiblanca",
+    weight: "1720g (720g + 500ml + 500ml)",
+    ingredients: "Paraguayo en almíbar (720g), Aceite de oliva virgen extra equilibrado (500ml), Aceite de oliva virgen extra ecológico (500ml)",
     nutritionalInfo: {
-      calories: "884 kcal/100ml",
-      carbs: "0g",
-      protein: "0g",
-      fat: "100g",
-      saturated: "14g"
+      calories: "Variable según producto",
+      carbs: "Variable",
+      protein: "Variable",
+      fat: "Variable",
+      saturated: "Variable"
     },
     subscriptionAvailable: false,
     subscriptionFrequencies: []
-  },
-  {
-    id: 6,
-    name: "Mermelada de Paraguayo Artesanal",
-    slug: "mermelada-paraguayo",
-    description: "Mermelada artesanal elaborada con paraguayos de Alcarrás. Perfecta para desayunos.",
-    longDescription: "Elaborada con la misma fruta que utilizamos para nuestro paraguayo en almíbar, esta mermelada artesanal captura todo el sabor del verano en un frasco. Con un 65% de fruta y azúcar de caña, sin pectinas artificiales ni conservantes. El resultado es una mermelada de textura suave y sabor intenso que te transportará a los campos de Alcarrás con cada cucharada.",
-    price: 6.50,
-    priceSubscription: 5.80,
-    currency: "EUR",
-    image: "/images/mermelada-paraguayo.jpg",
-    category: "Conservas",
-    tags: ["Vegano", "Sin Gluten", "Artesanal", "Local"],
-    stock: 38,
-    weight: "350g",
-    ingredients: "Paraguayo (65%), azúcar de caña, zumo de limón",
-    nutritionalInfo: {
-      calories: "250 kcal/100g",
-      carbs: "62g",
-      protein: "0.4g",
-      fat: "0.1g",
-      fiber: "1.5g"
-    },
-    subscriptionAvailable: true,
-    subscriptionFrequencies: [
-      { value: "monthly", label: "Mensual", discount: 10 },
-      { value: "bimonthly", label: "Bimensual", discount: 8 }
-    ]
   }
 ];
 
@@ -181,10 +160,12 @@ export const tags = [
   "Artesanal",
   "Local",
   "Prensado en Frío",
-  "DOP",
+  "Ecológico",
+  "Premiado",
   "Alto en Polifenoles",
   "Versátil",
   "Regalo",
+  "Premium",
   "Degustación"
 ];
 
