@@ -35,7 +35,7 @@ const LaFamilia = () => {
             
             <div className="prose prose-lg max-w-none text-gray-700 space-y-6">
               <p>
-                Cuando nuestra familia plantó el primer olivo en las tierras de Lleida en 1819, 
+                Cuando nuestra familia plantó el primer árbol en las tierras de Lleida en 1819, 
                 no sabíamos que estábamos sembrando algo mucho más grande que un árbol. 
                 Estábamos plantando una tradición, un legado que atravesaría generaciones 
                 y que hoy, más de dos siglos después, sigue vivo en cada frasco que sale de nuestro obrador.
