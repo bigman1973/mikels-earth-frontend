@@ -190,10 +190,10 @@ const LaFamilia = () => {
                 Jordi Giró - Séptima Generación
               </h2>
               <p className="text-xl mb-8 text-white">
-                "Soy el guardián de un legado de más de 200 años. Cada día que entro 
-                al obrador, siento el peso de la responsabilidad y el orgullo de continuar 
-                lo que mis ancestros comenzaron. Mi misión es simple: honrar su trabajo 
-                haciendo productos que ellos estarían orgullosos de probar."
+                "Soy el guardi\u00e1n de un legado de m\u00e1s de 200 a\u00f1os. Cada d\u00eda que voy 
+                al campo, siento el peso de la responsabilidad y el orgullo de continuar 
+                lo que mis ancestros comenzaron. Mi misi\u00f3n es simple: honrar su trabajo 
+                haciendo productos que ellos estar\u00edan orgullosos de probar."
               </p>
               <p className="text-lg text-white">
                 Desde Alcarràs y Córdoba, comparto nuestra historia con el mundo. 
