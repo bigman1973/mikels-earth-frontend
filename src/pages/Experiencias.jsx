@@ -95,7 +95,7 @@ const Experiencias = () => {
               {
                 icon: <Users className="text-secondary" size={48} />,
                 title: "Visitas al Obrador",
-                description: "Descubre cómo elaboramos nuestros productos artesanales. Ver, tocar, oler... una experiencia sensorial completa."
+                description: "Descubre c\u00f3mo puedes hacer tu propio producto artesanal."
               },
               {
                 icon: <Heart className="text-secondary" size={48} />,
