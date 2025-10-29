@@ -201,29 +201,58 @@ const LaFamilia = () => {
       {/* Jordi - La Cara Actual */}
       <section className="py-16" style={{backgroundColor: 'var(--mikels-red)'}}>
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-            >
-              <h2 className="text-4xl font-bold mb-6" style={{color: 'var(--mikels-green)'}}>
-                Jordi Giró - Séptima Generación
-              </h2>
-              <p className="text-xl mb-8 text-white">
-                "Soy el guardián de un legado de más de 200 años. Cada día que voy 
-                al campo, siento el peso de la responsabilidad y el orgullo de continuar 
-                lo que mis ancestros comenzaron. Mi misión es simple: honrar su trabajo 
-                haciendo productos que ellos estarían orgullosos de probar."
-              </p>
-              <p className="text-lg text-white">
-                Desde Alcarràs y Córdoba, comparto nuestra historia con el mundo. 
-                Porque creo que en un mundo de productos industriales y sin alma, 
-                la gente merece saber que todavía existen familias como la nuestra, 
-                que hacen las cosas bien, con tiempo, con amor, con tradición.
-              </p>
-            </motion.div>
+          <div className="max-w-6xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              {/* Imagen de Jordi */}
+              <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
+                className="order-2 md:order-1"
+              >
+                <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+                  <img 
+                    src="/images/jordi-mas.jpg" 
+                    alt="Jordi Giró en el Mas" 
+                    className="w-full h-auto object-cover"
+                  />
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-6">
+                    <p className="text-white text-sm italic">
+                      Jordi Giró en el mas familiar - "Mas del Quelet"
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Texto */}
+              <motion.div
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
+                className="order-1 md:order-2"
+              >
+                <h2 className="text-4xl md:text-5xl font-bold mb-6" style={{color: 'var(--mikels-green)'}}>
+                  Jordi Giró
+                </h2>
+                <p className="text-2xl font-script mb-6 text-white">
+                  Séptima Generación
+                </p>
+                <p className="text-xl mb-6 text-white leading-relaxed">
+                  "Soy el guardián de un legado de más de 200 años. Cada día que voy 
+                  al campo, siento el peso de la responsabilidad y el orgullo de continuar 
+                  lo que mis ancestros comenzaron. Mi misión es simple: honrar su trabajo 
+                  haciendo productos que ellos estarían orgullosos de probar."
+                </p>
+                <p className="text-lg text-white/90 leading-relaxed">
+                  Desde Alcarràs y Córdoba, comparto nuestra historia con el mundo. 
+                  Porque creo que en un mundo de productos industriales y sin alma, 
+                  la gente merece saber que todavía existen familias como la nuestra, 
+                  que hacen las cosas bien, con tiempo, con amor, con tradición.
+                </p>
+              </motion.div>
+            </div>
           </div>
         </div>
       </section>
