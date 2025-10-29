@@ -7,8 +7,18 @@ const Home = () => {
   return (
     <div className="bg-white">
       {/* Hero Section - Inmersivo */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-primary/5 via-white to-accent/10">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiMzZDI4MTciIGZpbGwtb3BhY2l0eT0iMC4wMyI+PHBhdGggZD0iTTM2IDE0YzMuMzE0IDAgNi0yLjY4NiA2LTZzLTIuNjg2LTYtNi02LTYgMi42ODYtNiA2IDIuNjg2IDYgNiA2em0wIDJjLTQuNDE4IDAtOC0zLjU4Mi04LThzMy41ODItOCA4LTggOCAzLjU4MiA4IDgtMy41ODIgOC04IDh6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-50"></div>
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Imagen de fondo con olivos */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: 'url(/images/hero-olivos-background.jpeg)',
+            filter: 'grayscale(100%)'
+          }}
+        >
+          {/* Overlay oscuro para mejorar legibilidad */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/50"></div>
+        </div>
         
         <div className="container mx-auto px-4 py-20 relative z-10">
           <div className="max-w-5xl mx-auto text-center">
@@ -17,14 +27,14 @@ const Home = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <h1 className="text-6xl md:text-8xl font-script text-primary mb-6 leading-tight">
+              <h1 className="text-6xl md:text-8xl font-script text-white mb-6 leading-tight drop-shadow-2xl">
                 Más de 200 Años<br />Cultivando Tradición
               </h1>
-              <p className="text-2xl md:text-3xl text-gray-700 mb-8 max-w-3xl mx-auto leading-relaxed">
+              <p className="text-2xl md:text-3xl text-white/95 mb-8 max-w-3xl mx-auto leading-relaxed drop-shadow-lg">
                 Desde 1819, siete generaciones han cuidado la misma tierra, 
                 guardado los mismos secretos, compartido la misma pasión.
               </p>
-              <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto">
+              <p className="text-xl text-white/90 mb-12 max-w-2xl mx-auto drop-shadow-lg">
                 No somos una marca. Somos una familia de Lleida que hace las cosas 
                 como se hacían antes: con tiempo, con manos, con alma.
               </p>
