@@ -196,13 +196,13 @@ const Home = () => {
                   name: "Aceite Temprano",
                   tagline: "Para Paladares Valientes",
                   description: "Intenso, picante, con carácter. Elaborado con aceitunas verdes de cosecha temprana.",
-                  image: "/images/products/aceite-temprano-hero.jpg"
+                  image: "/images/aceite-temprano.jpg"
                 },
                 {
-                  name: "Pack Degustaci\u00f3n 360",
+                  name: "Pack Degustación",
                   tagline: "El Regalo Perfecto",
                   description: "Descubre toda nuestra historia en un pack cuidadosamente seleccionado.",
-                  image: "/images/products/pack-productos.jpg"
+                  image: "/images/pack-degustacion.jpg"
                 }
               ].map((product, index) => (
                 <motion.div
