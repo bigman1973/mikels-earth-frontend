@@ -102,12 +102,12 @@ const LaFamilia = () => {
               {
                 year: "1920",
                 title: "El Obrador Familiar",
-                text: "Construimos nuestro obrador, donde cada frasco se llena a mano. La tradición se encuentra con la dedicación para crear productos únicos."
+                text: "El obrador familiar se alzó con el mas, donde pasaban los veranos y transformaban los frutos a conserva para pasar el invierno."
               },
               {
                 year: "1975",
                 title: "El Descubrimiento del Paraguayo",
-                text: "El obrador familiar se alzó con el mas, donde pasaban los veranos y transformaban los frutos a conserva para pasar el invierno. La cuarta generación descubre el melocotón plano en Alcarràs."
+                text: "La sexta generación descubre el melocotón plano en Alcarràs. Su sabor único y su textura perfecta nos inspiran a crear nuestra primera conserva artesanal."
               },
               {
                 year: "2010",
