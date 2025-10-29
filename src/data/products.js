@@ -203,6 +203,34 @@ export const products = [
       { value: "monthly", label: "Mensual", discount: 8 }
     ],
     claims: ["60% de fruta", "3 veces más fruta que la industria", "Sin conservantes", "Sin colorantes", "Sin espesantes"]
+  },
+  {
+    id: 8,
+    name: "Aceite de Oliva Virgen Extra 5L (Caja de 3 unidades)",
+    slug: "aceite-5l-caja-3",
+    description: "Caja de 3 garrafas de 5 litros de aceite virgen extra de baja acidez. Variedades Picual, Hojiblanca y Arbequina. Ideal para uso cotidiano.",
+    longDescription: "Caja de 3 unidades de 5 litros de Aceite Virgen Extra de baja acidez, de las variedades Picual, Hojiblanca y Arbequina. Ideal para uso cotidiano en tu cocina. Nosotros lo utilizamos a diario para todo tipo de recetas. ¿Y tú te animas? Con la compra de 1 caja (3 unidades) no pagas el envío. Formato económico perfecto para familias y uso intensivo en cocina.",
+    price: 90.00,
+    priceSubscription: null,
+    originalPrice: 95.00,
+    currency: "EUR",
+    image: "/images/aceite-5l-garrafa.jpeg",
+    category: "Aceites",
+    tags: ["Vegano", "Sin Gluten", "Prensado en Frío", "Formato Familiar", "Uso Cotidiano"],
+    stock: 10,
+    weight: "15L (3 x 5L)",
+    ingredients: "Aceite de oliva virgen extra 100% (variedades Picual, Hojiblanca y Arbequina)",
+    nutritionalInfo: {
+      calories: "884 kcal/100ml",
+      carbs: "0g",
+      protein: "0g",
+      fat: "100g",
+      saturated: "14g"
+    },
+    subscriptionAvailable: false,
+    subscriptionFrequencies: [],
+    freeShipping: true,
+    discount: 5
   }
 ];
 
@@ -228,6 +256,8 @@ export const tags = [
   "Degustación",
   "Sin Filtrar",
   "Edición Limitada",
-  "Alto en Fruta"
+  "Alto en Fruta",
+  "Formato Familiar",
+  "Uso Cotidiano"
 ];
 
