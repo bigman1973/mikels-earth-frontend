@@ -172,6 +172,37 @@ export const products = [
     featured: true,
     freeShipping: true,
     limitedEdition: true
+  },
+  {
+    id: 7,
+    name: "Mermelada de Paraguayo Artesanal",
+    slug: "mermelada-paraguayo",
+    description: "Mermelada artesanal con 60% de fruta. 3 veces más fruta que la industria en general. Sin pectinas artificiales ni conservantes.",
+    longDescription: "Elaborada con la misma fruta que utilizamos para nuestro paraguayo en almíbar, esta mermelada artesanal captura todo el sabor del verano en un frasco. Con un 60% de fruta (el doble que las mermeladas industriales), sin pectinas artificiales ni conservantes. El resultado es una mermelada de textura suave y sabor intenso que te transportará a los campos de Alcarràs con cada cucharada. 3 veces más fruta que la industria en general.",
+    price: 6.50,
+    priceSubscription: 5.80,
+    currency: "EUR",
+    image: "/images/mermelada-paraguayo.jpg",
+    category: "Conservas",
+    tags: ["Vegano", "Sin Gluten", "Artesanal", "Local", "Alto en Fruta"],
+    stock: 30,
+    weight: "250g",
+    ingredients: "Paraguayo (60%), zumo de limón (0.5%)",
+    nutritionalInfo: {
+      calories: "177 kcal",
+      carbs: "46g",
+      protein: "1g",
+      fat: "0.1g",
+      fiber: "1.5g"
+    },
+    subscriptionAvailable: true,
+    subscriptionDiscount: 10,
+    subscriptionFrequencies: [
+      { value: "weekly", label: "Semanal", discount: 12 },
+      { value: "biweekly", label: "Quincenal", discount: 10 },
+      { value: "monthly", label: "Mensual", discount: 8 }
+    ],
+    claims: ["60% de fruta", "3 veces más fruta que la industria", "Sin conservantes", "Sin colorantes", "Sin espesantes"]
   }
 ];
 
@@ -196,6 +227,7 @@ export const tags = [
   "Premium",
   "Degustación",
   "Sin Filtrar",
-  "Edición Limitada"
+  "Edición Limitada",
+  "Alto en Fruta"
 ];
 
