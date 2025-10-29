@@ -147,10 +147,10 @@ export const products = [
   },
   {
     id: 6,
-    name: "Aceite de Oliva Virgen Extra Temprano 500ml sin filtrar (con estuche)",
-    slug: "aceite-temprano-estuche",
+    name: "Aceite de Oliva Virgen Extra Temprano 500ml sin filtrar",
+    slug: "aceite-temprano-sin-filtrar",
     description: "Aceite de oliva virgen extra sin filtrar, único en su categoría. Sabor extremadamente afrutado con aromas a hierba recién cortada.",
-    longDescription: "Nuestro aceite temprano sin filtrar es una edición limitada que captura la esencia más pura del olivo. Elaborado con aceitunas verdes de cosecha temprana, este aceite virgen extra sin filtrar es único en su categoría. Su sabor extremadamente afrutado, con intensos aromas a hierba recién cortada y su color verde intenso, lo convierten en una experiencia sensorial única. Ideal para tomar solo, acompañado con verduras, ensaladas... y darle el toque 'temprano' a tus platos. Presentado en elegante estuche, perfecto para regalo.",
+    longDescription: "Nuestro aceite temprano sin filtrar es una edición limitada que captura la esencia más pura del olivo. Elaborado con aceitunas verdes de cosecha temprana, este aceite virgen extra sin filtrar es único en su categoría. Su sabor extremadamente afrutado, con intensos aromas a hierba recién cortada y su color verde intenso, lo convierten en una experiencia sensorial única. Ideal para tomar solo, acompañado con verduras, ensaladas... y darle el toque 'temprano' a tus platos.",
     price: 14.90,
     priceSubscription: null,
     currency: "EUR",
