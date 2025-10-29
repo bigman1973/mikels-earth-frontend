@@ -101,13 +101,13 @@ const LaFamilia = () => {
               },
               {
                 year: "1920",
-                title: "El Descubrimiento del Paraguayo",
-                text: "El obrador familiar se alz\u00f3 con el mas, donde pasaban los veranos y transformaban los frutos a conserva para pasar el invierno. La cuarta generaci\u00f3n descubre el melocot\u00f3n plano en Alcarr\u00e0s."
+                title: "El Obrador Familiar",
+                text: "Construimos nuestro obrador, donde cada frasco se llena a mano. La tradición se encuentra con la dedicación para crear productos únicos."
               },
               {
                 year: "1975",
-                title: "El Obrador Familiar",
-                text: "La quinta generaci\u00f3n descubre el melocot\u00f3n plano en Alcarr\u00e0s. Construimos nuestro obrador, donde cada frasco se llena a mano. La tradici\u00f3n se encuentra con la dedicaci\u00f3n para crear productos \u00fanicos."
+                title: "El Descubrimiento del Paraguayo",
+                text: "El obrador familiar se alzó con el mas, donde pasaban los veranos y transformaban los frutos a conserva para pasar el invierno. La cuarta generación descubre el melocotón plano en Alcarràs."
               },
               {
                 year: "2010",
