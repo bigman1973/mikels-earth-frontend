@@ -5,8 +5,17 @@ const NuestraTierra = () => {
   return (
     <div className="bg-white">
       {/* Hero Section */}
-      <section className="relative h-[70vh] bg-gradient-to-b from-secondary/20 to-white flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiMzZDI4MTciIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDE0YzMuMzE0IDAgNi0yLjY4NiA2LTZzLTIuNjg2LTYtNi02LTYgMi42ODYtNiA2IDIuNjg2IDYgNiA2em0wIDJjLTQuNDE4IDAtOC0zLjU4Mi04LThzMy41ODItOCA4LTggOCAzLjU4MiA4IDgtMy41ODIgOC04IDh6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-30"></div>
+      <section className="relative h-[70vh] flex items-center justify-center overflow-hidden">
+        {/* Imagen de fondo de la finca La Moncloa */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: 'url(/images/finca-moncloa-hero.jpg)'
+          }}
+        >
+          {/* Overlay para mejorar legibilidad */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/40"></div>
+        </div>
         
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -15,12 +24,12 @@ const NuestraTierra = () => {
           className="text-center px-4 relative z-10"
         >
           <div className="flex items-center justify-center gap-3 mb-4">
-            <MapPin className="text-secondary" size={40} />
-            <h1 className="text-5xl md:text-7xl font-script text-primary">
+            <MapPin className="text-white drop-shadow-lg" size={40} />
+            <h1 className="text-5xl md:text-7xl font-script text-white drop-shadow-2xl">
               Nuestra Tierra
             </h1>
           </div>
-          <p className="text-xl md:text-2xl text-primary/70 max-w-3xl mx-auto">
+          <p className="text-xl md:text-2xl text-white/95 max-w-3xl mx-auto drop-shadow-lg">
             Alcarràs y Córdoba: donde el terroir se convierte en sabor
           </p>
         </motion.div>
