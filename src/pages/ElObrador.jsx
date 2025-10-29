@@ -5,18 +5,32 @@ const ElObrador = () => {
   return (
     <div className="bg-white">
       {/* Hero Section */}
-      <section className="relative h-[70vh] bg-gradient-to-b from-primary/10 to-white flex items-center justify-center">
+      <section className="relative h-[70vh] flex items-center justify-center overflow-hidden">
+        {/* Imagen histórica del obrador 1975 */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: 'url(/images/obrador-1975-hero.jpg)'
+          }}
+        >
+          {/* Overlay para mejorar legibilidad */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/60"></div>
+        </div>
+        
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="text-center px-4"
+          className="text-center px-4 relative z-10"
         >
-          <h1 className="text-5xl md:text-7xl font-script text-primary mb-6">
+          <h1 className="text-5xl md:text-7xl font-script text-white mb-6 drop-shadow-2xl">
             El Obrador
           </h1>
-          <p className="text-xl md:text-2xl text-primary/70 max-w-3xl mx-auto">
+          <p className="text-xl md:text-2xl text-white/95 max-w-3xl mx-auto drop-shadow-lg mb-8">
             Donde el tiempo se detiene y la artesanía cobra vida
+          </p>
+          <p className="text-sm md:text-base text-white/80 italic drop-shadow-md">
+            El obrador en 1975
           </p>
         </motion.div>
       </section>
