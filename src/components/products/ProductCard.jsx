@@ -18,8 +18,24 @@ const ProductCard = ({ product }) => {
       <Link to={`/producto/${product.slug}`} className="block">
         {/* Image container */}
         <div className="relative h-64 bg-gray-200 overflow-hidden">
-          {/* Placeholder para imagen */}
-          <div className="absolute inset-0 flex items-center justify-center text-gray-400 bg-gradient-to-br from-gray-100 to-gray-200">
+          {/* Imagen del producto */}
+          {(product.image || product.images?.[0]) ? (
+            <img 
+              src={product.images?.[0] || product.image} 
+              alt={product.name}
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+              onError={(e) => {
+                e.target.style.display = 'none';
+                e.target.nextSibling.style.display = 'flex';
+              }}
+            />
+          ) : null}
+          
+          {/* Placeholder para imagen (fallback) */}
+          <div 
+            className="absolute inset-0 flex items-center justify-center text-gray-400 bg-gradient-to-br from-gray-100 to-gray-200"
+            style={{ display: (product.image || product.images?.[0]) ? 'none' : 'flex' }}
+          >
             <div className="text-center">
               <Tag className="w-16 h-16 mx-auto mb-2 opacity-30" />
               <p className="text-sm">{product.name}</p>
