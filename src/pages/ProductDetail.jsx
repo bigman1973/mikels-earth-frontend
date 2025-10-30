@@ -34,7 +34,16 @@ const ProductDetail = () => {
     );
   }
 
-  const currentPrice = purchaseType === 'subscription' ? product.priceSubscription : product.price;
+  // Calculate price with volume discount
+  const hasVolumeDiscount = product.volumeDiscount && quantity >= product.volumeDiscount.minQuantity && purchaseType === 'one-time';
+  const volumeDiscountedPrice = hasVolumeDiscount 
+    ? product.price * (1 - product.volumeDiscount.discount / 100)
+    : product.price;
+  
+  const currentPrice = purchaseType === 'subscription' 
+    ? product.priceSubscription 
+    : volumeDiscountedPrice;
+  
   const selectedFrequency = product.subscriptionFrequencies?.find(f => f.value === subscriptionFrequency);
 
   const handleAddToCart = () => {
@@ -187,6 +196,16 @@ const ProductDetail = () => {
                 {purchaseType === 'subscription' && selectedFrequency && (
                   <div className="text-sm text-gray-600">
                     Ahorras {selectedFrequency.discount}% con suscripción {selectedFrequency.label.toLowerCase()}
+                  </div>
+                )}
+                {hasVolumeDiscount && (
+                  <div className="text-sm text-green-600 font-semibold">
+                    ¡Descuento por volumen aplicado! Ahorras {product.volumeDiscount.discount}% ({quantity} unidades)
+                  </div>
+                )}
+                {product.volumeDiscount && !hasVolumeDiscount && purchaseType === 'one-time' && (
+                  <div className="text-sm text-gray-600">
+                    Compra {product.volumeDiscount.minQuantity} o más unidades y ahorra {product.volumeDiscount.discount}%
                   </div>
                 )}
                 {purchaseType === 'one-time' && product.subscriptionAvailable && (
@@ -485,6 +504,30 @@ const ProductDetail = () => {
                   )}
                 </div>
               </div>
+              )}
+
+              {/* Addons section */}
+              {product.addons && product.addons.length > 0 && (
+                <div className="mb-6">
+                  <h3 className="text-sm font-semibold text-primary mb-3">Complementos opcionales</h3>
+                  <div className="space-y-3">
+                    {product.addons.map((addon, idx) => (
+                      <div key={idx} className="flex items-center gap-3 p-3 border-2 border-gray-200 rounded-lg hover:border-primary transition-all">
+                        <input
+                          type="checkbox"
+                          id={`addon-${idx}`}
+                          className="w-5 h-5 text-primary focus:ring-primary"
+                        />
+                        <label htmlFor={`addon-${idx}`} className="flex-1 cursor-pointer">
+                          <span className="text-sm font-medium text-gray-700">{addon.label}</span>
+                          {addon.variantId && (
+                            <span className="text-xs text-gray-500 block">Modelo: {addon.variantId.replace('-', ' ')}</span>
+                          )}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               )}
 
               {/* Action buttons */}

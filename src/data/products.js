@@ -96,7 +96,7 @@ export const products = [
     description: "Aceite de oliva virgen extra ecológico premiado. Intenso, robusto y con carácter.",
     longDescription: "Nuestro aceite ecológico es para los amantes de los sabores intensos. Con un perfil más robusto y un toque picante característico, este aceite es perfecto para guisos, carnes y platos que requieren un aceite con personalidad. Rico en polifenoles y antioxidantes naturales, es uno de los aceites más estables y saludables del mercado. Premiado por su calidad excepcional.",
     price: 13.50,
-    priceSubscription: 12.00,
+    priceSubscription: 12.15,
     currency: "EUR",
     image: "/images/aceite-ecologico.jpg",
     category: "Aceites",
@@ -105,17 +105,37 @@ export const products = [
     weight: "500ml",
     ingredients: "Aceite de oliva virgen extra ecológico 100%",
     nutritionalInfo: {
-      calories: "884 kcal/100ml",
-      carbs: "0g",
-      protein: "0g",
-      fat: "100g",
-      saturated: "14g"
+      ingredientes: "Aceite de oliva virgen extra ecológico 100%",
+      coupage: "Selección ecológica premium",
+      perfilSabor: {
+        frutado: "Intenso",
+        amargo: "Intenso",
+        picante: "Intenso"
+      },
+      idealPara: [
+        "Guisos y estofados",
+        "Carnes a la brasa",
+        "Tostadas y pan",
+        "Platos con personalidad"
+      ]
     },
     subscriptionAvailable: true,
-    subscriptionDiscount: 11,
+    subscriptionDiscount: 10,
     subscriptionFrequencies: [
-      { value: "monthly", label: "Mensual", discount: 11 },
-      { value: "bimonthly", label: "Bimensual", discount: 9 }
+      { value: "monthly", label: "Mensual", discount: 10 },
+      { value: "quarterly", label: "Trimestral", discount: 8 },
+      { value: "biannual", label: "Semestral", discount: 7 }
+    ],
+    volumeDiscount: {
+      minQuantity: 12,
+      discount: 10
+    },
+    addons: [
+      {
+        productSlug: "estuche-regalo",
+        variantId: "extra-virgin",
+        label: "Añadir Estuche Regalo Premium"
+      }
     ],
     featured: true,
     award: "Premiado"
