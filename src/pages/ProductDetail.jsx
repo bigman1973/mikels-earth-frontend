@@ -15,6 +15,8 @@ const ProductDetail = () => {
   const [purchaseType, setPurchaseType] = useState('one-time');
   const [subscriptionFrequency, setSubscriptionFrequency] = useState(null);
   const [preferredDeliveryDay, setPreferredDeliveryDay] = useState('');
+  const [preferredTimeSlot, setPreferredTimeSlot] = useState('');
+  const [preferredDayOfMonth, setPreferredDayOfMonth] = useState('');
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [variantQuantities, setVariantQuantities] = useState({});
@@ -288,23 +290,57 @@ const ProductDetail = () => {
                     ))}
                   </div>
                   
-                  {/* Preferred delivery day selector */}
-                  <div className="mt-4">
-                    <label className="block text-sm font-semibold text-primary mb-3">
-                      Día preferible de envío
-                    </label>
-                    <select
-                      value={preferredDeliveryDay}
-                      onChange={(e) => setPreferredDeliveryDay(e.target.value)}
-                      className="w-full p-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary transition-all"
-                    >
-                      <option value="">Selecciona un día</option>
-                      <option value="monday">Lunes</option>
-                      <option value="tuesday">Martes</option>
-                      <option value="wednesday">Miércoles</option>
-                      <option value="thursday">Jueves</option>
-                      <option value="friday">Viernes</option>
-                    </select>
+                  {/* Preferred delivery options */}
+                  <div className="mt-4 space-y-4">
+                    <div>
+                      <label className="block text-sm font-semibold text-primary mb-3">
+                        Día de la semana preferible
+                      </label>
+                      <select
+                        value={preferredDeliveryDay}
+                        onChange={(e) => setPreferredDeliveryDay(e.target.value)}
+                        className="w-full p-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary transition-all"
+                      >
+                        <option value="">Selecciona un día</option>
+                        <option value="monday">Lunes</option>
+                        <option value="tuesday">Martes</option>
+                        <option value="wednesday">Miércoles</option>
+                        <option value="thursday">Jueves</option>
+                        <option value="friday">Viernes</option>
+                      </select>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-semibold text-primary mb-3">
+                        Franja horaria preferible
+                      </label>
+                      <select
+                        value={preferredTimeSlot}
+                        onChange={(e) => setPreferredTimeSlot(e.target.value)}
+                        className="w-full p-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary transition-all"
+                      >
+                        <option value="">Selecciona una franja</option>
+                        <option value="morning">Mañana (9:00 - 14:00)</option>
+                        <option value="afternoon">Tarde (14:00 - 18:00)</option>
+                        <option value="evening">Noche (18:00 - 21:00)</option>
+                      </select>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-semibold text-primary mb-3">
+                        Día del mes preferible
+                      </label>
+                      <select
+                        value={preferredDayOfMonth}
+                        onChange={(e) => setPreferredDayOfMonth(e.target.value)}
+                        className="w-full p-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary transition-all"
+                      >
+                        <option value="">Selecciona un día</option>
+                        {Array.from({ length: 31 }, (_, i) => i + 1).map(day => (
+                          <option key={day} value={day}>{day}</option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
                   
                   {/* Subscription terms notice */}
