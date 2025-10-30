@@ -21,7 +21,7 @@ const ProductCard = ({ product }) => {
           {/* Imagen del producto */}
           {(product.image || product.images?.[0]) ? (
             <img 
-              src={product.images?.[0] || product.image} 
+              src={product.image || product.images?.[0]} 
               alt={product.name}
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               onError={(e) => {

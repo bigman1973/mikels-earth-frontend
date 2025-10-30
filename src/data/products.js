@@ -241,7 +241,7 @@ export const products = [
     price: 5.00,
     priceSubscription: null,
     currency: "EUR",
-    image: "/images/estuche-extra-1.jpg",
+    image: "/images/estuche-eco-1.jpg",
     images: [
       "/images/estuche-extra-1.jpg",
       "/images/estuche-extra-2.jpg",
