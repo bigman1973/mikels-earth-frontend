@@ -42,6 +42,20 @@ const ProductCard = ({ product }) => {
             </div>
           </div>
           
+          {/* Badges personalizados del producto */}
+          {product.badges && product.badges.length > 0 && (
+            <div className="absolute top-3 left-3 flex flex-col gap-2">
+              {product.badges.map((badge, index) => (
+                <div 
+                  key={index}
+                  className={`${badge.color} text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg uppercase tracking-wide`}
+                >
+                  {badge.text}
+                </div>
+              ))}
+            </div>
+          )}
+          
           {/* Badge de suscripción disponible */}
           {hasSubscription && (
             <div className="absolute top-3 right-3 bg-secondary text-primary px-3 py-1 rounded-full text-xs font-semibold shadow-md">

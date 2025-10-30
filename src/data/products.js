@@ -237,7 +237,11 @@ export const products = [
     subscriptionFrequencies: [],
     freeShipping: true,
     discount: 5,
-    claims: ["Solo 6€/litro", "Envío gratis", "15 litros en total", "Formato ahorro", "De nuestros olivares de Córdoba"]
+    claims: ["Solo 6€/litro", "Envío gratis", "15 litros en total", "Formato ahorro", "De nuestros olivares de Córdoba"],
+    badges: [
+      { text: "Más Vendido", color: "bg-red-600" },
+      { text: "Directo del Campo", color: "bg-green-600" }
+    ]
   },
   {
     id: 9,
