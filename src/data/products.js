@@ -119,8 +119,8 @@ export const products = [
     id: 4,
     name: "Aceite de Oliva Virgen Extra Ecológico Mikel's Fruit",
     slug: "aceite-oliva-ecologico",
-    description: "Aceite de oliva virgen extra ecológico premiado. Intenso, robusto y con carácter.",
-    longDescription: "Nuestro aceite ecológico es para los amantes de los sabores intensos. Con un perfil más robusto y un toque picante característico, este aceite es perfecto para guisos, carnes y platos que requieren un aceite con personalidad. Rico en polifenoles y antioxidantes naturales, es uno de los aceites más estables y saludables del mercado. Premiado por su calidad excepcional.",
+    description: "Medalla de Oro en Japón & Nueva York. Coupage ecológico Picual, Hojiblanca y Arbequina. Reconocido internacionalmente por su intensidad excepcional y equilibrio perfecto.",
+    longDescription: "Medalla de Oro en Japón & Nueva York.\n\nCoupage de variedades Picual, Hojiblanca y Arbequina de cultivo ecológico. Reconocido internacionalmente por su intensidad excepcional y equilibrio perfecto.\n\nEl cultivo orgánico concentra sabores más potentes y complejos que el convencional. El resultado: un aceite premiado que destaca en cada cata.\n\nIdeal para quienes buscan un aceite de autor, con personalidad y reconocimiento mundial.\n\nVegano, Prensado en Frío, Sin Gluten, Versátil.",
     price: 13.50,
     priceSubscription: 12.15,
     currency: "EUR",
@@ -171,7 +171,11 @@ export const products = [
       }
     ],
     featured: true,
-    award: "Premiado"
+    award: "Medalla de Oro - Japón & Nueva York",
+    badges: [
+      { text: "🏅 MEDALLA DE ORO", color: "bg-gradient-to-r from-yellow-500 to-yellow-600" },
+      { text: "PREMIADO", color: "bg-gradient-to-r from-purple-600 to-purple-700" }
+    ]
   },
   {
     id: 5,
