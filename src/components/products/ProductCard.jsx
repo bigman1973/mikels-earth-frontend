@@ -121,8 +121,8 @@ const ProductCard = ({ product }) => {
             </button>
           </div>
 
-          {/* Stock indicator */}
-          {product.stock < 10 && (
+          {/* Stock indicator - oculto temporalmente */}
+          {false && product.stock < 10 && (
             <div className="mt-3 text-xs text-orange-600 font-semibold">
               ¡Solo quedan {product.stock} unidades!
             </div>

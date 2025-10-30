@@ -531,7 +531,8 @@ const ProductDetail = () => {
                   >
                     +
                   </button>
-                  {product.stock < 10 && (
+                  {/* Stock oculto temporalmente */}
+                  {false && product.stock < 10 && (
                     <span className="text-sm text-orange-600 font-semibold ml-2">
                       Solo quedan {product.stock}
                     </span>
