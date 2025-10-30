@@ -47,17 +47,26 @@ export const CartProvider = ({ children }) => {
         return newCart;
       } else {
         // Si es nuevo, añadirlo al carrito
-        const price = purchaseType === 'subscription' ? product.priceSubscription : product.price;
+        let price = purchaseType === 'subscription' ? product.priceSubscription : product.price;
+        
+        // Apply volume discount if applicable
+        const hasVolumeDiscount = product.volumeDiscount && quantity >= product.volumeDiscount.minQuantity && purchaseType === 'one-time';
+        if (hasVolumeDiscount) {
+          price = product.price * (1 - product.volumeDiscount.discount / 100);
+        }
+        
         return [...prevCart, {
           id: product.id,
           name: product.name,
           slug: product.slug,
           image: product.image,
           price: price,
+          originalPrice: product.price,
           quantity: quantity,
           purchaseType: purchaseType,
           subscriptionFrequency: subscriptionFrequency,
-          weight: product.weight
+          weight: product.weight,
+          volumeDiscount: hasVolumeDiscount ? product.volumeDiscount.discount : null
         }];
       }
     });

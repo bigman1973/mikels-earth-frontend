@@ -17,6 +17,7 @@ const ProductDetail = () => {
   const [preferredDeliveryDay, setPreferredDeliveryDay] = useState('');
   const [preferredTimeSlot, setPreferredTimeSlot] = useState('');
   const [preferredDayOfMonth, setPreferredDayOfMonth] = useState('');
+  const [selectedAddons, setSelectedAddons] = useState({});
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [variantQuantities, setVariantQuantities] = useState({});
@@ -67,6 +68,19 @@ const ProductDetail = () => {
         : product;
       addToCart(productWithVariant, quantity, purchaseType, subscriptionFrequency);
     }
+    
+    // Add selected addons to cart
+    Object.entries(selectedAddons).forEach(([addonSlug, addonData]) => {
+      if (addonData.selected && addonData.quantity > 0) {
+        const addonProduct = products.find(p => p.slug === addonSlug);
+        if (addonProduct) {
+          const addonWithVariant = addonData.variantId
+            ? { ...addonProduct, selectedVariant: addonData.variantId }
+            : addonProduct;
+          addToCart(addonWithVariant, addonData.quantity, 'one-time', null);
+        }
+      }
+    });
   };
 
   const handleBuyNow = () => {
@@ -511,21 +525,107 @@ const ProductDetail = () => {
                 <div className="mb-6">
                   <h3 className="text-sm font-semibold text-primary mb-3">Complementos opcionales</h3>
                   <div className="space-y-3">
-                    {product.addons.map((addon, idx) => (
-                      <div key={idx} className="flex items-center gap-3 p-3 border-2 border-gray-200 rounded-lg hover:border-primary transition-all">
-                        <input
-                          type="checkbox"
-                          id={`addon-${idx}`}
-                          className="w-5 h-5 text-primary focus:ring-primary"
-                        />
-                        <label htmlFor={`addon-${idx}`} className="flex-1 cursor-pointer">
-                          <span className="text-sm font-medium text-gray-700">{addon.label}</span>
-                          {addon.variantId && (
-                            <span className="text-xs text-gray-500 block">Modelo: {addon.variantId.replace('-', ' ')}</span>
+                    {product.addons.map((addon, idx) => {
+                      const addonProduct = products.find(p => p.slug === addon.productSlug);
+                      const isSelected = selectedAddons[addon.productSlug]?.selected || false;
+                      const addonQty = selectedAddons[addon.productSlug]?.quantity || 1;
+                      
+                      return (
+                        <div key={idx} className={`p-4 border-2 rounded-lg transition-all ${
+                          isSelected ? 'border-primary bg-primary/5' : 'border-gray-200'
+                        }`}>
+                          <div className="flex items-center gap-3 mb-3">
+                            <input
+                              type="checkbox"
+                              id={`addon-${idx}`}
+                              checked={isSelected}
+                              onChange={(e) => {
+                                setSelectedAddons(prev => ({
+                                  ...prev,
+                                  [addon.productSlug]: {
+                                    selected: e.target.checked,
+                                    quantity: addonQty,
+                                    variantId: addon.variantId
+                                  }
+                                }));
+                              }}
+                              className="w-5 h-5 text-primary focus:ring-primary"
+                            />
+                            <label htmlFor={`addon-${idx}`} className="flex-1 cursor-pointer">
+                              <div className="flex items-center justify-between">
+                                <div>
+                                  <span className="text-sm font-medium text-gray-700">{addon.label}</span>
+                                  {addon.variantId && (
+                                    <span className="text-xs text-gray-500 block">Modelo: {addon.variantId.replace('-', ' ')}</span>
+                                  )}
+                                </div>
+                                {addonProduct && (
+                                  <span className="text-sm font-bold text-primary">5.00€</span>
+                                )}
+                              </div>
+                            </label>
+                          </div>
+                          
+                          {isSelected && (
+                            <div className="ml-8">
+                              <label className="block text-xs font-semibold text-gray-600 mb-2">
+                                Cantidad de estuches
+                              </label>
+                              <div className="flex items-center gap-2">
+                                <button
+                                  onClick={() => {
+                                    const newQty = Math.max(1, addonQty - 1);
+                                    setSelectedAddons(prev => ({
+                                      ...prev,
+                                      [addon.productSlug]: {
+                                        ...prev[addon.productSlug],
+                                        quantity: newQty
+                                      }
+                                    }));
+                                  }}
+                                  className="w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded font-bold transition-colors"
+                                >
+                                  −
+                                </button>
+                                <input
+                                  type="number"
+                                  value={addonQty}
+                                  onChange={(e) => {
+                                    const newQty = Math.max(1, parseInt(e.target.value) || 1);
+                                    setSelectedAddons(prev => ({
+                                      ...prev,
+                                      [addon.productSlug]: {
+                                        ...prev[addon.productSlug],
+                                        quantity: newQty
+                                      }
+                                    }));
+                                  }}
+                                  className="w-16 text-center border-2 border-gray-200 rounded py-1 font-semibold"
+                                />
+                                <button
+                                  onClick={() => {
+                                    const newQty = addonQty + 1;
+                                    setSelectedAddons(prev => ({
+                                      ...prev,
+                                      [addon.productSlug]: {
+                                        ...prev[addon.productSlug],
+                                        quantity: newQty
+                                      }
+                                    }));
+                                  }}
+                                  className="w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded font-bold transition-colors"
+                                >
+                                  +
+                                </button>
+                                <span className="text-xs text-gray-600 ml-2">
+                                  Total: {(5 * addonQty).toFixed(2)}€
+                                </span>
+                              </div>
+                            </div>
                           )}
-                        </label>
-                      </div>
-                    ))}
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               )}
