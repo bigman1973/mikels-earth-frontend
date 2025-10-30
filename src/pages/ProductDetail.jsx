@@ -12,9 +12,8 @@ const ProductDetail = () => {
   
   const product = products.find(p => p.slug === slug);
   
-  // Determinar cantidad inicial basada en si hay mínimo de volumen para suscripción
-  const initialQuantity = product?.volumeDiscount?.minQuantity || 1;
-  const [quantity, setQuantity] = useState(initialQuantity);
+  // Cantidad inicial siempre es 1
+  const [quantity, setQuantity] = useState(1);
   const [purchaseType, setPurchaseType] = useState('one-time');
   const [subscriptionFrequency, setSubscriptionFrequency] = useState(null);
   const [preferredDeliveryDay, setPreferredDeliveryDay] = useState('');
@@ -242,6 +241,10 @@ const ProductDetail = () => {
                     onClick={() => {
                       setPurchaseType('one-time');
                       setSubscriptionFrequency(null);
+                      // Resetear cantidad a 1 cuando se selecciona compra única
+                      if (product.volumeDiscount?.minQuantity && quantity >= product.volumeDiscount.minQuantity) {
+                        setQuantity(1);
+                      }
                     }}
                     className={`p-4 rounded-lg border-2 transition-all ${
                       purchaseType === 'one-time'
