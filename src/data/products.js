@@ -202,10 +202,10 @@ export const products = [
     id: 6,
     name: "Aceite de Oliva Virgen Extra Temprano 500ml sin filtrar",
     slug: "aceite-temprano-sin-filtrar",
-    description: "Aceite de oliva virgen extra sin filtrar, único en su categoría. Sabor extremadamente afrutado con aromas a hierba recién cortada.",
-    longDescription: "Nuestro aceite temprano sin filtrar es una edición limitada que captura la esencia más pura del olivo. Elaborado con aceitunas verdes de cosecha temprana, este aceite virgen extra sin filtrar es único en su categoría. Su sabor extremadamente afrutado, con intensos aromas a hierba recién cortada y su color verde intenso, lo convierten en una experiencia sensorial única. Ideal para tomar solo, acompañado con verduras, ensaladas... y darle el toque 'temprano' a tus platos.",
+    description: "Aceitunas recolectadas en su momento verde. Sin filtrar. Verde intenso, ligeramente picante, con ese amargor noble que indica frescura y calidad.",
+    longDescription: "**ACEITE DE OLIVA VIRGEN EXTRA \"TEMPRANO\"**\n\nAceitunas recolectadas en su momento verde, cuando concentran hasta tres veces más polifenoles y antioxidantes.\n\n**Sin filtrar.** Conserva todos sus compuestos beneficiosos: alto contenido en polifenoles, vitamina E y antioxidantes naturales.\n\nVerde intenso, ligeramente picante, con ese amargor noble que indica frescura y calidad. Prensado en frío.\n\n**Ideal en crudo:** ensaladas, tostadas, carpaccios.\n\nUn aceite que no se disculpa por ser auténtico.",
     price: 14.90,
-    priceSubscription: null,
+    priceSubscription: 13.41,
     currency: "EUR",
     image: "/images/aceite-temprano-estuche.jpeg",
     category: "Aceites",
@@ -214,14 +214,39 @@ export const products = [
     weight: "500ml",
     ingredients: "Aceite de oliva virgen extra 100% sin filtrar",
     nutritionalInfo: {
-      calories: "884 kcal/100ml",
-      carbs: "0g",
-      protein: "0g",
-      fat: "100g",
-      saturated: "14g"
+      ingredientes: "Aceite de oliva virgen extra 100% sin filtrar",
+      coupage: "Aceitunas verdes de cosecha temprana",
+      perfilSabor: {
+        frutado: "Extremadamente Intenso",
+        amargo: "Noble",
+        picante: "Ligero"
+      },
+      notasCata: "Hierba recién cortada, verde intenso, frescura extrema",
+      idealPara: [
+        "Ensaladas en crudo",
+        "Tostadas y pan",
+        "Carpaccios",
+        "Platos que requieren frescura"
+      ]
     },
-    subscriptionAvailable: false,
-    subscriptionFrequencies: [],
+    subscriptionAvailable: true,
+    subscriptionDiscount: 10,
+    subscriptionFrequencies: [
+      { value: "monthly", label: "Mensual", discount: 10 },
+      { value: "quarterly", label: "Trimestral", discount: 8 },
+      { value: "biannual", label: "Semestral", discount: 7 }
+    ],
+    volumeDiscount: {
+      minQuantity: 12,
+      discount: 10
+    },
+    addons: [
+      {
+        productSlug: "estuche-regalo",
+        variantId: "temprano",
+        label: "Añadir Estuche Regalo Premium Temprano"
+      }
+    ],
     featured: true,
     freeShipping: true,
     limitedEdition: true
