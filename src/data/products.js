@@ -197,19 +197,25 @@ export const products = [
   },
   {
     id: 5,
-    name: "Pack Mermelada & Aceites Premium",
+    name: "Pack Degustación Premium",
     slug: "pack-mermelada-aceites",
     description: "Pack premium con paraguayo en almíbar y nuestros dos aceites de oliva virgen extra.",
-    longDescription: "¿Quieres probar lo mejor de Mikel's Earth? Este pack premium incluye nuestro paraguayo en almíbar estrella y nuestros dos aceites de oliva virgen extra: el equilibrado y el ecológico premiado. Una combinación perfecta que te permitirá descubrir los sabores únicos de nuestros productos artesanales. También es un regalo perfecto para los amantes de la gastronomía de calidad.",
+    longDescription: "¿Quieres probar lo mejor de Mikel's Earth? Este pack premium incluye mermelada de paraguayo artesanal (250g) y 4 botellas de aceite de oliva virgen extra (140ml cada una) para que descubras nuestros diferentes perfiles de sabor. Una combinación perfecta que te permitirá descubrir los sabores únicos de nuestros productos artesanales. También es un regalo perfecto para los amantes de la gastronomía de calidad.",
     price: 28.00,
-    priceSubscription: null,
+    priceSubscription: 25.20,
     currency: "EUR",
-    image: "/images/pack-productos.jpg",
+    image: "/images/pack-degustacion-principal.jpeg",
+    images: [
+      "/images/pack-degustacion-principal.jpeg",
+      "/images/pack-degustacion-abierto.jpeg",
+      "/images/pack-degustacion-caja.png",
+      "/images/pack-degustacion-ceo.png"
+    ],
     category: "Packs",
     tags: ["Vegano", "Sin Gluten", "Regalo", "Premium", "Degustación"],
     stock: 20,
-    weight: "1720g (720g + 500ml + 500ml)",
-    ingredients: "Paraguayo en almíbar (720g), Aceite de oliva virgen extra equilibrado (500ml), Aceite de oliva virgen extra ecológico (500ml)",
+    weight: "810g (250g mermelada + 560ml aceite)",
+    ingredients: "Mermelada de paraguayo artesanal (250g), 4 botellas de aceite de oliva virgen extra (140ml cada una)",
     nutritionalInfo: {
       calories: "Variable según producto",
       carbs: "Variable",
@@ -217,8 +223,20 @@ export const products = [
       fat: "Variable",
       saturated: "Variable"
     },
-    subscriptionAvailable: false,
-    subscriptionFrequencies: []
+    subscriptionAvailable: true,
+    subscriptionFrequencies: [
+      { value: 'monthly', label: 'Mensual', discount: 10 },
+      { value: 'quarterly', label: 'Trimestral', discount: 8 },
+      { value: 'semiannual', label: 'Semestral', discount: 7 }
+    ],
+    volumeDiscount: {
+      minQuantity: 12,
+      discount: 10
+    },
+    subscriptionTerms: {
+      duration: 12,
+      renewalPolicy: "Los precios se revisan anualmente. Al finalizar el periodo, podrás cancelar o renovar tu suscripción."
+    }
   },
   {
     id: 6,
