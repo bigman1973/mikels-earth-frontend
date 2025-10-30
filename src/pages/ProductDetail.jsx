@@ -14,6 +14,7 @@ const ProductDetail = () => {
   const [quantity, setQuantity] = useState(1);
   const [purchaseType, setPurchaseType] = useState('one-time');
   const [subscriptionFrequency, setSubscriptionFrequency] = useState(null);
+  const [preferredDeliveryDay, setPreferredDeliveryDay] = useState('');
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [variantQuantities, setVariantQuantities] = useState({});
@@ -286,6 +287,25 @@ const ProductDetail = () => {
                       </button>
                     ))}
                   </div>
+                  
+                  {/* Preferred delivery day selector */}
+                  <div className="mt-4">
+                    <label className="block text-sm font-semibold text-primary mb-3">
+                      Día preferible de envío
+                    </label>
+                    <select
+                      value={preferredDeliveryDay}
+                      onChange={(e) => setPreferredDeliveryDay(e.target.value)}
+                      className="w-full p-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary transition-all"
+                    >
+                      <option value="">Selecciona un día</option>
+                      <option value="monday">Lunes</option>
+                      <option value="tuesday">Martes</option>
+                      <option value="wednesday">Miércoles</option>
+                      <option value="thursday">Jueves</option>
+                      <option value="friday">Viernes</option>
+                    </select>
+                  </div>
                 </div>
               )}
 
@@ -448,25 +468,60 @@ const ProductDetail = () => {
 
                 {product.nutritionalInfo && (
                   <>
-                    <h3 className="font-bold text-primary mb-3">Información Nutricional (por 100g/ml)</h3>
-                    <div className="grid grid-cols-2 gap-2 text-sm">
-                      <div className="bg-gray-50 p-2 rounded">
-                        <span className="text-gray-600">Calorías:</span>
-                        <span className="font-semibold ml-2">{product.nutritionalInfo.calories}</span>
-                      </div>
-                      <div className="bg-gray-50 p-2 rounded">
-                        <span className="text-gray-600">Carbohidratos:</span>
-                        <span className="font-semibold ml-2">{product.nutritionalInfo.carbs}</span>
-                      </div>
-                      <div className="bg-gray-50 p-2 rounded">
-                        <span className="text-gray-600">Proteínas:</span>
-                        <span className="font-semibold ml-2">{product.nutritionalInfo.protein}</span>
-                      </div>
-                      <div className="bg-gray-50 p-2 rounded">
-                        <span className="text-gray-600">Grasas:</span>
-                        <span className="font-semibold ml-2">{product.nutritionalInfo.fat}</span>
-                      </div>
-                    </div>
+                    {product.nutritionalInfo.perfilSabor ? (
+                      <>
+                        <h3 className="font-bold text-primary mb-3">Perfil de Sabor</h3>
+                        <div className="space-y-3 mb-4">
+                          <div className="flex items-center justify-between">
+                            <span className="text-gray-700 font-medium">Frutado:</span>
+                            <span className="font-semibold text-primary">{product.nutritionalInfo.perfilSabor.frutado}</span>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-gray-700 font-medium">Amargo:</span>
+                            <span className="font-semibold text-primary">{product.nutritionalInfo.perfilSabor.amargo}</span>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-gray-700 font-medium">Picante:</span>
+                            <span className="font-semibold text-primary">{product.nutritionalInfo.perfilSabor.picante}</span>
+                          </div>
+                        </div>
+                        {product.nutritionalInfo.idealPara && (
+                          <>
+                            <h3 className="font-bold text-primary mb-3 mt-6">Ideal Para</h3>
+                            <ul className="space-y-2">
+                              {product.nutritionalInfo.idealPara.map((uso, idx) => (
+                                <li key={idx} className="flex items-start gap-2 text-sm text-gray-700">
+                                  <span className="text-green-600 mt-0.5">✓</span>
+                                  <span>{uso}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        <h3 className="font-bold text-primary mb-3">Información Nutricional (por 100g/ml)</h3>
+                        <div className="grid grid-cols-2 gap-2 text-sm">
+                          <div className="bg-gray-50 p-2 rounded">
+                            <span className="text-gray-600">Calorías:</span>
+                            <span className="font-semibold ml-2">{product.nutritionalInfo.calories}</span>
+                          </div>
+                          <div className="bg-gray-50 p-2 rounded">
+                            <span className="text-gray-600">Carbohidratos:</span>
+                            <span className="font-semibold ml-2">{product.nutritionalInfo.carbs}</span>
+                          </div>
+                          <div className="bg-gray-50 p-2 rounded">
+                            <span className="text-gray-600">Proteínas:</span>
+                            <span className="font-semibold ml-2">{product.nutritionalInfo.protein}</span>
+                          </div>
+                          <div className="bg-gray-50 p-2 rounded">
+                            <span className="text-gray-600">Grasas:</span>
+                            <span className="font-semibold ml-2">{product.nutritionalInfo.fat}</span>
+                          </div>
+                        </div>
+                      </>
+                    )}
                   </>
                 )}
               </div>

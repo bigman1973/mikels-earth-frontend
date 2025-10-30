@@ -214,13 +214,13 @@ export const products = [
     priceSubscription: 81.00,
     originalPrice: 95.00,
     currency: "EUR",
-    image: "/images/aceite-5l-finca-principal.jpg",
+    image: "/images/aceite-5l-portada.jpg",
     images: [
+      "/images/aceite-5l-portada.jpg",
       "/images/aceite-5l-finca-principal.jpg",
       "/images/aceite-5l-lifestyle-1.jpg",
       "/images/aceite-5l-lifestyle-2.jpg",
       "/images/aceite-5l-lifestyle-3.jpg",
-      "/images/aceite-5l-lifestyle-4.jpg",
       "/images/aceite-5l-3-garrafas.jpg"
     ],
     category: "Aceites",
@@ -229,16 +229,26 @@ export const products = [
     weight: "15L (3 x 5L)",
     ingredients: "Aceite de oliva virgen extra 100% (variedades Picual, Hojiblanca y Arbequina)",
     nutritionalInfo: {
-      calories: "884 kcal/100ml",
-      carbs: "0g",
-      protein: "0g",
-      fat: "100g",
-      saturated: "14g"
+      ingredientes: "Aceite de oliva virgen extra 100%",
+      coupage: "Picual, Hojiblanca y Arbequina",
+      perfilSabor: {
+        frutado: "Intenso",
+        amargo: "Medio",
+        picante: "Medio"
+      },
+      idealPara: [
+        "Aliñar ensaladas y verduras",
+        "Sofritos y guisos",
+        "Carnes y pescados a la plancha",
+        "Uso diario en cocina"
+      ]
     },
     subscriptionAvailable: true,
     subscriptionDiscount: 10,
     subscriptionFrequencies: [
-      { value: "monthly", label: "Mensual", discount: 10 }
+      { value: "monthly", label: "Mensual", discount: 10 },
+      { value: "quarterly", label: "Trimestral", discount: 8 },
+      { value: "biannual", label: "Semestral", discount: 7 }
     ],
     freeShipping: true,
     discount: 5,
