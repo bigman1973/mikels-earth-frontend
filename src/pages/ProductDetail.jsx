@@ -293,13 +293,12 @@ const ProductDetail = () => {
               {product.variants && product.variants.length > 0 && product.slug === 'estuche-regalo' ? (
                 <div className="mb-6">
                   <label className="block text-sm font-semibold text-primary mb-3">
-                    Selecciona los diseños y cantidades (máximo 12 estuches en total)
+                    Selecciona los diseños y cantidades (máximo 12 estuches de cada tipo)
                   </label>
                   <div className="space-y-4">
                     {product.variants.map((variant) => {
                       const variantQty = variantQuantities[variant.id] || 0;
-                      const totalQty = Object.values(variantQuantities).reduce((sum, q) => sum + q, 0);
-                      const canIncrease = totalQty < 12;
+                      const canIncrease = variantQty < 12;
                       
                       return (
                         <div key={variant.id} className="border-2 border-gray-200 rounded-lg p-4">
@@ -330,12 +329,10 @@ const ProductDetail = () => {
                               <span className="w-12 text-center font-bold text-lg">{variantQty}</span>
                               <button
                                 onClick={() => {
-                                  if (canIncrease) {
-                                    setVariantQuantities(prev => ({
-                                      ...prev,
-                                      [variant.id]: variantQty + 1
-                                    }));
-                                  }
+                                  setVariantQuantities(prev => ({
+                                    ...prev,
+                                    [variant.id]: Math.min(12, variantQty + 1)
+                                  }));
                                 }}
                                 disabled={!canIncrease}
                                 className="w-10 h-10 bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg font-bold text-xl transition-colors"
@@ -350,7 +347,7 @@ const ProductDetail = () => {
                   </div>
                   <div className="mt-4 p-3 bg-gray-100 rounded-lg">
                     <p className="text-sm font-semibold text-center">
-                      Total: {Object.values(variantQuantities).reduce((sum, q) => sum + q, 0)} / 12 estuches
+                      Total: {Object.values(variantQuantities).reduce((sum, q) => sum + q, 0)} estuches seleccionados
                     </p>
                   </div>
                 </div>
