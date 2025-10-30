@@ -780,11 +780,33 @@ const ProductDetail = () => {
                 <Link
                   key={relatedProduct.id}
                   to={`/producto/${relatedProduct.slug}`}
-                  className="bg-white rounded-lg shadow-md p-4 hover:shadow-xl transition-shadow"
+                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow group"
                 >
-                  <div className="h-48 bg-gray-200 rounded mb-3" />
-                  <h3 className="font-semibold text-primary mb-2">{relatedProduct.name}</h3>
-                  <p className="text-lg font-bold text-primary">{relatedProduct.price.toFixed(2)}€</p>
+                  <div className="relative h-48 bg-gray-200 overflow-hidden">
+                    {(relatedProduct.image || relatedProduct.images?.[0]) ? (
+                      <img 
+                        src={relatedProduct.image || relatedProduct.images?.[0]} 
+                        alt={relatedProduct.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.nextSibling.style.display = 'flex';
+                        }}
+                      />
+                    ) : null}
+                    <div 
+                      className="absolute inset-0 flex items-center justify-center text-gray-400 bg-gradient-to-br from-gray-100 to-gray-200"
+                      style={{ display: (relatedProduct.image || relatedProduct.images?.[0]) ? 'none' : 'flex' }}
+                    >
+                      <div className="text-center text-sm">
+                        {relatedProduct.name}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-semibold text-primary mb-2 line-clamp-2">{relatedProduct.name}</h3>
+                    <p className="text-lg font-bold text-primary">{relatedProduct.price.toFixed(2)}€</p>
+                  </div>
                 </Link>
               ))}
           </div>
