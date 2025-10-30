@@ -62,12 +62,45 @@ const ProductDetail = () => {
             transition={{ duration: 0.6 }}
           >
             <div className="bg-white rounded-lg shadow-lg overflow-hidden sticky top-8">
-              <div className="aspect-square bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                <div className="text-center p-8">
-                  <Tag className="w-24 h-24 mx-auto mb-4 text-gray-300" />
-                  <p className="text-gray-400">{product.name}</p>
+              {product.images && product.images.length > 0 ? (
+                <div className="relative">
+                  {/* Carrusel de imágenes */}
+                  <div className="aspect-square overflow-hidden">
+                    <img 
+                      src={product.images[0]} 
+                      alt={product.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  {product.images.length > 1 && (
+                    <div className="grid grid-cols-3 gap-2 p-4 bg-gray-50">
+                      {product.images.slice(1, 4).map((img, idx) => (
+                        <img 
+                          key={idx}
+                          src={img} 
+                          alt={`${product.name} ${idx + 2}`}
+                          className="w-full aspect-square object-cover rounded-lg cursor-pointer hover:opacity-75 transition-opacity"
+                        />
+                      ))}
+                    </div>
+                  )}
                 </div>
-              </div>
+              ) : product.image ? (
+                <div className="aspect-square overflow-hidden">
+                  <img 
+                    src={product.image} 
+                    alt={product.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ) : (
+                <div className="aspect-square bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                  <div className="text-center p-8">
+                    <Tag className="w-24 h-24 mx-auto mb-4 text-gray-300" />
+                    <p className="text-gray-400">{product.name}</p>
+                  </div>
+                </div>
+              )}
             </div>
           </motion.div>
 

@@ -231,6 +231,78 @@ export const products = [
     subscriptionFrequencies: [],
     freeShipping: true,
     discount: 5
+  },
+  {
+    id: 9,
+    name: "Estuche de Regalo Premium",
+    slug: "estuche-regalo",
+    description: "Estuche cilíndrico premium para presentar tu aceite como un auténtico regalo. Disponible en 3 diseños: Extra, Ecológico y Temprano.",
+    longDescription: "Transforma tu aceite en un regalo inolvidable con nuestro estuche premium. Diseñado con ilustraciones exclusivas que cuentan nuestra historia: el mas familiar, los olivos centenarios y la Seu Vella de Lleida. Cada estuche es una obra de arte que protege y realza la presentación de nuestros aceites. Perfecto para ocasiones especiales, regalos corporativos o simplemente para dar ese toque de distinción que merece un producto artesanal. Disponible en tres diseños: Extra Virgin (crema con olivos), Ecológico (crema con Seu Vella) y Temprano (verde oscuro minimalista). **Importante: El estuche se vende vacío, sin aceite.**",
+    price: 5.00,
+    priceSubscription: null,
+    currency: "EUR",
+    image: "/images/estuche-extra-1.jpg",
+    images: [
+      "/images/estuche-extra-1.jpg",
+      "/images/estuche-extra-2.jpg",
+      "/images/estuche-eco-1.jpg",
+      "/images/estuche-eco-2.jpg",
+      "/images/estuche-temprano-1.jpg",
+      "/images/estuche-temprano-2.jpg"
+    ],
+    category: "Packs",
+    tags: ["Regalo", "Premium", "Presentación"],
+    stock: 50,
+    weight: "50g",
+    ingredients: "Cartón reciclable de alta calidad",
+    nutritionalInfo: null,
+    subscriptionAvailable: false,
+    subscriptionFrequencies: [],
+    variants: [
+      { id: "extra", name: "Extra Virgin", description: "Diseño crema con ilustración del mas y olivos" },
+      { id: "eco", name: "Ecológico", description: "Diseño crema con ilustración de la Seu Vella de Lleida" },
+      { id: "temprano", name: "Temprano", description: "Diseño verde oscuro minimalista" }
+    ],
+    claims: ["3 diseños disponibles", "Presentación premium", "Perfecto para regalo", "No incluye aceite"]
+  },
+  {
+    id: 10,
+    name: "Pack Navidad Completo Mikel's Earth",
+    slug: "pack-navidad-completo",
+    description: "El regalo perfecto para Navidad. Incluye toda nuestra gama de productos: conservas, aceites premium y estuches de regalo. Ahorra 20%.",
+    longDescription: "Sorprende esta Navidad con el pack más completo de Mikel's Earth. Una selección cuidadosamente elegida que reúne lo mejor de nuestra tradición familiar: nuestro icónico Paraguayo en Almíbar, la Mermelada Artesanal con 60% de fruta, y nuestra exclusiva colección de aceites premium (Equilibrado, Ecológico Premiado y Temprano sin filtrar). Todo presentado en elegantes estuches de regalo que cuentan nuestra historia. Un regalo que transmite calidad, tradición y amor por lo artesanal. **Especial Navidad: 20% de descuento** sobre el precio individual de los productos.",
+    price: 54.90,
+    priceSubscription: null,
+    originalPrice: 68.40,
+    currency: "EUR",
+    image: "/images/pack-productos.jpg",
+    category: "Packs",
+    tags: ["Vegano", "Sin Gluten", "Regalo", "Premium", "Navidad", "Pack Completo"],
+    stock: 15,
+    weight: "2470g (720g + 250g + 500ml x3 + 3 estuches)",
+    ingredients: "Paraguayo en almíbar (720g), Mermelada de paraguayo (250g), Aceite equilibrado (500ml), Aceite ecológico (500ml), Aceite temprano (500ml), 3 estuches de regalo premium",
+    nutritionalInfo: {
+      calories: "Variable según producto",
+      carbs: "Variable",
+      protein: "Variable",
+      fat: "Variable",
+      saturated: "Variable"
+    },
+    subscriptionAvailable: false,
+    subscriptionFrequencies: [],
+    freeShipping: true,
+    discount: 20,
+    featured: true,
+    specialOccasion: "Navidad",
+    includes: [
+      "1x Paraguayo en Almíbar (720g) - 8.50€",
+      "1x Mermelada de Paraguayo Artesanal (250g) - 6.50€",
+      "1x Aceite de Oliva Equilibrado (500ml) - 10.00€",
+      "1x Aceite de Oliva Ecológico Premiado (500ml) - 13.50€",
+      "1x Aceite de Oliva Temprano sin filtrar (500ml) - 14.90€",
+      "3x Estuches de Regalo Premium - 15.00€"
+    ],
+    claims: ["20% de descuento", "Envío gratuito", "Edición especial Navidad", "Incluye 3 estuches premium", "Ahorra 13.50€"]
   }
 ];
 
@@ -258,6 +330,9 @@ export const tags = [
   "Edición Limitada",
   "Alto en Fruta",
   "Formato Familiar",
-  "Uso Cotidiano"
+  "Uso Cotidiano",
+  "Presentación",
+  "Navidad",
+  "Pack Completo"
 ];
 
