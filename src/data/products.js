@@ -42,7 +42,13 @@ export const products = [
     price: 8.50,
     priceSubscription: 7.82,
     currency: "EUR",
-    image: "/images/nectarina-almibar.jpg",
+    image: "/images/nectarina-principal.jpg",
+    images: [
+      "/images/nectarina-principal.jpg",
+      "/images/nectarina-desayuno-1.png",
+      "/images/nectarina-desayuno-2.png",
+      "/images/nectarina-picnic.jpg"
+    ],
     category: "Conservas",
     tags: ["Vegano", "Sin Gluten", "Artesanal", "Local"],
     stock: 0,
