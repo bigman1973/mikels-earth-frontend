@@ -54,8 +54,6 @@ export const products = [
     ]
   },
   {
-
-  {
     id: 1,
     name: "Paraguayo en Almíbar",
     slug: "paraguayo-almibar",
@@ -499,7 +497,6 @@ export const products = [
       "1x Estuche kraft premium con historia de Mikel's"
     ],
     claims: ["Pack completo premium", "Envío gratuito", "Edición especial Navidad", "Incluye estuche degustación", "7 productos + estuche"]
-  }
   }
 ];
 
