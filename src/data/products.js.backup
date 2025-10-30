@@ -1,62 +1,6 @@
 // Catálogo oficial de productos de Mikel's Earth
 export const products = [
   {
-    id: 8,
-    name: "Aceite de Oliva Virgen Extra 5L (Caja de 3 unidades)",
-    slug: "aceite-5l-caja-3",
-    description: "Caja de 3 garrafas de 5 litros de aceite virgen extra de baja acidez. Variedades Picual, Hojiblanca y Arbequina. Solo 6€/litro con envío gratis.",
-    longDescription: "El formato más económico para familias que aman el buen aceite. Caja de 3 garrafas de 5 litros de Aceite de Oliva Virgen Extra de baja acidez, procedente de nuestros olivares de Córdoba y Lleida. Variedades Picual, Hojiblanca y Arbequina cuidadosamente seleccionadas y prensadas en frío. Este es el aceite que usamos a diario en nuestra cocina familiar para todo tipo de recetas: desde un sofrito hasta aliñar una ensalada. Su equilibrio perfecto entre sabor y suavidad lo hace ideal para el uso cotidiano. Con la compra de 1 caja (3 unidades) el envío es totalmente gratuito. Formato ahorro perfecto para familias, restaurantes y uso intensivo en cocina.",
-    price: 90.00,
-    priceSubscription: 81.00,
-    originalPrice: 95.00,
-    currency: "EUR",
-    image: "/images/aceite-5l-portada.jpg",
-    images: [
-      "/images/aceite-5l-portada.jpg",
-      "/images/aceite-5l-finca-principal.jpg",
-      "/images/aceite-5l-lifestyle-1.jpg",
-      "/images/aceite-5l-lifestyle-2.jpg",
-      "/images/aceite-5l-lifestyle-3.jpg",
-      "/images/aceite-5l-3-garrafas.jpg"
-    ],
-    category: "Aceites",
-    tags: ["Vegano", "Sin Gluten", "Prensado en Frío", "Formato Familiar", "Uso Cotidiano"],
-    stock: 10,
-    weight: "15L (3 x 5L)",
-    ingredients: "Aceite de oliva virgen extra 100% (variedades Picual, Hojiblanca y Arbequina)",
-    nutritionalInfo: {
-      ingredientes: "Aceite de oliva virgen extra 100%",
-      coupage: "Picual, Hojiblanca y Arbequina",
-      perfilSabor: {
-        frutado: "Intenso",
-        amargo: "Medio",
-        picante: "Medio"
-      },
-      idealPara: [
-        "Aliñar ensaladas y verduras",
-        "Sofritos y guisos",
-        "Carnes y pescados a la plancha",
-        "Uso diario en cocina"
-      ]
-    },
-    subscriptionAvailable: true,
-    subscriptionDiscount: 10,
-    subscriptionFrequencies: [
-      { value: "monthly", label: "Mensual", discount: 10 },
-      { value: "quarterly", label: "Trimestral", discount: 8 },
-      { value: "biannual", label: "Semestral", discount: 7 }
-    ],
-    freeShipping: true,
-    discount: 5,
-    claims: ["Solo 6€/litro", "Envío gratis", "15 litros en total", "Formato ahorro", "De nuestros olivares de Córdoba y Lleida"],
-    badges: [
-      { text: "Más Vendido", color: "bg-red-600" },
-      { text: "Directo del Campo", color: "bg-green-600" }
-    ]
-  },
-  {
-
-  {
     id: 1,
     name: "Paraguayo en Almíbar",
     slug: "paraguayo-almibar",
@@ -99,69 +43,6 @@ export const products = [
     ]
   },
   {
-
-    id: 6,
-    name: "Aceite de Oliva Virgen Extra Temprano 500ml sin filtrar",
-    slug: "aceite-temprano-sin-filtrar",
-    description: "Aceitunas recolectadas en su momento verde. Sin filtrar. Verde intenso, ligeramente picante, con ese amargor noble que indica frescura y calidad.",
-    longDescription: "Aceitunas recolectadas en su momento verde, cuando concentran hasta tres veces más polifenoles y antioxidantes.\n\nSin filtrar. Conserva todos sus compuestos beneficiosos: alto contenido en polifenoles, vitamina E y antioxidantes naturales.\n\nVerde intenso, ligeramente picante, con ese amargor noble que indica frescura y calidad. Prensado en frío.\n\nIdeal en crudo: ensaladas, tostadas, carpaccios.\n\nUn aceite que no se disculpa por ser auténtico.",
-    price: 14.90,
-    priceSubscription: 13.41,
-    currency: "EUR",
-    image: "/images/aceite-temprano-principal.jpeg",
-    images: [
-      "/images/aceite-temprano-principal.jpeg",
-      "/images/aceite-temprano-estuche-blanco.png",
-      "/images/aceite-temprano-lifestyle-ceo.png"
-    ],
-    category: "Aceites",
-    tags: ["Vegano", "Sin Gluten", "Prensado en Frío", "Sin Filtrar", "Edición Limitada", "Premium", "Regalo"],
-    stock: 15,
-    weight: "500ml",
-    ingredients: "Aceite de oliva virgen extra 100% sin filtrar",
-    nutritionalInfo: {
-      ingredientes: "Aceite de oliva virgen extra 100% sin filtrar",
-      coupage: "Aceitunas verdes de cosecha temprana",
-      perfilSabor: {
-        frutado: "Extremadamente Intenso",
-        amargo: "Noble",
-        picante: "Ligero"
-      },
-      notasCata: "Hierba recién cortada, verde intenso, frescura extrema",
-      idealPara: [
-        "Ensaladas en crudo",
-        "Tostadas y pan",
-        "Carpaccios",
-        "Platos que requieren frescura"
-      ]
-    },
-    subscriptionAvailable: true,
-    subscriptionDiscount: 10,
-    subscriptionFrequencies: [
-      { value: "monthly", label: "Mensual", discount: 10 },
-      { value: "quarterly", label: "Trimestral", discount: 8 },
-      { value: "biannual", label: "Semestral", discount: 7 }
-    ],
-    volumeDiscount: {
-      minQuantity: 12,
-      discount: 10
-    },
-    addons: [
-      {
-        productSlug: "estuche-regalo",
-        variantId: "temprano",
-        label: "Añadir Estuche Regalo Premium Temprano"
-      }
-    ],
-    featured: true,
-    freeShipping: true,
-    limitedEdition: true,
-    badges: [
-      { text: "🍂 ÚNICO TEMPRANO NOVIEMBRE", color: "bg-gradient-to-r from-orange-600 to-amber-600" }
-    ]
-  },
-  {
-
     id: 2,
     name: "Nectarina en Almíbar",
     slug: "nectarina-almibar",
@@ -201,7 +82,6 @@ export const products = [
     }
   },
   {
-
     id: 3,
     name: "Aceite de Oliva Virgen Extra Mikel's Fruit (Equilibrado)",
     slug: "aceite-oliva-equilibrado",
@@ -257,7 +137,6 @@ export const products = [
     ]
   },
   {
-
     id: 4,
     name: "Aceite de Oliva Virgen Extra Ecológico Mikel's Fruit",
     slug: "aceite-oliva-ecologico",
@@ -320,7 +199,6 @@ export const products = [
     ]
   },
   {
-
     id: 5,
     name: "Pack Degustación Premium",
     slug: "pack-mermelada-aceites",
@@ -364,7 +242,67 @@ export const products = [
     }
   },
   {
-
+    id: 6,
+    name: "Aceite de Oliva Virgen Extra Temprano 500ml sin filtrar",
+    slug: "aceite-temprano-sin-filtrar",
+    description: "Aceitunas recolectadas en su momento verde. Sin filtrar. Verde intenso, ligeramente picante, con ese amargor noble que indica frescura y calidad.",
+    longDescription: "Aceitunas recolectadas en su momento verde, cuando concentran hasta tres veces más polifenoles y antioxidantes.\n\nSin filtrar. Conserva todos sus compuestos beneficiosos: alto contenido en polifenoles, vitamina E y antioxidantes naturales.\n\nVerde intenso, ligeramente picante, con ese amargor noble que indica frescura y calidad. Prensado en frío.\n\nIdeal en crudo: ensaladas, tostadas, carpaccios.\n\nUn aceite que no se disculpa por ser auténtico.",
+    price: 14.90,
+    priceSubscription: 13.41,
+    currency: "EUR",
+    image: "/images/aceite-temprano-principal.jpeg",
+    images: [
+      "/images/aceite-temprano-principal.jpeg",
+      "/images/aceite-temprano-estuche-blanco.png",
+      "/images/aceite-temprano-lifestyle-ceo.png"
+    ],
+    category: "Aceites",
+    tags: ["Vegano", "Sin Gluten", "Prensado en Frío", "Sin Filtrar", "Edición Limitada", "Premium", "Regalo"],
+    stock: 15,
+    weight: "500ml",
+    ingredients: "Aceite de oliva virgen extra 100% sin filtrar",
+    nutritionalInfo: {
+      ingredientes: "Aceite de oliva virgen extra 100% sin filtrar",
+      coupage: "Aceitunas verdes de cosecha temprana",
+      perfilSabor: {
+        frutado: "Extremadamente Intenso",
+        amargo: "Noble",
+        picante: "Ligero"
+      },
+      notasCata: "Hierba recién cortada, verde intenso, frescura extrema",
+      idealPara: [
+        "Ensaladas en crudo",
+        "Tostadas y pan",
+        "Carpaccios",
+        "Platos que requieren frescura"
+      ]
+    },
+    subscriptionAvailable: true,
+    subscriptionDiscount: 10,
+    subscriptionFrequencies: [
+      { value: "monthly", label: "Mensual", discount: 10 },
+      { value: "quarterly", label: "Trimestral", discount: 8 },
+      { value: "biannual", label: "Semestral", discount: 7 }
+    ],
+    volumeDiscount: {
+      minQuantity: 12,
+      discount: 10
+    },
+    addons: [
+      {
+        productSlug: "estuche-regalo",
+        variantId: "temprano",
+        label: "Añadir Estuche Regalo Premium Temprano"
+      }
+    ],
+    featured: true,
+    freeShipping: true,
+    limitedEdition: true,
+    badges: [
+      { text: "🍂 ÚNICO TEMPRANO NOVIEMBRE", color: "bg-gradient-to-r from-orange-600 to-amber-600" }
+    ]
+  },
+  {
     id: 7,
     name: "Mermelada de Paraguayo Artesanal",
     slug: "mermelada-paraguayo",
@@ -404,7 +342,60 @@ export const products = [
     claims: ["4 ingredientes naturales", "60% de fruta", "3 veces más fruta que la industria", "Sin conservantes", "Sin colorantes", "Sin espesantes"]
   },
   {
-
+    id: 8,
+    name: "Aceite de Oliva Virgen Extra 5L (Caja de 3 unidades)",
+    slug: "aceite-5l-caja-3",
+    description: "Caja de 3 garrafas de 5 litros de aceite virgen extra de baja acidez. Variedades Picual, Hojiblanca y Arbequina. Solo 6€/litro con envío gratis.",
+    longDescription: "El formato más económico para familias que aman el buen aceite. Caja de 3 garrafas de 5 litros de Aceite de Oliva Virgen Extra de baja acidez, procedente de nuestros olivares de Córdoba y Lleida. Variedades Picual, Hojiblanca y Arbequina cuidadosamente seleccionadas y prensadas en frío. Este es el aceite que usamos a diario en nuestra cocina familiar para todo tipo de recetas: desde un sofrito hasta aliñar una ensalada. Su equilibrio perfecto entre sabor y suavidad lo hace ideal para el uso cotidiano. Con la compra de 1 caja (3 unidades) el envío es totalmente gratuito. Formato ahorro perfecto para familias, restaurantes y uso intensivo en cocina.",
+    price: 90.00,
+    priceSubscription: 81.00,
+    originalPrice: 95.00,
+    currency: "EUR",
+    image: "/images/aceite-5l-portada.jpg",
+    images: [
+      "/images/aceite-5l-portada.jpg",
+      "/images/aceite-5l-finca-principal.jpg",
+      "/images/aceite-5l-lifestyle-1.jpg",
+      "/images/aceite-5l-lifestyle-2.jpg",
+      "/images/aceite-5l-lifestyle-3.jpg",
+      "/images/aceite-5l-3-garrafas.jpg"
+    ],
+    category: "Aceites",
+    tags: ["Vegano", "Sin Gluten", "Prensado en Frío", "Formato Familiar", "Uso Cotidiano"],
+    stock: 10,
+    weight: "15L (3 x 5L)",
+    ingredients: "Aceite de oliva virgen extra 100% (variedades Picual, Hojiblanca y Arbequina)",
+    nutritionalInfo: {
+      ingredientes: "Aceite de oliva virgen extra 100%",
+      coupage: "Picual, Hojiblanca y Arbequina",
+      perfilSabor: {
+        frutado: "Intenso",
+        amargo: "Medio",
+        picante: "Medio"
+      },
+      idealPara: [
+        "Aliñar ensaladas y verduras",
+        "Sofritos y guisos",
+        "Carnes y pescados a la plancha",
+        "Uso diario en cocina"
+      ]
+    },
+    subscriptionAvailable: true,
+    subscriptionDiscount: 10,
+    subscriptionFrequencies: [
+      { value: "monthly", label: "Mensual", discount: 10 },
+      { value: "quarterly", label: "Trimestral", discount: 8 },
+      { value: "biannual", label: "Semestral", discount: 7 }
+    ],
+    freeShipping: true,
+    discount: 5,
+    claims: ["Solo 6€/litro", "Envío gratis", "15 litros en total", "Formato ahorro", "De nuestros olivares de Córdoba y Lleida"],
+    badges: [
+      { text: "Más Vendido", color: "bg-red-600" },
+      { text: "Directo del Campo", color: "bg-green-600" }
+    ]
+  },
+  {
     id: 9,
     name: "Estuche de Regalo Premium",
     slug: "estuche-regalo",
@@ -452,7 +443,6 @@ export const products = [
     claims: ["3 diseños disponibles", "Presentación premium", "Perfecto para regalo", "No incluye aceite"]
   },
   {
-
     id: 10,
     name: "Pack Navidad Completo Mikel's Earth",
     slug: "pack-navidad-completo",
@@ -509,7 +499,6 @@ export const products = [
       "1x Estuche kraft premium con historia de Mikel's"
     ],
     claims: ["Pack completo premium", "Envío gratuito", "Edición especial Navidad", "Incluye estuche degustación", "7 productos + estuche"]
-  }
   }
 ];
 
