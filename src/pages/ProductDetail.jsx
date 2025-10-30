@@ -313,25 +313,29 @@ const ProductDetail = () => {
                 <h3 className="font-bold text-primary mb-3">Ingredientes</h3>
                 <p className="text-sm text-gray-700 mb-4">{product.ingredients}</p>
 
-                <h3 className="font-bold text-primary mb-3">Información Nutricional (por 100g/ml)</h3>
-                <div className="grid grid-cols-2 gap-2 text-sm">
-                  <div className="bg-gray-50 p-2 rounded">
-                    <span className="text-gray-600">Calorías:</span>
-                    <span className="font-semibold ml-2">{product.nutritionalInfo.calories}</span>
-                  </div>
-                  <div className="bg-gray-50 p-2 rounded">
-                    <span className="text-gray-600">Carbohidratos:</span>
-                    <span className="font-semibold ml-2">{product.nutritionalInfo.carbs}</span>
-                  </div>
-                  <div className="bg-gray-50 p-2 rounded">
-                    <span className="text-gray-600">Proteínas:</span>
-                    <span className="font-semibold ml-2">{product.nutritionalInfo.protein}</span>
-                  </div>
-                  <div className="bg-gray-50 p-2 rounded">
-                    <span className="text-gray-600">Grasas:</span>
-                    <span className="font-semibold ml-2">{product.nutritionalInfo.fat}</span>
-                  </div>
-                </div>
+                {product.nutritionalInfo && (
+                  <>
+                    <h3 className="font-bold text-primary mb-3">Información Nutricional (por 100g/ml)</h3>
+                    <div className="grid grid-cols-2 gap-2 text-sm">
+                      <div className="bg-gray-50 p-2 rounded">
+                        <span className="text-gray-600">Calorías:</span>
+                        <span className="font-semibold ml-2">{product.nutritionalInfo.calories}</span>
+                      </div>
+                      <div className="bg-gray-50 p-2 rounded">
+                        <span className="text-gray-600">Carbohidratos:</span>
+                        <span className="font-semibold ml-2">{product.nutritionalInfo.carbs}</span>
+                      </div>
+                      <div className="bg-gray-50 p-2 rounded">
+                        <span className="text-gray-600">Proteínas:</span>
+                        <span className="font-semibold ml-2">{product.nutritionalInfo.protein}</span>
+                      </div>
+                      <div className="bg-gray-50 p-2 rounded">
+                        <span className="text-gray-600">Grasas:</span>
+                        <span className="font-semibold ml-2">{product.nutritionalInfo.fat}</span>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </motion.div>
