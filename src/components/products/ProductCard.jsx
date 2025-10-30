@@ -4,9 +4,11 @@ import { motion } from 'framer-motion';
 
 const ProductCard = ({ product }) => {
   const hasSubscription = product.subscriptionAvailable;
-  const savingsPercent = hasSubscription 
-    ? Math.round(((product.price - product.priceSubscription) / product.price) * 100)
+  // Calcular el descuento máximo disponible según las frecuencias
+  const maxDiscount = hasSubscription && product.subscriptionFrequencies && product.subscriptionFrequencies.length > 0
+    ? Math.max(...product.subscriptionFrequencies.map(f => f.discount))
     : 0;
+  const savingsPercent = maxDiscount;
 
   return (
     <motion.div
@@ -102,9 +104,9 @@ const ProductCard = ({ product }) => {
               <div className="text-2xl font-bold text-primary">
                 {product.price.toFixed(2)}€
               </div>
-              {hasSubscription && (
+              {hasSubscription && maxDiscount > 0 && (
                 <div className="text-xs text-gray-500">
-                  o desde {product.priceSubscription.toFixed(2)}€/mes
+                  o desde {(product.price * (1 - maxDiscount / 100)).toFixed(2)}€
                 </div>
               )}
             </div>

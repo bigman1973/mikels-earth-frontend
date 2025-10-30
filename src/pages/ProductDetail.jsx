@@ -43,11 +43,16 @@ const ProductDetail = () => {
     ? product.price * (1 - product.volumeDiscount.discount / 100)
     : product.price;
   
-  const currentPrice = purchaseType === 'subscription' 
-    ? product.priceSubscription 
-    : volumeDiscountedPrice;
-  
   const selectedFrequency = product.subscriptionFrequencies?.find(f => f.value === subscriptionFrequency);
+  
+  // Para suscripción, aplicar descuento SOLO según la frecuencia elegida
+  const subscriptionPrice = purchaseType === 'subscription' && selectedFrequency
+    ? product.price * (1 - selectedFrequency.discount / 100)
+    : product.price;
+  
+  const currentPrice = purchaseType === 'subscription' 
+    ? subscriptionPrice
+    : volumeDiscountedPrice;
 
   const handleAddToCart = () => {
     // Si el producto tiene variantes con cantidades individuales
@@ -238,9 +243,9 @@ const ProductDetail = () => {
                     Compra {product.volumeDiscount.minQuantity} o más unidades y ahorra {product.volumeDiscount.discount}%
                   </div>
                 )}
-                {purchaseType === 'one-time' && product.subscriptionAvailable && (
+                {purchaseType === 'one-time' && product.subscriptionAvailable && product.subscriptionFrequencies && product.subscriptionFrequencies.length > 0 && (
                   <div className="text-sm text-gray-600">
-                    o desde {product.priceSubscription.toFixed(2)}€ con suscripción
+                    o desde {(product.price * (1 - Math.max(...product.subscriptionFrequencies.map(f => f.discount)) / 100)).toFixed(2)}€ con suscripción
                   </div>
                 )}
               </div>
@@ -305,10 +310,10 @@ const ProductDetail = () => {
                         )}
                       </div>
                       <div className="text-2xl font-bold text-primary">
-                        {product.priceSubscription.toFixed(2)}€
+                        {product.price.toFixed(2)}€
                       </div>
                       <div className="text-xs text-gray-600 mt-1">
-                        Ahorra hasta {Math.max(...product.subscriptionFrequencies.map(f => f.discount))}%
+                        Descuento según frecuencia
                       </div>
                     </button>
                   )}
@@ -336,7 +341,7 @@ const ProductDetail = () => {
                           <div>
                             <div className="font-semibold">{freq.label}</div>
                             <div className="text-sm text-gray-600">
-                              Ahorra {freq.discount}% · {(product.priceSubscription * (1 - freq.discount / 100)).toFixed(2)}€/unidad
+                              Ahorra {freq.discount}% · {(product.price * (1 - freq.discount / 100)).toFixed(2)}€/unidad
                             </div>
                           </div>
                           {subscriptionFrequency === freq.value && (

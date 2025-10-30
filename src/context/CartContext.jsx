@@ -47,9 +47,17 @@ export const CartProvider = ({ children }) => {
         return newCart;
       } else {
         // Si es nuevo, añadirlo al carrito
-        let price = purchaseType === 'subscription' ? product.priceSubscription : product.price;
+        let price = product.price;
         
-        // Apply volume discount if applicable
+        // Apply subscription discount based on frequency
+        if (purchaseType === 'subscription' && subscriptionFrequency) {
+          const frequency = product.subscriptionFrequencies?.find(f => f.value === subscriptionFrequency);
+          if (frequency) {
+            price = product.price * (1 - frequency.discount / 100);
+          }
+        }
+        
+        // Apply volume discount if applicable (only for one-time purchases)
         const hasVolumeDiscount = product.volumeDiscount && quantity >= product.volumeDiscount.minQuantity && purchaseType === 'one-time';
         if (hasVolumeDiscount) {
           price = product.price * (1 - product.volumeDiscount.discount / 100);

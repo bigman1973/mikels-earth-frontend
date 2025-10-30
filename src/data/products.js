@@ -7,7 +7,6 @@ export const products = [
     description: "Caja de 3 garrafas de 5 litros de aceite virgen extra de baja acidez. Variedades Picual, Hojiblanca y Arbequina. Solo 6€/litro con envío gratis.",
     longDescription: "El formato más económico para familias que aman el buen aceite. Caja de 3 garrafas de 5 litros de Aceite de Oliva Virgen Extra de baja acidez, procedente de nuestros olivares de Córdoba y Lleida. Variedades Picual, Hojiblanca y Arbequina cuidadosamente seleccionadas y prensadas en frío. Este es el aceite que usamos a diario en nuestra cocina familiar para todo tipo de recetas: desde un sofrito hasta aliñar una ensalada. Su equilibrio perfecto entre sabor y suavidad lo hace ideal para el uso cotidiano. Con la compra de 1 caja (3 unidades) el envío es totalmente gratuito. Formato ahorro perfecto para familias, restaurantes y uso intensivo en cocina.",
     price: 90.00,
-    priceSubscription: 81.00,
     originalPrice: 95.00,
     currency: "EUR",
     image: "/images/aceite-5l-portada.jpg",
@@ -63,7 +62,6 @@ export const products = [
     description: "Melocotón plano cultivado en Alcarràs y preparado a mano. Sin aditivos artificiales, 100% natural y vegano.",
     longDescription: "Nuestro paraguayo en almíbar es el producto estrella de Mikel's Earth. Cultivado en los campos de Alcarràs, cada fruta es seleccionada cuidadosamente y preparada siguiendo métodos artesanales transmitidos de generación en generación. El proceso de elaboración respeta los tiempos naturales de la fruta, conservando su sabor auténtico y propiedades nutritivas. Sin conservantes, sin colorantes, solo fruta de calidad y almíbar natural.",
     price: 14.90,
-    priceSubscription: 13.71,
     currency: "EUR",
     image: "/images/paraguayo-principal.png",
     images: [
@@ -106,7 +104,6 @@ export const products = [
     description: "Aceitunas recolectadas en su momento verde. Sin filtrar. Verde intenso, ligeramente picante, con ese amargor noble que indica frescura y calidad.",
     longDescription: "Aceitunas recolectadas en su momento verde, cuando concentran hasta tres veces más polifenoles y antioxidantes.\n\nSin filtrar. Conserva todos sus compuestos beneficiosos: alto contenido en polifenoles, vitamina E y antioxidantes naturales.\n\nVerde intenso, ligeramente picante, con ese amargor noble que indica frescura y calidad. Prensado en frío.\n\nIdeal en crudo: ensaladas, tostadas, carpaccios.\n\nUn aceite que no se disculpa por ser auténtico.",
     price: 14.90,
-    priceSubscription: 13.41,
     currency: "EUR",
     image: "/images/aceite-temprano-principal.jpeg",
     images: [
@@ -168,7 +165,6 @@ export const products = [
     description: "El melocotón sin complejos: piel lisa, sabor intenso, carácter definido. Cultivada en Alcarràs, seleccionada en su momento de máxima expresión.",
     longDescription: "La nectarina es el melocotón sin complejos: piel lisa, sabor intenso, carácter definido.\n\nCultivada en los campos de Alcarràs, cada fruta es seleccionada en su momento de máxima expresión. Cuando el dulzor y la acidez se equilibran a la perfección.\n\nEl proceso de elaboración respeta los tiempos naturales de la fruta. Sin prisas, sin atajos. El resultado: una nectarina que conserva su textura firme y su sabor auténtico.\n\nSin conservantes. Sin colorantes. Solo fruta de verdad y almíbar natural.",
     price: 14.90,
-    priceSubscription: 13.71,
     currency: "EUR",
     image: "/images/nectarina-principal.jpg",
     images: [
@@ -208,7 +204,6 @@ export const products = [
     description: "Aceite de oliva virgen extra equilibrado. Versátil y perfecto para todo tipo de platos.",
     longDescription: "Nuestro aceite de oliva virgen extra equilibrado es el todoterreno de la cocina. Con un perfil organoléptico balanceado entre suavidad e intensidad, es perfecto tanto para cocinar como para aliñar. Prensado en frío para preservar todas sus propiedades antioxidantes y su perfil excepcional. Ideal para el uso diario en cualquier preparación culinaria.",
     price: 10.00,
-    priceSubscription: 9.00,
     currency: "EUR",
     image: "/images/aceite-equilibrado-principal.png",
     images: [
@@ -264,7 +259,6 @@ export const products = [
     description: "Medalla de Oro en Japón & Nueva York. Coupage ecológico Picual, Hojiblanca y Arbequina. Reconocido internacionalmente por su intensidad excepcional y equilibrio perfecto.",
     longDescription: "Medalla de Oro en Japón & Nueva York.\n\nCoupage de variedades Picual, Hojiblanca y Arbequina de cultivo ecológico. Reconocido internacionalmente por su intensidad excepcional y equilibrio perfecto.\n\nEl cultivo orgánico concentra sabores más potentes y complejos que el convencional. El resultado: un aceite premiado que destaca en cada cata.\n\nIdeal para quienes buscan un aceite de autor, con personalidad y reconocimiento mundial.\n\nVegano, Prensado en Frío, Sin Gluten, Versátil.",
     price: 13.50,
-    priceSubscription: 12.15,
     currency: "EUR",
     image: "/images/aceite-ecologico-principal.jpg",
     images: [
@@ -327,7 +321,6 @@ export const products = [
     description: "Pack premium con paraguayo en almíbar y nuestros dos aceites de oliva virgen extra.",
     longDescription: "¿Quieres probar lo mejor de Mikel's Earth? Este pack premium incluye mermelada de paraguayo artesanal (250g) y 4 botellas de aceite de oliva virgen extra (14ml cada una) para que descubras nuestros diferentes perfiles de sabor. Una combinación perfecta que te permitirá descubrir los sabores únicos de nuestros productos artesanales. También es un regalo perfecto para los amantes de la gastronomía de calidad.",
     price: 9.00,
-    priceSubscription: 8.10,
     currency: "EUR",
     image: "/images/pack-degustacion-abierto.jpeg",
     images: [
@@ -371,7 +364,6 @@ export const products = [
     description: "4 ingredientes. Punto. Sin conservantes. Sin colorantes. Sin espesantes. 60% de fruta, 3 veces más que la industria.",
     longDescription: "Paraguayo (melocotón plano), agua, azúcar, zumo de limón natural.\n\n4 ingredientes. Punto.\n\nSin conservantes. Sin colorantes. Sin espesantes.\n\nElaborada con la misma fruta que utilizamos para nuestro paraguayo en almíbar, esta mermelada artesanal captura todo el sabor del verano en un frasco. Con un 60% de fruta (3 veces más que la industria en general), el resultado es una mermelada de textura suave y sabor intenso que te transportará a los campos de Alcarràs con cada cucharada.",
     price: 6.50,
-    priceSubscription: 5.98,
     currency: "EUR",
     image: "/images/mermelada-principal.png",
     images: [
@@ -411,7 +403,6 @@ export const products = [
     description: "Estuche cilíndrico premium para presentar tu aceite como un auténtico regalo. Disponible en 3 diseños: Extra, Ecológico y Temprano.",
     longDescription: "Transforma tu aceite en un regalo inolvidable con nuestro estuche premium. Diseñado con ilustraciones exclusivas que cuentan nuestra historia: el mas familiar, los olivos centenarios y la Seu Vella de Lleida. Cada estuche es una obra de arte que protege y realza la presentación de nuestros aceites. Perfecto para ocasiones especiales, regalos corporativos o simplemente para dar ese toque de distinción que merece un producto artesanal. Disponible en tres diseños: Extra Virgin (crema con olivos), Ecológico (crema con Seu Vella) y Temprano (verde oscuro minimalista). **Importante: El estuche se vende vacío, sin aceite.**",
     price: 5.00,
-    priceSubscription: null,
     currency: "EUR",
     image: "/images/estuche-eco-jardin.jpg",
     images: [
@@ -459,7 +450,6 @@ export const products = [
     description: "El regalo perfecto para Navidad. Pack completo con aceites premium, conservas artesanales y estuche degustación.",
     longDescription: "Sorprende esta Navidad con el pack más completo de Mikel's Earth. Una selección cuidadosamente elegida que reúne lo mejor de nuestra tradición familiar.\n\n**CONTENIDO DETALLADO DEL PACK:**\n\n**Fuera del estuche:**\n- 1 × Aceite de Oliva Virgen Extra 5L (garrafa)\n- 1 × Aceite Temprano 500ml sin filtrar (con estuche verde oscuro)\n- 1 × Paraguayo en Almíbar 720g\n- 1 × Nectarina en Almíbar 720g\n\n**Dentro del estuche kraft de degustación:**\n- 1 × Mermelada de Paraguayo Artesanal 250g\n- 4 × Botellas de aceite 14ml (formato degustación para probar diferentes perfiles)\n\nUn regalo que transmite calidad, tradición y amor por lo artesanal. Perfecto para compartir en familia o regalar a los amantes de la gastronomía de calidad.",
     price: 81.90,
-    priceSubscription: 73.71,
     originalPrice: null,
     currency: "EUR",
     image: "/images/pack-navidad-principal.jpg",
