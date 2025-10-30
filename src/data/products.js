@@ -264,32 +264,40 @@ export const products = [
     id: 7,
     name: "Mermelada de Paraguayo Artesanal",
     slug: "mermelada-paraguayo",
-    description: "Mermelada artesanal con 60% de fruta. 3 veces más fruta que la industria en general. Sin pectinas artificiales ni conservantes.",
-    longDescription: "Elaborada con la misma fruta que utilizamos para nuestro paraguayo en almíbar, esta mermelada artesanal captura todo el sabor del verano en un frasco. Con un 60% de fruta (el doble que las mermeladas industriales), sin pectinas artificiales ni conservantes. El resultado es una mermelada de textura suave y sabor intenso que te transportará a los campos de Alcarràs con cada cucharada. 3 veces más fruta que la industria en general.",
+    description: "4 ingredientes. Punto. Sin conservantes. Sin colorantes. Sin espesantes. 60% de fruta, 3 veces más que la industria.",
+    longDescription: "Paraguayo (melocotón plano), agua, azúcar, zumo de limón natural.\n\n4 ingredientes. Punto.\n\nSin conservantes. Sin colorantes. Sin espesantes.\n\nElaborada con la misma fruta que utilizamos para nuestro paraguayo en almíbar, esta mermelada artesanal captura todo el sabor del verano en un frasco. Con un 60% de fruta (3 veces más que la industria en general), el resultado es una mermelada de textura suave y sabor intenso que te transportará a los campos de Alcarràs con cada cucharada.",
     price: 6.50,
-    priceSubscription: 5.80,
+    priceSubscription: 5.98,
     currency: "EUR",
-    image: "/images/mermelada-paraguayo.jpg",
+    image: "/images/mermelada-principal.png",
+    images: [
+      "/images/mermelada-principal.png",
+      "/images/mermelada-desayuno.png",
+      "/images/mermelada-lifestyle.png",
+      "/images/mermelada-tarros.png"
+    ],
     category: "Conservas",
     tags: ["Vegano", "Sin Gluten", "Artesanal", "Local", "Alto en Fruta"],
     stock: 30,
     weight: "250g",
-    ingredients: "Paraguayo (60%), zumo de limón (0.5%)",
+    ingredients: "Paraguayo (melocotón plano), agua, azúcar, zumo de limón natural",
     nutritionalInfo: {
-      calories: "177 kcal",
-      carbs: "46g",
-      protein: "1g",
-      fat: "0.1g",
-      fiber: "1.5g"
+      calories: "154 kcal",
+      carbs: "37g",
+      protein: "0.6g",
+      fat: "0.1g"
     },
     subscriptionAvailable: true,
-    subscriptionDiscount: 10,
+    subscriptionDiscount: 8,
     subscriptionFrequencies: [
-      { value: "weekly", label: "Semanal", discount: 12 },
-      { value: "biweekly", label: "Quincenal", discount: 10 },
-      { value: "monthly", label: "Mensual", discount: 8 }
+      { value: "quarterly", label: "Trimestral", discount: 8 },
+      { value: "biannual", label: "Semestral", discount: 7 }
     ],
-    claims: ["60% de fruta", "3 veces más fruta que la industria", "Sin conservantes", "Sin colorantes", "Sin espesantes"]
+    volumeDiscount: {
+      minQuantity: 12,
+      discount: 8
+    },
+    claims: ["4 ingredientes naturales", "60% de fruta", "3 veces más fruta que la industria", "Sin conservantes", "Sin colorantes", "Sin espesantes"]
   },
   {
     id: 8,
