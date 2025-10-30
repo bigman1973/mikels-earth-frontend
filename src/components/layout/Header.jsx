@@ -123,6 +123,12 @@ const Header = () => {
               >
                 Tienda
               </Link>
+              <Link 
+                to="/producto/pack-navidad-completo" 
+                className="text-sm font-bold bg-gradient-to-r from-red-600 to-green-600 text-white px-4 py-2 rounded-full hover:from-red-700 hover:to-green-700 transition-all shadow-lg uppercase tracking-wide"
+              >
+                🎄 Pack Navidad
+              </Link>
             </div>
 
             {/* Right icons */}
@@ -216,6 +222,13 @@ const Header = () => {
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Tienda
+                </Link>
+                <Link 
+                  to="/producto/pack-navidad-completo" 
+                  className="text-sm font-bold bg-gradient-to-r from-red-600 to-green-600 text-white px-4 py-2 rounded-full hover:from-red-700 hover:to-green-700 transition-all shadow-lg uppercase text-center"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  🎄 Pack Navidad
                 </Link>
                 <div className="flex items-center gap-4 pt-3 border-t border-white/10">
                   <button aria-label="Buscar">
