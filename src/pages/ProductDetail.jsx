@@ -306,6 +306,13 @@ const ProductDetail = () => {
                       <option value="friday">Viernes</option>
                     </select>
                   </div>
+                  
+                  {/* Subscription terms notice */}
+                  <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <p className="text-sm text-gray-700">
+                      <span className="font-semibold text-primary">Condiciones de suscripción:</span> Esta suscripción tiene una duración de 12 meses. Los precios se revisan anualmente. Al finalizar el periodo, podrás cancelar o renovar tu suscripción.
+                    </p>
+                  </div>
                 </div>
               )}
 
