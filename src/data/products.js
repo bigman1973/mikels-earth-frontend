@@ -207,7 +207,12 @@ export const products = [
     price: 14.90,
     priceSubscription: 13.41,
     currency: "EUR",
-    image: "/images/aceite-temprano-estuche.jpeg",
+    image: "/images/aceite-temprano-principal.jpeg",
+    images: [
+      "/images/aceite-temprano-principal.jpeg",
+      "/images/aceite-temprano-estuche-blanco.png",
+      "/images/aceite-temprano-lifestyle-ceo.png"
+    ],
     category: "Aceites",
     tags: ["Vegano", "Sin Gluten", "Prensado en Frío", "Sin Filtrar", "Edición Limitada", "Premium", "Regalo"],
     stock: 15,
