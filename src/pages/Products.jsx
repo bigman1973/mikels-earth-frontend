@@ -5,7 +5,7 @@ import { Filter } from 'lucide-react';
 
 const Products = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [sortBy, setSortBy] = useState('name');
+  const [sortBy, setSortBy] = useState('default');
 
   const filteredProducts = products.filter(product => {
     if (selectedCategory === 'all') return true;
@@ -14,6 +14,9 @@ const Products = () => {
 
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     switch (sortBy) {
+      case 'default':
+        // Mantener el orden original del array
+        return 0;
       case 'name':
         return a.name.localeCompare(b.name);
       case 'price-asc':
@@ -78,6 +81,7 @@ const Products = () => {
                 onChange={(e) => setSortBy(e.target.value)}
                 className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
               >
+                <option value="default">Recomendado</option>
                 <option value="name">Nombre</option>
                 <option value="price-asc">Precio: Menor a Mayor</option>
                 <option value="price-desc">Precio: Mayor a Menor</option>
