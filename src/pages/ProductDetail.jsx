@@ -193,6 +193,20 @@ const ProductDetail = () => {
                 ))}
               </div>
 
+              {/* Badges */}
+              {product.badges && product.badges.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {product.badges.map((badge, index) => (
+                    <span
+                      key={index}
+                      className={`${badge.color} text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg uppercase tracking-wide`}
+                    >
+                      {badge.text}
+                    </span>
+                  ))}
+                </div>
+              )}
+
               {/* Description */}
               <p className="text-gray-700 leading-relaxed mb-6">
                 {product.longDescription}
