@@ -37,7 +37,10 @@ export const products = [
     volumeDiscount: {
       minQuantity: 12,
       discount: 8
-    }
+    },
+    badges: [
+      { text: "🌍 ÚNICO EN EL MUNDO", color: "bg-gradient-to-r from-blue-600 to-purple-600" }
+    ]
   },
   {
     id: 2,
