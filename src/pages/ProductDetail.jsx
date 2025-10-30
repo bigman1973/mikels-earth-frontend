@@ -11,7 +11,10 @@ const ProductDetail = () => {
   const { addToCart } = useCart();
   
   const product = products.find(p => p.slug === slug);
-  const [quantity, setQuantity] = useState(1);
+  
+  // Determinar cantidad inicial basada en si hay mínimo de volumen para suscripción
+  const initialQuantity = product?.volumeDiscount?.minQuantity || 1;
+  const [quantity, setQuantity] = useState(initialQuantity);
   const [purchaseType, setPurchaseType] = useState('one-time');
   const [subscriptionFrequency, setSubscriptionFrequency] = useState(null);
   const [preferredDeliveryDay, setPreferredDeliveryDay] = useState('');
@@ -264,6 +267,10 @@ const ProductDetail = () => {
                         if (!subscriptionFrequency && product.subscriptionFrequencies.length > 0) {
                           setSubscriptionFrequency(product.subscriptionFrequencies[0].value);
                         }
+                        // Ajustar cantidad al mínimo si hay volumeDiscount
+                        if (product.volumeDiscount?.minQuantity && quantity < product.volumeDiscount.minQuantity) {
+                          setQuantity(product.volumeDiscount.minQuantity);
+                        }
                       }}
                       className={`p-4 rounded-lg border-2 transition-all ${
                         purchaseType === 'subscription'
@@ -493,7 +500,12 @@ const ProductDetail = () => {
                 </label>
                 <div className="flex items-center gap-3">
                   <button
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    onClick={() => {
+                      const minQty = (purchaseType === 'subscription' && product.volumeDiscount?.minQuantity) 
+                        ? product.volumeDiscount.minQuantity 
+                        : 1;
+                      setQuantity(Math.max(minQty, quantity - 1));
+                    }}
                     className="w-12 h-12 bg-gray-100 hover:bg-gray-200 rounded-lg font-bold text-xl transition-colors"
                   >
                     −
@@ -501,9 +513,14 @@ const ProductDetail = () => {
                   <input
                     type="number"
                     value={quantity}
-                    onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                    onChange={(e) => {
+                      const minQty = (purchaseType === 'subscription' && product.volumeDiscount?.minQuantity) 
+                        ? product.volumeDiscount.minQuantity 
+                        : 1;
+                      setQuantity(Math.max(minQty, parseInt(e.target.value) || minQty));
+                    }}
                     className="w-20 h-12 text-center border-2 border-gray-200 rounded-lg font-semibold text-lg focus:outline-none focus:border-primary"
-                    min="1"
+                    min={(purchaseType === 'subscription' && product.volumeDiscount?.minQuantity) ? product.volumeDiscount.minQuantity : 1}
                   />
                   <button
                     onClick={() => setQuantity(quantity + 1)}
@@ -517,6 +534,11 @@ const ProductDetail = () => {
                     </span>
                   )}
                 </div>
+                {purchaseType === 'subscription' && product.volumeDiscount?.minQuantity && (
+                  <p className="text-sm text-primary/70 mt-2">
+                    Mínimo {product.volumeDiscount.minQuantity} unidades para suscripción
+                  </p>
+                )}
               </div>
               )}
 
