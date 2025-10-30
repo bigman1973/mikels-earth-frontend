@@ -69,24 +69,50 @@ export const products = [
     price: 10.00,
     priceSubscription: 9.00,
     currency: "EUR",
-    image: "/images/aceite-equilibrado.jpg",
+    image: "/images/aceite-equilibrado-principal.png",
+    images: [
+      "/images/aceite-equilibrado-principal.png",
+      "/images/aceite-equilibrado-caracteristicas.png",
+      "/images/aceite-equilibrado-estuche.png",
+      "/images/aceite-equilibrado-finca.jpg"
+    ],
     category: "Aceites",
     tags: ["Vegano", "Sin Gluten", "Prensado en Frío", "Versátil"],
     stock: 35,
     weight: "500ml",
     ingredients: "Aceite de oliva virgen extra",
     nutritionalInfo: {
-      calories: "884 kcal/100ml",
-      carbs: "0g",
-      protein: "0g",
-      fat: "100g",
-      saturated: "14g"
+      ingredientes: "Aceite de oliva virgen extra 100%",
+      coupage: "Hojiblanca y Picual",
+      perfilSabor: {
+        frutado: "Medio",
+        amargo: "Suave",
+        picante: "Suave"
+      },
+      idealPara: [
+        "Aliñar ensaladas",
+        "Cocinar todo tipo de platos",
+        "Repostería",
+        "Uso diario versátil"
+      ]
     },
     subscriptionAvailable: true,
     subscriptionDiscount: 10,
     subscriptionFrequencies: [
       { value: "monthly", label: "Mensual", discount: 10 },
-      { value: "bimonthly", label: "Bimensual", discount: 8 }
+      { value: "quarterly", label: "Trimestral", discount: 8 },
+      { value: "biannual", label: "Semestral", discount: 7 }
+    ],
+    volumeDiscount: {
+      minQuantity: 12,
+      discount: 10
+    },
+    addons: [
+      {
+        productSlug: "estuche-regalo",
+        variantId: "extra-virgin",
+        label: "Añadir Estuche Regalo Premium"
+      }
     ]
   },
   {
