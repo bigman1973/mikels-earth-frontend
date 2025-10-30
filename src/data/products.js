@@ -9,7 +9,13 @@ export const products = [
     price: 8.50,
     priceSubscription: 7.82,
     currency: "EUR",
-    image: "/images/paraguayo-almibar.jpg",
+    image: "/images/paraguayo-principal.png",
+    images: [
+      "/images/paraguayo-principal.png",
+      "/images/paraguayo-terraza.png",
+      "/images/paraguayo-mujer.png",
+      "/images/paraguayo-cocina.png"
+    ],
     category: "Conservas",
     tags: ["Vegano", "Sin Gluten", "Artesanal", "Local"],
     stock: 45,
