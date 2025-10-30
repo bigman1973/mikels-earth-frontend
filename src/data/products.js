@@ -165,8 +165,8 @@ export const products = [
     addons: [
       {
         productSlug: "estuche-regalo",
-        variantId: "extra-virgin",
-        label: "Añadir Estuche Regalo Premium"
+        variantId: "eco",
+        label: "Añadir Estuche Regalo Premium Eco"
       }
     ],
     featured: true,
