@@ -203,7 +203,7 @@ export const products = [
     name: "Aceite de Oliva Virgen Extra Temprano 500ml sin filtrar",
     slug: "aceite-temprano-sin-filtrar",
     description: "Aceitunas recolectadas en su momento verde. Sin filtrar. Verde intenso, ligeramente picante, con ese amargor noble que indica frescura y calidad.",
-    longDescription: "**ACEITE DE OLIVA VIRGEN EXTRA \"TEMPRANO\"**\n\nAceitunas recolectadas en su momento verde, cuando concentran hasta tres veces más polifenoles y antioxidantes.\n\n**Sin filtrar.** Conserva todos sus compuestos beneficiosos: alto contenido en polifenoles, vitamina E y antioxidantes naturales.\n\nVerde intenso, ligeramente picante, con ese amargor noble que indica frescura y calidad. Prensado en frío.\n\n**Ideal en crudo:** ensaladas, tostadas, carpaccios.\n\nUn aceite que no se disculpa por ser auténtico.",
+    longDescription: "Aceitunas recolectadas en su momento verde, cuando concentran hasta tres veces más polifenoles y antioxidantes.\n\nSin filtrar. Conserva todos sus compuestos beneficiosos: alto contenido en polifenoles, vitamina E y antioxidantes naturales.\n\nVerde intenso, ligeramente picante, con ese amargor noble que indica frescura y calidad. Prensado en frío.\n\nIdeal en crudo: ensaladas, tostadas, carpaccios.\n\nUn aceite que no se disculpa por ser auténtico.",
     price: 14.90,
     priceSubscription: 13.41,
     currency: "EUR",
