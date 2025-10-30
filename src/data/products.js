@@ -241,14 +241,13 @@ export const products = [
     price: 5.00,
     priceSubscription: null,
     currency: "EUR",
-    image: "/images/estuche-eco-1.jpg",
+    image: "/images/estuche-eco-jardin.jpg",
     images: [
-      "/images/estuche-extra-1.jpg",
-      "/images/estuche-extra-2.jpg",
-      "/images/estuche-eco-1.jpg",
-      "/images/estuche-eco-2.jpg",
-      "/images/estuche-temprano-1.jpg",
-      "/images/estuche-temprano-2.jpg"
+      "/images/estuche-eco-jardin.jpg",
+      "/images/estuche-eco-fondo-blanco.jpg",
+      "/images/estuche-extra-fondo-blanco.jpg",
+      "/images/estuche-temprano-fondo-blanco.jpg",
+      "/images/estuche-extra-cocina.jpg"
     ],
     category: "Packs",
     tags: ["Regalo", "Premium", "Presentación"],
@@ -259,9 +258,24 @@ export const products = [
     subscriptionAvailable: false,
     subscriptionFrequencies: [],
     variants: [
-      { id: "extra", name: "Extra Virgin", description: "Diseño crema con ilustración del mas y olivos" },
-      { id: "eco", name: "Ecológico", description: "Diseño crema con ilustración de la Seu Vella de Lleida" },
-      { id: "temprano", name: "Temprano", description: "Diseño verde oscuro minimalista" }
+      { 
+        id: "extra", 
+        name: "Extra Virgin", 
+        description: "Diseño crema con ilustración del mas y olivos",
+        image: "/images/estuche-extra-fondo-blanco.jpg"
+      },
+      { 
+        id: "eco", 
+        name: "Ecológico", 
+        description: "Diseño crema con ilustración de la Seu Vella de Lleida",
+        image: "/images/estuche-eco-fondo-blanco.jpg"
+      },
+      { 
+        id: "temprano", 
+        name: "Temprano", 
+        description: "Diseño verde oscuro minimalista",
+        image: "/images/estuche-temprano-fondo-blanco.jpg"
+      }
     ],
     claims: ["3 diseños disponibles", "Presentación premium", "Perfecto para regalo", "No incluye aceite"]
   },

@@ -15,6 +15,7 @@ const ProductDetail = () => {
   const [purchaseType, setPurchaseType] = useState('one-time');
   const [subscriptionFrequency, setSubscriptionFrequency] = useState(null);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [selectedVariant, setSelectedVariant] = useState(null);
 
   if (!product) {
     return (
@@ -33,11 +34,17 @@ const ProductDetail = () => {
   const selectedFrequency = product.subscriptionFrequencies?.find(f => f.value === subscriptionFrequency);
 
   const handleAddToCart = () => {
-    addToCart(product, quantity, purchaseType, subscriptionFrequency);
+    const productWithVariant = selectedVariant 
+      ? { ...product, selectedVariant, variantName: product.variants.find(v => v.id === selectedVariant)?.name }
+      : product;
+    addToCart(productWithVariant, quantity, purchaseType, subscriptionFrequency);
   };
 
   const handleBuyNow = () => {
-    addToCart(product, quantity, purchaseType, subscriptionFrequency);
+    const productWithVariant = selectedVariant 
+      ? { ...product, selectedVariant, variantName: product.variants.find(v => v.id === selectedVariant)?.name }
+      : product;
+    addToCart(productWithVariant, quantity, purchaseType, subscriptionFrequency);
     navigate('/checkout');
   };
 
@@ -265,6 +272,45 @@ const ProductDetail = () => {
                       </button>
                     ))}
                   </div>
+                </div>
+              )}
+
+              {/* Variant selector */}
+              {product.variants && product.variants.length > 0 && (
+                <div className="mb-6">
+                  <label className="block text-sm font-semibold text-primary mb-3">
+                    Selecciona el diseño
+                  </label>
+                  <div className="grid grid-cols-3 gap-3">
+                    {product.variants.map((variant) => (
+                      <button
+                        key={variant.id}
+                        onClick={() => setSelectedVariant(variant.id)}
+                        className={`relative border-2 rounded-lg p-2 transition-all ${
+                          selectedVariant === variant.id
+                            ? 'border-primary ring-2 ring-primary ring-offset-2'
+                            : 'border-gray-200 hover:border-gray-300'
+                        }`}
+                      >
+                        <img
+                          src={variant.image}
+                          alt={variant.name}
+                          className="w-full h-32 object-contain mb-2"
+                        />
+                        <p className="text-xs font-semibold text-center">{variant.name}</p>
+                        {selectedVariant === variant.id && (
+                          <div className="absolute top-2 right-2 bg-primary text-white rounded-full p-1">
+                            <Check className="w-4 h-4" />
+                          </div>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                  {selectedVariant && (
+                    <p className="text-sm text-gray-600 mt-2">
+                      {product.variants.find(v => v.id === selectedVariant)?.description}
+                    </p>
+                  )}
                 </div>
               )}
 
