@@ -16,6 +16,7 @@ const ProductDetail = () => {
   const [subscriptionFrequency, setSubscriptionFrequency] = useState(null);
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedVariant, setSelectedVariant] = useState(null);
+  const [variantQuantities, setVariantQuantities] = useState({});
 
   if (!product) {
     return (
@@ -34,17 +35,30 @@ const ProductDetail = () => {
   const selectedFrequency = product.subscriptionFrequencies?.find(f => f.value === subscriptionFrequency);
 
   const handleAddToCart = () => {
-    const productWithVariant = selectedVariant 
-      ? { ...product, selectedVariant, variantName: product.variants.find(v => v.id === selectedVariant)?.name }
-      : product;
-    addToCart(productWithVariant, quantity, purchaseType, subscriptionFrequency);
+    // Si el producto tiene variantes con cantidades individuales
+    if (product.variants && Object.keys(variantQuantities).length > 0) {
+      Object.entries(variantQuantities).forEach(([variantId, qty]) => {
+        if (qty > 0) {
+          const variant = product.variants.find(v => v.id === variantId);
+          const productWithVariant = {
+            ...product,
+            selectedVariant: variantId,
+            variantName: variant?.name
+          };
+          addToCart(productWithVariant, qty, purchaseType, subscriptionFrequency);
+        }
+      });
+    } else {
+      // Producto sin variantes o con variante simple
+      const productWithVariant = selectedVariant 
+        ? { ...product, selectedVariant, variantName: product.variants.find(v => v.id === selectedVariant)?.name }
+        : product;
+      addToCart(productWithVariant, quantity, purchaseType, subscriptionFrequency);
+    }
   };
 
   const handleBuyNow = () => {
-    const productWithVariant = selectedVariant 
-      ? { ...product, selectedVariant, variantName: product.variants.find(v => v.id === selectedVariant)?.name }
-      : product;
-    addToCart(productWithVariant, quantity, purchaseType, subscriptionFrequency);
+    handleAddToCart();
     navigate('/checkout');
   };
 
@@ -275,8 +289,72 @@ const ProductDetail = () => {
                 </div>
               )}
 
-              {/* Variant selector */}
-              {product.variants && product.variants.length > 0 && (
+              {/* Variant selector with individual quantities */}
+              {product.variants && product.variants.length > 0 && product.slug === 'estuche-regalo' ? (
+                <div className="mb-6">
+                  <label className="block text-sm font-semibold text-primary mb-3">
+                    Selecciona los diseños y cantidades (máximo 12 estuches en total)
+                  </label>
+                  <div className="space-y-4">
+                    {product.variants.map((variant) => {
+                      const variantQty = variantQuantities[variant.id] || 0;
+                      const totalQty = Object.values(variantQuantities).reduce((sum, q) => sum + q, 0);
+                      const canIncrease = totalQty < 12;
+                      
+                      return (
+                        <div key={variant.id} className="border-2 border-gray-200 rounded-lg p-4">
+                          <div className="flex items-center gap-4">
+                            <img
+                              src={variant.image}
+                              alt={variant.name}
+                              className="w-20 h-20 object-contain"
+                            />
+                            <div className="flex-1">
+                              <p className="font-semibold text-primary">{variant.name}</p>
+                              <p className="text-xs text-gray-600">{variant.description}</p>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={() => {
+                                  const newQty = Math.max(0, variantQty - 1);
+                                  setVariantQuantities(prev => ({
+                                    ...prev,
+                                    [variant.id]: newQty
+                                  }));
+                                }}
+                                disabled={variantQty === 0}
+                                className="w-10 h-10 bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg font-bold text-xl transition-colors"
+                              >
+                                −
+                              </button>
+                              <span className="w-12 text-center font-bold text-lg">{variantQty}</span>
+                              <button
+                                onClick={() => {
+                                  if (canIncrease) {
+                                    setVariantQuantities(prev => ({
+                                      ...prev,
+                                      [variant.id]: variantQty + 1
+                                    }));
+                                  }
+                                }}
+                                disabled={!canIncrease}
+                                className="w-10 h-10 bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg font-bold text-xl transition-colors"
+                              >
+                                +
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div className="mt-4 p-3 bg-gray-100 rounded-lg">
+                    <p className="text-sm font-semibold text-center">
+                      Total: {Object.values(variantQuantities).reduce((sum, q) => sum + q, 0)} / 12 estuches
+                    </p>
+                  </div>
+                </div>
+              ) : product.variants && product.variants.length > 0 ? (
                 <div className="mb-6">
                   <label className="block text-sm font-semibold text-primary mb-3">
                     Selecciona el diseño
@@ -312,9 +390,10 @@ const ProductDetail = () => {
                     </p>
                   )}
                 </div>
-              )}
+              ) : null}
 
               {/* Quantity selector */}
+              {product.slug !== 'estuche-regalo' && (
               <div className="mb-6">
                 <label className="block text-sm font-semibold text-primary mb-3">
                   Cantidad
@@ -346,6 +425,7 @@ const ProductDetail = () => {
                   )}
                 </div>
               </div>
+              )}
 
               {/* Action buttons */}
               <div className="space-y-3">
@@ -366,7 +446,7 @@ const ProductDetail = () => {
 
               {/* Additional info */}
               <div className="mt-8 pt-8 border-t border-gray-200">
-                <h3 className="font-bold text-primary mb-3">Ingredientes</h3>
+                <h3 className="font-bold text-primary mb-3">{product.category === 'Packs' ? 'Material' : 'Ingredientes'}</h3>
                 <p className="text-sm text-gray-700 mb-4">{product.ingredients}</p>
 
                 {product.nutritionalInfo && (
