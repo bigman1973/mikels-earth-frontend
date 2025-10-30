@@ -671,6 +671,12 @@ const ProductDetail = () => {
                             <span className="font-semibold text-primary">{product.nutritionalInfo.perfilSabor.picante}</span>
                           </div>
                         </div>
+                        {product.nutritionalInfo.notasCata && (
+                          <div className="mb-4">
+                            <h3 className="font-bold text-primary mb-3 mt-6">Notas de Cata</h3>
+                            <p className="text-sm text-gray-700 italic">{product.nutritionalInfo.notasCata}</p>
+                          </div>
+                        )}
                         {product.nutritionalInfo.idealPara && (
                           <>
                             <h3 className="font-bold text-primary mb-3 mt-6">Ideal Para</h3>

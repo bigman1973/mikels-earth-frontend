@@ -138,12 +138,13 @@ export const products = [
     ingredients: "Aceite de oliva virgen extra ecológico 100%",
     nutritionalInfo: {
       ingredientes: "Aceite de oliva virgen extra ecológico 100%",
-      coupage: "Selección ecológica premium",
+      coupage: "Picual, Hojiblanca y Arbequina",
       perfilSabor: {
         frutado: "Intenso",
-        amargo: "Intenso",
-        picante: "Intenso"
+        amargo: "Medio",
+        picante: "Medio-Alto"
       },
+      notasCata: "Herbáceo, tomate verde, almendra, equilibrado",
       idealPara: [
         "Guisos y estofados",
         "Carnes a la brasa",
