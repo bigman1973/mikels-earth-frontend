@@ -297,7 +297,10 @@ export const products = [
     ],
     featured: true,
     freeShipping: true,
-    limitedEdition: true
+    limitedEdition: true,
+    badges: [
+      { text: "🍂 ÚNICO TEMPRANO NOVIEMBRE", color: "bg-gradient-to-r from-orange-600 to-amber-600" }
+    ]
   },
   {
     id: 7,
