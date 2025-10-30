@@ -310,6 +310,7 @@ const ProductDetail = () => {
                         )}
                       </div>
                       <div className="text-2xl font-bold text-primary">
+                        {/* Precio base sin descuento */}
                         {product.price.toFixed(2)}€
                       </div>
                       <div className="text-xs text-gray-600 mt-1">
