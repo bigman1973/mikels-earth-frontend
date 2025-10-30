@@ -211,17 +211,17 @@ export const products = [
     description: "Caja de 3 garrafas de 5 litros de aceite virgen extra de baja acidez. Variedades Picual, Hojiblanca y Arbequina. Solo 6€/litro con envío gratis.",
     longDescription: "El formato más económico para familias que aman el buen aceite. Caja de 3 garrafas de 5 litros de Aceite de Oliva Virgen Extra de baja acidez, procedente de nuestros olivares de Córdoba y Lleida. Variedades Picual, Hojiblanca y Arbequina cuidadosamente seleccionadas y prensadas en frío. Este es el aceite que usamos a diario en nuestra cocina familiar para todo tipo de recetas: desde un sofrito hasta aliñar una ensalada. Su equilibrio perfecto entre sabor y suavidad lo hace ideal para el uso cotidiano. Con la compra de 1 caja (3 unidades) el envío es totalmente gratuito. Formato ahorro perfecto para familias, restaurantes y uso intensivo en cocina.",
     price: 90.00,
-    priceSubscription: null,
+    priceSubscription: 81.00,
     originalPrice: 95.00,
     currency: "EUR",
-    image: "/images/aceite-5l-lifestyle-1.jpg",
+    image: "/images/aceite-5l-finca-principal.jpg",
     images: [
+      "/images/aceite-5l-finca-principal.jpg",
       "/images/aceite-5l-lifestyle-1.jpg",
       "/images/aceite-5l-lifestyle-2.jpg",
       "/images/aceite-5l-lifestyle-3.jpg",
       "/images/aceite-5l-lifestyle-4.jpg",
-      "/images/aceite-5l-3-garrafas.jpg",
-      "/images/finca-cordoba.jpg"
+      "/images/aceite-5l-3-garrafas.jpg"
     ],
     category: "Aceites",
     tags: ["Vegano", "Sin Gluten", "Prensado en Frío", "Formato Familiar", "Uso Cotidiano"],
@@ -235,8 +235,11 @@ export const products = [
       fat: "100g",
       saturated: "14g"
     },
-    subscriptionAvailable: false,
-    subscriptionFrequencies: [],
+    subscriptionAvailable: true,
+    subscriptionDiscount: 10,
+    subscriptionFrequencies: [
+      { value: "monthly", label: "Mensual", discount: 10 }
+    ],
     freeShipping: true,
     discount: 5,
     claims: ["Solo 6€/litro", "Envío gratis", "15 litros en total", "Formato ahorro", "De nuestros olivares de Córdoba y Lleida"],
