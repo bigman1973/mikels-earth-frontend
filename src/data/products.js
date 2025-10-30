@@ -98,7 +98,13 @@ export const products = [
     price: 13.50,
     priceSubscription: 12.15,
     currency: "EUR",
-    image: "/images/aceite-ecologico.jpg",
+    image: "/images/aceite-ecologico-principal.jpg",
+    images: [
+      "/images/aceite-ecologico-principal.jpg",
+      "/images/aceite-ecologico-estuche-blanco.png",
+      "/images/aceite-ecologico-lifestyle-terraza.png",
+      "/images/aceite-ecologico-lifestyle-campo.png"
+    ],
     category: "Aceites",
     tags: ["Vegano", "Sin Gluten", "Prensado en Frío", "Ecológico", "Premiado", "Alto en Polifenoles"],
     stock: 28,
