@@ -7,7 +7,7 @@ export const products = [
     description: "Melocotón plano cultivado en Alcarrás y preparado a mano. Sin aditivos artificiales, 100% natural y vegano.",
     longDescription: "Nuestro paraguayo en almíbar es el producto estrella de Mikel's Earth. Cultivado en los campos de Alcarrás, cada fruta es seleccionada cuidadosamente y preparada siguiendo métodos artesanales transmitidos de generación en generación. El proceso de elaboración respeta los tiempos naturales de la fruta, conservando su sabor auténtico y propiedades nutritivas. Sin conservantes, sin colorantes, solo fruta de calidad y almíbar natural.",
     price: 8.50,
-    priceSubscription: 7.50,
+    priceSubscription: 7.82,
     currency: "EUR",
     image: "/images/paraguayo-almibar.jpg",
     category: "Conservas",
@@ -23,26 +23,29 @@ export const products = [
       fiber: "1.2g"
     },
     subscriptionAvailable: true,
-    subscriptionDiscount: 12,
+    subscriptionDiscount: 8,
     subscriptionFrequencies: [
-      { value: "weekly", label: "Semanal", discount: 15 },
-      { value: "biweekly", label: "Quincenal", discount: 12 },
-      { value: "monthly", label: "Mensual", discount: 10 }
-    ]
+      { value: "quarterly", label: "Trimestral", discount: 8 },
+      { value: "biannual", label: "Semestral", discount: 7 }
+    ],
+    volumeDiscount: {
+      minQuantity: 12,
+      discount: 8
+    }
   },
   {
     id: 2,
     name: "Nectarina en Almíbar",
     slug: "nectarina-almibar",
-    description: "Nectarina cultivada en Alcarrás y preparada a mano. Sin aditivos artificiales, 100% natural y vegano.",
-    longDescription: "Nuestra nectarina en almíbar captura la esencia del verano mediterráneo. Cultivada en los campos de Alcarrás, cada fruta es seleccionada en su punto óptimo de maduración y preparada siguiendo métodos artesanales. El proceso de elaboración respeta los tiempos naturales de la fruta, conservando su sabor auténtico y propiedades nutritivas. Sin conservantes, sin colorantes, solo fruta de calidad y almíbar natural.",
-    price: 8.50, // Precio temporal (pendiente de confirmar)
-    priceSubscription: 7.50, // Precio suscripción temporal (pendiente de confirmar)
+    description: "El melocotón sin complejos: piel lisa, sabor intenso, carácter definido. Cultivada en Alcarràs, seleccionada en su momento de máxima expresión.",
+    longDescription: "La nectarina es el melocotón sin complejos: piel lisa, sabor intenso, carácter definido.\n\nCultivada en los campos de Alcarràs, cada fruta es seleccionada en su momento de máxima expresión. Cuando el dulzor y la acidez se equilibran a la perfección.\n\nEl proceso de elaboración respeta los tiempos naturales de la fruta. Sin prisas, sin atajos. El resultado: una nectarina que conserva su textura firme y su sabor auténtico.\n\nSin conservantes. Sin colorantes. Solo fruta de verdad y almíbar natural.",
+    price: 8.50,
+    priceSubscription: 7.82,
     currency: "EUR",
     image: "/images/nectarina-almibar.jpg",
     category: "Conservas",
     tags: ["Vegano", "Sin Gluten", "Artesanal", "Local"],
-    stock: 0, // Pendiente de stock
+    stock: 0,
     weight: "720g",
     ingredients: "Nectarina, agua, azúcar de caña",
     nutritionalInfo: {
@@ -53,12 +56,15 @@ export const products = [
       fiber: "1.2g"
     },
     subscriptionAvailable: true,
-    subscriptionDiscount: 12, // Temporal - Pendiente de confirmar
+    subscriptionDiscount: 8,
     subscriptionFrequencies: [
-      { value: "weekly", label: "Semanal", discount: 15 },
-      { value: "biweekly", label: "Quincenal", discount: 12 },
-      { value: "monthly", label: "Mensual", discount: 10 }
-    ]
+      { value: "quarterly", label: "Trimestral", discount: 8 },
+      { value: "biannual", label: "Semestral", discount: 7 }
+    ],
+    volumeDiscount: {
+      minQuantity: 12,
+      discount: 8
+    }
   },
   {
     id: 3,
