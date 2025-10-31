@@ -47,12 +47,11 @@ export const createCheckoutSession = async (cartItems, customerInfo) => {
 
     const { sessionId, url, order_number } = await response.json();
     
-    // Redirigir a Stripe Checkout
-    const stripe = await stripePromise;
-    const { error } = await stripe.redirectToCheckout({ sessionId });
-
-    if (error) {
-      throw new Error(error.message);
+    // Redirigir a Stripe Checkout usando la URL directa
+    if (url) {
+      window.location.href = url;
+    } else {
+      throw new Error('No se recibió URL de checkout');
     }
 
     return { order_number };
@@ -100,12 +99,11 @@ export const createSubscriptionCheckout = async (item, customerInfo) => {
 
     const { sessionId, url, subscription_number } = await response.json();
     
-    // Redirigir a Stripe Checkout
-    const stripe = await stripePromise;
-    const { error } = await stripe.redirectToCheckout({ sessionId });
-
-    if (error) {
-      throw new Error(error.message);
+    // Redirigir a Stripe Checkout usando la URL directa
+    if (url) {
+      window.location.href = url;
+    } else {
+      throw new Error('No se recibió URL de checkout');
     }
 
     return { subscription_number };
