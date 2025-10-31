@@ -15,7 +15,7 @@ const Header = () => {
         <div className="container mx-auto px-4 flex justify-between items-center">
           <div className="flex gap-3">
             <a 
-              href="https://www.facebook.com" 
+              href="https://www.facebook.com/mikelsearth/" 
               target="_blank" 
               rel="noopener noreferrer"
               className="hover:text-accent transition-colors"
@@ -26,7 +26,7 @@ const Header = () => {
               </svg>
             </a>
             <a 
-              href="https://www.instagram.com" 
+              href="https://www.instagram.com/mikelsearth" 
               target="_blank" 
               rel="noopener noreferrer"
               className="hover:text-accent transition-colors"
@@ -37,7 +37,7 @@ const Header = () => {
               </svg>
             </a>
             <a 
-              href="https://www.tiktok.com" 
+              href="https://www.tiktok.com/@mikelsearth" 
               target="_blank" 
               rel="noopener noreferrer"
               className="hover:text-accent transition-colors"
@@ -48,7 +48,7 @@ const Header = () => {
               </svg>
             </a>
             <a 
-              href="https://www.youtube.com" 
+              href="https://www.youtube.com/channel/UCZmLAbkaLOTdwGGMYxaDy-Q" 
               target="_blank" 
               rel="noopener noreferrer"
               className="hover:text-accent transition-colors"

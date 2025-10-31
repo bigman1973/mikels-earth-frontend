@@ -75,7 +75,7 @@ const Footer = () => {
             </h3>
             <div className="flex gap-4">
               <a 
-                href="https://www.facebook.com" 
+                href="https://www.facebook.com/mikelsearth/" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-gray-600 hover:text-primary transition-colors"
@@ -108,7 +108,7 @@ const Footer = () => {
                 </svg>
               </a>
               <a 
-                href="https://www.youtube.com" 
+                href="https://www.youtube.com/channel/UCZmLAbkaLOTdwGGMYxaDy-Q" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-gray-600 hover:text-primary transition-colors"
