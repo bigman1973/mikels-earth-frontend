@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { CheckCircle, Package, Mail } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { getSessionStatus } from '../services/stripeService';
 
 const OrderSuccess = () => {
   const [searchParams] = useSearchParams();
@@ -12,8 +13,7 @@ const OrderSuccess = () => {
   useEffect(() => {
     if (sessionId) {
       // Fetch session status from backend
-      fetch(`http://localhost:5001/api/stripe/session-status/${sessionId}`)
-        .then(res => res.json())
+      getSessionStatus(sessionId)
         .then(data => {
           setSessionData(data);
           setLoading(false);

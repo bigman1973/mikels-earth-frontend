@@ -3,6 +3,7 @@ import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
 import { Package, CreditCard, Truck, ShoppingBag } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { createCheckoutSession, createSubscriptionCheckout } from '../services/stripeService';
 
 const Checkout = () => {
   const { cart, getCartTotal, clearCart } = useCart();
@@ -59,66 +60,29 @@ const Checkout = () => {
       const oneTimePurchases = cart.filter(item => item.purchaseType === 'one-time');
       const subscriptions = cart.filter(item => item.purchaseType === 'subscription');
       
+      // Prepare customer info with correct field names
+      const customerInfo = {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        address: formData.address,
+        city: formData.city,
+        postalCode: formData.postal_code,
+        country: formData.country,
+        notes: formData.notes
+      };
+      
       // Process one-time purchases
       if (oneTimePurchases.length > 0) {
-        const response = await fetch('http://localhost:5001/api/stripe/create-checkout-session', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            items: oneTimePurchases.map(item => ({
-              id: item.id,
-              name: item.name,
-              slug: item.slug,
-              price: item.price,
-              quantity: item.quantity,
-              weight: item.weight
-            })),
-            customer_info: formData
-          })
-        });
-        
-        if (!response.ok) {
-          throw new Error('Error al crear la sesión de pago');
-        }
-        
-        const data = await response.json();
-        
-        // Redirect to Stripe Checkout
-        window.location.href = data.url;
+        await createCheckoutSession(oneTimePurchases, customerInfo);
+        // The function will redirect to Stripe Checkout
       }
       
       // Process subscriptions (one at a time for now)
       if (subscriptions.length > 0) {
         const subscription = subscriptions[0]; // Process first subscription
-        
-        const response = await fetch('http://localhost:5001/api/stripe/create-subscription-checkout', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            item: {
-              id: subscription.id,
-              name: subscription.name,
-              slug: subscription.slug,
-              price: subscription.price,
-              quantity: subscription.quantity,
-              subscription_frequency: subscription.subscriptionFrequency
-            },
-            customer_info: formData
-          })
-        });
-        
-        if (!response.ok) {
-          throw new Error('Error al crear la suscripción');
-        }
-        
-        const data = await response.json();
-        
-        // Redirect to Stripe Checkout
-        window.location.href = data.url;
+        await createSubscriptionCheckout(subscription, customerInfo);
+        // The function will redirect to Stripe Checkout
       }
       
     } catch (err) {
