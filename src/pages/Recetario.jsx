@@ -10,7 +10,7 @@ const Recetario = () => {
       difficulty: 'Fácil',
       time: '5 min',
       servings: '2',
-      image: '🍞',
+      image: '/images/pan-tomate.png',
       description: 'La manera más simple y deliciosa de disfrutar nuestro aceite Temprano. Un desayuno que te transporta al Mediterráneo.',
       ingredients: [
         '2 rebanadas de pan de masa madre',
@@ -36,7 +36,7 @@ const Recetario = () => {
       difficulty: 'Fácil',
       time: '15 min',
       servings: '4',
-      image: '🥗',
+      image: '/images/ensalada-paraguayo.png',
       description: 'Una combinación sorprendente que equilibra lo dulce del paraguayo con la cremosidad de la burrata. Perfecta para verano.',
       ingredients: [
         '1 frasco de Paraguayo en Almíbar',
@@ -65,7 +65,7 @@ const Recetario = () => {
       difficulty: 'Media',
       time: '20 min',
       servings: '4',
-      image: '🥩',
+      image: '/images/carpaccio.jpg',
       description: 'El Temprano eleva el carpaccio a otro nivel. Su intensidad complementa perfectamente la carne cruda.',
       ingredients: [
         '400g de solomillo de ternera',
@@ -94,7 +94,7 @@ const Recetario = () => {
       difficulty: 'Fácil',
       time: '10 min',
       servings: '4',
-      image: '🍨',
+      image: '/images/postre-paraguayo.png',
       description: 'Un postre simple pero espectacular. El calor carameliza el almíbar y el contraste con el helado es mágico.',
       ingredients: [
         '1 frasco de Paraguayo en Almíbar',
@@ -115,13 +115,13 @@ const Recetario = () => {
       tips: 'El contraste caliente-frío es clave. Sirve inmediatamente. Puedes flamear con un poco de brandy para un toque espectacular.'
     },
     {
-      id: 'pasta-picual',
-      name: 'Pasta Aglio e Olio con Ecol\u00f3gico',
+        id: 'pasta-picual',
+      name: 'Pasta Aglio e Olio con Ecológico',
       category: 'Principal',
       difficulty: 'Fácil',
       time: '20 min',
       servings: '4',
-      image: '\ud83c\udf5d',
+      image: '/images/pasta-aglio.png',
       description: 'La receta italiana m\u00e1s simple, elevada con nuestro ecol\u00f3gico. Cuando menos es m\u00e1s.',
       ingredients: [
         '400g de espaguetis',
@@ -150,7 +150,7 @@ const Recetario = () => {
       difficulty: 'Muy Fácil',
       time: '5 min',
       servings: '1',
-      image: '🥣',
+      image: '/images/yogur-paraguayo.png',
       description: 'Un desayuno saludable y delicioso. El paraguayo añade dulzor natural sin azúcares añadidos.',
       ingredients: [
         'Yogur griego natural',
@@ -232,9 +232,13 @@ const Recetario = () => {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow cursor-pointer group"
               >
-                {/* Imagen/Icono */}
-                <div className="h-48 bg-gradient-to-br from-accent/30 to-secondary/30 flex items-center justify-center text-8xl group-hover:scale-110 transition-transform">
-                  {recipe.image}
+                {/* Imagen */}
+                <div className="h-48 bg-gray-200 overflow-hidden">
+                  <img 
+                    src={recipe.image} 
+                    alt={recipe.name}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
                 </div>
 
                 {/* Contenido */}
