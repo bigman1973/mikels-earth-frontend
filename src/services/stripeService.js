@@ -1,9 +1,12 @@
 import { loadStripe } from '@stripe/stripe-js';
 
-// Cargar Stripe con la clave pública
+// Cargar Stripe con la clave pública desde variables de entorno
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_placeholder');
 
+// API URL desde variables de entorno de Vercel
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
+console.log('API_URL configured:', API_URL); // Debug log
 
 /**
  * Crear sesión de checkout para compra única
