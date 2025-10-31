@@ -9,6 +9,7 @@ const NuestrasJoyas = () => {
       name: 'Paraguayo en Almíbar',
       tagline: 'La Joya de Alcarràs',
       icon: <Sparkles className="text-secondary" size={48} />,
+      image: '/images/paraguayo-principal.png',
       description: 'El melocotón plano que conquistó nuestros corazones hace más de un siglo. Cultivado en Alcarràs, seleccionado a mano, cocido con paciencia y envasado con amor.',
       features: [
         'Melocot\u00f3n plano de Alcarr\u00e0s',
@@ -26,6 +27,7 @@ const NuestrasJoyas = () => {
       name: 'Aceites de Oliva Virgen Extra',
       tagline: 'El Oro Líquido de Córdoba',
       icon: <Droplet className="text-secondary" size={48} />,
+      image: '/images/aceite-5l-portada.jpg',
       description: 'Tres variedades, tres personalidades, un mismo compromiso con la excelencia. Nuestros aceites son el resultado de generaciones de conocimiento y pasión por el olivo.',
       features: [
         'Cosecha manual de aceitunas',
@@ -42,6 +44,7 @@ const NuestrasJoyas = () => {
       name: 'Aceite Temprano',
       tagline: 'Para Paladares Valientes',
       icon: <Leaf className="text-secondary" size={48} />,
+      image: '/images/aceite-temprano-principal.jpeg',
       description: 'No es para todos. Y nos encanta. Este aceite de cosecha temprana, elaborado con aceitunas verdes, es intenso, picante, con un frutado verde que explota en boca.',
       features: [
         'Aceitunas verdes recogidas antes de madurar',
@@ -58,6 +61,7 @@ const NuestrasJoyas = () => {
       name: 'Packs Degustación',
       tagline: 'El Regalo Perfecto',
       icon: <Gift className="text-secondary" size={48} />,
+      image: '/images/pack-degustacion-principal.jpeg',
       description: 'Combina nuestras joyas en packs cuidadosamente seleccionados. El regalo perfecto para quien aprecia lo auténtico, lo artesanal, lo hecho con amor.',
       features: [
         'Combinaciones exclusivas',
@@ -136,13 +140,12 @@ const NuestrasJoyas = () => {
                 {/* Imagen placeholder */}
                 <div className={`${index % 2 === 1 ? 'md:order-2' : ''}`}>
                   <div className="relative">
-                    <div className="aspect-square bg-gradient-to-br from-accent/30 to-secondary/30 rounded-2xl flex items-center justify-center overflow-hidden">
-                      <div className="text-center p-8">
-                        {collection.icon}
-                        <p className="text-primary/50 mt-4">
-                          [Imagen de {collection.name}]
-                        </p>
-                      </div>
+                    <div className="aspect-square bg-gray-100 rounded-2xl overflow-hidden shadow-lg group">
+                      <img 
+                        src={collection.image} 
+                        alt={collection.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                      />
                     </div>
                     <div className="absolute -top-4 -right-4 bg-secondary text-primary px-6 py-2 rounded-full font-bold shadow-lg">
                       {collection.tagline}
