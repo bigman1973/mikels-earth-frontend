@@ -4,6 +4,7 @@ import { products } from '../data/products';
 import { useCart } from '../context/CartContext';
 import { ShoppingCart, ArrowLeft, Check, Repeat, Tag, Package, Leaf } from 'lucide-react';
 import { motion } from 'framer-motion';
+import SoldOutNotification from '../components/SoldOutNotification';
 
 const ProductDetail = () => {
   const { slug } = useParams();
@@ -199,9 +200,14 @@ const ProductDetail = () => {
               </div>
 
               {/* Badges */}
-              {product.badges && product.badges.length > 0 && (
+              {(product.soldOut || (product.badges && product.badges.length > 0)) && (
                 <div className="flex flex-wrap gap-2 mb-6">
-                  {product.badges.map((badge, index) => (
+                  {product.soldOut && (
+                    <span className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg uppercase tracking-wide">
+                      🌾 {product.soldOutMessage || 'Sold Out'}
+                    </span>
+                  )}
+                  {product.badges && product.badges.map((badge, index) => (
                     <span
                       key={index}
                       className={`${badge.color} text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg uppercase tracking-wide`}
@@ -676,22 +682,26 @@ const ProductDetail = () => {
                 </div>
               )}
 
-              {/* Action buttons */}
-              <div className="space-y-3">
-                <button
-                  onClick={handleBuyNow}
-                  className="w-full bg-primary text-white py-4 rounded-lg font-semibold text-lg hover:bg-primary/90 transition-all shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
-                >
-                  Comprar Ahora
-                </button>
-                <button
-                  onClick={handleAddToCart}
-                  className="w-full bg-white border-2 border-primary text-primary py-4 rounded-lg font-semibold text-lg hover:bg-primary/5 transition-all flex items-center justify-center gap-2"
-                >
-                  <ShoppingCart className="w-5 h-5" />
-                  Añadir al Carrito
-                </button>
-              </div>
+              {/* Action buttons or Sold Out Notification */}
+              {product.soldOut ? (
+                <SoldOutNotification productName={product.name} />
+              ) : (
+                <div className="space-y-3">
+                  <button
+                    onClick={handleBuyNow}
+                    className="w-full bg-primary text-white py-4 rounded-lg font-semibold text-lg hover:bg-primary/90 transition-all shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
+                  >
+                    Comprar Ahora
+                  </button>
+                  <button
+                    onClick={handleAddToCart}
+                    className="w-full bg-white border-2 border-primary text-primary py-4 rounded-lg font-semibold text-lg hover:bg-primary/5 transition-all flex items-center justify-center gap-2"
+                  >
+                    <ShoppingCart className="w-5 h-5" />
+                    Añadir al Carrito
+                  </button>
+                </div>
+              )}
 
               {/* Additional info */}
               <div className="mt-8 pt-8 border-t border-gray-200">

@@ -46,7 +46,6 @@ export const products = [
       { value: "biannual", label: "Semestral", discount: 7 }
     ],
     freeShipping: true,
-    discount: 5,
     claims: ["Solo 6€/litro", "Envío gratis", "15 litros en total", "Formato ahorro", "De nuestros olivares de Córdoba y Lleida"],
     badges: [
       { text: "Más Vendido", color: "bg-red-600" },
@@ -212,7 +211,9 @@ export const products = [
     ],
     category: "Aceites",
     tags: ["Vegano", "Sin Gluten", "Prensado en Frío", "Versátil"],
-    stock: 35,
+    stock: 0,
+    soldOut: true,
+    soldOutMessage: "En cosecha - Disponible pronto",
     weight: "500ml",
     ingredients: "Aceite de oliva virgen extra",
     nutritionalInfo: {
@@ -267,7 +268,9 @@ export const products = [
     ],
     category: "Aceites",
     tags: ["Vegano", "Sin Gluten", "Prensado en Frío", "Ecológico", "Premiado", "Alto en Polifenoles"],
-    stock: 28,
+    stock: 0,
+    soldOut: true,
+    soldOutMessage: "En cosecha - Disponible pronto",
     weight: "500ml",
     ingredients: "Aceite de oliva virgen extra ecológico 100%",
     nutritionalInfo: {
@@ -484,7 +487,6 @@ export const products = [
       renewalPolicy: "Los precios se revisan anualmente. Al finalizar el periodo, podrás cancelar o renovar tu suscripción."
     },
     freeShipping: true,
-    discount: 20,
     featured: true,
     specialOccasion: "Navidad",
     includes: [
