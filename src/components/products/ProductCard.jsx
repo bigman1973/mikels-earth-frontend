@@ -58,12 +58,7 @@ const ProductCard = ({ product }) => {
             </div>
           )}
           
-          {/* Badge de suscripción disponible */}
-          {hasSubscription && (
-            <div className="absolute top-3 right-3 bg-secondary text-primary px-3 py-1 rounded-full text-xs font-semibold shadow-md">
-              Ahorra {savingsPercent}%
-            </div>
-          )}
+          {/* Badge de suscripción disponible - ELIMINADO para mantener imagen premium */}
 
           {/* Overlay en hover */}
           <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-all duration-300" />
