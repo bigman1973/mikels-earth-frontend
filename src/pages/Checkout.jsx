@@ -21,10 +21,27 @@ const Checkout = () => {
     country: 'España',
     notes: ''
   });
+  
+  const [needsInvoice, setNeedsInvoice] = useState(false);
+  const [invoiceData, setInvoiceData] = useState({
+    fiscalName: '',
+    nif: '',
+    fiscalAddress: '',
+    fiscalCity: '',
+    fiscalPostalCode: ''
+  });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+  
+  const handleInvoiceInputChange = (e) => {
+    const { name, value } = e.target;
+    setInvoiceData(prev => ({
       ...prev,
       [name]: value
     }));
@@ -44,6 +61,17 @@ const Checkout = () => {
     if (!emailRegex.test(formData.email)) {
       setError('Por favor, introduce un email válido');
       return false;
+    }
+    
+    // Validate invoice data if needed
+    if (needsInvoice) {
+      const invoiceRequired = ['fiscalName', 'nif'];
+      for (const field of invoiceRequired) {
+        if (!invoiceData[field]) {
+          setError(`Por favor, completa el campo de factura: ${field === 'fiscalName' ? 'Nombre fiscal' : 'NIF/CIF'}`);
+          return false;
+        }
+      }
     }
     
     return true;
@@ -71,7 +99,9 @@ const Checkout = () => {
         country: formData.country,
         notes: formData.notes,
         discountCode: appliedDiscount?.code || null,
-        discountAmount: appliedDiscount ? getDiscountAmount() : 0
+        discountAmount: appliedDiscount ? getDiscountAmount() : 0,
+        needsInvoice: needsInvoice,
+        invoiceData: needsInvoice ? invoiceData : null
       };
       
       // Process one-time purchases
@@ -257,6 +287,104 @@ const Checkout = () => {
                       placeholder="Instrucciones especiales para la entrega..."
                     />
                   </div>
+
+                  {/* Checkbox para factura */}
+                  <div className="md:col-span-2 border-t-2 border-gray-200 pt-4">
+                    <label className="flex items-center gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={needsInvoice}
+                        onChange={(e) => setNeedsInvoice(e.target.checked)}
+                        className="w-5 h-5 text-primary border-gray-300 rounded focus:ring-primary"
+                      />
+                      <span className="text-sm font-semibold text-primary">
+                        ¿Necesitas factura?
+                      </span>
+                    </label>
+                  </div>
+
+                  {/* Campos de factura */}
+                  {needsInvoice && (
+                    <>
+                      <div className="md:col-span-2 bg-green-50 border border-green-200 rounded-lg p-4">
+                        <p className="text-sm text-green-800 font-medium mb-3">
+                          📝 Datos para la factura
+                        </p>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="md:col-span-2">
+                            <label className="block text-sm font-semibold text-primary mb-2">
+                              Nombre Fiscal / Razón Social *
+                            </label>
+                            <input
+                              type="text"
+                              name="fiscalName"
+                              value={invoiceData.fiscalName}
+                              onChange={handleInvoiceInputChange}
+                              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+                              placeholder="Nombre completo o razón social"
+                            />
+                          </div>
+
+                          <div className="md:col-span-2">
+                            <label className="block text-sm font-semibold text-primary mb-2">
+                              NIF/CIF *
+                            </label>
+                            <input
+                              type="text"
+                              name="nif"
+                              value={invoiceData.nif}
+                              onChange={handleInvoiceInputChange}
+                              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+                              placeholder="12345678A o B12345678"
+                            />
+                          </div>
+
+                          <div className="md:col-span-2">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Dirección Fiscal (opcional, si es diferente a la de envío)
+                            </label>
+                            <input
+                              type="text"
+                              name="fiscalAddress"
+                              value={invoiceData.fiscalAddress}
+                              onChange={handleInvoiceInputChange}
+                              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+                              placeholder="Calle, número, piso, puerta"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Ciudad Fiscal
+                            </label>
+                            <input
+                              type="text"
+                              name="fiscalCity"
+                              value={invoiceData.fiscalCity}
+                              onChange={handleInvoiceInputChange}
+                              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+                              placeholder="Ciudad"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                              Código Postal Fiscal
+                            </label>
+                            <input
+                              type="text"
+                              name="fiscalPostalCode"
+                              value={invoiceData.fiscalPostalCode}
+                              onChange={handleInvoiceInputChange}
+                              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+                              placeholder="08001"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
 
