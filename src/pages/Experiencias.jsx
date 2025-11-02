@@ -11,12 +11,30 @@ const Experiencias = () => {
   });
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Aquí se conectará con el backend para guardar en BD y enviar email
-    console.log('Formulario enviado:', formData);
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 5000);
+    
+    try {
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const response = await fetch(`${API_URL}/api/experience/workshop-visit`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      
+      if (response.ok) {
+        setSubmitted(true);
+        setTimeout(() => setSubmitted(false), 5000);
+      } else {
+        console.error('Error enviando solicitud');
+        alert('Hubo un error al enviar tu solicitud. Por favor, inténtalo de nuevo.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Hubo un error al enviar tu solicitud. Por favor, inténtalo de nuevo.');
+    }
   };
 
   const handleChange = (e) => {

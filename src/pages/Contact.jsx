@@ -16,27 +16,42 @@ const Contact = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     
-    // Crear mensaje para WhatsApp
-    const whatsappMessage = `*Nuevo mensaje de contacto*%0A%0A` +
-      `*Nombre:* ${formData.name}%0A` +
-      `*Email:* ${formData.email}%0A` +
-      `*Teléfono:* ${formData.phone}%0A%0A` +
-      `*Mensaje:*%0A${formData.message}`;
-    
-    // Abrir WhatsApp con el mensaje
-    const whatsappUrl = `https://wa.me/436789070062172?text=${whatsappMessage}`;
-    window.open(whatsappUrl, '_blank');
-    
-    // Limpiar formulario
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      message: ''
-    });
+    try {
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const response = await fetch(`${API_URL}/api/contact/send-message`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      
+      if (response.ok) {
+        setSubmitted(true);
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          message: ''
+        });
+        setTimeout(() => setSubmitted(false), 5000);
+      } else {
+        console.error('Error enviando mensaje');
+        alert('Hubo un error al enviar tu mensaje. Por favor, inténtalo de nuevo.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Hubo un error al enviar tu mensaje. Por favor, inténtalo de nuevo.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -46,7 +61,7 @@ const Contact = () => {
           Contacto
         </h1>
         <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
-          ¿Tienes alguna pregunta? Completa el formulario y te responderemos por WhatsApp
+          ¿Tienes alguna pregunta? Completa el formulario y te responderemos por email en menos de 24 horas
         </p>
 
         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -179,17 +194,28 @@ const Contact = () => {
                 ></textarea>
               </div>
 
-              <button
-                type="submit"
-                className="w-full bg-primary text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
-              >
-                <Send className="w-5 h-5" />
-                Enviar por WhatsApp
-              </button>
+              {submitted ? (
+                <div className="bg-green-50 border border-green-500 rounded-lg p-4 text-center">
+                  <p className="text-green-700 font-semibold">
+                    ✓ ¡Mensaje enviado! Te responderemos pronto.
+                  </p>
+                </div>
+              ) : (
+                <>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full bg-primary text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                  >
+                    <Send className="w-5 h-5" />
+                    {loading ? 'Enviando...' : 'Enviar Mensaje'}
+                  </button>
 
-              <p className="text-xs text-gray-500 text-center">
-                Al enviar, se abrirá WhatsApp con tu mensaje prellenado
-              </p>
+                  <p className="text-xs text-gray-500 text-center">
+                    Te responderemos por email en menos de 24 horas
+                  </p>
+                </>
+              )}
             </form>
           </div>
         </div>
