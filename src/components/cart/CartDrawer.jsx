@@ -89,7 +89,17 @@ const CartDrawer = () => {
 
                       {/* Product info */}
                       <div className="flex gap-3 mb-3">
-                        <div className="w-16 h-16 bg-gray-200 rounded flex-shrink-0" />
+                        {item.image ? (
+                          <img 
+                            src={item.image} 
+                            alt={item.name}
+                            className="w-16 h-16 object-cover rounded flex-shrink-0"
+                          />
+                        ) : (
+                          <div className="w-16 h-16 bg-gray-200 rounded flex-shrink-0 flex items-center justify-center">
+                            <ShoppingBag className="w-8 h-8 text-gray-400" />
+                          </div>
+                        )}
                         <div className="flex-1 min-w-0">
                           <h3 className="font-semibold text-sm text-primary mb-1 line-clamp-2">
                             {item.name}
