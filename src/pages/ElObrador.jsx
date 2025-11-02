@@ -88,33 +88,36 @@ const ElObrador = () => {
                 title: "La Cosecha Manual",
                 subtitle: "El Ojo Experto que Ninguna Máquina Puede Replicar",
                 icon: <Hand className="text-secondary" size={48} />,
+                image: "/images/cosechamanual.jpg",
                 content: [
                   "Cada fruta es seleccionada a mano en su punto óptimo de maduración. No antes, cuando aún le falta sabor. No después, cuando ya ha perdido textura. Justo en el momento perfecto.",
                   "Nuestros recolectores conocen cada árbol. Saben cuáles maduran primero, cuáles necesitan más tiempo. Es un conocimiento que se adquiere con años, con experiencia, con pasión.",
-                  "Durante la recolecci\u00f3n, seleccionamos el fruto. Y esa diferencia se nota en cada bocado."
+                  "Durante la recolección, seleccionamos el fruto. Y esa diferencia se nota en cada bocado."
                 ],
                 highlight: "Solo el 60% de la fruta pasa nuestro control de calidad"
               },
               {
                 step: "02",
-                title: "La Elaboraci\u00f3n Artesanal",
-                subtitle: "El Punto Exacto, No el Camino F\u00e1cil",
+                title: "La Elaboración Artesanal",
+                subtitle: "El Punto Exacto, No el Camino Fácil",
                 icon: <Clock className="text-secondary" size={48} />,
+                image: "/images/Elaboracionartesanal.png",
                 content: [
-                  "En las f\u00e1bricas industriales, la fruta se cuece durante horas hasta convertirse en una masa homog\u00e9nea. Luego a\u00f1aden espesantes para darle textura, conservantes para alargar su vida, y aromas para recuperar lo que el exceso de calor destruy\u00f3.",
+                  "En las fábricas industriales, la fruta se cuece durante horas hasta convertirse en una masa homogénea. Luego añaden espesantes para darle textura, conservantes para alargar su vida, y aromas para recuperar lo que el exceso de calor destruyó.",
                   "Nosotros hacemos lo contrario.",
-                  "En nuestro obrador, cada lote se cocina solo hasta alcanzar su punto \u00f3ptimo. Ni un minuto m\u00e1s, ni uno menos. La pasteurizaci\u00f3n se controla con precisi\u00f3n milim\u00e9trica: el tiempo exacto para conservar la fruta como si acabara de cosecharse, sin cocinarla hasta la muerte.",
-                  "No usamos espesantes. No a\u00f1adimos conservantes. No compensamos con qu\u00edmica lo que el proceso industrial destruye.",
-                  "Solo fruta, un poco de az\u00facar, y el conocimiento de cu\u00e1ndo detenerse.",
+                  "En nuestro obrador, cada lote se cocina solo hasta alcanzar su punto óptimo. Ni un minuto más, ni uno menos. La pasteurización se controla con precisión milimétrica: el tiempo exacto para conservar la fruta como si acabara de cosecharse, sin cocinarla hasta la muerte.",
+                  "No usamos espesantes. No añadimos conservantes. No compensamos con química lo que el proceso industrial destruye.",
+                  "Solo fruta, un poco de azúcar, y el conocimiento de cuándo detenerse.",
                   "El resultado es un producto que conserva el sabor, la textura y el color de la fruta fresca. Porque la tratamos con el respeto que merece."
                 ],
-                highlight: "La diferencia est\u00e1 en lo que NO hacemos."
+                highlight: "La diferencia está en lo que NO hacemos."
               },
               {
                 step: "03",
                 title: "El Envasado Uno a Uno",
                 subtitle: "Nuestra Firma Personal en Cada Producto",
                 icon: <Eye className="text-secondary" size={48} />,
+                image: "/images/ElEnvasadounoauno.png",
                 content: [
                   "Cada frasco es llenado a mano. Cada tapa se cierra manualmente. Cada etiqueta se coloca con cuidado.",
                   "Es nuestro sello de garantía. Nuestra firma personal. Cuando recibes un producto de Mikel's Earth, sabes que pasó por nuestras manos, que lo revisamos, que está perfecto.",
@@ -159,10 +162,12 @@ const ElObrador = () => {
                   </div>
                   
                   <div className={`${index % 2 === 1 ? 'md:order-1' : ''} flex items-center justify-center`}>
-                    <div className="w-full h-64 bg-gradient-to-br from-accent/30 to-secondary/30 rounded-lg flex items-center justify-center">
-                      <p className="text-primary/50 text-center px-4">
-                        [Espacio para imagen/video del proceso]
-                      </p>
+                    <div className="w-full h-64 rounded-lg overflow-hidden shadow-lg">
+                      <img 
+                        src={process.image} 
+                        alt={process.title}
+                        className="w-full h-full object-cover"
+                      />
                     </div>
                   </div>
                 </div>
