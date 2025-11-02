@@ -11,18 +11,32 @@ const Newsletter = ({ variant = 'default' }) => {
     e.preventDefault();
     setLoading(true);
     
-    // Aquí se conectará con Brevo/backend
-    console.log('Newsletter subscription:', email);
-    
-    // Simular envío
-    setTimeout(() => {
-      setLoading(false);
-      setSubmitted(true);
-      setEmail('');
+    try {
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const response = await fetch(`${API_URL}/api/newsletter/subscribe`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
       
-      // Reset después de 5 segundos
-      setTimeout(() => setSubmitted(false), 5000);
-    }, 1000);
+      if (response.ok) {
+        setSubmitted(true);
+        setEmail('');
+        
+        // Reset después de 5 segundos
+        setTimeout(() => setSubmitted(false), 5000);
+      } else {
+        console.error('Error subscribing to newsletter');
+        alert('Hubo un error al suscribirte. Por favor, inténtalo de nuevo.');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Hubo un error al suscribirte. Por favor, inténtalo de nuevo.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (variant === 'footer') {
