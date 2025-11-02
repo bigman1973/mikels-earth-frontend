@@ -46,6 +46,11 @@ const ProductDetail = () => {
   
   const selectedFrequency = product.subscriptionFrequencies?.find(f => f.value === subscriptionFrequency);
   
+  // Calcular el descuento máximo disponible en suscripción
+  const maxSubscriptionDiscount = product.subscriptionFrequencies && product.subscriptionFrequencies.length > 0
+    ? Math.max(...product.subscriptionFrequencies.map(f => f.discount))
+    : 0;
+  
   // Para suscripción, aplicar descuento SOLO según la frecuencia elegida
   const subscriptionPrice = purchaseType === 'subscription' && selectedFrequency
     ? product.price * (1 - selectedFrequency.discount / 100)
@@ -315,12 +320,11 @@ const ProductDetail = () => {
                           <Check className="w-5 h-5 text-primary" />
                         )}
                       </div>
-                      <div className="text-2xl font-bold text-primary">
-                        {/* Precio base sin descuento */}
-                        {product.price.toFixed(2)}€
+                      <div className="text-lg font-bold text-primary">
+                        Benefíciate de hasta un {maxSubscriptionDiscount}% de descuento
                       </div>
                       <div className="text-xs text-gray-600 mt-1">
-                        Descuento según frecuencia
+                        El precio final depende de la frecuencia elegida
                       </div>
                     </button>
                   )}
