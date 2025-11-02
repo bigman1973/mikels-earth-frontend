@@ -17,7 +17,7 @@ const SoldOutNotification = ({ productName }) => {
     setErrorMessage('');
 
     try {
-      const response = await fetch(`${API_URL}/notification/notify-me`, {
+      const response = await fetch(`${API_URL}/api/notification/notify-me`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
