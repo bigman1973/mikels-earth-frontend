@@ -13,6 +13,8 @@ export const useCart = () => {
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [discountCode, setDiscountCode] = useState('');
+  const [appliedDiscount, setAppliedDiscount] = useState(null);
 
   // Cargar carrito desde localStorage al iniciar
   useEffect(() => {
@@ -102,8 +104,57 @@ export const CartProvider = ({ children }) => {
     setCart([]);
   };
 
+  const applyDiscountCode = (code) => {
+    const normalizedCode = code.trim().toUpperCase();
+    
+    if (normalizedCode === 'ME2025') {
+      setDiscountCode(normalizedCode);
+      setAppliedDiscount({
+        code: normalizedCode,
+        oneTimeDiscount: 10, // 10% adicional para compras únicas
+        subscriptionDiscount: 5 // 5% adicional para suscripciones
+      });
+      return { success: true, message: 'Código aplicado correctamente' };
+    } else {
+      return { success: false, message: 'Código no válido' };
+    }
+  };
+
+  const removeDiscountCode = () => {
+    setDiscountCode('');
+    setAppliedDiscount(null);
+  };
+
   const getCartTotal = () => {
-    return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    let total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    
+    // Aplicar descuento adicional si hay código
+    if (appliedDiscount) {
+      cart.forEach(item => {
+        const itemTotal = item.price * item.quantity;
+        const discount = item.purchaseType === 'subscription' 
+          ? appliedDiscount.subscriptionDiscount 
+          : appliedDiscount.oneTimeDiscount;
+        total -= itemTotal * (discount / 100);
+      });
+    }
+    
+    return total;
+  };
+  
+  const getDiscountAmount = () => {
+    if (!appliedDiscount) return 0;
+    
+    let discountAmount = 0;
+    cart.forEach(item => {
+      const itemTotal = item.price * item.quantity;
+      const discount = item.purchaseType === 'subscription' 
+        ? appliedDiscount.subscriptionDiscount 
+        : appliedDiscount.oneTimeDiscount;
+      discountAmount += itemTotal * (discount / 100);
+    });
+    
+    return discountAmount;
   };
 
   const getCartCount = () => {
@@ -124,7 +175,12 @@ export const CartProvider = ({ children }) => {
     getCartCount,
     isCartOpen,
     toggleCart,
-    setIsCartOpen
+    setIsCartOpen,
+    discountCode,
+    appliedDiscount,
+    applyDiscountCode,
+    removeDiscountCode,
+    getDiscountAmount
   };
 
   return (

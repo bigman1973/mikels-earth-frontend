@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { createCheckoutSession, createSubscriptionCheckout } from '../services/stripeService';
 
 const Checkout = () => {
-  const { cart, getCartTotal, clearCart } = useCart();
+  const { cart, getCartTotal, clearCart, appliedDiscount, getDiscountAmount } = useCart();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -69,7 +69,9 @@ const Checkout = () => {
         city: formData.city,
         postalCode: formData.postal_code,
         country: formData.country,
-        notes: formData.notes
+        notes: formData.notes,
+        discountCode: appliedDiscount?.code || null,
+        discountAmount: appliedDiscount ? getDiscountAmount() : 0
       };
       
       // Process one-time purchases
@@ -307,8 +309,14 @@ const Checkout = () => {
               <div className="space-y-2 mb-6 pt-4 border-t-2 border-gray-200">
                 <div className="flex justify-between text-gray-700">
                   <span>Subtotal</span>
-                  <span>{getCartTotal().toFixed(2)}€</span>
+                  <span>{appliedDiscount ? (getCartTotal() + getDiscountAmount()).toFixed(2) : getCartTotal().toFixed(2)}€</span>
                 </div>
+                {appliedDiscount && (
+                  <div className="flex justify-between text-green-600 font-medium">
+                    <span>Descuento {appliedDiscount.code}</span>
+                    <span>-{getDiscountAmount().toFixed(2)}€</span>
+                  </div>
+                )}
                 <div className="flex justify-between text-gray-700">
                   <span>Envío</span>
                   <span className="text-green-600 font-semibold">GRATIS</span>

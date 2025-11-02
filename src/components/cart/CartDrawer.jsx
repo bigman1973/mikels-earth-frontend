@@ -2,9 +2,12 @@ import { X, Plus, Minus, ShoppingBag, Repeat } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
 
 const CartDrawer = () => {
-  const { cart, isCartOpen, setIsCartOpen, updateQuantity, removeFromCart, getCartTotal, getCartCount } = useCart();
+  const { cart, isCartOpen, setIsCartOpen, updateQuantity, removeFromCart, getCartTotal, getCartCount, appliedDiscount, applyDiscountCode, removeDiscountCode, getDiscountAmount } = useCart();
+  const [codeInput, setCodeInput] = useState('');
+  const [codeMessage, setCodeMessage] = useState({ text: '', type: '' });
 
   const getPurchaseTypeLabel = (item) => {
     if (item.purchaseType === 'subscription') {
@@ -135,6 +138,81 @@ const CartDrawer = () => {
             {/* Footer */}
             {cart.length > 0 && (
               <div className="border-t border-gray-200 p-6 bg-gray-50">
+                {/* Código de descuento */}
+                <div className="mb-4">
+                  {!appliedDiscount ? (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        ¿Tienes un código de descuento?
+                      </label>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={codeInput}
+                          onChange={(e) => setCodeInput(e.target.value.toUpperCase())}
+                          placeholder="Introduce tu código"
+                          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                        />
+                        <button
+                          onClick={() => {
+                            const result = applyDiscountCode(codeInput);
+                            setCodeMessage({ text: result.message, type: result.success ? 'success' : 'error' });
+                            if (result.success) {
+                              setCodeInput('');
+                              setTimeout(() => setCodeMessage({ text: '', type: '' }), 3000);
+                            }
+                          }}
+                          className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-medium"
+                        >
+                          Aplicar
+                        </button>
+                      </div>
+                      {codeMessage.text && (
+                        <p className={`text-sm mt-2 ${codeMessage.type === 'success' ? 'text-green-600' : 'text-red-600'}`}>
+                          {codeMessage.text}
+                        </p>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium text-green-800">
+                            Código aplicado: {appliedDiscount.code}
+                          </p>
+                          <p className="text-xs text-green-600">
+                            {appliedDiscount.oneTimeDiscount}% en compras únicas, {appliedDiscount.subscriptionDiscount}% en suscripciones
+                          </p>
+                        </div>
+                        <button
+                          onClick={removeDiscountCode}
+                          className="text-red-600 hover:text-red-800 text-sm font-medium"
+                        >
+                          Eliminar
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Subtotal y descuento */}
+                {appliedDiscount && (
+                  <div className="space-y-2 mb-3 pb-3 border-b border-gray-200">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-600">Subtotal</span>
+                      <span className="text-gray-900">
+                        {(getCartTotal() + getDiscountAmount()).toFixed(2)}€
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-green-600 font-medium">Descuento {appliedDiscount.code}</span>
+                      <span className="text-green-600 font-medium">
+                        -{getDiscountAmount().toFixed(2)}€
+                      </span>
+                    </div>
+                  </div>
+                )}
+
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-lg font-semibold text-primary">Total</span>
                   <span className="text-2xl font-bold text-primary">
