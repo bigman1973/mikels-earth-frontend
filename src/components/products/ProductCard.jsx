@@ -44,9 +44,16 @@ const ProductCard = ({ product }) => {
             </div>
           </div>
           
+          {/* Badge de Sold Out */}
+          {product.soldOut && (
+            <div className="absolute top-3 left-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg uppercase tracking-wide">
+              🌾 {product.soldOutMessage || 'Sold Out'}
+            </div>
+          )}
+          
           {/* Badges personalizados del producto */}
           {product.badges && product.badges.length > 0 && (
-            <div className="absolute top-3 left-3 flex flex-col gap-2">
+            <div className={`absolute ${product.soldOut ? 'top-12' : 'top-3'} left-3 flex flex-col gap-2`}>
               {product.badges.map((badge, index) => (
                 <div 
                   key={index}
