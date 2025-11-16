@@ -191,7 +191,7 @@ const CartDrawer = () => {
                             Código aplicado: {appliedDiscount.code}
                           </p>
                           <p className="text-xs text-green-600">
-                            {appliedDiscount.oneTimeDiscount}% en compras únicas, {appliedDiscount.subscriptionDiscount}% en suscripciones
+                            {appliedDiscount.oneTimeDiscount}% de descuento
                           </p>
                         </div>
                         <button
