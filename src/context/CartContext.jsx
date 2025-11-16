@@ -107,21 +107,21 @@ export const CartProvider = ({ children }) => {
     // Validar código de descuento
     const normalizedCode = code.trim().toUpperCase();
     
-    // Definir códigos disponibles
+    // Definir códigos disponibles (solo para compras únicas)
     const discountCodes = {
       'ME2025': {
         oneTimeDiscount: 10,
-        subscriptionDiscount: 5,
+        subscriptionDiscount: 0,
         name: 'ME2025'
       },
       'MIKELSFRIENDS': {
         oneTimeDiscount: 10,
-        subscriptionDiscount: 10,
+        subscriptionDiscount: 0,
         name: 'MIKELSFRIENDS'
       },
       'MIKELSFAMILY': {
         oneTimeDiscount: 20,
-        subscriptionDiscount: 20,
+        subscriptionDiscount: 0,
         name: 'MIKELSFAMILY'
       }
     };
