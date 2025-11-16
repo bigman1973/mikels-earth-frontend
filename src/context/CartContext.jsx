@@ -103,16 +103,36 @@ export const CartProvider = ({ children }) => {
   const clearCart = () => {
     setCart([]);
   };
-
   const applyDiscountCode = (code) => {
+    // Validar código de descuento
     const normalizedCode = code.trim().toUpperCase();
     
-    if (normalizedCode === 'ME2025') {
+    // Definir códigos disponibles
+    const discountCodes = {
+      'ME2025': {
+        oneTimeDiscount: 10,
+        subscriptionDiscount: 5,
+        name: 'ME2025'
+      },
+      'MIKELSFRIENDS': {
+        oneTimeDiscount: 10,
+        subscriptionDiscount: 10,
+        name: 'MIKELSFRIENDS'
+      },
+      'MIKELSFAMILY': {
+        oneTimeDiscount: 20,
+        subscriptionDiscount: 20,
+        name: 'MIKELSFAMILY'
+      }
+    };
+    
+    if (discountCodes[normalizedCode]) {
+      const discount = discountCodes[normalizedCode];
       setDiscountCode(normalizedCode);
       setAppliedDiscount({
         code: normalizedCode,
-        oneTimeDiscount: 10, // 10% adicional para compras únicas
-        subscriptionDiscount: 5 // 5% adicional para suscripciones
+        oneTimeDiscount: discount.oneTimeDiscount,
+        subscriptionDiscount: discount.subscriptionDiscount
       });
       return { success: true, message: 'Código aplicado correctamente' };
     } else {

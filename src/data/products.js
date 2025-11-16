@@ -38,7 +38,7 @@ export const products = [
         "Uso diario en cocina"
       ]
     },
-    subscriptionAvailable: true,
+    subscriptionAvailable: false,
     subscriptionDiscount: 10,
     subscriptionFrequencies: [
       { value: "monthly", label: "Mensual", discount: 10 },
@@ -79,7 +79,7 @@ export const products = [
       fat: "0.1g",
       fiber: "1.2g"
     },
-    subscriptionAvailable: true,
+    subscriptionAvailable: false,
     subscriptionDiscount: 8,
     subscriptionFrequencies: [
       { value: "quarterly", label: "Trimestral", discount: 8 },
@@ -129,7 +129,7 @@ export const products = [
         "Platos que requieren frescura"
       ]
     },
-    subscriptionAvailable: true,
+    subscriptionAvailable: false,
     subscriptionDiscount: 10,
     subscriptionFrequencies: [
       { value: "monthly", label: "Mensual", discount: 10 },
@@ -182,7 +182,7 @@ export const products = [
       fat: "0.1g",
       fiber: "1.2g"
     },
-    subscriptionAvailable: true,
+    subscriptionAvailable: false,
     subscriptionDiscount: 8,
     subscriptionFrequencies: [
       { value: "quarterly", label: "Trimestral", discount: 8 },
@@ -231,7 +231,7 @@ export const products = [
         "Uso diario versátil"
       ]
     },
-    subscriptionAvailable: true,
+    subscriptionAvailable: false,
     subscriptionDiscount: 10,
     subscriptionFrequencies: [
       { value: "monthly", label: "Mensual", discount: 10 },
@@ -289,7 +289,7 @@ export const products = [
         "Platos con personalidad"
       ]
     },
-    subscriptionAvailable: true,
+    subscriptionAvailable: false,
     subscriptionDiscount: 10,
     subscriptionFrequencies: [
       { value: "monthly", label: "Mensual", discount: 10 },
@@ -342,7 +342,7 @@ export const products = [
       fat: "Variable",
       saturated: "Variable"
     },
-    subscriptionAvailable: true,
+    subscriptionAvailable: false,
     subscriptionFrequencies: [
       { value: 'monthly', label: 'Mensual', discount: 10 },
       { value: 'quarterly', label: 'Trimestral', discount: 8 },
@@ -384,7 +384,7 @@ export const products = [
       protein: "0.6g",
       fat: "0.1g"
     },
-    subscriptionAvailable: true,
+    subscriptionAvailable: false,
     subscriptionDiscount: 8,
     subscriptionFrequencies: [
       { value: "quarterly", label: "Trimestral", discount: 8 },
@@ -472,7 +472,7 @@ export const products = [
       fat: "Variable",
       saturated: "Variable"
     },
-    subscriptionAvailable: true,
+    subscriptionAvailable: false,
     subscriptionFrequencies: [
       { value: 'monthly', label: 'Mensual', discount: 10 },
       { value: 'quarterly', label: 'Trimestral', discount: 8 },
