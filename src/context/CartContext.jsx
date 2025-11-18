@@ -123,6 +123,11 @@ export const CartProvider = ({ children }) => {
         oneTimeDiscount: 20,
         subscriptionDiscount: 0,
         name: 'MIKELSFAMILY'
+      },
+      'BIENVENIDA10': {
+        oneTimeDiscount: 10,
+        subscriptionDiscount: 0,
+        name: 'BIENVENIDA10'
       }
     };
     
