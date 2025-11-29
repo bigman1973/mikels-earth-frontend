@@ -36,7 +36,11 @@ export const createCheckoutSession = async (cartItems, customerInfo) => {
           postal_code: customerInfo.postalCode,
           country: customerInfo.country || 'España',
           notes: customerInfo.notes
-        }
+        },
+        discount_code: customerInfo.discountCode,
+        discount_amount: customerInfo.discountAmount,
+        needs_invoice: customerInfo.needsInvoice,
+        invoice_data: customerInfo.invoiceData
       }),
     });
 
