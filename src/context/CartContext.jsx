@@ -103,12 +103,12 @@ export const CartProvider = ({ children }) => {
   const clearCart = () => {
     setCart([]);
   };
-  const applyDiscountCode = (code) => {
+  const applyDiscountCode = async (code) => {
     // Validar código de descuento
     const normalizedCode = code.trim().toUpperCase();
     
-    // Definir códigos disponibles (solo para compras únicas)
-    const discountCodes = {
+    // Definir códigos estáticos disponibles (solo para compras únicas)
+    const staticDiscountCodes = {
       'ME2025': {
         oneTimeDiscount: 10,
         subscriptionDiscount: 0,
@@ -131,8 +131,9 @@ export const CartProvider = ({ children }) => {
       }
     };
     
-    if (discountCodes[normalizedCode]) {
-      const discount = discountCodes[normalizedCode];
+    // Verificar si es un código estático
+    if (staticDiscountCodes[normalizedCode]) {
+      const discount = staticDiscountCodes[normalizedCode];
       setDiscountCode(normalizedCode);
       setAppliedDiscount({
         code: normalizedCode,
@@ -140,9 +141,41 @@ export const CartProvider = ({ children }) => {
         subscriptionDiscount: discount.subscriptionDiscount
       });
       return { success: true, message: 'Código aplicado correctamente' };
-    } else {
-      return { success: false, message: 'Código no válido' };
     }
+    
+    // Si no es estático, verificar si es un cupón único (formato MIKELS10-XXXXXXXX)
+    if (normalizedCode.startsWith('MIKELS10-')) {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/coupon/validate`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ code: normalizedCode })
+        });
+        
+        const data = await response.json();
+        
+        if (data.valid) {
+          setDiscountCode(normalizedCode);
+          setAppliedDiscount({
+            code: normalizedCode,
+            oneTimeDiscount: data.coupon.discount_percentage,
+            subscriptionDiscount: 0,
+            email: data.coupon.email
+          });
+          return { success: true, message: 'Cupón aplicado correctamente' };
+        } else {
+          return { success: false, message: data.message || 'Cupón no válido' };
+        }
+      } catch (error) {
+        console.error('Error validating coupon:', error);
+        return { success: false, message: 'Error al validar el cupón' };
+      }
+    }
+    
+    // Si no es ni estático ni cupón único
+    return { success: false, message: 'Código no válido' };
   };
 
   const removeDiscountCode = () => {
