@@ -12,13 +12,31 @@ const Newsletter = ({ variant = 'default' }) => {
     setLoading(true);
     
     try {
+      // Paso 1: Generar cupón único en el microservicio
+      const COUPONS_API_URL = 'https://mikels-coupons-service-production.up.railway.app';
+      const couponResponse = await fetch(`${COUPONS_API_URL}/api/coupon/generate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+      
+      if (!couponResponse.ok) {
+        throw new Error('Error generating coupon');
+      }
+      
+      const couponData = await couponResponse.json();
+      const couponCode = couponData.coupon_code;
+      
+      // Paso 2: Suscribir al newsletter con el cupón generado
       const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
       const response = await fetch(`${API_URL}/api/newsletter/subscribe`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, coupon_code: couponCode }),
       });
       
       if (response.ok) {
