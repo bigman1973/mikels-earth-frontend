@@ -3,6 +3,7 @@ import { CartProvider } from './context/CartContext';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import CartDrawer from './components/cart/CartDrawer';
+import FloatingNewsletterButton from './components/FloatingNewsletterButton';
 import Home from './pages/Home';
 import LaFamilia from './pages/LaFamilia';
 import NuestraTierra from './pages/NuestraTierra';
@@ -49,6 +50,7 @@ function App() {
           </main>
           <Footer />
           <CartDrawer />
+          <FloatingNewsletterButton />
         </div>
       </CartProvider>
     </Router>
