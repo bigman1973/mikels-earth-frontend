@@ -445,6 +445,99 @@ export const products = [
   },
   {
 
+    id: 11,
+    name: "Pack Fruta Premium",
+    slug: "pack-fruta-premium",
+    description: "El regalo perfecto para los amantes de la fruta artesanal. Pack completo con paraguayo, nectarina y mermelada en estuche de madera premium.",
+    longDescription: "**El sabor del verano en un estuche de madera premium**\n\n¿Buscas un regalo especial que transmita calidad y tradición? El Pack Fruta de Mikel's Earth es la elección perfecta.\n\n**CONTENIDO DEL PACK:**\n\n- **1x Paraguayo en Almíbar 720g** - Nuestro producto estrella. Melocotón plano cultivado en Alcarràs, seleccionado a mano y preparado siguiendo métodos artesanales de generación en generación.\n\n- **1x Nectarina en Almíbar 720g** - El melocotón sin complejos: piel lisa, sabor intenso, carácter definido. Cultivada en nuestros campos y seleccionada en su momento de máxima expresión.\n\n- **1x Mermelada de Paraguayo Artesanal 250g** - 60% de fruta (3 veces más que la industria). Solo 4 ingredientes: paraguayo, agua, azúcar y zumo de limón natural. Sin conservantes, sin colorantes, sin espesantes.\n\n- **Estuche de madera premium** - Presentación elegante y reutilizable, perfecta para regalo. Un detalle que marca la diferencia.\n\n**¿Por qué elegir este pack?**\n\n✨ **Fruta 100% artesanal** de nuestros campos de Alcarràs\n🎁 **Presentación premium** en estuche de madera\n❤️ **Sin aditivos artificiales** - Solo ingredientes naturales\n🌿 **Vegano y sin gluten** - Apto para todos\n🎄 **Regalo perfecto** para cualquier ocasión\n\n**El estuche de madera incluido**\n\nCuando compras los productos por separado pagas 36,30€. Con este pack, por solo 40€ recibes todo en un elegante estuche de madera que podrás reutilizar para siempre.\n\nUn regalo que transmite calidad, tradición y el amor por lo artesanal.",
+    price: 40.00,
+    originalPrice: 36.30,
+    currency: "EUR",
+    image: "/images/pack-fruta-principal.jpg",
+    images: [
+      "/images/pack-fruta-principal.jpg",
+      "/images/pack-fruta-estuche.jpg",
+      "/images/pack-fruta-lifestyle.jpg",
+      "/images/pack-fruta-detalle.jpg"
+    ],
+    category: "Packs",
+    tags: ["Vegano", "Sin Gluten", "Regalo", "Premium", "Artesanal"],
+    stock: 20,
+    weight: "1690g (720g + 720g + 250g)",
+    ingredients: "Paraguayo en almíbar 720g, Nectarina en almíbar 720g, Mermelada de paraguayo 250g, Estuche de madera premium",
+    nutritionalInfo: {
+      calories: "Variable según producto",
+      carbs: "Variable",
+      protein: "Variable",
+      fat: "Variable"
+    },
+    subscriptionAvailable: false,
+    freeShipping: true,
+    featured: true,
+    includes: [
+      "1x Paraguayo en Almíbar 720g (14,90€)",
+      "1x Nectarina en Almíbar 720g (14,90€)",
+      "1x Mermelada de Paraguayo 250g (6,50€)",
+      "1x Estuche de madera premium reutilizable"
+    ],
+    claims: ["Estuche de madera incluido", "Fruta 100% artesanal", "Sin aditivos", "Regalo perfecto", "Ahorra 3,70€ en estuche"],
+    badges: [
+      { text: "🎁 REGALO PREMIUM", color: "bg-gradient-to-r from-amber-600 to-orange-600" }
+    ]
+  },
+  {
+
+    id: 12,
+    name: "Pack Temprano Premium",
+    slug: "pack-temprano-premium",
+    description: "Aceite temprano sin filtrar en estuche premium. El regalo perfecto para los amantes del aceite de calidad excepcional.",
+    longDescription: "**El aceite que no se disculpa por ser auténtico**\n\nPara los que entienden de aceite. Para los que buscan algo más que lo ordinario. Para los que aprecian la autenticidad sin filtros.\n\n**CONTENIDO DEL PACK:**\n\n- **Aceite de Oliva Virgen Extra Temprano 500ml sin filtrar** - Aceitunas recolectadas en su momento verde, cuando concentran hasta tres veces más polifenoles y antioxidantes. Sin filtrar para conservar todos sus compuestos beneficiosos.\n\n- **Estuche Premium Temprano** - Presentación elegante y exclusiva que realza la calidad excepcional del aceite. Perfecto para regalo o para lucir en tu cocina.\n\n**Características del aceite:**\n\n🍂 **Cosecha temprana** - Aceitunas verdes en su punto óptimo\n🌿 **Sin filtrar** - Conserva todos sus antioxidantes naturales\n💚 **Verde intenso** - Color que indica frescura y calidad\n🔥 **Ligeramente picante** - Con ese amargor noble de los grandes aceites\n❄️ **Prensado en frío** - Para preservar todas sus propiedades\n\n**Perfil de sabor:**\n- Frutado: Extremadamente intenso\n- Amargo: Noble\n- Picante: Ligero\n- Notas: Hierba recién cortada, verde intenso, frescura extrema\n\n**Ideal para:**\n- Ensaladas en crudo\n- Tostadas y pan\n- Carpaccios\n- Platos que requieren frescura\n\n**¿Por qué este pack?**\n\nEste no es un aceite para cocinar. Es un aceite para disfrutar. Para saborear. Para apreciar cada matiz.\n\nEl estuche premium incluido convierte este aceite excepcional en un regalo memorable. Por solo 4,10€ adicionales, transformas una botella de aceite en una experiencia de regalo completa.\n\n**Edición limitada - Disponible solo en temporada**\n\nEl aceite temprano solo se produce una vez al año, cuando las aceitunas están en su momento verde perfecto. Una vez agotado, hay que esperar a la próxima cosecha.\n\nUn regalo para los que saben apreciar lo auténtico.",
+    price: 19.00,
+    originalPrice: 14.90,
+    currency: "EUR",
+    image: "/images/pack-temprano-principal.jpg",
+    images: [
+      "/images/pack-temprano-principal.jpg",
+      "/images/pack-temprano-estuche.jpg",
+      "/images/pack-temprano-lifestyle.jpg",
+      "/images/aceite-temprano-principal.jpeg"
+    ],
+    category: "Packs",
+    tags: ["Vegano", "Sin Gluten", "Regalo", "Premium", "Edición Limitada", "Sin Filtrar"],
+    stock: 15,
+    weight: "500ml",
+    ingredients: "Aceite de Oliva Virgen Extra Temprano 500ml sin filtrar, Estuche premium temprano",
+    nutritionalInfo: {
+      ingredientes: "Aceite de oliva virgen extra 100% sin filtrar",
+      coupage: "Aceitunas verdes de cosecha temprana",
+      perfilSabor: {
+        frutado: "Extremadamente Intenso",
+        amargo: "Noble",
+        picante: "Ligero"
+      },
+      notasCata: "Hierba recién cortada, verde intenso, frescura extrema",
+      idealPara: [
+        "Ensaladas en crudo",
+        "Tostadas y pan",
+        "Carpaccios",
+        "Platos que requieren frescura"
+      ]
+    },
+    subscriptionAvailable: false,
+    freeShipping: true,
+    featured: true,
+    limitedEdition: true,
+    includes: [
+      "1x Aceite Temprano 500ml sin filtrar (14,90€)",
+      "1x Estuche premium temprano exclusivo"
+    ],
+    claims: ["Estuche premium incluido", "Edición limitada", "Sin filtrar", "3x más antioxidantes", "Solo 4,10€ más por el estuche"],
+    badges: [
+      { text: "🍂 EDICIÓN TEMPRANO", color: "bg-gradient-to-r from-orange-600 to-amber-600" }
+    ]
+  },
+  {
+
     id: 10,
     name: "Pack Navidad Completo Mikel's Earth",
     slug: "pack-navidad-completo",
@@ -498,7 +591,8 @@ export const products = [
       "4x Botellas de aceite degustación 14ml",
       "1x Estuche kraft premium con historia de Mikel's"
     ],
-    claims: ["Pack completo premium", "Envío gratuito", "Edición especial Navidad", "Incluye estuche degustación", "7 productos + estuche"]
+    claims: ["Pack completo premium", "Envío gratuito", "Edición especial Navidad", "Incluye estuche degustación", "7 productos + estuche"],
+    relatedProducts: ["pack-fruta-premium", "pack-temprano-premium"]
   }
 ];
 

@@ -787,10 +787,10 @@ const ProductDetail = () => {
             También te puede interesar
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {products
-              .filter(p => p.id !== product.id && p.category === product.category)
-              .slice(0, 3)
-              .map(relatedProduct => (
+            {(product.relatedProducts
+              ? products.filter(p => product.relatedProducts.includes(p.slug))
+              : products.filter(p => p.id !== product.id && p.category === product.category).slice(0, 3)
+            ).map(relatedProduct => (
                 <Link
                   key={relatedProduct.id}
                   to={`/producto/${relatedProduct.slug}`}
