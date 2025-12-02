@@ -146,9 +146,8 @@ export const CartProvider = ({ children }) => {
     // Si no es estático, verificar si es un cupón único (formato MIKELS10-XXXXXXXX)
     if (normalizedCode.startsWith('MIKELS10-')) {
       try {
-        // Llamar al servicio de cupones (no al backend principal)
-        const couponServiceUrl = import.meta.env.VITE_COUPON_SERVICE_URL || 'https://mikels-coupons-service-production.up.railway.app';
-        const response = await fetch(`${couponServiceUrl}/api/coupon/validate`, {
+        // Llamar al backend principal para validar el cupón
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/coupon/validate`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
