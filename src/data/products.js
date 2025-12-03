@@ -319,7 +319,7 @@ export const products = [
     id: 5,
     name: "Pack Degustación Premium",
     slug: "pack-mermelada-aceites",
-    description: "Pack premium con paraguayo en almíbar y nuestros dos aceites de oliva virgen extra.",
+    description: "Pack premium con mermelada de paraguayo artesanal y 4 botellas de aceite de oliva virgen extra para degustación.",
     longDescription: "¿Quieres probar lo mejor de Mikel's Earth? Este pack premium incluye mermelada de paraguayo artesanal (250g) y 4 botellas de aceite de oliva virgen extra (14ml cada una) para que descubras nuestros diferentes perfiles de sabor. Una combinación perfecta que te permitirá descubrir los sabores únicos de nuestros productos artesanales. También es un regalo perfecto para los amantes de la gastronomía de calidad.",
     price: 9.00,
     currency: "EUR",
