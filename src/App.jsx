@@ -18,6 +18,7 @@ import OrderSuccess from './pages/OrderSuccess';
 import SubscriptionSuccess from './pages/SubscriptionSuccess';
 import Blog from './pages/Blog';
 import Contact from './pages/Contact';
+import Horeca from './pages/Horeca';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Terms from './pages/Terms';
 import './App.css';
@@ -44,6 +45,7 @@ function App() {
               <Route path="/subscription-success" element={<SubscriptionSuccess />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/contacto" element={<Contact />} />
+              <Route path="/horeca" element={<Horeca />} />
               <Route path="/politica-privacidad" element={<PrivacyPolicy />} />
               <Route path="/terminos" element={<Terms />} />
             </Routes>

@@ -124,6 +124,13 @@ const Header = () => {
                 Tienda
               </Link>
               <Link 
+                to="/horeca" 
+                className="text-sm font-bold bg-gradient-to-r from-orange-600 to-amber-600 text-white px-4 py-2 rounded-full hover:from-orange-700 hover:to-amber-700 transition-all shadow-lg uppercase tracking-wide relative"
+              >
+                🏛️ HORECA
+                <span className="absolute -top-1 -right-1 bg-green-500 text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold">B2B</span>
+              </Link>
+              <Link 
                 to="/producto/pack-navidad-completo" 
                 className="text-sm font-bold bg-gradient-to-r from-red-600 to-green-600 text-white px-4 py-2 rounded-full hover:from-red-700 hover:to-green-700 transition-all shadow-lg uppercase tracking-wide"
               >
@@ -222,6 +229,13 @@ const Header = () => {
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Tienda
+                </Link>
+                <Link 
+                  to="/horeca" 
+                  className="text-sm font-bold bg-gradient-to-r from-orange-600 to-amber-600 text-white px-4 py-2 rounded-full hover:from-orange-700 hover:to-amber-700 transition-all shadow-lg uppercase text-center"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  🏛️ HORECA (B2B)
                 </Link>
                 <Link 
                   to="/producto/pack-navidad-completo" 
