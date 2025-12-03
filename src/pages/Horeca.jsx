@@ -16,6 +16,7 @@ const Horeca = () => {
     postalCode: '',
     province: '',
     comments: '',
+    subscribeNewsletter: false,
     acceptPrivacy: false
   });
 
@@ -87,6 +88,7 @@ const Horeca = () => {
           postalCode: '',
           province: '',
           comments: '',
+          subscribeNewsletter: false,
           acceptPrivacy: false
         });
 
@@ -494,6 +496,30 @@ const Horeca = () => {
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="Horarios de entrega preferidos, necesidades especiales, etc."
               />
+            </div>
+
+            {/* Suscripción al Newsletter */}
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              <div className="flex items-start gap-3">
+                <input
+                  type="checkbox"
+                  name="subscribeNewsletter"
+                  checked={formData.subscribeNewsletter}
+                  onChange={handleChange}
+                  className="mt-1"
+                  id="newsletter-checkbox"
+                />
+                <label htmlFor="newsletter-checkbox" className="text-sm text-gray-700 flex-1">
+                  <span className="font-semibold text-primary">✉️ Suscribirme al newsletter</span>
+                  <p className="mt-1 text-gray-600">
+                    Recibe los mejores consejos, recetas exclusivas y ofertas especiales. 
+                    Puedes anular la suscripción en cualquier momento.
+                  </p>
+                  <p className="mt-2 text-green-700 font-semibold">
+                    🎁 ¡Obtén un 10% de descuento en tu primera compra online!
+                  </p>
+                </label>
+              </div>
             </div>
 
             {/* Política de Privacidad */}
