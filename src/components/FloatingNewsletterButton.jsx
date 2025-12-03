@@ -81,8 +81,8 @@ const FloatingNewsletterButton = () => {
             </div>
             
             {/* Badge de descuento */}
-            <span className="absolute -top-2 -left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">
-              -10%
+            <span className="absolute -top-2 -left-2 bg-gradient-to-r from-red-500 to-orange-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-lg animate-pulse">
+              🎁 10% DTO
             </span>
             
             {/* Efecto de pulso */}
@@ -128,8 +128,19 @@ const FloatingNewsletterButton = () => {
                 <h2 className="text-2xl font-bold text-primary mb-2">
                   Únete a Nuestra Familia
                 </h2>
-                <p className="text-gray-600">
-                  Recibe recetas exclusivas, historias de nuestra tierra y ofertas especiales
+                
+                {/* Destacar beneficio del descuento */}
+                <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-500 rounded-lg p-3 mb-3">
+                  <p className="text-green-800 font-bold text-lg">
+                    🎁 ¡Obtén un 10% de descuento!
+                  </p>
+                  <p className="text-green-700 text-sm mt-1">
+                    Al suscribirte recibirás un cupón único para tu primera compra online
+                  </p>
+                </div>
+                
+                <p className="text-gray-600 text-sm">
+                  Además: recetas exclusivas, historias de nuestra tierra y ofertas especiales
                 </p>
               </div>
 
