@@ -80,6 +80,11 @@ const FloatingNewsletterButton = () => {
               <span className="hidden md:block font-semibold pr-2">Newsletter</span>
             </div>
             
+            {/* Badge de descuento */}
+            <span className="absolute -top-2 -left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">
+              -10%
+            </span>
+            
             {/* Efecto de pulso */}
             <span className="absolute top-0 right-0 -mt-1 -mr-1 flex h-3 w-3">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
