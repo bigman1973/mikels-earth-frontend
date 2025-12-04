@@ -43,16 +43,61 @@ const Horeca = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    // Validación completa de campos requeridos
+    if (!formData.establishmentName.trim()) {
+      setStatus('error');
+      setMessage('Por favor, introduce el nombre del establecimiento.');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    if (!formData.establishmentType) {
+      setStatus('error');
+      setMessage('Por favor, selecciona el tipo de establecimiento.');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    if (!formData.contactName.trim()) {
+      setStatus('error');
+      setMessage('Por favor, introduce el nombre de contacto.');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    if (!formData.phone.trim()) {
+      setStatus('error');
+      setMessage('Por favor, introduce el teléfono de contacto.');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    if (!formData.email.trim()) {
+      setStatus('error');
+      setMessage('Por favor, introduce el email de contacto.');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
     // Validación: al menos un producto debe tener cantidad > 0
     if (formData.aceite5L === 0 && formData.aceiteTemprano === 0) {
       setStatus('error');
       setMessage('Por favor, selecciona al menos un producto.');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    if (!formData.street.trim() || !formData.city.trim() || !formData.postalCode.trim() || !formData.province.trim()) {
+      setStatus('error');
+      setMessage('Por favor, completa todos los campos de la dirección de entrega.');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
 
     if (!formData.acceptPrivacy) {
       setStatus('error');
       setMessage('Debes aceptar la política de privacidad.');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
 
