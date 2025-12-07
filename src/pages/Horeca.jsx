@@ -105,7 +105,7 @@ const Horeca = () => {
     setMessage('');
 
     try {
-      const response = await fetch('https://mikels-earth-backend-production.up.railway.app/api/horeca/order', {
+      const response = await fetch('https://api.mikels.es/api/horeca/order', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

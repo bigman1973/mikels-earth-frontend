@@ -30,7 +30,7 @@ const FloatingNewsletterButton = () => {
     setMessage('');
 
     try {
-      const response = await fetch('https://mikels-earth-backend-production.up.railway.app/api/newsletter/subscribe', {
+      const response = await fetch('https://api.mikels.es/api/newsletter/subscribe', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
