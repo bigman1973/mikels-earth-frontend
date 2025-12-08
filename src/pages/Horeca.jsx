@@ -11,7 +11,7 @@ const Horeca = () => {
     email: '',
     aceite5L: 0,
     aceiteTemprano: 0,
-    street: '',
+    address: '',
     city: '',
     postalCode: '',
     province: '',
@@ -87,7 +87,7 @@ const Horeca = () => {
       return;
     }
 
-    if (!formData.street.trim() || !formData.city.trim() || !formData.postalCode.trim() || !formData.province.trim()) {
+    if (!formData.address.trim() || !formData.city.trim() || !formData.postalCode.trim() || !formData.province.trim()) {
       setStatus('error');
       setMessage('Por favor, completa todos los campos de la dirección de entrega.');
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -105,12 +105,19 @@ const Horeca = () => {
     setMessage('');
 
     try {
+      // Mapear campos al formato esperado por el backend
+      const payload = {
+        ...formData,
+        quantity5L: formData.aceite5L,
+        quantityTemprano: formData.aceiteTemprano
+      };
+      
       const response = await fetch('https://api.mikels.es/api/horeca/order', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       const data = await response.json();
@@ -128,7 +135,7 @@ const Horeca = () => {
           email: '',
           aceite5L: 0,
           aceiteTemprano: 0,
-          street: '',
+          address: '',
           city: '',
           postalCode: '',
           province: '',
