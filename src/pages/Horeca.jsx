@@ -481,8 +481,8 @@ const Horeca = () => {
                   </label>
                   <input
                     type="text"
-                    name="street"
-                    value={formData.street}
+                    name="address"
+                    value={formData.address}
                     onChange={handleChange}
                     required
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
