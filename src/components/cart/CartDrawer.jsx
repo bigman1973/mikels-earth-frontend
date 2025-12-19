@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 
 const CartDrawer = () => {
-  const { cart, isCartOpen, setIsCartOpen, updateQuantity, removeFromCart, getCartTotal, getCartCount, appliedDiscount, applyDiscountCode, removeDiscountCode, getDiscountAmount } = useCart();
+  const { cart, isCartOpen, setIsCartOpen, updateQuantity, removeFromCart, getCartTotal, getCartCount, getItemPrice, appliedDiscount, applyDiscountCode, removeDiscountCode, getDiscountAmount } = useCart();
   const [codeInput, setCodeInput] = useState('');
   const [codeMessage, setCodeMessage] = useState({ text: '', type: '' });
 
@@ -111,7 +111,7 @@ const CartDrawer = () => {
                             <span>{getPurchaseTypeLabel(item)}</span>
                           </div>
                           <p className="text-sm font-bold text-primary">
-                            {item.price.toFixed(2)}€
+                            {getItemPrice(item).toFixed(2)}€
                           </p>
                         </div>
                       </div>
@@ -136,7 +136,7 @@ const CartDrawer = () => {
                           </button>
                         </div>
                         <div className="text-sm font-bold text-primary">
-                          {(item.price * item.quantity).toFixed(2)}€
+                          {(getItemPrice(item) * item.quantity).toFixed(2)}€
                         </div>
                       </div>
                     </motion.div>

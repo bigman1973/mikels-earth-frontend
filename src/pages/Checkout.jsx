@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { createCheckoutSession, createSubscriptionCheckout } from '../services/stripeService';
 
 const Checkout = () => {
-  const { cart, getCartTotal, clearCart, appliedDiscount, getDiscountAmount } = useCart();
+  const { cart, getCartTotal, clearCart, getItemPrice, appliedDiscount, getDiscountAmount } = useCart();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -106,14 +106,23 @@ const Checkout = () => {
       
       // Process one-time purchases
       if (oneTimePurchases.length > 0) {
-        await createCheckoutSession(oneTimePurchases, customerInfo);
+        // Calcular precio final con descuento por volumen
+        const itemsWithFinalPrice = oneTimePurchases.map(item => ({
+          ...item,
+          finalPrice: getItemPrice(item)
+        }));
+        await createCheckoutSession(itemsWithFinalPrice, customerInfo);
         // The function will redirect to Stripe Checkout
       }
       
       // Process subscriptions (one at a time for now)
       if (subscriptions.length > 0) {
         const subscription = subscriptions[0]; // Process first subscription
-        await createSubscriptionCheckout(subscription, customerInfo);
+        const subscriptionWithFinalPrice = {
+          ...subscription,
+          finalPrice: getItemPrice(subscription)
+        };
+        await createSubscriptionCheckout(subscriptionWithFinalPrice, customerInfo);
         // The function will redirect to Stripe Checkout
       }
       
@@ -427,7 +436,7 @@ const Checkout = () => {
                     </div>
                     <div className="text-right">
                       <p className="font-bold text-primary">
-                        {(item.price * item.quantity).toFixed(2)}€
+                        {(getItemPrice(item) * item.quantity).toFixed(2)}€
                       </p>
                     </div>
                   </div>

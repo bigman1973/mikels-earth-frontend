@@ -59,11 +59,8 @@ export const CartProvider = ({ children }) => {
           }
         }
         
-        // Apply volume discount if applicable (only for one-time purchases)
-        const hasVolumeDiscount = product.volumeDiscount && quantity >= product.volumeDiscount.minQuantity && purchaseType === 'one-time';
-        if (hasVolumeDiscount) {
-          price = product.price * (1 - product.volumeDiscount.discount / 100);
-        }
+        // NO aplicar descuento por volumen al precio guardado
+        // Se calculará dinámicamente en getItemPrice()
         
         return [...prevCart, {
           id: product.id,
@@ -76,7 +73,7 @@ export const CartProvider = ({ children }) => {
           purchaseType: purchaseType,
           subscriptionFrequency: subscriptionFrequency,
           weight: product.weight,
-          volumeDiscount: hasVolumeDiscount ? product.volumeDiscount.discount : null
+          volumeDiscountConfig: product.volumeDiscount || null
         }];
       }
     });
@@ -184,8 +181,22 @@ export const CartProvider = ({ children }) => {
     setAppliedDiscount(null);
   };
 
+  // Calcular precio de un item con descuento por volumen si aplica
+  const getItemPrice = (item) => {
+    let price = item.price;
+    
+    // Aplicar descuento por volumen si cumple condiciones
+    if (item.volumeDiscountConfig && 
+        item.quantity >= item.volumeDiscountConfig.minQuantity && 
+        item.purchaseType === 'one-time') {
+      price = item.price * (1 - item.volumeDiscountConfig.discount / 100);
+    }
+    
+    return price;
+  };
+  
   const getCartTotal = () => {
-    let total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    let total = cart.reduce((sum, item) => sum + (getItemPrice(item) * item.quantity), 0);
     
     // Aplicar descuento adicional si hay código
     if (appliedDiscount) {
@@ -206,7 +217,7 @@ export const CartProvider = ({ children }) => {
     
     let discountAmount = 0;
     cart.forEach(item => {
-      const itemTotal = item.price * item.quantity;
+      const itemTotal = getItemPrice(item) * item.quantity;
       const discount = item.purchaseType === 'subscription' 
         ? appliedDiscount.subscriptionDiscount 
         : appliedDiscount.oneTimeDiscount;
@@ -232,6 +243,7 @@ export const CartProvider = ({ children }) => {
     clearCart,
     getCartTotal,
     getCartCount,
+    getItemPrice,
     isCartOpen,
     toggleCart,
     setIsCartOpen,
