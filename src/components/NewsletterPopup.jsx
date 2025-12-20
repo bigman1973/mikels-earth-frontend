@@ -7,7 +7,7 @@ const NewsletterPopup = () => {
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState({ text: '', type: '' });
-  const [couponCode, setCouponCode] = useState('');
+  const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
     // Check if popup was already shown in this session
@@ -54,9 +54,9 @@ const NewsletterPopup = () => {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        setCouponCode(data.coupon_code);
+        setShowSuccess(true);
         setMessage({ 
-          text: '¡Suscripción exitosa! Aquí está tu cupón del 10%', 
+          text: '¡Suscripción exitosa! Revisa tu email', 
           type: 'success' 
         });
       } else {
@@ -128,7 +128,7 @@ const NewsletterPopup = () => {
                   Suscríbete a nuestro newsletter y recibe un cupón de bienvenida
                 </p>
 
-                {!couponCode ? (
+                {!showSuccess ? (
                   /* Form */
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
@@ -163,19 +163,20 @@ const NewsletterPopup = () => {
                     </p>
                   </form>
                 ) : (
-                  /* Success state with coupon */
+                  /* Success state */
                   <div className="text-center space-y-4">
-                    <div className="bg-green-50 border-2 border-green-200 rounded-lg p-4">
-                      <p className="text-sm text-green-700 mb-2 font-medium">
-                        Tu cupón de descuento:
-                      </p>
-                      <div className="bg-white border-2 border-dashed border-green-400 rounded-lg p-3">
-                        <p className="text-2xl font-bold text-primary font-mono">
-                          {couponCode}
-                        </p>
+                    <div className="bg-green-50 border-2 border-green-200 rounded-lg p-6">
+                      <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Mail className="w-8 h-8 text-white" />
                       </div>
-                      <p className="text-xs text-green-600 mt-2">
-                        Copia este código y úsalo en tu próxima compra
+                      <h3 className="text-xl font-bold text-green-800 mb-2">
+                        ¡Bienvenido/a a Mikel's Earth!
+                      </h3>
+                      <p className="text-green-700 mb-3">
+                        Te hemos enviado un email con tu cupón de <strong>10% de descuento</strong>
+                      </p>
+                      <p className="text-sm text-green-600">
+                        Revisa tu bandeja de entrada (y spam por si acaso)
                       </p>
                     </div>
 
