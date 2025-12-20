@@ -2,12 +2,11 @@
 export const products = [
   {
     id: 8,
-    name: "Aceite de Oliva Virgen Extra 5L (Caja de 3 unidades)",
+    name: "Aceite de Oliva Virgen Extra 5L",
     slug: "aceite-5l-caja-3",
-    description: "Caja de 3 garrafas de 5 litros de aceite virgen extra de baja acidez. Variedades Picual, Hojiblanca y Arbequina. Solo 6€/litro con envío gratis.",
-    longDescription: "El formato más económico para familias que aman el buen aceite. Caja de 3 garrafas de 5 litros de Aceite de Oliva Virgen Extra de baja acidez, procedente de nuestros olivares de Córdoba y Lleida. Variedades Picual, Hojiblanca y Arbequina cuidadosamente seleccionadas y prensadas en frío. Este es el aceite que usamos a diario en nuestra cocina familiar para todo tipo de recetas: desde un sofrito hasta aliñar una ensalada. Su equilibrio perfecto entre sabor y suavidad lo hace ideal para el uso cotidiano. Con la compra de 1 caja (3 unidades) el envío es totalmente gratuito. Formato ahorro perfecto para familias, restaurantes y uso intensivo en cocina.",
-    price: 90.00,
-    originalPrice: 95.00,
+    description: "Garrafa de 5 litros de aceite virgen extra de baja acidez. Variedades Picual, Hojiblanca y Arbequina. Compra 3 o más y ahorra 9% (30€/unidad). Envío gratis.",
+    longDescription: "Aceite de Oliva Virgen Extra de baja acidez en formato de 5 litros, procedente de nuestros olivares de Córdoba y Lleida. Variedades Picual, Hojiblanca y Arbequina cuidadosamente seleccionadas y prensadas en frío. Este es el aceite que usamos a diario en nuestra cocina familiar para todo tipo de recetas: desde un sofrito hasta aliñar una ensalada. Su equilibrio perfecto entre sabor y suavidad lo hace ideal para el uso cotidiano.\n\nCompra 3 o más garrafas y obtén un 9% de descuento automático (30€ por garrafa en lugar de 33€). Envío gratuito. Formato ahorro perfecto para familias, restaurantes y uso intensivo en cocina.",
+    price: 33.00,
     currency: "EUR",
     image: "/images/aceite-5l-portada.jpg",
     images: [
@@ -21,7 +20,7 @@ export const products = [
     category: "Aceites",
     tags: ["Vegano", "Sin Gluten", "Prensado en Frío", "Formato Familiar", "Uso Cotidiano"],
     stock: 10,
-    weight: "15L (3 x 5L)",
+    weight: "5L",
     ingredients: "Aceite de oliva virgen extra 100% (variedades Picual, Hojiblanca y Arbequina)",
     nutritionalInfo: {
       ingredientes: "Aceite de oliva virgen extra 100%",
@@ -45,8 +44,12 @@ export const products = [
       { value: "quarterly", label: "Trimestral", discount: 8 },
       { value: "biannual", label: "Semestral", discount: 7 }
     ],
+    volumeDiscount: {
+      minQuantity: 3,
+      discount: 9.09
+    },
     freeShipping: true,
-    claims: ["Solo 6€/litro", "Envío gratis", "15 litros en total", "Formato ahorro", "De nuestros olivares de Córdoba y Lleida"],
+    claims: ["Solo 6.60€/litro", "Envío gratis", "Compra 3+ y ahorra 9%", "Formato ahorro", "De nuestros olivares de Córdoba y Lleida"],
     badges: [
       { text: "Más Vendido", color: "bg-red-600" },
       { text: "Directo del Campo", color: "bg-green-600" }
