@@ -4,6 +4,7 @@ import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import CartDrawer from './components/cart/CartDrawer';
 import FloatingNewsletterButton from './components/FloatingNewsletterButton';
+import NewsletterPopup from './components/NewsletterPopup';
 import Home from './pages/Home';
 import LaFamilia from './pages/LaFamilia';
 import NuestraTierra from './pages/NuestraTierra';
@@ -53,6 +54,7 @@ function App() {
           <Footer />
           <CartDrawer />
           <FloatingNewsletterButton />
+          <NewsletterPopup />
         </div>
       </CartProvider>
     </Router>

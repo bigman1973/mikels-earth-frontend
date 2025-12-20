@@ -10,18 +10,29 @@ const NewsletterPopup = () => {
   const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
-    // Check if popup was already shown in this session
-    const popupShown = sessionStorage.getItem('newsletter_popup_shown');
+    // Check if popup was already shown today
+    const popupData = localStorage.getItem('newsletter_popup_shown');
     
-    if (!popupShown) {
-      // Show popup after 3 seconds
-      const timer = setTimeout(() => {
-        setIsOpen(true);
-        sessionStorage.setItem('newsletter_popup_shown', 'true');
-      }, 3000);
-
-      return () => clearTimeout(timer);
+    if (popupData) {
+      const { timestamp } = JSON.parse(popupData);
+      const now = Date.now();
+      const oneDayInMs = 24 * 60 * 60 * 1000; // 24 horas
+      
+      // Si han pasado menos de 24 horas, no mostrar
+      if (now - timestamp < oneDayInMs) {
+        return;
+      }
     }
+    
+    // Show popup after 3 seconds
+    const timer = setTimeout(() => {
+      setIsOpen(true);
+      localStorage.setItem('newsletter_popup_shown', JSON.stringify({
+        timestamp: Date.now()
+      }));
+    }, 3000);
+
+    return () => clearTimeout(timer);
   }, []);
 
   const handleClose = () => {
