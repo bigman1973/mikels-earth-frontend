@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { products, categories } from '../data/products';
 import ProductCard from '../components/products/ProductCard';
-import ChristmasPopup from '../components/ChristmasPopup';
+import NewsletterPopup from '../components/NewsletterPopup';
 import { Filter } from 'lucide-react';
 
 const Products = () => {
@@ -37,7 +37,7 @@ const Products = () => {
 
   return (
     <>
-      <ChristmasPopup />
+      <NewsletterPopup />
       <div className="min-h-screen py-16 bg-gray-50">
       <div className="container mx-auto px-4">
         {/* Header */}
