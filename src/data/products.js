@@ -214,9 +214,7 @@ export const products = [
     ],
     category: "Aceites",
     tags: ["Vegano", "Sin Gluten", "Prensado en Frío", "Versátil"],
-    stock: 0,
-    soldOut: true,
-    soldOutMessage: "En cosecha - Disponible pronto",
+    stock: 50,
     weight: "500ml",
     ingredients: "Aceite de oliva virgen extra",
     nutritionalInfo: {
