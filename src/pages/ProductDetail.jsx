@@ -38,11 +38,31 @@ const ProductDetail = () => {
     );
   }
 
-  // Calculate price with volume discount
-  const hasVolumeDiscount = product.volumeDiscount && quantity >= product.volumeDiscount.minQuantity && purchaseType === 'one-time';
-  const volumeDiscountedPrice = hasVolumeDiscount 
-    ? product.price * (1 - product.volumeDiscount.discount / 100)
+  // Calculate price with tiered or volume discount
+  let discountPercent = 0;
+  let discountLabel = '';
+  
+  if (product.tieredDiscount && purchaseType === 'one-time') {
+    // Encontrar el descuento escalonado que aplica
+    for (const tier of product.tieredDiscount) {
+      if (quantity >= tier.minQuantity) {
+        discountPercent = tier.discount;
+        discountLabel = tier.label;
+      }
+    }
+  } else if (product.volumeDiscount && quantity >= product.volumeDiscount.minQuantity && purchaseType === 'one-time') {
+    discountPercent = product.volumeDiscount.discount;
+    discountLabel = 'volumen';
+  }
+  
+  const hasDiscount = discountPercent > 0;
+  const discountedPrice = hasDiscount 
+    ? product.price * (1 - discountPercent / 100)
     : product.price;
+  
+  // Mantener compatibilidad con código existente
+  const hasVolumeDiscount = hasDiscount;
+  const volumeDiscountedPrice = discountedPrice;
   
   const selectedFrequency = product.subscriptionFrequencies?.find(f => f.value === subscriptionFrequency);
   
@@ -244,12 +264,22 @@ const ProductDetail = () => {
                     Ahorras {selectedFrequency.discount}% con suscripción {selectedFrequency.label.toLowerCase()}
                   </div>
                 )}
-                {hasVolumeDiscount && (
+                {hasDiscount && (
                   <div className="text-sm text-green-600 font-semibold">
-                    ¡Descuento por volumen aplicado! Ahorras {product.volumeDiscount.discount}% ({quantity} unidades)
+                    ¡Descuento aplicado! Ahorras {discountPercent}% ({discountLabel}) - {quantity} unidades
                   </div>
                 )}
-                {product.volumeDiscount && !hasVolumeDiscount && purchaseType === 'one-time' && (
+                {product.tieredDiscount && !hasDiscount && purchaseType === 'one-time' && (
+                  <div className="text-sm text-gray-600 space-y-1">
+                    <p className="font-semibold">🎁 Descuentos por volumen:</p>
+                    {product.tieredDiscount.map((tier, index) => (
+                      <p key={index} className="pl-4">
+                        • {tier.minQuantity}+ unidades ({tier.label}): {tier.discount}% dto
+                      </p>
+                    ))}
+                  </div>
+                )}
+                {product.volumeDiscount && !hasDiscount && purchaseType === 'one-time' && (
                   <div className="text-sm text-gray-600">
                     Compra {product.volumeDiscount.minQuantity} o más unidades y ahorra {product.volumeDiscount.discount}%
                   </div>

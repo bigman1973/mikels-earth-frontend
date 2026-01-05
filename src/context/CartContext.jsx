@@ -73,7 +73,8 @@ export const CartProvider = ({ children }) => {
           purchaseType: purchaseType,
           subscriptionFrequency: subscriptionFrequency,
           weight: product.weight,
-          volumeDiscountConfig: product.volumeDiscount || null
+          volumeDiscountConfig: product.volumeDiscount || null,
+          tieredDiscountConfig: product.tieredDiscount || null
         }];
       }
     });
@@ -185,8 +186,21 @@ export const CartProvider = ({ children }) => {
   const getItemPrice = (item) => {
     let price = item.price;
     
-    // Aplicar descuento por volumen si cumple condiciones
-    if (item.volumeDiscountConfig && 
+    // Aplicar descuento escalonado (tieredDiscount) si existe
+    if (item.tieredDiscountConfig && item.purchaseType === 'one-time') {
+      // Encontrar el descuento más alto que aplique
+      let applicableDiscount = 0;
+      for (const tier of item.tieredDiscountConfig) {
+        if (item.quantity >= tier.minQuantity) {
+          applicableDiscount = tier.discount;
+        }
+      }
+      if (applicableDiscount > 0) {
+        price = item.price * (1 - applicableDiscount / 100);
+      }
+    }
+    // Si no hay tieredDiscount, aplicar volumeDiscount simple
+    else if (item.volumeDiscountConfig && 
         item.quantity >= item.volumeDiscountConfig.minQuantity && 
         item.purchaseType === 'one-time') {
       price = item.price * (1 - item.volumeDiscountConfig.discount / 100);

@@ -110,26 +110,50 @@ const CartDrawer = () => {
                             )}
                             <span>{getPurchaseTypeLabel(item)}</span>
                           </div>
-                          {/* Mostrar descuento por volumen si aplica */}
-                          {item.volumeDiscountConfig && item.quantity >= item.volumeDiscountConfig.minQuantity && item.purchaseType === 'one-time' ? (
-                            <div>
-                              <p className="text-xs text-gray-500 line-through">
-                                {item.price.toFixed(2)}€
-                              </p>
-                              <div className="flex items-center gap-2">
-                                <p className="text-sm font-bold text-green-600">
+                          {/* Mostrar descuento escalonado o por volumen si aplica */}
+                          {(() => {
+                            let discountPercent = 0;
+                            let discountLabel = '';
+                            
+                            // Verificar si hay descuento escalonado
+                            if (item.tieredDiscountConfig && item.purchaseType === 'one-time') {
+                              for (const tier of item.tieredDiscountConfig) {
+                                if (item.quantity >= tier.minQuantity) {
+                                  discountPercent = tier.discount;
+                                  discountLabel = tier.label;
+                                }
+                              }
+                            }
+                            // Si no hay tieredDiscount, verificar volumeDiscount
+                            else if (item.volumeDiscountConfig && item.quantity >= item.volumeDiscountConfig.minQuantity && item.purchaseType === 'one-time') {
+                              discountPercent = item.volumeDiscountConfig.discount;
+                              discountLabel = 'volumen';
+                            }
+                            
+                            if (discountPercent > 0) {
+                              return (
+                                <div>
+                                  <p className="text-xs text-gray-500 line-through">
+                                    {item.price.toFixed(2)}€
+                                  </p>
+                                  <div className="flex items-center gap-2">
+                                    <p className="text-sm font-bold text-green-600">
+                                      {getItemPrice(item).toFixed(2)}€
+                                    </p>
+                                    <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">
+                                      -{discountPercent}% {discountLabel}
+                                    </span>
+                                  </div>
+                                </div>
+                              );
+                            } else {
+                              return (
+                                <p className="text-sm font-bold text-primary">
                                   {getItemPrice(item).toFixed(2)}€
                                 </p>
-                                <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">
-                                  -{item.volumeDiscountConfig.discount}% volumen
-                                </span>
-                              </div>
-                            </div>
-                          ) : (
-                            <p className="text-sm font-bold text-primary">
-                              {getItemPrice(item).toFixed(2)}€
-                            </p>
-                          )}
+                              );
+                            }
+                          })()}
                         </div>
                       </div>
 

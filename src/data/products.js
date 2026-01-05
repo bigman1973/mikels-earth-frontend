@@ -139,10 +139,11 @@ export const products = [
       { value: "quarterly", label: "Trimestral", discount: 8 },
       { value: "biannual", label: "Semestral", discount: 7 }
     ],
-    volumeDiscount: {
-      minQuantity: 12,
-      discount: 10
-    },
+    tieredDiscount: [
+      { minQuantity: 12, discount: 15, label: "1 caja" },
+      { minQuantity: 24, discount: 20, label: "2 cajas" },
+      { minQuantity: 36, discount: 25, label: "3 cajas (3+1 gratis)" }
+    ],
     addons: [
       {
         productSlug: "estuche-regalo",
@@ -154,7 +155,8 @@ export const products = [
     freeShipping: true,
     limitedEdition: true,
     badges: [
-      { text: "🍂 ÚNICO TEMPRANO NOVIEMBRE", color: "bg-gradient-to-r from-orange-600 to-amber-600" }
+      { text: "🍂 Único TEMPRANO NOVIEMBRE", color: "bg-gradient-to-r from-orange-600 to-amber-600" },
+      { text: "🎁 PROMOCIÓN: Hasta 25% dto", color: "bg-gradient-to-r from-red-600 to-pink-600" }
     ]
   },
   {
