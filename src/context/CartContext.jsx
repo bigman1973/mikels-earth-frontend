@@ -33,7 +33,7 @@ export const CartProvider = ({ children }) => {
     localStorage.setItem('mikels_cart', JSON.stringify(cart));
   }, [cart]);
 
-  const addToCart = (product, quantity = 1, purchaseType = 'one-time', subscriptionFrequency = null, freeQuantity = 0) => {
+  const addToCart = (product, quantity = 1, purchaseType = 'one-time', subscriptionFrequency = null) => {
     setCart(prevCart => {
       const existingItemIndex = prevCart.findIndex(
         item => 
@@ -46,10 +46,6 @@ export const CartProvider = ({ children }) => {
         // Si el producto ya existe con las mismas opciones, incrementar cantidad
         const newCart = [...prevCart];
         newCart[existingItemIndex].quantity += quantity;
-        // Actualizar freeQuantity si se proporciona
-        if (freeQuantity > 0) {
-          newCart[existingItemIndex].freeQuantity = (newCart[existingItemIndex].freeQuantity || 0) + freeQuantity;
-        }
         return newCart;
       } else {
         // Si es nuevo, añadirlo al carrito
@@ -78,8 +74,7 @@ export const CartProvider = ({ children }) => {
           subscriptionFrequency: subscriptionFrequency,
           weight: product.weight,
           volumeDiscountConfig: product.volumeDiscount || null,
-          tieredDiscountConfig: product.tieredDiscount || null,
-          freeQuantity: freeQuantity || 0
+          tieredDiscountConfig: product.tieredDiscount || null
         }];
       }
     });
@@ -215,10 +210,7 @@ export const CartProvider = ({ children }) => {
   };
   
   const getCartTotal = () => {
-    let total = cart.reduce((sum, item) => {
-      const paidQuantity = item.freeQuantity ? (item.quantity - item.freeQuantity) : item.quantity;
-      return sum + (getItemPrice(item) * paidQuantity);
-    }, 0);
+    let total = cart.reduce((sum, item) => sum + (getItemPrice(item) * item.quantity), 0);
     
     // Aplicar descuento adicional si hay código
     if (appliedDiscount) {
@@ -239,8 +231,7 @@ export const CartProvider = ({ children }) => {
     
     let discountAmount = 0;
     cart.forEach(item => {
-      const paidQuantity = item.freeQuantity ? (item.quantity - item.freeQuantity) : item.quantity;
-      const itemTotal = getItemPrice(item) * paidQuantity;
+      const itemTotal = getItemPrice(item) * item.quantity;
       const discount = item.purchaseType === 'subscription' 
         ? appliedDiscount.subscriptionDiscount 
         : appliedDiscount.oneTimeDiscount;

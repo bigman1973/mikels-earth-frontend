@@ -321,9 +321,7 @@ const ProductDetail = () => {
                           <button
                             onClick={() => {
                               const quantityToAdd = tier.actualQuantity || tier.minQuantity;
-                              // Calcular freeQuantity: si hay chargeQuantity, la diferencia es gratis
-                              const freeQuantity = tier.chargeQuantity ? (quantityToAdd - tier.chargeQuantity) : 0;
-                              addToCart(product, quantityToAdd, 'one-time', null, freeQuantity);
+                              addToCart(product, quantityToAdd, 'one-time', null);
                             }}
                             className={`w-full py-2 px-4 rounded-lg font-semibold text-white transition-all ${
                               isBestValue

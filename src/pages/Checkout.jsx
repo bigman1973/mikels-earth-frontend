@@ -432,17 +432,11 @@ const Checkout = () => {
                       </p>
                       <p className="text-xs text-gray-500">
                         Cantidad: {item.quantity}
-                        {item.freeQuantity && (
-                          <span className="text-green-600 font-semibold"> (incluye {item.freeQuantity} gratis)</span>
-                        )}
                       </p>
                     </div>
                     <div className="text-right">
                       <p className="font-bold text-primary">
-                        {(() => {
-                          const paidQuantity = item.freeQuantity ? (item.quantity - item.freeQuantity) : item.quantity;
-                          return (getItemPrice(item) * paidQuantity).toFixed(2);
-                        })()}€
+                        {(getItemPrice(item) * item.quantity).toFixed(2)}€
                       </p>
                     </div>
                   </div>
