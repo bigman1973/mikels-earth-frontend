@@ -159,8 +159,8 @@ const CartDrawer = () => {
                                   <p className="text-xs text-green-600 font-semibold mt-1">
                                     Ahorras {totalSavings.toFixed(2)}€ en total
                                   </p>
-                                </div>
-                              );}
+                                  </div>
+                                );
                             } else {
                               return (
                                 <p className="text-sm font-bold text-primary">
