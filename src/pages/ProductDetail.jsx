@@ -286,9 +286,8 @@ const ProductDetail = () => {
                     {product.tieredDiscount.map((tier, index) => {
                       const isBestValue = tier.minQuantity === 36; // Destacar la opción 3+1
                       const pricePerUnit = product.price * (1 - tier.discount / 100);
-                      const quantityToCharge = tier.chargeQuantity || tier.minQuantity;
                       const actualQuantity = tier.actualQuantity || tier.minQuantity;
-                      const totalPrice = pricePerUnit * quantityToCharge;
+                      const totalPrice = pricePerUnit * actualQuantity;
                       const savings = (product.price * actualQuantity) - totalPrice;
                       
                       return (
