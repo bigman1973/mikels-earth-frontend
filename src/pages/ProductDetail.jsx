@@ -265,18 +265,60 @@ const ProductDetail = () => {
                   </div>
                 )}
                 {hasDiscount && (
-                  <div className="text-sm text-green-600 font-semibold">
-                    ¡Descuento aplicado! Ahorras {discountPercent}% ({discountLabel}) - {quantity} unidades
+                  <div className="bg-green-50 border-2 border-green-500 rounded-lg p-3 space-y-1">
+                    <div className="text-sm text-green-700 font-bold">
+                      ✅ ¡Descuento aplicado! Ahorras {discountPercent}% ({discountLabel})
+                    </div>
+                    <div className="text-xs text-green-600">
+                      Precio por unidad: {currentPrice.toFixed(2)}€ (antes {product.price.toFixed(2)}€)
+                    </div>
+                    <div className="text-lg font-bold text-green-700">
+                      Total: {(currentPrice * quantity).toFixed(2)}€
+                      <span className="text-sm font-normal text-green-600 ml-2">
+                        (ahorras {((product.price - currentPrice) * quantity).toFixed(2)}€)
+                      </span>
+                    </div>
                   </div>
                 )}
                 {product.tieredDiscount && !hasDiscount && purchaseType === 'one-time' && (
-                  <div className="text-sm text-gray-600 space-y-1">
-                    <p className="font-semibold">🎁 Descuentos por volumen:</p>
-                    {product.tieredDiscount.map((tier, index) => (
-                      <p key={index} className="pl-4">
-                        • {tier.minQuantity}+ unidades ({tier.label}): {tier.discount}% dto
-                      </p>
-                    ))}
+                  <div className="text-sm text-gray-600 space-y-2">
+                    <p className="font-semibold text-base">🎁 Descuentos por volumen:</p>
+                    {product.tieredDiscount.map((tier, index) => {
+                      const isBestValue = tier.minQuantity === 36; // Destacar la opción 3+1
+                      const pricePerUnit = product.price * (1 - tier.discount / 100);
+                      const totalPrice = pricePerUnit * tier.minQuantity;
+                      const savings = (product.price - pricePerUnit) * tier.minQuantity;
+                      
+                      return (
+                        <div 
+                          key={index} 
+                          className={`p-3 rounded-lg border-2 ${
+                            isBestValue 
+                              ? 'bg-gradient-to-r from-yellow-50 to-orange-50 border-orange-400' 
+                              : 'bg-gray-50 border-gray-200'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="font-semibold">
+                              {tier.minQuantity}+ unidades ({tier.label})
+                            </span>
+                            {isBestValue && (
+                              <span className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white text-xs font-bold px-2 py-1 rounded-full">
+                                ⭐ MEJOR VALOR
+                              </span>
+                            )}
+                          </div>
+                          <div className="text-xs space-y-0.5">
+                            <p className="text-green-600 font-semibold">{tier.discount}% descuento</p>
+                            <p>{pricePerUnit.toFixed(2)}€/unidad</p>
+                            <p className="font-bold text-primary">
+                              Total: {totalPrice.toFixed(2)}€
+                              <span className="text-green-600 ml-1">(ahorras {savings.toFixed(2)}€)</span>
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
                 {product.volumeDiscount && !hasDiscount && purchaseType === 'one-time' && (

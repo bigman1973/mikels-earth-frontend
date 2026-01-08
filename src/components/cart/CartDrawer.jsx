@@ -131,8 +131,20 @@ const CartDrawer = () => {
                             }
                             
                             if (discountPercent > 0) {
+                              const isBestValue = item.quantity >= 36 && item.tieredDiscountConfig;
+                              const totalSavings = (item.price - getItemPrice(item)) * item.quantity;
+                              
                               return (
-                                <div>
+                                <div className={`${
+                                  isBestValue ? 'bg-gradient-to-r from-yellow-50 to-orange-50 p-2 rounded-lg -mx-2' : ''
+                                }`}>
+                                  {isBestValue && (
+                                    <div className="flex items-center gap-1 mb-1">
+                                      <span className="text-xs bg-gradient-to-r from-yellow-400 to-orange-400 text-white font-bold px-2 py-0.5 rounded-full">
+                                        ⭐ MEJOR VALOR
+                                      </span>
+                                    </div>
+                                  )}
                                   <p className="text-xs text-gray-500 line-through">
                                     {item.price.toFixed(2)}€
                                   </p>
@@ -144,8 +156,11 @@ const CartDrawer = () => {
                                       -{discountPercent}% {discountLabel}
                                     </span>
                                   </div>
+                                  <p className="text-xs text-green-600 font-semibold mt-1">
+                                    Ahorras {totalSavings.toFixed(2)}€ en total
+                                  </p>
                                 </div>
-                              );
+                              );}
                             } else {
                               return (
                                 <p className="text-sm font-bold text-primary">
