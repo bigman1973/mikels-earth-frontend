@@ -331,7 +331,7 @@ const ProductDetail = () => {
                                 : 'bg-primary hover:bg-primary-dark'
                             }`}
                           >
-                            Añadir {tier.actualQuantity || tier.minQuantity} unidades al carrito
+                            {isBestValue ? '¡QUIERO MI CAJA GRATIS!' : `Añadir ${tier.actualQuantity || tier.minQuantity} unidades al carrito`}
                           </button>
                         </div>
                       );
