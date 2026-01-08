@@ -210,7 +210,10 @@ export const CartProvider = ({ children }) => {
   };
   
   const getCartTotal = () => {
-    let total = cart.reduce((sum, item) => sum + (getItemPrice(item) * item.quantity), 0);
+    let total = cart.reduce((sum, item) => {
+      const paidQuantity = item.freeQuantity ? (item.quantity - item.freeQuantity) : item.quantity;
+      return sum + (getItemPrice(item) * paidQuantity);
+    }, 0);
     
     // Aplicar descuento adicional si hay código
     if (appliedDiscount) {
@@ -231,7 +234,8 @@ export const CartProvider = ({ children }) => {
     
     let discountAmount = 0;
     cart.forEach(item => {
-      const itemTotal = getItemPrice(item) * item.quantity;
+      const paidQuantity = item.freeQuantity ? (item.quantity - item.freeQuantity) : item.quantity;
+      const itemTotal = getItemPrice(item) * paidQuantity;
       const discount = item.purchaseType === 'subscription' 
         ? appliedDiscount.subscriptionDiscount 
         : appliedDiscount.oneTimeDiscount;

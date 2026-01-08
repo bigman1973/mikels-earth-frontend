@@ -286,8 +286,10 @@ const ProductDetail = () => {
                     {product.tieredDiscount.map((tier, index) => {
                       const isBestValue = tier.minQuantity === 36; // Destacar la opción 3+1
                       const pricePerUnit = product.price * (1 - tier.discount / 100);
-                      const totalPrice = pricePerUnit * tier.minQuantity;
-                      const savings = (product.price - pricePerUnit) * tier.minQuantity;
+                      const quantityToCharge = tier.chargeQuantity || tier.minQuantity;
+                      const actualQuantity = tier.actualQuantity || tier.minQuantity;
+                      const totalPrice = pricePerUnit * quantityToCharge;
+                      const savings = (product.price * actualQuantity) - totalPrice;
                       
                       return (
                         <div 
@@ -300,7 +302,7 @@ const ProductDetail = () => {
                         >
                           <div className="flex items-center justify-between mb-1">
                             <span className="font-semibold">
-                              {tier.minQuantity}+ unidades ({tier.label})
+                              {actualQuantity} unidades ({tier.label})
                             </span>
                             {isBestValue && (
                               <span className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white text-xs font-bold px-2 py-1 rounded-full">
@@ -318,7 +320,8 @@ const ProductDetail = () => {
                           </div>
                           <button
                             onClick={() => {
-                              addToCart(product, tier.minQuantity, 'one-time', null);
+                              const quantityToAdd = tier.actualQuantity || tier.minQuantity;
+                              addToCart(product, quantityToAdd, 'one-time', null);
                             }}
                             className={`w-full py-2 px-4 rounded-lg font-semibold text-white transition-all ${
                               isBestValue
@@ -326,7 +329,7 @@ const ProductDetail = () => {
                                 : 'bg-primary hover:bg-primary-dark'
                             }`}
                           >
-                            Añadir {tier.minQuantity} unidades al carrito
+                            Añadir {tier.actualQuantity || tier.minQuantity} unidades al carrito
                           </button>
                         </div>
                       );

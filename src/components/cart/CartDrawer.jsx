@@ -132,7 +132,8 @@ const CartDrawer = () => {
                             
                             if (discountPercent > 0) {
                               const isBestValue = item.quantity >= 36 && item.tieredDiscountConfig;
-                              const totalSavings = (item.price - getItemPrice(item)) * item.quantity;
+                              const paidQuantity = item.freeQuantity ? (item.quantity - item.freeQuantity) : item.quantity;
+                              const totalSavings = (item.price - getItemPrice(item)) * paidQuantity;
                               
                               return (
                                 <div className={`${
@@ -182,7 +183,16 @@ const CartDrawer = () => {
                           >
                             <Minus className="w-4 h-4" />
                           </button>
-                          <span className="px-3 font-semibold">{item.quantity}</span>
+                          <span className="px-3 font-semibold">
+                            {item.freeQuantity ? (
+                              <span className="flex flex-col items-center">
+                                <span>{item.quantity}</span>
+                                <span className="text-xs text-green-600">({item.freeQuantity} gratis)</span>
+                              </span>
+                            ) : (
+                              item.quantity
+                            )}
+                          </span>
                           <button
                             onClick={() => updateQuantity(index, item.quantity + 1)}
                             className="p-2 hover:bg-gray-50 transition-colors rounded-r-lg"
@@ -192,7 +202,10 @@ const CartDrawer = () => {
                           </button>
                         </div>
                         <div className="text-sm font-bold text-primary">
-                          {(getItemPrice(item) * item.quantity).toFixed(2)}€
+                          {(() => {
+                            const paidQuantity = item.freeQuantity ? (item.quantity - item.freeQuantity) : item.quantity;
+                            return (getItemPrice(item) * paidQuantity).toFixed(2);
+                          })()}€
                         </div>
                       </div>
                     </motion.div>

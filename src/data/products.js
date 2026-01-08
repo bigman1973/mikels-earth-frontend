@@ -140,9 +140,9 @@ export const products = [
       { value: "biannual", label: "Semestral", discount: 7 }
     ],
     tieredDiscount: [
-      { minQuantity: 12, discount: 15, label: "1 caja" },
-      { minQuantity: 24, discount: 20, label: "2 cajas" },
-      { minQuantity: 36, discount: 25, label: "3 cajas (3+1 gratis)" }
+      { minQuantity: 12, discount: 15, label: "1 caja", actualQuantity: 12 },
+      { minQuantity: 24, discount: 20, label: "2 cajas", actualQuantity: 24 },
+      { minQuantity: 36, discount: 25, label: "3 cajas (3+1 gratis)", actualQuantity: 48, chargeQuantity: 36 }
     ],
     addons: [
       {
