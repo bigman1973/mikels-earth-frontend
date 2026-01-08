@@ -308,7 +308,7 @@ const ProductDetail = () => {
                               </span>
                             )}
                           </div>
-                          <div className="text-xs space-y-0.5">
+                          <div className="text-xs space-y-0.5 mb-2">
                             <p className="text-green-600 font-semibold">{tier.discount}% descuento</p>
                             <p>{pricePerUnit.toFixed(2)}€/unidad</p>
                             <p className="font-bold text-primary">
@@ -316,9 +316,24 @@ const ProductDetail = () => {
                               <span className="text-green-600 ml-1">(ahorras {savings.toFixed(2)}€)</span>
                             </p>
                           </div>
+                          <button
+                            onClick={() => {
+                              addToCart(product, tier.minQuantity, 'one-time', null);
+                            }}
+                            className={`w-full py-2 px-4 rounded-lg font-semibold text-white transition-all ${
+                              isBestValue
+                                ? 'bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600'
+                                : 'bg-primary hover:bg-primary-dark'
+                            }`}
+                          >
+                            Añadir {tier.minQuantity} unidades al carrito
+                          </button>
                         </div>
                       );
                     })}
+                    <div className="border-t-2 border-gray-300 pt-2 mt-3">
+                      <p className="text-sm font-semibold mb-2">O elige cantidad personalizada:</p>
+                    </div>
                   </div>
                 )}
                 {product.volumeDiscount && !hasDiscount && purchaseType === 'one-time' && (
