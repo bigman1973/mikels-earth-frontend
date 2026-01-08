@@ -33,7 +33,7 @@ export const CartProvider = ({ children }) => {
     localStorage.setItem('mikels_cart', JSON.stringify(cart));
   }, [cart]);
 
-  const addToCart = (product, quantity = 1, purchaseType = 'one-time', subscriptionFrequency = null) => {
+  const addToCart = (product, quantity = 1, purchaseType = 'one-time', subscriptionFrequency = null, freeQuantity = 0) => {
     setCart(prevCart => {
       const existingItemIndex = prevCart.findIndex(
         item => 
@@ -46,6 +46,10 @@ export const CartProvider = ({ children }) => {
         // Si el producto ya existe con las mismas opciones, incrementar cantidad
         const newCart = [...prevCart];
         newCart[existingItemIndex].quantity += quantity;
+        // Actualizar freeQuantity si se proporciona
+        if (freeQuantity > 0) {
+          newCart[existingItemIndex].freeQuantity = (newCart[existingItemIndex].freeQuantity || 0) + freeQuantity;
+        }
         return newCart;
       } else {
         // Si es nuevo, añadirlo al carrito
@@ -74,7 +78,8 @@ export const CartProvider = ({ children }) => {
           subscriptionFrequency: subscriptionFrequency,
           weight: product.weight,
           volumeDiscountConfig: product.volumeDiscount || null,
-          tieredDiscountConfig: product.tieredDiscount || null
+          tieredDiscountConfig: product.tieredDiscount || null,
+          freeQuantity: freeQuantity || 0
         }];
       }
     });
