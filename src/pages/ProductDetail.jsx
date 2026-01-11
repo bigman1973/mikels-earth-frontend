@@ -256,14 +256,6 @@ const ProductDetail = () => {
 
               {/* Price */}
               <div className="bg-accent/30 rounded-lg p-6 mb-6">
-                <div className="text-4xl font-bold text-primary mb-2">
-                  {currentPrice ? currentPrice.toFixed(2) : product.price.toFixed(2)}€
-                </div>
-                {purchaseType === 'subscription' && selectedFrequency && (
-                  <div className="text-sm text-gray-600">
-                    Ahorras {selectedFrequency.discount}% con suscripción {selectedFrequency.label.toLowerCase()}
-                  </div>
-                )}
                 {hasDiscount && (
                   <div className="bg-green-50 border-2 border-green-500 rounded-lg p-3 space-y-1">
                     <div className="text-sm text-green-700 font-bold">
@@ -282,7 +274,6 @@ const ProductDetail = () => {
                 )}
                 {product.tieredDiscount && !hasDiscount && purchaseType === 'one-time' && (
                   <div className="text-sm text-gray-600 space-y-2">
-                    <p className="font-semibold text-base">🎁 Descuentos por volumen:</p>
                     {product.tieredDiscount.map((tier, index) => {
                       const isBestValue = tier.minQuantity === 36; // Destacar la opción 3+1
                       const isFreeShipping = tier.freeShipping === true; // Pack Duo con envío gratis
