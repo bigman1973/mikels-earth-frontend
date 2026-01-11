@@ -140,6 +140,7 @@ export const products = [
       { value: "biannual", label: "Semestral", discount: 7 }
     ],
     tieredDiscount: [
+      { minQuantity: 2, discount: 0, label: "Pack Duo", actualQuantity: 2, freeShipping: true, description: "Incluye polifenoles para dos meses" },
       { minQuantity: 12, discount: 15, label: "1 caja", actualQuantity: 12 },
       { minQuantity: 24, discount: 20, label: "2 cajas", actualQuantity: 24 },
       { minQuantity: 36, discount: 25, label: "4 CAJAS (Pagas 3 + 1 GRATIS)", actualQuantity: 48 }

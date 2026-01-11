@@ -285,6 +285,7 @@ const ProductDetail = () => {
                     <p className="font-semibold text-base">🎁 Descuentos por volumen:</p>
                     {product.tieredDiscount.map((tier, index) => {
                       const isBestValue = tier.minQuantity === 36; // Destacar la opción 3+1
+                      const isFreeShipping = tier.freeShipping === true; // Pack Duo con envío gratis
                       const pricePerUnit = product.price * (1 - tier.discount / 100);
                       const actualQuantity = tier.actualQuantity || tier.minQuantity;
                       const totalPrice = pricePerUnit * actualQuantity;
@@ -295,7 +296,9 @@ const ProductDetail = () => {
                           key={index} 
                           className={`p-3 rounded-lg border-2 ${
                             isBestValue 
-                              ? 'bg-gradient-to-r from-yellow-50 to-orange-50 border-orange-400' 
+                              ? 'bg-gradient-to-r from-yellow-50 to-orange-50 border-orange-400'
+                              : isFreeShipping
+                              ? 'bg-gradient-to-r from-green-50 to-blue-50 border-green-400'
                               : 'bg-gray-50 border-gray-200'
                           }`}
                         >
@@ -308,13 +311,21 @@ const ProductDetail = () => {
                                 ⭐ MEJOR VALOR
                               </span>
                             )}
+                            {isFreeShipping && (
+                              <span className="bg-gradient-to-r from-green-500 to-blue-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                                🚚 ENVÍO GRATIS
+                              </span>
+                            )}
                           </div>
+                          {tier.description && (
+                            <p className="text-xs text-gray-600 mb-1 italic">{tier.description}</p>
+                          )}
                           <div className="text-xs space-y-0.5 mb-2">
-                            <p className="text-green-600 font-semibold">{tier.discount}% descuento</p>
+                            {tier.discount > 0 && <p className="text-green-600 font-semibold">{tier.discount}% descuento</p>}
                             <p>{pricePerUnit.toFixed(2)}€/unidad</p>
                             <p className="font-bold text-primary">
                               Total: {totalPrice.toFixed(2)}€
-                              <span className="text-green-600 ml-1">(ahorras {savings.toFixed(2)}€)</span>
+                              {savings > 0 && <span className="text-green-600 ml-1">(ahorras {savings.toFixed(2)}€)</span>}
                             </p>
                           </div>
                           <button
@@ -328,7 +339,7 @@ const ProductDetail = () => {
                                 : 'bg-primary hover:bg-primary-dark'
                             }`}
                           >
-                            {isBestValue ? '¡QUIERO MI CAJA GRATIS!' : `Añadir ${tier.actualQuantity || tier.minQuantity} unidades al carrito`}
+                            {isBestValue ? '¡QUIERO MI CAJA GRATIS!' : isFreeShipping ? 'Añadir Pack Duo al carrito' : `Añadir ${tier.actualQuantity || tier.minQuantity} unidades al carrito`}
                           </button>
                         </div>
                       );
