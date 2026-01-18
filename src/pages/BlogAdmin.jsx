@@ -705,22 +705,24 @@ const BlogAdmin = () => {
                   Contenido *
                 </label>
                 <div className="quill-container">
-                  <ReactQuill
-                    theme="snow"
-                    value={formData.content}
-                    onChange={(content) => setFormData(prev => ({ ...prev, content }))}
-                    placeholder="Escribe el contenido de la noticia aquí..."
-                    modules={{
-                      toolbar: [
-                        [{ 'header': [1, 2, 3, false] }],
-                        ['bold', 'italic', 'underline', 'strike'],
-                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                        ['link', 'image'],
-                        ['clean']
-                      ],
-                    }}
-                    style={{ height: '300px', marginBottom: '50px' }}
-                  />
+                  {typeof window !== 'undefined' && (
+                    <ReactQuill
+                      theme="snow"
+                      value={formData.content}
+                      onChange={(content) => setFormData(prev => ({ ...prev, content }))}
+                      placeholder="Escribe el contenido de la noticia aquí..."
+                      modules={{
+                        toolbar: [
+                          [{ 'header': [1, 2, 3, false] }],
+                          ['bold', 'italic', 'underline', 'strike'],
+                          [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                          ['link', 'image'],
+                          ['clean']
+                        ],
+                      }}
+                      style={{ height: '300px', marginBottom: '50px' }}
+                    />
+                  )}
                 </div>
               </div>
 
