@@ -18,6 +18,8 @@ import Checkout from './pages/Checkout';
 import OrderSuccess from './pages/OrderSuccess';
 import SubscriptionSuccess from './pages/SubscriptionSuccess';
 import Blog from './pages/Blog';
+import BlogPost from './pages/BlogPost';
+import BlogAdmin from './pages/BlogAdmin';
 import Contact from './pages/Contact';
 import Horeca from './pages/Horeca';
 import PrivacyPolicy from './pages/PrivacyPolicy';
@@ -45,6 +47,8 @@ function App() {
               <Route path="/order-success" element={<OrderSuccess />} />
               <Route path="/subscription-success" element={<SubscriptionSuccess />} />
               <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:slug" element={<BlogPost />} />
+              <Route path="/admin/blog" element={<BlogAdmin />} />
               <Route path="/contacto" element={<Contact />} />
               <Route path="/horeca" element={<Horeca />} />
               <Route path="/politica-privacidad" element={<PrivacyPolicy />} />
