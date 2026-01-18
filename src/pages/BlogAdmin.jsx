@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Lock, 
   LogOut, 
@@ -17,8 +17,12 @@ import {
   Save,
   ArrowLeft,
   Upload,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Type,
+  Code
 } from 'lucide-react';
+
+// Importación dinámica de ReactQuill para evitar errores de SSR/Hidratación
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
@@ -54,6 +58,27 @@ const BlogAdmin = () => {
   const [formLoading, setFormLoading] = useState(false);
   const [formError, setFormError] = useState('');
   const [imageUploading, setImageUploading] = useState(false);
+  
+  // Modo de rescate: si el editor visual falla, permitir usar texto plano
+  const [useVisualEditor, setUseVisualEditor] = useState(true);
+
+  // Configuración del editor Quill
+  const quillModules = useMemo(() => ({
+    toolbar: [
+      [{ 'header': [1, 2, 3, false] }],
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+      ['link', 'image'],
+      ['clean']
+    ],
+  }), []);
+
+  const quillFormats = [
+    'header',
+    'bold', 'italic', 'underline', 'strike',
+    'list', 'bullet',
+    'link', 'image'
+  ];
 
   // Verificar si hay token guardado
   useEffect(() => {
@@ -266,18 +291,20 @@ const BlogAdmin = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  const handleContentChange = (content) => {
+    setFormData(prev => ({ ...prev, content }));
+  };
+
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Validar tipo de archivo
     const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp'];
     if (!allowedTypes.includes(file.type)) {
       setFormError('Tipo de archivo no permitido. Use: png, jpg, jpeg, gif, webp');
       return;
     }
 
-    // Validar tamaño (5MB)
     if (file.size > 5 * 1024 * 1024) {
       setFormError('El archivo es demasiado grande. Máximo 5MB');
       return;
@@ -389,87 +416,57 @@ const BlogAdmin = () => {
     }
   };
 
-  // Pantalla de Login
+  // Login View
   if (!isLoggedIn) {
     return (
-      <div 
-        className="min-h-screen flex items-center justify-center p-4"
-        style={{ backgroundColor: 'var(--mikels-red-10)' }}
-      >
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="w-full max-w-md bg-white rounded-xl shadow-lg p-8"
+      <div className="min-h-screen flex items-center justify-center px-4" style={{ backgroundColor: 'var(--mikels-red-10)' }}>
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full"
         >
-          <div className="text-center mb-8">
-            <div 
-              className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
-              style={{ backgroundColor: 'var(--mikels-red-10)' }}
-            >
+          <div className="flex justify-center mb-6">
+            <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--mikels-red-10)' }}>
               <Lock className="w-8 h-8" style={{ color: 'var(--mikels-red)' }} />
             </div>
-            <h1 
-              className="text-2xl font-bold"
-              style={{ 
-                fontFamily: 'Georgia, serif', 
-                fontStyle: 'italic',
-                color: 'var(--mikels-red)' 
-              }}
-            >
-              Blog Admin
-            </h1>
-            <p style={{ color: 'var(--mikels-gray-medium)' }}>
-              Mikel's Earth
-            </p>
           </div>
           
-          <form onSubmit={handleLogin}>
+          <h2 
+            className="text-3xl font-bold text-center mb-2"
+            style={{ fontFamily: 'Georgia, serif', fontStyle: 'italic', color: 'var(--mikels-red)' }}
+          >
+            Blog Admin
+          </h2>
+          <p className="text-center text-gray-500 mb-8">Mikel's Earth</p>
+          
+          <form onSubmit={handleLogin} className="space-y-6">
             {loginError && (
-              <div 
-                className="mb-4 p-3 rounded-lg flex items-center gap-2"
-                style={{ backgroundColor: 'var(--mikels-red-10)', color: 'var(--mikels-red)' }}
-              >
-                <AlertCircle className="w-5 h-5" />
+              <div className="p-4 rounded-lg flex items-center gap-3 text-sm" style={{ backgroundColor: '#FEF2F2', color: '#991B1B' }}>
+                <AlertCircle className="w-5 h-5 flex-shrink-0" />
                 {loginError}
               </div>
             )}
             
-            <div className="mb-4">
-              <label 
-                className="block text-sm font-medium mb-2"
-                style={{ color: 'var(--mikels-gray-dark)' }}
-              >
-                Usuario
-              </label>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Usuario</label>
               <input
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2"
-                style={{ 
-                  borderColor: 'var(--mikels-gray-light)',
-                  '--tw-ring-color': 'var(--mikels-red-50)'
-                }}
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all"
+                placeholder="admin"
                 required
               />
             </div>
             
-            <div className="mb-6">
-              <label 
-                className="block text-sm font-medium mb-2"
-                style={{ color: 'var(--mikels-gray-dark)' }}
-              >
-                Contraseña
-              </label>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Contraseña</label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2"
-                style={{ 
-                  borderColor: 'var(--mikels-gray-light)',
-                  '--tw-ring-color': 'var(--mikels-red-50)'
-                }}
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none transition-all"
+                placeholder="••••••••"
                 required
               />
             </div>
@@ -477,17 +474,10 @@ const BlogAdmin = () => {
             <button
               type="submit"
               disabled={loginLoading}
-              className="w-full py-3 rounded-lg font-semibold text-white transition-all duration-300 hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-2"
+              className="w-full py-4 rounded-xl font-bold text-white shadow-lg transition-all duration-300 hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-2"
               style={{ backgroundColor: 'var(--mikels-red)' }}
             >
-              {loginLoading ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  Iniciando sesión...
-                </>
-              ) : (
-                'Iniciar Sesión'
-              )}
+              {loginLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Iniciar Sesión'}
             </button>
           </form>
         </motion.div>
@@ -495,329 +485,205 @@ const BlogAdmin = () => {
     );
   }
 
-  // Vista de Crear/Editar Post
+  // Create/Edit View
   if (view === 'create' || view === 'edit') {
     return (
-      <div className="min-h-screen" style={{ backgroundColor: 'var(--mikels-red-10)' }}>
-        {/* Header */}
-        <header className="bg-white shadow-sm">
+      <div className="min-h-screen pb-20" style={{ backgroundColor: 'var(--mikels-red-10)' }}>
+        <header className="bg-white shadow-sm sticky top-0 z-10">
           <div className="container mx-auto px-4 py-4 flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <button
+              <button 
                 onClick={goBackToList}
-                className="flex items-center gap-2 px-3 py-2 rounded-lg font-medium transition-all duration-300 hover:opacity-80"
-                style={{ 
-                  backgroundColor: 'var(--mikels-gray-lighter)',
-                  color: 'var(--mikels-gray-dark)'
-                }}
+                className="p-2 rounded-full hover:bg-gray-100 transition-colors"
               >
-                <ArrowLeft className="w-5 h-5" />
-                Volver
+                <ArrowLeft className="w-6 h-6" style={{ color: 'var(--mikels-gray-dark)' }} />
               </button>
               <h1 
                 className="text-xl font-bold"
-                style={{ 
-                  fontFamily: 'Georgia, serif', 
-                  fontStyle: 'italic',
-                  color: 'var(--mikels-red)' 
-                }}
+                style={{ fontFamily: 'Georgia, serif', fontStyle: 'italic', color: 'var(--mikels-red)' }}
               >
-                {view === 'create' ? 'Nuevo Post' : 'Editar Post'}
+                {view === 'create' ? 'Nueva Noticia' : 'Editar Noticia'}
               </h1>
             </div>
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-300 hover:opacity-80"
-              style={{ 
-                backgroundColor: 'var(--mikels-gray-lighter)',
-                color: 'var(--mikels-gray-dark)'
-              }}
-            >
-              <LogOut className="w-5 h-5" />
-              Salir
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setUseVisualEditor(!useVisualEditor)}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
+                style={{ 
+                  backgroundColor: useVisualEditor ? 'var(--mikels-gray-lighter)' : 'var(--mikels-red)',
+                  color: useVisualEditor ? 'var(--mikels-gray-dark)' : 'white'
+                }}
+              >
+                {useVisualEditor ? <Code className="w-4 h-4" /> : <Type className="w-4 h-4" />}
+                {useVisualEditor ? 'Modo Código' : 'Modo Visual'}
+              </button>
+            </div>
           </div>
         </header>
 
-        {/* Mensaje de éxito */}
-        {successMessage && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg flex items-center gap-2"
-            style={{ backgroundColor: 'var(--mikels-green)', color: 'white' }}
-          >
-            <CheckCircle className="w-5 h-5" />
-            {successMessage}
-          </motion.div>
-        )}
-
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-4xl mx-auto">
-            <div className="bg-white rounded-xl shadow-sm p-6 md:p-8">
-              {formError && (
-                <div 
-                  className="mb-6 p-4 rounded-lg flex items-center gap-2"
-                  style={{ backgroundColor: 'var(--mikels-red-10)', color: 'var(--mikels-red)' }}
-                >
-                  <AlertCircle className="w-5 h-5 flex-shrink-0" />
-                  {formError}
-                </div>
-              )}
-
-              {/* Título */}
-              <div className="mb-6">
-                <label 
-                  className="block text-sm font-medium mb-2"
-                  style={{ color: 'var(--mikels-gray-dark)' }}
-                >
-                  Título *
-                </label>
-                <input
-                  type="text"
-                  name="title"
-                  value={formData.title}
-                  onChange={handleFormChange}
-                  placeholder="Escribe el título del post..."
-                  className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 text-lg"
-                  style={{ 
-                    borderColor: 'var(--mikels-gray-light)',
-                    fontFamily: 'Georgia, serif',
-                    fontStyle: 'italic'
-                  }}
-                />
+            {formError && (
+              <div className="mb-6 p-4 rounded-lg flex items-center gap-3 text-sm" style={{ backgroundColor: '#FEF2F2', color: '#991B1B' }}>
+                <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                {formError}
               </div>
+            )}
 
-              {/* Categoría */}
-              <div className="mb-6">
-                <label 
-                  className="block text-sm font-medium mb-2"
-                  style={{ color: 'var(--mikels-gray-dark)' }}
-                >
-                  Categoría
-                </label>
-                <input
-                  type="text"
-                  name="category"
-                  value={formData.category}
-                  onChange={handleFormChange}
-                  placeholder="Ej: Recetas, Salud, Historia..."
-                  className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2"
-                  style={{ borderColor: 'var(--mikels-gray-light)' }}
-                />
-              </div>
-
-              {/* Imagen destacada */}
-              <div className="mb-6">
-                <label 
-                  className="block text-sm font-medium mb-2"
-                  style={{ color: 'var(--mikels-gray-dark)' }}
-                >
-                  Imagen destacada
-                </label>
-                
-                {/* Subir archivo */}
-                <div className="flex flex-col gap-3">
-                  <div className="flex items-center gap-3">
-                    <label 
-                      className="flex items-center gap-2 px-4 py-3 rounded-lg cursor-pointer transition-all duration-300 hover:opacity-80"
-                      style={{ 
-                        backgroundColor: 'var(--mikels-green)',
-                        color: 'white'
-                      }}
-                    >
-                      {imageUploading ? (
-                        <>
-                          <Loader2 className="w-5 h-5 animate-spin" />
-                          Subiendo...
-                        </>
-                      ) : (
-                        <>
-                          <Upload className="w-5 h-5" />
-                          Subir imagen
-                        </>
-                      )}
-                      <input
-                        type="file"
-                        accept="image/png,image/jpeg,image/jpg,image/gif,image/webp"
-                        onChange={handleImageUpload}
-                        disabled={imageUploading}
-                        className="hidden"
-                      />
-                    </label>
-                    <span className="text-xs" style={{ color: 'var(--mikels-gray-light)' }}>
-                      PNG, JPG, GIF, WEBP (máx. 5MB)
-                    </span>
-                  </div>
-                  
-                  {/* O introducir URL */}
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs" style={{ color: 'var(--mikels-gray-light)' }}>o</span>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Columna Principal */}
+              <div className="lg:col-span-2 space-y-6">
+                <div className="bg-white rounded-2xl shadow-sm p-6 space-y-6">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Título de la noticia</label>
                     <input
-                      type="url"
-                      name="featured_image"
-                      value={formData.featured_image}
+                      type="text"
+                      name="title"
+                      value={formData.title}
                       onChange={handleFormChange}
-                      placeholder="Pegar URL de imagen..."
-                      className="flex-1 px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 text-sm"
-                      style={{ borderColor: 'var(--mikels-gray-light)' }}
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 outline-none transition-all text-lg font-medium"
+                      placeholder="Ej: Los beneficios del aceite temprano..."
                     />
-                    {formData.featured_image && (
-                      <button
-                        type="button"
-                        onClick={() => setFormData(prev => ({ ...prev, featured_image: '' }))}
-                        className="p-2 rounded-lg transition-all duration-300 hover:opacity-80"
-                        style={{ backgroundColor: 'var(--mikels-red-10)', color: 'var(--mikels-red)' }}
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Contenido</label>
+                    {useVisualEditor ? (
+                      <div className="quill-container">
+                        <ReactQuill 
+                          theme="snow"
+                          value={formData.content}
+                          onChange={handleContentChange}
+                          modules={quillModules}
+                          formats={quillFormats}
+                          placeholder="Escribe aquí el contenido de la noticia..."
+                          style={{ height: '400px', marginBottom: '50px' }}
+                        />
+                      </div>
+                    ) : (
+                      <textarea
+                        name="content"
+                        value={formData.content}
+                        onChange={handleFormChange}
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 outline-none transition-all font-mono text-sm"
+                        style={{ minHeight: '450px' }}
+                        placeholder="Escribe aquí el contenido en formato HTML..."
+                      />
                     )}
                   </div>
                 </div>
-                
-                {/* Preview de imagen */}
-                {formData.featured_image && (
-                  <div className="mt-3 p-3 rounded-lg" style={{ backgroundColor: 'var(--mikels-gray-lighter)' }}>
-                    <div className="flex items-center gap-2 mb-2">
-                      <ImageIcon className="w-4 h-4" style={{ color: 'var(--mikels-green)' }} />
-                      <span className="text-xs font-medium" style={{ color: 'var(--mikels-gray-dark)' }}>Vista previa</span>
-                    </div>
-                    <img 
-                      src={formData.featured_image} 
-                      alt="Preview" 
-                      className="max-h-48 rounded-lg object-cover"
-                      onError={(e) => {
-                        e.target.style.display = 'none';
-                        setFormError('No se pudo cargar la imagen. Verifica la URL.');
-                      }}
+              </div>
+
+              {/* Columna Lateral */}
+              <div className="space-y-6">
+                <div className="bg-white rounded-2xl shadow-sm p-6 space-y-6">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Categoría</label>
+                    <input
+                      type="text"
+                      name="category"
+                      value={formData.category}
+                      onChange={handleFormChange}
+                      className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-red-500 outline-none transition-all"
+                      placeholder="Ej: Recetas, Salud..."
                     />
                   </div>
-                )}
-              </div>
 
-              {/* Contenido con Editor WYSIWYG */}
-              <div className="mb-6">
-                <label 
-                  className="block text-sm font-medium mb-2"
-                  style={{ color: 'var(--mikels-gray-dark)' }}
-                >
-                  Contenido *
-                </label>
-                <div className="quill-container">
-                  {typeof window !== 'undefined' && (
-                    <ReactQuill
-                      theme="snow"
-                      value={formData.content}
-                      onChange={(content) => setFormData(prev => ({ ...prev, content }))}
-                      placeholder="Escribe el contenido de la noticia aquí..."
-                      modules={{
-                        toolbar: [
-                          [{ 'header': [1, 2, 3, false] }],
-                          ['bold', 'italic', 'underline', 'strike'],
-                          [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                          ['link', 'image'],
-                          ['clean']
-                        ],
-                      }}
-                      style={{ height: '300px', marginBottom: '50px' }}
-                    />
-                  )}
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Imagen destacada</label>
+                    <div className="space-y-3">
+                      {formData.featured_image ? (
+                        <div className="relative rounded-lg overflow-hidden border group">
+                          <img 
+                            src={formData.featured_image} 
+                            alt="Preview" 
+                            className="w-full h-40 object-cover"
+                          />
+                          <button 
+                            onClick={() => setFormData(prev => ({ ...prev, featured_image: '' }))}
+                            className="absolute top-2 right-2 p-1.5 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center">
+                          <ImageIcon className="w-10 h-10 mx-auto mb-2 text-gray-300" />
+                          <p className="text-xs text-gray-400">No hay imagen seleccionada</p>
+                        </div>
+                      )}
+                      
+                      <div className="flex flex-col gap-2">
+                        <label className="cursor-pointer flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-green-50 text-green-700 font-medium hover:bg-green-100 transition-colors">
+                          {imageUploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                          {imageUploading ? 'Subiendo...' : 'Subir imagen'}
+                          <input 
+                            type="file" 
+                            className="hidden" 
+                            onChange={handleImageUpload}
+                            accept="image/*"
+                            disabled={imageUploading}
+                          />
+                        </label>
+                        <div className="relative">
+                          <input
+                            type="text"
+                            name="featured_image"
+                            value={formData.featured_image}
+                            onChange={handleFormChange}
+                            className="w-full px-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-red-500 outline-none transition-all text-xs"
+                            placeholder="O pega una URL de imagen..."
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-2xl shadow-sm p-6 space-y-4">
+                  <button
+                    onClick={() => view === 'create' ? handleCreatePost(false) : handleUpdatePost(false)}
+                    disabled={formLoading}
+                    className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold transition-all duration-300 hover:opacity-90 disabled:opacity-50"
+                    style={{ backgroundColor: 'var(--mikels-gray-lighter)', color: 'var(--mikels-gray-dark)' }}
+                  >
+                    {formLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
+                    Guardar borrador
+                  </button>
+                  
+                  <button
+                    onClick={() => view === 'create' ? handleCreatePost(true) : handleUpdatePost(true)}
+                    disabled={formLoading}
+                    className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold text-white shadow-lg transition-all duration-300 hover:opacity-90 disabled:opacity-50"
+                    style={{ backgroundColor: 'var(--mikels-green)' }}
+                  >
+                    {formLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
+                    Publicar ahora
+                  </button>
                 </div>
               </div>
-
-              {/* Botones de acción */}
-              <div className="flex flex-wrap gap-3 pt-4 border-t" style={{ borderColor: 'var(--mikels-gray-lighter)' }}>
-                <button
-                  onClick={() => view === 'create' ? handleCreatePost(false) : handleUpdatePost(false)}
-                  disabled={formLoading}
-                  className="flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:opacity-90 disabled:opacity-50"
-                  style={{ 
-                    backgroundColor: 'var(--mikels-gray-lighter)',
-                    color: 'var(--mikels-gray-dark)'
-                  }}
-                >
-                  {formLoading ? (
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                  ) : (
-                    <Save className="w-5 h-5" />
-                  )}
-                  Guardar borrador
-                </button>
-                
-                <button
-                  onClick={() => view === 'create' ? handleCreatePost(true) : handleUpdatePost(true)}
-                  disabled={formLoading}
-                  className="flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-white transition-all duration-300 hover:opacity-90 disabled:opacity-50"
-                  style={{ backgroundColor: 'var(--mikels-green)' }}
-                >
-                  {formLoading ? (
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                  ) : (
-                    <Send className="w-5 h-5" />
-                  )}
-                  Publicar ahora
-                </button>
-                
-                <button
-                  onClick={goBackToList}
-                  disabled={formLoading}
-                  className="flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:opacity-80"
-                  style={{ color: 'var(--mikels-gray-medium)' }}
-                >
-                  <X className="w-5 h-5" />
-                  Cancelar
-                </button>
-              </div>
             </div>
-
-            {/* Preview del contenido */}
-            {formData.content && (
-              <div className="mt-8 bg-white rounded-xl shadow-sm p-6 md:p-8">
-                <h3 
-                  className="text-lg font-bold mb-4 pb-4 border-b"
-                  style={{ 
-                    fontFamily: 'Georgia, serif', 
-                    fontStyle: 'italic',
-                    color: 'var(--mikels-gray-dark)',
-                    borderColor: 'var(--mikels-gray-lighter)'
-                  }}
-                >
-                  Vista previa
-                </h3>
-                <div 
-                  className="prose max-w-none"
-                  dangerouslySetInnerHTML={{ __html: formData.content }}
-                  style={{ color: 'var(--mikels-gray-dark)' }}
-                />
-              </div>
-            )}
           </div>
         </div>
       </div>
     );
   }
 
-  // Panel Admin - Lista de Posts
+  // List View
   return (
-    <div className="min-h-screen" style={{ backgroundColor: 'var(--mikels-red-10)' }}>
-      {/* Header */}
-      <header className="bg-white shadow-sm">
+    <div className="min-h-screen pb-20" style={{ backgroundColor: 'var(--mikels-red-10)' }}>
+      <header className="bg-white shadow-sm sticky top-0 z-10">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <h1 
             className="text-xl font-bold"
-            style={{ 
-              fontFamily: 'Georgia, serif', 
-              fontStyle: 'italic',
-              color: 'var(--mikels-red)' 
-            }}
+            style={{ fontFamily: 'Georgia, serif', fontStyle: 'italic', color: 'var(--mikels-red)' }}
           >
             Blog Admin - Mikel's Earth
           </h1>
           <div className="flex items-center gap-3">
             <button
               onClick={openCreateForm}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg font-semibold text-white transition-all duration-300 hover:opacity-90"
+              className="flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-white shadow-md transition-all duration-300 hover:opacity-90"
               style={{ backgroundColor: 'var(--mikels-green)' }}
             >
               <Plus className="w-5 h-5" />
@@ -825,292 +691,219 @@ const BlogAdmin = () => {
             </button>
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-300 hover:opacity-80"
-              style={{ 
-                backgroundColor: 'var(--mikels-gray-lighter)',
-                color: 'var(--mikels-gray-dark)'
-              }}
+              className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              title="Cerrar Sesión"
             >
-              <LogOut className="w-5 h-5" />
-              Salir
+              <LogOut className="w-5 h-5" style={{ color: 'var(--mikels-gray-dark)' }} />
             </button>
           </div>
         </div>
       </header>
 
-      {/* Mensaje de éxito */}
-      {successMessage && (
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          className="fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg flex items-center gap-2"
-          style={{ backgroundColor: 'var(--mikels-green)', color: 'white' }}
-        >
-          <CheckCircle className="w-5 h-5" />
-          {successMessage}
-        </motion.div>
-      )}
-
       <div className="container mx-auto px-4 py-8">
-        {/* Estadísticas */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          <div className="bg-white rounded-xl p-6 shadow-sm">
-            <div className="flex items-center gap-4">
-              <div 
-                className="w-12 h-12 rounded-full flex items-center justify-center"
-                style={{ backgroundColor: 'var(--mikels-red-10)' }}
-              >
-                <FileText className="w-6 h-6" style={{ color: 'var(--mikels-red)' }} />
+        {/* Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          {[
+            { label: 'Total Noticias', value: stats.total, icon: FileText, color: 'var(--mikels-gray-dark)' },
+            { label: 'Publicadas', value: stats.published, icon: CheckCircle, color: 'var(--mikels-green)' },
+            { label: 'Borradores', value: stats.drafts, icon: Clock, color: 'var(--mikels-red)' }
+          ].map((stat, i) => (
+            <div key={i} className="bg-white p-6 rounded-2xl shadow-sm flex items-center gap-4">
+              <div className="p-3 rounded-xl" style={{ backgroundColor: `${stat.color}10` }}>
+                <stat.icon className="w-6 h-6" style={{ color: stat.color }} />
               </div>
               <div>
-                <p className="text-2xl font-bold" style={{ color: 'var(--mikels-gray-dark)' }}>
-                  {stats.total}
-                </p>
-                <p style={{ color: 'var(--mikels-gray-medium)' }}>Total Posts</p>
+                <p className="text-sm text-gray-500 font-medium">{stat.label}</p>
+                <p className="text-2xl font-bold" style={{ color: 'var(--mikels-gray-dark)' }}>{stat.value}</p>
               </div>
             </div>
-          </div>
-          
-          <div className="bg-white rounded-xl p-6 shadow-sm">
-            <div className="flex items-center gap-4">
-              <div 
-                className="w-12 h-12 rounded-full flex items-center justify-center"
-                style={{ backgroundColor: 'var(--mikels-green-10)' }}
-              >
-                <CheckCircle className="w-6 h-6" style={{ color: 'var(--mikels-green)' }} />
-              </div>
-              <div>
-                <p className="text-2xl font-bold" style={{ color: 'var(--mikels-gray-dark)' }}>
-                  {stats.published}
-                </p>
-                <p style={{ color: 'var(--mikels-gray-medium)' }}>Publicados</p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="bg-white rounded-xl p-6 shadow-sm">
-            <div className="flex items-center gap-4">
-              <div 
-                className="w-12 h-12 rounded-full flex items-center justify-center"
-                style={{ backgroundColor: 'var(--mikels-gray-lighter)' }}
-              >
-                <Clock className="w-6 h-6" style={{ color: 'var(--mikels-gray-medium)' }} />
-              </div>
-              <div>
-                <p className="text-2xl font-bold" style={{ color: 'var(--mikels-gray-dark)' }}>
-                  {stats.drafts}
-                </p>
-                <p style={{ color: 'var(--mikels-gray-medium)' }}>Borradores</p>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
 
-        {/* Lista de Posts */}
-        <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-          <div className="p-6 border-b flex items-center justify-between" style={{ borderColor: 'var(--mikels-gray-lighter)' }}>
-            <h2 
-              className="text-lg font-bold"
-              style={{ 
-                fontFamily: 'Georgia, serif', 
-                fontStyle: 'italic',
-                color: 'var(--mikels-gray-dark)' 
-              }}
+        {/* Success Message */}
+        <AnimatePresence>
+          {successMessage && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="mb-6 p-4 rounded-xl flex items-center gap-3 text-white shadow-lg"
+              style={{ backgroundColor: 'var(--mikels-green)' }}
             >
-              Todos los Posts
-            </h2>
-            <button
-              onClick={() => fetchPosts(token)}
-              className="text-sm px-3 py-1 rounded-lg transition-colors hover:bg-gray-100"
-              style={{ color: 'var(--mikels-gray-medium)' }}
-            >
-              Actualizar
-            </button>
+              <CheckCircle className="w-5 h-5" />
+              {successMessage}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Error Message */}
+        {error && (
+          <div className="mb-6 p-4 rounded-xl flex items-center gap-3 text-sm" style={{ backgroundColor: '#FEF2F2', color: '#991B1B' }}>
+            <AlertCircle className="w-5 h-5 flex-shrink-0" />
+            {error}
+            <button onClick={() => fetchPosts(token)} className="ml-auto underline font-medium">Reintentar</button>
           </div>
-          
+        )}
+
+        {/* Posts Table */}
+        <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
           {loading ? (
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="w-8 h-8 animate-spin" style={{ color: 'var(--mikels-red)' }} />
-            </div>
-          ) : error ? (
-            <div className="text-center py-12">
-              <p style={{ color: 'var(--mikels-red)' }}>{error}</p>
-              <button
-                onClick={() => fetchPosts(token)}
-                className="mt-4 px-4 py-2 rounded-lg font-medium"
-                style={{ backgroundColor: 'var(--mikels-red)', color: 'white' }}
-              >
-                Reintentar
-              </button>
+            <div className="py-20 flex flex-col items-center justify-center gap-4">
+              <Loader2 className="w-10 h-10 animate-spin" style={{ color: 'var(--mikels-red)' }} />
+              <p className="text-gray-500 font-medium">Cargando noticias...</p>
             </div>
           ) : posts.length === 0 ? (
-            <div className="text-center py-12">
-              <FileText className="w-12 h-12 mx-auto mb-4" style={{ color: 'var(--mikels-gray-light)' }} />
-              <p className="mb-4" style={{ color: 'var(--mikels-gray-medium)' }}>
-                No hay posts todavía.
-              </p>
+            <div className="py-20 text-center">
+              <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                <FileText className="w-10 h-10 text-gray-300" />
+              </div>
+              <h3 className="text-lg font-bold text-gray-700 mb-2">No hay noticias aún</h3>
+              <p className="text-gray-500 mb-6">Comienza creando tu primera noticia para el blog.</p>
               <button
                 onClick={openCreateForm}
-                className="px-6 py-3 rounded-lg font-semibold text-white transition-all duration-300 hover:opacity-90"
+                className="px-6 py-3 rounded-xl font-bold text-white shadow-md transition-all hover:opacity-90"
                 style={{ backgroundColor: 'var(--mikels-green)' }}
               >
-                <Plus className="w-5 h-5 inline mr-2" />
-                Crear primer post
+                Crear mi primera noticia
               </button>
             </div>
           ) : (
-            <div className="divide-y" style={{ borderColor: 'var(--mikels-gray-lighter)' }}>
-              {posts.map((post) => (
-                <div key={post.id} className="p-6 hover:bg-gray-50 transition-colors">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-3 mb-2">
-                        <h3 
-                          className="font-semibold truncate"
-                          style={{ color: 'var(--mikels-gray-dark)' }}
-                        >
-                          {post.title}
-                        </h3>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-gray-50 border-b border-gray-100">
+                    <th className="px-6 py-4 text-sm font-bold text-gray-600">Noticia</th>
+                    <th className="px-6 py-4 text-sm font-bold text-gray-600">Estado</th>
+                    <th className="px-6 py-4 text-sm font-bold text-gray-600">Fecha</th>
+                    <th className="px-6 py-4 text-sm font-bold text-gray-600 text-right">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-50">
+                  {posts.map((post) => (
+                    <tr key={post.id} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                            {post.featured_image ? (
+                              <img src={post.featured_image} alt="" className="w-full h-full object-cover" />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center">
+                                <ImageIcon className="w-6 h-6 text-gray-300" />
+                              </div>
+                            )}
+                          </div>
+                          <div>
+                            <p className="font-bold text-gray-800 line-clamp-1">{post.title}</p>
+                            <p className="text-xs text-gray-500">{post.category || 'Sin categoría'}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
                         <span 
-                          className={`px-2 py-1 text-xs font-medium rounded-full ${
-                            post.status === 'published' 
-                              ? 'bg-green-100 text-green-700' 
-                              : 'bg-gray-100 text-gray-600'
-                          }`}
+                          className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider"
+                          style={{ 
+                            backgroundColor: post.status === 'published' ? '#ECFDF5' : '#FFF7ED',
+                            color: post.status === 'published' ? '#065F46' : '#9A3412'
+                          }}
                         >
                           {post.status === 'published' ? 'Publicado' : 'Borrador'}
                         </span>
-                      </div>
-                      <p 
-                        className="text-sm mb-2 line-clamp-2"
-                        style={{ color: 'var(--mikels-gray-medium)' }}
-                      >
-                        {post.excerpt}
-                      </p>
-                      <p className="text-xs" style={{ color: 'var(--mikels-gray-light)' }}>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-500">
                         {formatDate(post.published_at || post.created_at)}
-                        {post.category && ` • ${post.category}`}
-                      </p>
-                    </div>
-                    
-                    <div className="flex items-center gap-2">
-                      {post.status === 'published' && (
-                        <a
-                          href={`/blog/${post.slug}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="p-2 rounded-lg transition-colors hover:bg-gray-100"
-                          title="Ver post"
-                        >
-                          <Eye className="w-5 h-5" style={{ color: 'var(--mikels-gray-medium)' }} />
-                        </a>
-                      )}
-                      
-                      <button
-                        onClick={() => openEditForm(post)}
-                        className="p-2 rounded-lg transition-colors hover:bg-blue-50"
-                        title="Editar"
-                      >
-                        <Edit className="w-5 h-5" style={{ color: '#3b82f6' }} />
-                      </button>
-                      
-                      {post.status === 'draft' && (
-                        <button
-                          onClick={() => handlePublish(post)}
-                          disabled={actionLoading === post.id}
-                          className="p-2 rounded-lg transition-colors hover:bg-green-50"
-                          title="Publicar"
-                        >
-                          {actionLoading === post.id ? (
-                            <Loader2 className="w-5 h-5 animate-spin" style={{ color: 'var(--mikels-green)' }} />
-                          ) : (
-                            <Send className="w-5 h-5" style={{ color: 'var(--mikels-green)' }} />
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          {post.status === 'draft' && (
+                            <button 
+                              onClick={() => handlePublish(post)}
+                              disabled={actionLoading === post.id}
+                              className="p-2 rounded-lg hover:bg-green-50 text-green-600 transition-colors"
+                              title="Publicar ahora"
+                            >
+                              {actionLoading === post.id ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
+                            </button>
                           )}
-                        </button>
-                      )}
-                      
-                      <button
-                        onClick={() => setDeleteModal({ show: true, post })}
-                        disabled={actionLoading === post.id}
-                        className="p-2 rounded-lg transition-colors hover:bg-red-50"
-                        title="Eliminar"
-                      >
-                        <Trash2 className="w-5 h-5" style={{ color: 'var(--mikels-red)' }} />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
+                          <a 
+                            href={`/blog/${post.slug}`} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="p-2 rounded-lg hover:bg-blue-50 text-blue-600 transition-colors"
+                            title="Ver noticia"
+                          >
+                            <Eye className="w-5 h-5" />
+                          </a>
+                          <button 
+                            onClick={() => openEditForm(post)}
+                            className="p-2 rounded-lg hover:bg-gray-100 text-gray-600 transition-colors"
+                            title="Editar"
+                          >
+                            <Edit className="w-5 h-5" />
+                          </button>
+                          <button 
+                            onClick={() => setDeleteModal({ show: true, post })}
+                            className="p-2 rounded-lg hover:bg-red-50 text-red-600 transition-colors"
+                            title="Eliminar"
+                          >
+                            <Trash2 className="w-5 h-5" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
         </div>
       </div>
 
-      {/* Modal de confirmación de eliminación */}
-      {deleteModal.show && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-white rounded-xl shadow-xl max-w-md w-full p-6"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <h3 
-                className="text-lg font-bold"
-                style={{ 
-                  fontFamily: 'Georgia, serif', 
-                  fontStyle: 'italic',
-                  color: 'var(--mikels-red)' 
-                }}
-              >
-                Confirmar eliminación
-              </h3>
-              <button
-                onClick={() => setDeleteModal({ show: false, post: null })}
-                className="p-1 rounded-full hover:bg-gray-100"
-              >
-                <X className="w-5 h-5" style={{ color: 'var(--mikels-gray-medium)' }} />
-              </button>
-            </div>
-            
-            <p className="mb-6" style={{ color: 'var(--mikels-gray-medium)' }}>
-              ¿Estás seguro de que quieres eliminar el post <strong>"{deleteModal.post?.title}"</strong>? Esta acción no se puede deshacer.
-            </p>
-            
-            <div className="flex gap-3 justify-end">
-              <button
-                onClick={() => setDeleteModal({ show: false, post: null })}
-                className="px-4 py-2 rounded-lg font-medium transition-colors"
-                style={{ 
-                  backgroundColor: 'var(--mikels-gray-lighter)',
-                  color: 'var(--mikels-gray-dark)'
-                }}
-              >
-                Cancelar
-              </button>
-              <button
-                onClick={handleDelete}
-                disabled={actionLoading}
-                className="px-4 py-2 rounded-lg font-medium text-white transition-colors flex items-center gap-2"
-                style={{ backgroundColor: 'var(--mikels-red)' }}
-              >
-                {actionLoading ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    Eliminando...
-                  </>
-                ) : (
-                  <>
-                    <Trash2 className="w-4 h-4" />
-                    Eliminar
-                  </>
-                )}
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      )}
+      {/* Modal de Eliminación */}
+      <AnimatePresence>
+        {deleteModal.show && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setDeleteModal({ show: false, post: null })}
+              className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            />
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full relative z-10"
+            >
+              <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Trash2 className="w-8 h-8 text-red-500" />
+              </div>
+              <h3 className="text-2xl font-bold text-center mb-2" style={{ color: 'var(--mikels-gray-dark)' }}>¿Eliminar noticia?</h3>
+              <p className="text-center text-gray-500 mb-8">
+                Esta acción no se puede deshacer. Se eliminará permanentemente la noticia:
+                <br />
+                <strong className="text-gray-800">"{deleteModal.post?.title}"</strong>
+              </p>
+              <div className="flex gap-4">
+                <button 
+                  onClick={() => setDeleteModal({ show: false, post: null })}
+                  className="flex-1 py-3 rounded-xl font-bold text-gray-500 hover:bg-gray-50 transition-colors"
+                >
+                  Cancelar
+                </button>
+                <button 
+                  onClick={handleDelete}
+                  disabled={actionLoading === deleteModal.post?.id}
+                  className="flex-1 py-3 rounded-xl font-bold text-white shadow-lg transition-all hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-2"
+                  style={{ backgroundColor: 'var(--mikels-red)' }}
+                >
+                  {actionLoading === deleteModal.post?.id ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Sí, eliminar'}
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
