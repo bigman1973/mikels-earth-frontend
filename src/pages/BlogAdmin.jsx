@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Layout, Plus, FileText, CheckCircle, Clock, LogOut, 
   Pencil, Trash2, Eye, Image as ImageIcon, Upload, 
   X, AlertCircle, Send, Code
 } from 'lucide-react';
+import { Editor } from '@tinymce/tinymce-react';
 
 const API_URL = 'https://mikels-earth-backend-production.up.railway.app/api/blog';
 
@@ -18,6 +19,7 @@ const BlogAdmin = ( ) => {
   const [editingPost, setEditingPost] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [stats, setStats] = useState({ total: 0, published: 0, drafts: 0 });
+  const editorRef = useRef(null);
 
   const [formData, setFormData] = useState({
     title: '', content: '', category: 'General', image_url: '', status: 'draft'
@@ -100,14 +102,16 @@ const BlogAdmin = ( ) => {
       });
       const data = await response.json();
       if (response.ok) {
-        setFormData(prev => ({ ...prev, image_url: data.url || data.secure_url }));
+        const url = data.url || data.secure_url;
+        setFormData(prev => ({ ...prev, image_url: url }));
       } else { alert('Error al subir imagen: ' + (data.error || 'Verifica Cloudinary')); }
     } catch (err) { alert('Error de conexión al subir imagen'); }
     finally { setIsUploading(false); }
   };
 
   const handleSubmit = async (status) => {
-    if (!formData.title || !formData.content) {
+    const content = editorRef.current ? editorRef.current.getContent() : formData.content;
+    if (!formData.title || !content) {
       alert('Por favor, rellena el título y el contenido');
       return;
     }
@@ -118,7 +122,7 @@ const BlogAdmin = ( ) => {
       const response = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ ...formData, status })
+        body: JSON.stringify({ ...formData, content, status })
       });
       if (response.ok) {
         setShowForm(false);
@@ -214,51 +218,50 @@ const BlogAdmin = ( ) => {
         </div>
         {showForm && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
-            <div className="bg-white w-full max-w-4xl rounded-2xl shadow-2xl my-8">
+            <div className="bg-white w-full max-w-5xl rounded-2xl shadow-2xl my-8">
               <div className="p-6 border-b flex justify-between items-center sticky top-0 bg-white z-10">
                 <h3 className="text-xl font-serif font-bold">{editingPost ? 'Editar Noticia' : 'Crear Nueva Noticia'}</h3>
                 <button onClick={() => setShowForm(false)}><X className="w-6 h-6 text-gray-400" /></button>
               </div>
-              <div className="p-6 space-y-6 max-h-[70vh] overflow-y-auto">
-                <input type="text" className="w-full px-4 py-3 rounded-xl border outline-none" placeholder="Título..." value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} />
-                <select className="w-full px-4 py-3 rounded-xl border outline-none" value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})}>
-                  <option value="General">General</option><option value="Recetas">Recetas</option><option value="Salud">Salud</option><option value="Tradición">Tradición</option><option value="Eventos">Eventos</option>
-                </select>
-                
-                <div className="space-y-2">
-                  <p className="text-sm font-medium text-gray-700">Imagen de portada</p>
-                  <div className="flex gap-4 items-start">
-                    <div className="flex-1 space-y-2">
-                      <input type="text" className="w-full px-4 py-3 rounded-xl border outline-none text-sm text-gray-500 bg-gray-50" placeholder="URL de imagen..." value={formData.image_url} readOnly />
-                      <label className="cursor-pointer bg-green-600 text-white px-6 py-3 rounded-xl font-medium flex items-center justify-center gap-2 hover:bg-green-700 transition-colors">
-                        <Upload className="w-5 h-5" /> {isUploading ? 'Subiendo...' : 'Subir Imagen'}
-                        <input type="file" className="hidden" onChange={handleImageUpload} disabled={isUploading} accept="image/*" />
-                      </label>
-                    </div>
-                    {formData.image_url && (
-                      <div className="w-32 h-32 rounded-xl border overflow-hidden bg-gray-100 flex-shrink-0">
-                        <img src={formData.image_url} className="w-full h-full object-cover" alt="Preview" />
+              <div className="p-6 space-y-6 max-h-[75vh] overflow-y-auto">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <input type="text" className="w-full px-4 py-3 rounded-xl border outline-none" placeholder="Título de la noticia..." value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} />
+                    <select className="w-full px-4 py-3 rounded-xl border outline-none" value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})}>
+                      <option value="General">Categoría: General</option><option value="Recetas">Recetas</option><option value="Salud">Salud</option><option value="Tradición">Tradición</option><option value="Eventos">Eventos</option>
+                    </select>
+                    <div className="space-y-2">
+                      <label className="block text-sm font-medium text-gray-700">Imagen de portada</label>
+                      <div className="flex gap-3">
+                        <label className="flex-1 cursor-pointer bg-gray-100 border-2 border-dashed border-gray-300 rounded-xl p-4 flex flex-col items-center justify-center hover:bg-gray-200 transition-all">
+                          <Upload className="w-8 h-8 text-gray-400 mb-2" />
+                          <span className="text-sm text-gray-500">{isUploading ? 'Subiendo...' : 'Haz clic para subir'}</span>
+                          <input type="file" className="hidden" onChange={handleImageUpload} disabled={isUploading} accept="image/*" />
+                        </label>
+                        {formData.image_url && (
+                          <div className="w-32 h-32 rounded-xl border overflow-hidden bg-white shadow-inner">
+                            <img src={formData.image_url} className="w-full h-full object-cover" alt="Preview" key={formData.image_url} />
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <p className="text-sm font-medium text-gray-700">Contenido de la noticia</p>
-                  <div className="border rounded-xl overflow-hidden bg-white">
-                    <div className="bg-gray-50 border-b p-2 flex gap-2">
-                      <button onClick={() => document.execCommand('bold')} className="p-2 hover:bg-gray-200 rounded font-bold" title="Negrita">B</button>
-                      <button onClick={() => document.execCommand('italic')} className="p-2 hover:bg-gray-200 rounded italic" title="Cursiva">I</button>
-                      <button onClick={() => document.execCommand('insertUnorderedList')} className="p-2 hover:bg-gray-200 rounded" title="Lista">•</button>
                     </div>
-                    <div 
-                      contentEditable 
-                      className="w-full min-h-[300px] p-4 outline-none overflow-y-auto"
-                      onInput={(e) => setFormData({...formData, content: e.currentTarget.innerHTML})}
-                      dangerouslySetInnerHTML={{ __html: formData.content }}
+                  </div>
+                  <div className="h-full min-h-[400px]">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Contenido</label>
+                    <Editor
+                      apiKey="no-api-key-needed"
+                      onInit={(evt, editor) => editorRef.current = editor}
+                      initialValue={formData.content}
+                      init={{
+                        height: 400,
+                        menubar: false,
+                        plugins: ['advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview', 'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen', 'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'],
+                        toolbar: 'undo redo | blocks | bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+                        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+                        placeholder: 'Pega aquí el contenido de tu correo...'
+                      }}
                     />
                   </div>
-                  <p className="text-xs text-gray-400 italic">Puedes pegar texto directamente desde tu correo y mantendrá el formato básico.</p>
                 </div>
               </div>
               <div className="p-6 border-t flex justify-end gap-4 bg-gray-50 rounded-b-2xl">
@@ -305,5 +308,6 @@ const BlogAdmin = ( ) => {
 };
 
 export default BlogAdmin;
+
 
 
