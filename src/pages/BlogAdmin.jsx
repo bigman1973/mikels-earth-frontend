@@ -1,12 +1,9 @@
-import React, { useState, useEffect, Suspense, lazy } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Layout, Plus, FileText, CheckCircle, Clock, LogOut, 
   Pencil, Trash2, Eye, Image as ImageIcon, Upload, 
   X, AlertCircle, Send, Code
 } from 'lucide-react';
-
-const ReactQuill = lazy(() => import('react-quill'));
-import 'react-quill/dist/quill.snow.css';
 
 const API_URL = 'https://mikels-earth-backend-production.up.railway.app/api/blog';
 
@@ -20,7 +17,6 @@ const BlogAdmin = ( ) => {
   const [showForm, setShowForm] = useState(false);
   const [editingPost, setEditingPost] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [useRawEditor, setUseRawEditor] = useState(false);
   const [stats, setStats] = useState({ total: 0, published: 0, drafts: 0 });
 
   const [formData, setFormData] = useState({
@@ -78,7 +74,7 @@ const BlogAdmin = ( ) => {
         setIsLoggedIn(true);
         fetchPosts();
       } else {
-        setError(data.error || 'Credenciales inválidas');
+        setError(data.error || 'Credenciales incorrectas');
       }
     } catch (err) { setError('Error de conexión'); }
   };
@@ -105,7 +101,7 @@ const BlogAdmin = ( ) => {
       const data = await response.json();
       if (response.ok) {
         setFormData(prev => ({ ...prev, image_url: data.url || data.secure_url }));
-      } else { alert(data.error || 'Error al subir imagen'); }
+      } else { alert('Error al subir imagen: ' + (data.error || 'Verifica Cloudinary')); }
     } catch (err) { alert('Error de conexión al subir imagen'); }
     finally { setIsUploading(false); }
   };
@@ -221,10 +217,7 @@ const BlogAdmin = ( ) => {
             <div className="bg-white w-full max-w-4xl rounded-2xl shadow-2xl my-8">
               <div className="p-6 border-b flex justify-between items-center sticky top-0 bg-white z-10">
                 <h3 className="text-xl font-serif font-bold">{editingPost ? 'Editar Noticia' : 'Crear Nueva Noticia'}</h3>
-                <div className="flex items-center gap-4">
-                  <button onClick={() => setUseRawEditor(!useRawEditor)} className="p-2 bg-gray-100 rounded-lg">{useRawEditor ? <Layout className="w-5 h-5" /> : <Code className="w-5 h-5" />}</button>
-                  <button onClick={() => setShowForm(false)}><X className="w-6 h-6 text-gray-400" /></button>
-                </div>
+                <button onClick={() => setShowForm(false)}><X className="w-6 h-6 text-gray-400" /></button>
               </div>
               <div className="p-6 space-y-6 max-h-[70vh] overflow-y-auto">
                 <input type="text" className="w-full px-4 py-3 rounded-xl border outline-none" placeholder="Título..." value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} />
@@ -238,14 +231,13 @@ const BlogAdmin = ( ) => {
                     <input type="file" className="hidden" onChange={handleImageUpload} disabled={isUploading} accept="image/*" />
                   </label>
                 </div>
-                <div className="border rounded-xl overflow-hidden min-h-[300px]">
-                  {useRawEditor ? (
-                    <textarea className="w-full h-[300px] p-4 font-mono text-sm outline-none" value={formData.content} onChange={(e) => setFormData({...formData, content: e.target.value})} />
-                  ) : (
-                    <Suspense fallback={<div>Cargando...</div>}>
-                      <ReactQuill theme="snow" value={formData.content} onChange={(content) => setFormData({...formData, content})} className="h-[250px] mb-12" />
-                    </Suspense>
-                  )}
+                <div className="border rounded-xl overflow-hidden">
+                  <textarea 
+                    className="w-full h-[300px] p-4 outline-none resize-none" 
+                    placeholder="Escribe aquí el contenido de la noticia (puedes usar HTML si lo deseas)..."
+                    value={formData.content} 
+                    onChange={(e) => setFormData({...formData, content: e.target.value})} 
+                  />
                 </div>
               </div>
               <div className="p-6 border-t flex justify-end gap-4 bg-gray-50 rounded-b-2xl">
@@ -292,3 +284,4 @@ const BlogAdmin = ( ) => {
 };
 
 export default BlogAdmin;
+
