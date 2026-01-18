@@ -224,20 +224,41 @@ const BlogAdmin = ( ) => {
                 <select className="w-full px-4 py-3 rounded-xl border outline-none" value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})}>
                   <option value="General">General</option><option value="Recetas">Recetas</option><option value="Salud">Salud</option><option value="Tradición">Tradición</option><option value="Eventos">Eventos</option>
                 </select>
-                <div className="flex gap-4">
-                  <input type="text" className="flex-1 px-4 py-3 rounded-xl border outline-none" placeholder="URL de imagen..." value={formData.image_url} onChange={(e) => setFormData({...formData, image_url: e.target.value})} />
-                  <label className="cursor-pointer bg-green-600 text-white px-6 py-3 rounded-xl font-medium flex items-center gap-2">
-                    <Upload className="w-5 h-5" /> {isUploading ? '...' : 'Subir'}
-                    <input type="file" className="hidden" onChange={handleImageUpload} disabled={isUploading} accept="image/*" />
-                  </label>
+                
+                <div className="space-y-2">
+                  <p className="text-sm font-medium text-gray-700">Imagen de portada</p>
+                  <div className="flex gap-4 items-start">
+                    <div className="flex-1 space-y-2">
+                      <input type="text" className="w-full px-4 py-3 rounded-xl border outline-none text-sm text-gray-500 bg-gray-50" placeholder="URL de imagen..." value={formData.image_url} readOnly />
+                      <label className="cursor-pointer bg-green-600 text-white px-6 py-3 rounded-xl font-medium flex items-center justify-center gap-2 hover:bg-green-700 transition-colors">
+                        <Upload className="w-5 h-5" /> {isUploading ? 'Subiendo...' : 'Subir Imagen'}
+                        <input type="file" className="hidden" onChange={handleImageUpload} disabled={isUploading} accept="image/*" />
+                      </label>
+                    </div>
+                    {formData.image_url && (
+                      <div className="w-32 h-32 rounded-xl border overflow-hidden bg-gray-100 flex-shrink-0">
+                        <img src={formData.image_url} className="w-full h-full object-cover" alt="Preview" />
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <div className="border rounded-xl overflow-hidden">
-                  <textarea 
-                    className="w-full h-[300px] p-4 outline-none resize-none" 
-                    placeholder="Escribe aquí el contenido de la noticia (puedes usar HTML si lo deseas)..."
-                    value={formData.content} 
-                    onChange={(e) => setFormData({...formData, content: e.target.value})} 
-                  />
+
+                <div className="space-y-2">
+                  <p className="text-sm font-medium text-gray-700">Contenido de la noticia</p>
+                  <div className="border rounded-xl overflow-hidden bg-white">
+                    <div className="bg-gray-50 border-b p-2 flex gap-2">
+                      <button onClick={() => document.execCommand('bold')} className="p-2 hover:bg-gray-200 rounded font-bold" title="Negrita">B</button>
+                      <button onClick={() => document.execCommand('italic')} className="p-2 hover:bg-gray-200 rounded italic" title="Cursiva">I</button>
+                      <button onClick={() => document.execCommand('insertUnorderedList')} className="p-2 hover:bg-gray-200 rounded" title="Lista">•</button>
+                    </div>
+                    <div 
+                      contentEditable 
+                      className="w-full min-h-[300px] p-4 outline-none overflow-y-auto"
+                      onInput={(e) => setFormData({...formData, content: e.currentTarget.innerHTML})}
+                      dangerouslySetInnerHTML={{ __html: formData.content }}
+                    />
+                  </div>
+                  <p className="text-xs text-gray-400 italic">Puedes pegar texto directamente desde tu correo y mantendrá el formato básico.</p>
                 </div>
               </div>
               <div className="p-6 border-t flex justify-end gap-4 bg-gray-50 rounded-b-2xl">
@@ -284,4 +305,5 @@ const BlogAdmin = ( ) => {
 };
 
 export default BlogAdmin;
+
 
