@@ -15,7 +15,9 @@ import {
   X,
   Plus,
   Save,
-  ArrowLeft
+  ArrowLeft,
+  Upload,
+  Image as ImageIcon
 } from 'lucide-react';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://mikels-earth-backend-production.up.railway.app';
@@ -49,6 +51,7 @@ const BlogAdmin = () => {
   });
   const [formLoading, setFormLoading] = useState(false);
   const [formError, setFormError] = useState('');
+  const [imageUploading, setImageUploading] = useState(false);
 
   // Verificar si hay token guardado
   useEffect(() => {
@@ -259,6 +262,53 @@ const BlogAdmin = () => {
   const handleFormChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Validar tipo de archivo
+    const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      setFormError('Tipo de archivo no permitido. Use: png, jpg, jpeg, gif, webp');
+      return;
+    }
+
+    // Validar tamaño (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setFormError('El archivo es demasiado grande. Máximo 5MB');
+      return;
+    }
+
+    setImageUploading(true);
+    setFormError('');
+
+    try {
+      const formDataUpload = new FormData();
+      formDataUpload.append('image', file);
+
+      const response = await fetch(`${API_URL}/api/blog/admin/upload-image`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formDataUpload
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setFormData(prev => ({ ...prev, featured_image: data.url }));
+        showSuccess('Imagen subida correctamente');
+      } else {
+        setFormError(data.error || 'Error al subir la imagen');
+      }
+    } catch (err) {
+      setFormError('Error de conexión al subir la imagen');
+    } finally {
+      setImageUploading(false);
+    }
   };
 
   const handleCreatePost = async (publishNow = false) => {
@@ -562,24 +612,83 @@ const BlogAdmin = () => {
                   className="block text-sm font-medium mb-2"
                   style={{ color: 'var(--mikels-gray-dark)' }}
                 >
-                  URL de imagen destacada
+                  Imagen destacada
                 </label>
-                <input
-                  type="url"
-                  name="featured_image"
-                  value={formData.featured_image}
-                  onChange={handleFormChange}
-                  placeholder="https://ejemplo.com/imagen.jpg"
-                  className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2"
-                  style={{ borderColor: 'var(--mikels-gray-light)' }}
-                />
+                
+                {/* Subir archivo */}
+                <div className="flex flex-col gap-3">
+                  <div className="flex items-center gap-3">
+                    <label 
+                      className="flex items-center gap-2 px-4 py-3 rounded-lg cursor-pointer transition-all duration-300 hover:opacity-80"
+                      style={{ 
+                        backgroundColor: 'var(--mikels-green)',
+                        color: 'white'
+                      }}
+                    >
+                      {imageUploading ? (
+                        <>
+                          <Loader2 className="w-5 h-5 animate-spin" />
+                          Subiendo...
+                        </>
+                      ) : (
+                        <>
+                          <Upload className="w-5 h-5" />
+                          Subir imagen
+                        </>
+                      )}
+                      <input
+                        type="file"
+                        accept="image/png,image/jpeg,image/jpg,image/gif,image/webp"
+                        onChange={handleImageUpload}
+                        disabled={imageUploading}
+                        className="hidden"
+                      />
+                    </label>
+                    <span className="text-xs" style={{ color: 'var(--mikels-gray-light)' }}>
+                      PNG, JPG, GIF, WEBP (máx. 5MB)
+                    </span>
+                  </div>
+                  
+                  {/* O introducir URL */}
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs" style={{ color: 'var(--mikels-gray-light)' }}>o</span>
+                    <input
+                      type="url"
+                      name="featured_image"
+                      value={formData.featured_image}
+                      onChange={handleFormChange}
+                      placeholder="Pegar URL de imagen..."
+                      className="flex-1 px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 text-sm"
+                      style={{ borderColor: 'var(--mikels-gray-light)' }}
+                    />
+                    {formData.featured_image && (
+                      <button
+                        type="button"
+                        onClick={() => setFormData(prev => ({ ...prev, featured_image: '' }))}
+                        className="p-2 rounded-lg transition-all duration-300 hover:opacity-80"
+                        style={{ backgroundColor: 'var(--mikels-red-10)', color: 'var(--mikels-red)' }}
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+                
+                {/* Preview de imagen */}
                 {formData.featured_image && (
-                  <div className="mt-3">
+                  <div className="mt-3 p-3 rounded-lg" style={{ backgroundColor: 'var(--mikels-gray-lighter)' }}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <ImageIcon className="w-4 h-4" style={{ color: 'var(--mikels-green)' }} />
+                      <span className="text-xs font-medium" style={{ color: 'var(--mikels-gray-dark)' }}>Vista previa</span>
+                    </div>
                     <img 
                       src={formData.featured_image} 
                       alt="Preview" 
-                      className="max-h-40 rounded-lg object-cover"
-                      onError={(e) => e.target.style.display = 'none'}
+                      className="max-h-48 rounded-lg object-cover"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        setFormError('No se pudo cargar la imagen. Verifica la URL.');
+                      }}
                     />
                   </div>
                 )}
