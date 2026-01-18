@@ -19,6 +19,8 @@ import {
   Upload,
   Image as ImageIcon
 } from 'lucide-react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://mikels-earth-backend-production.up.railway.app';
 
@@ -694,7 +696,7 @@ const BlogAdmin = () => {
                 )}
               </div>
 
-              {/* Contenido */}
+              {/* Contenido con Editor WYSIWYG */}
               <div className="mb-6">
                 <label 
                   className="block text-sm font-medium mb-2"
@@ -702,27 +704,24 @@ const BlogAdmin = () => {
                 >
                   Contenido *
                 </label>
-                <p className="text-xs mb-2" style={{ color: 'var(--mikels-gray-light)' }}>
-                  Puedes usar HTML para dar formato: &lt;h2&gt;, &lt;p&gt;, &lt;strong&gt;, &lt;em&gt;, &lt;ul&gt;, &lt;li&gt;, &lt;a href=""&gt;, &lt;img src=""&gt;
-                </p>
-                <textarea
-                  name="content"
-                  value={formData.content}
-                  onChange={handleFormChange}
-                  placeholder="Escribe el contenido del post...
-
-Puedes usar HTML para formato:
-<h2>Subtítulo</h2>
-<p>Párrafo de texto</p>
-<strong>Texto en negrita</strong>
-<em>Texto en cursiva</em>
-<ul><li>Elemento de lista</li></ul>
-<a href='https://...'>Enlace</a>
-<img src='https://...' alt='Descripción'>"
-                  rows={15}
-                  className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 font-mono text-sm"
-                  style={{ borderColor: 'var(--mikels-gray-light)' }}
-                />
+                <div className="quill-container">
+                  <ReactQuill
+                    theme="snow"
+                    value={formData.content}
+                    onChange={(content) => setFormData(prev => ({ ...prev, content }))}
+                    placeholder="Escribe el contenido de la noticia aquí..."
+                    modules={{
+                      toolbar: [
+                        [{ 'header': [1, 2, 3, false] }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        ['link', 'image'],
+                        ['clean']
+                      ],
+                    }}
+                    style={{ height: '300px', marginBottom: '50px' }}
+                  />
+                </div>
               </div>
 
               {/* Botones de acción */}
