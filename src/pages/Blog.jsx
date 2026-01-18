@@ -31,7 +31,7 @@ const Blog = () => {
       setError(null);
     } catch (err) {
       console.error('Error fetching posts:', err);
-      setError('No se pudieron cargar los artículos. Por favor, inténtalo de nuevo más tarde.');
+      setError('No se pudieron cargar las noticias. Por favor, inténtalo de nuevo más tarde.');
     } finally {
       setLoading(false);
     }
@@ -104,7 +104,7 @@ const Blog = () => {
                 className="w-12 h-12 animate-spin mb-4" 
                 style={{ color: 'var(--mikels-red)' }} 
               />
-              <p style={{ color: 'var(--mikels-gray-medium)' }}>Cargando artículos...</p>
+              <p style={{ color: 'var(--mikels-gray-medium)' }}>Cargando noticias...</p>
             </div>
           ) : error ? (
             <div className="text-center py-20">

@@ -34,9 +34,9 @@ const BlogPost = () => {
       
       if (!response.ok) {
         if (response.status === 404) {
-          throw new Error('Artículo no encontrado');
+          throw new Error('Noticia no encontrada');
         }
-        throw new Error('Error al cargar el artículo');
+        throw new Error('Error al cargar la noticia');
       }
       
       const data = await response.json();
@@ -99,7 +99,7 @@ const BlogPost = () => {
           className="w-12 h-12 animate-spin mb-4" 
           style={{ color: 'var(--mikels-red)' }} 
         />
-        <p style={{ color: 'var(--mikels-gray-medium)' }}>Cargando artículo...</p>
+        <p style={{ color: 'var(--mikels-gray-medium)' }}>Cargando noticia...</p>
       </div>
     );
   }
@@ -118,7 +118,7 @@ const BlogPost = () => {
           {error}
         </h1>
         <p className="mb-6" style={{ color: 'var(--mikels-gray-medium)' }}>
-          El artículo que buscas no existe o ha sido eliminado.
+          La noticia que buscas no existe o ha sido eliminada.
         </p>
         <Link
           to="/blog"
@@ -293,7 +293,7 @@ const BlogPost = () => {
                 }}
               >
                 <Share2 className="w-5 h-5" />
-                Compartir este artículo
+                Compartir esta noticia
               </h3>
               <div className="flex flex-wrap gap-3">
                 <button
@@ -357,7 +357,7 @@ const BlogPost = () => {
                 }}
               >
                 <ArrowLeft className="w-5 h-5" />
-                Ver más artículos
+                Ver más noticias
               </Link>
             </motion.div>
           </div>
