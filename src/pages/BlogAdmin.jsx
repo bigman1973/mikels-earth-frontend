@@ -4,7 +4,6 @@ import {
   Pencil, Trash2, Eye, Image as ImageIcon, Upload, 
   X, AlertCircle, Send, Code
 } from 'lucide-react';
-import { Editor } from '@tinymce/tinymce-react';
 
 const API_URL = 'https://mikels-earth-backend-production.up.railway.app/api/blog';
 
@@ -33,6 +32,41 @@ const BlogAdmin = ( ) => {
       setLoading(false);
     }
   }, [token]);
+
+  // Cargar el editor TinyMCE dinámicamente para evitar errores de Vercel
+  useEffect(() => {
+    if (showForm && !window.tinymce) {
+      const script = document.createElement('script');
+      script.src = 'https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js';
+      script.referrerPolicy = 'origin';
+      script.onload = ( ) => {
+        initEditor();
+      };
+      document.head.appendChild(script);
+    } else if (showForm && window.tinymce) {
+      setTimeout(initEditor, 100);
+    }
+  }, [showForm]);
+
+  const initEditor = () => {
+    if (window.tinymce) {
+      window.tinymce.remove('#editor-container');
+      window.tinymce.init({
+        selector: '#editor-container',
+        height: 400,
+        menubar: false,
+        plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table code help wordcount',
+        toolbar: 'undo redo | blocks | bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+        setup: (editor) => {
+          editorRef.current = editor;
+          editor.on('change', () => {
+            setFormData(prev => ({ ...prev, content: editor.getContent() }));
+          });
+        },
+        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+      });
+    }
+  };
 
   const fetchPosts = async () => {
     try {
@@ -248,19 +282,7 @@ const BlogAdmin = ( ) => {
                   </div>
                   <div className="h-full min-h-[400px]">
                     <label className="block text-sm font-medium text-gray-700 mb-2">Contenido</label>
-                    <Editor
-                      apiKey="no-api-key-needed"
-                      onInit={(evt, editor) => editorRef.current = editor}
-                      initialValue={formData.content}
-                      init={{
-                        height: 400,
-                        menubar: false,
-                        plugins: ['advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview', 'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen', 'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'],
-                        toolbar: 'undo redo | blocks | bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
-                        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
-                        placeholder: 'Pega aquí el contenido de tu correo...'
-                      }}
-                    />
+                    <textarea id="editor-container" defaultValue={formData.content}></textarea>
                   </div>
                 </div>
               </div>
@@ -308,6 +330,7 @@ const BlogAdmin = ( ) => {
 };
 
 export default BlogAdmin;
+
 
 
 
