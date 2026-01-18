@@ -12,7 +12,10 @@ import {
   CheckCircle,
   Clock,
   AlertCircle,
-  X
+  X,
+  Plus,
+  Save,
+  ArrowLeft
 } from 'lucide-react';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://mikels-earth-backend-production.up.railway.app';
@@ -33,6 +36,19 @@ const BlogAdmin = () => {
   const [deleteModal, setDeleteModal] = useState({ show: false, post: null });
   const [actionLoading, setActionLoading] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
+  
+  // Estados para el editor de posts
+  const [view, setView] = useState('list'); // 'list', 'create', 'edit'
+  const [editingPost, setEditingPost] = useState(null);
+  const [formData, setFormData] = useState({
+    title: '',
+    content: '',
+    category: '',
+    featured_image: '',
+    status: 'draft'
+  });
+  const [formLoading, setFormLoading] = useState(false);
+  const [formError, setFormError] = useState('');
 
   // Verificar si hay token guardado
   useEffect(() => {
@@ -99,6 +115,7 @@ const BlogAdmin = () => {
     localStorage.removeItem('blog_admin_token');
     setPosts([]);
     setStats({ total: 0, published: 0, drafts: 0 });
+    setView('list');
   };
 
   const fetchPosts = async (authToken) => {
@@ -201,6 +218,123 @@ const BlogAdmin = () => {
       month: 'short',
       year: 'numeric'
     });
+  };
+
+  // Funciones del editor
+  const resetForm = () => {
+    setFormData({
+      title: '',
+      content: '',
+      category: '',
+      featured_image: '',
+      status: 'draft'
+    });
+    setFormError('');
+    setEditingPost(null);
+  };
+
+  const openCreateForm = () => {
+    resetForm();
+    setView('create');
+  };
+
+  const openEditForm = (post) => {
+    setFormData({
+      title: post.title || '',
+      content: post.content || '',
+      category: post.category || '',
+      featured_image: post.featured_image || '',
+      status: post.status || 'draft'
+    });
+    setEditingPost(post);
+    setFormError('');
+    setView('edit');
+  };
+
+  const goBackToList = () => {
+    resetForm();
+    setView('list');
+  };
+
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleCreatePost = async (publishNow = false) => {
+    if (!formData.title.trim() || !formData.content.trim()) {
+      setFormError('El título y el contenido son obligatorios');
+      return;
+    }
+
+    setFormLoading(true);
+    setFormError('');
+
+    try {
+      const response = await fetch(`${API_URL}/api/blog/admin/posts`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          ...formData,
+          status: publishNow ? 'published' : formData.status
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        showSuccess(publishNow ? 'Post publicado correctamente' : 'Post guardado como borrador');
+        fetchPosts(token);
+        goBackToList();
+      } else {
+        setFormError(data.error || 'Error al crear el post');
+      }
+    } catch (err) {
+      setFormError('Error de conexión. Inténtalo de nuevo.');
+    } finally {
+      setFormLoading(false);
+    }
+  };
+
+  const handleUpdatePost = async (publishNow = false) => {
+    if (!formData.title.trim() || !formData.content.trim()) {
+      setFormError('El título y el contenido son obligatorios');
+      return;
+    }
+
+    setFormLoading(true);
+    setFormError('');
+
+    try {
+      const response = await fetch(`${API_URL}/api/blog/admin/posts/${editingPost.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          ...formData,
+          status: publishNow ? 'published' : formData.status
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        showSuccess('Post actualizado correctamente');
+        fetchPosts(token);
+        goBackToList();
+      } else {
+        setFormError(data.error || 'Error al actualizar el post');
+      }
+    } catch (err) {
+      setFormError('Error de conexión. Inténtalo de nuevo.');
+    } finally {
+      setFormLoading(false);
+    }
   };
 
   // Pantalla de Login
@@ -309,7 +443,252 @@ const BlogAdmin = () => {
     );
   }
 
-  // Panel Admin
+  // Vista de Crear/Editar Post
+  if (view === 'create' || view === 'edit') {
+    return (
+      <div className="min-h-screen" style={{ backgroundColor: 'var(--mikels-red-10)' }}>
+        {/* Header */}
+        <header className="bg-white shadow-sm">
+          <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={goBackToList}
+                className="flex items-center gap-2 px-3 py-2 rounded-lg font-medium transition-all duration-300 hover:opacity-80"
+                style={{ 
+                  backgroundColor: 'var(--mikels-gray-lighter)',
+                  color: 'var(--mikels-gray-dark)'
+                }}
+              >
+                <ArrowLeft className="w-5 h-5" />
+                Volver
+              </button>
+              <h1 
+                className="text-xl font-bold"
+                style={{ 
+                  fontFamily: 'Georgia, serif', 
+                  fontStyle: 'italic',
+                  color: 'var(--mikels-red)' 
+                }}
+              >
+                {view === 'create' ? 'Nuevo Post' : 'Editar Post'}
+              </h1>
+            </div>
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-300 hover:opacity-80"
+              style={{ 
+                backgroundColor: 'var(--mikels-gray-lighter)',
+                color: 'var(--mikels-gray-dark)'
+              }}
+            >
+              <LogOut className="w-5 h-5" />
+              Salir
+            </button>
+          </div>
+        </header>
+
+        {/* Mensaje de éxito */}
+        {successMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg flex items-center gap-2"
+            style={{ backgroundColor: 'var(--mikels-green)', color: 'white' }}
+          >
+            <CheckCircle className="w-5 h-5" />
+            {successMessage}
+          </motion.div>
+        )}
+
+        <div className="container mx-auto px-4 py-8">
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-white rounded-xl shadow-sm p-6 md:p-8">
+              {formError && (
+                <div 
+                  className="mb-6 p-4 rounded-lg flex items-center gap-2"
+                  style={{ backgroundColor: 'var(--mikels-red-10)', color: 'var(--mikels-red)' }}
+                >
+                  <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                  {formError}
+                </div>
+              )}
+
+              {/* Título */}
+              <div className="mb-6">
+                <label 
+                  className="block text-sm font-medium mb-2"
+                  style={{ color: 'var(--mikels-gray-dark)' }}
+                >
+                  Título *
+                </label>
+                <input
+                  type="text"
+                  name="title"
+                  value={formData.title}
+                  onChange={handleFormChange}
+                  placeholder="Escribe el título del post..."
+                  className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 text-lg"
+                  style={{ 
+                    borderColor: 'var(--mikels-gray-light)',
+                    fontFamily: 'Georgia, serif',
+                    fontStyle: 'italic'
+                  }}
+                />
+              </div>
+
+              {/* Categoría */}
+              <div className="mb-6">
+                <label 
+                  className="block text-sm font-medium mb-2"
+                  style={{ color: 'var(--mikels-gray-dark)' }}
+                >
+                  Categoría
+                </label>
+                <input
+                  type="text"
+                  name="category"
+                  value={formData.category}
+                  onChange={handleFormChange}
+                  placeholder="Ej: Recetas, Salud, Historia..."
+                  className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2"
+                  style={{ borderColor: 'var(--mikels-gray-light)' }}
+                />
+              </div>
+
+              {/* Imagen destacada */}
+              <div className="mb-6">
+                <label 
+                  className="block text-sm font-medium mb-2"
+                  style={{ color: 'var(--mikels-gray-dark)' }}
+                >
+                  URL de imagen destacada
+                </label>
+                <input
+                  type="url"
+                  name="featured_image"
+                  value={formData.featured_image}
+                  onChange={handleFormChange}
+                  placeholder="https://ejemplo.com/imagen.jpg"
+                  className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2"
+                  style={{ borderColor: 'var(--mikels-gray-light)' }}
+                />
+                {formData.featured_image && (
+                  <div className="mt-3">
+                    <img 
+                      src={formData.featured_image} 
+                      alt="Preview" 
+                      className="max-h-40 rounded-lg object-cover"
+                      onError={(e) => e.target.style.display = 'none'}
+                    />
+                  </div>
+                )}
+              </div>
+
+              {/* Contenido */}
+              <div className="mb-6">
+                <label 
+                  className="block text-sm font-medium mb-2"
+                  style={{ color: 'var(--mikels-gray-dark)' }}
+                >
+                  Contenido *
+                </label>
+                <p className="text-xs mb-2" style={{ color: 'var(--mikels-gray-light)' }}>
+                  Puedes usar HTML para dar formato: &lt;h2&gt;, &lt;p&gt;, &lt;strong&gt;, &lt;em&gt;, &lt;ul&gt;, &lt;li&gt;, &lt;a href=""&gt;, &lt;img src=""&gt;
+                </p>
+                <textarea
+                  name="content"
+                  value={formData.content}
+                  onChange={handleFormChange}
+                  placeholder="Escribe el contenido del post...
+
+Puedes usar HTML para formato:
+<h2>Subtítulo</h2>
+<p>Párrafo de texto</p>
+<strong>Texto en negrita</strong>
+<em>Texto en cursiva</em>
+<ul><li>Elemento de lista</li></ul>
+<a href='https://...'>Enlace</a>
+<img src='https://...' alt='Descripción'>"
+                  rows={15}
+                  className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 font-mono text-sm"
+                  style={{ borderColor: 'var(--mikels-gray-light)' }}
+                />
+              </div>
+
+              {/* Botones de acción */}
+              <div className="flex flex-wrap gap-3 pt-4 border-t" style={{ borderColor: 'var(--mikels-gray-lighter)' }}>
+                <button
+                  onClick={() => view === 'create' ? handleCreatePost(false) : handleUpdatePost(false)}
+                  disabled={formLoading}
+                  className="flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:opacity-90 disabled:opacity-50"
+                  style={{ 
+                    backgroundColor: 'var(--mikels-gray-lighter)',
+                    color: 'var(--mikels-gray-dark)'
+                  }}
+                >
+                  {formLoading ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <Save className="w-5 h-5" />
+                  )}
+                  Guardar borrador
+                </button>
+                
+                <button
+                  onClick={() => view === 'create' ? handleCreatePost(true) : handleUpdatePost(true)}
+                  disabled={formLoading}
+                  className="flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-white transition-all duration-300 hover:opacity-90 disabled:opacity-50"
+                  style={{ backgroundColor: 'var(--mikels-green)' }}
+                >
+                  {formLoading ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <Send className="w-5 h-5" />
+                  )}
+                  Publicar ahora
+                </button>
+                
+                <button
+                  onClick={goBackToList}
+                  disabled={formLoading}
+                  className="flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:opacity-80"
+                  style={{ color: 'var(--mikels-gray-medium)' }}
+                >
+                  <X className="w-5 h-5" />
+                  Cancelar
+                </button>
+              </div>
+            </div>
+
+            {/* Preview del contenido */}
+            {formData.content && (
+              <div className="mt-8 bg-white rounded-xl shadow-sm p-6 md:p-8">
+                <h3 
+                  className="text-lg font-bold mb-4 pb-4 border-b"
+                  style={{ 
+                    fontFamily: 'Georgia, serif', 
+                    fontStyle: 'italic',
+                    color: 'var(--mikels-gray-dark)',
+                    borderColor: 'var(--mikels-gray-lighter)'
+                  }}
+                >
+                  Vista previa
+                </h3>
+                <div 
+                  className="prose max-w-none"
+                  dangerouslySetInnerHTML={{ __html: formData.content }}
+                  style={{ color: 'var(--mikels-gray-dark)' }}
+                />
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Panel Admin - Lista de Posts
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--mikels-red-10)' }}>
       {/* Header */}
@@ -325,17 +704,27 @@ const BlogAdmin = () => {
           >
             Blog Admin - Mikel's Earth
           </h1>
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-300 hover:opacity-80"
-            style={{ 
-              backgroundColor: 'var(--mikels-gray-lighter)',
-              color: 'var(--mikels-gray-dark)'
-            }}
-          >
-            <LogOut className="w-5 h-5" />
-            Cerrar Sesión
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={openCreateForm}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg font-semibold text-white transition-all duration-300 hover:opacity-90"
+              style={{ backgroundColor: 'var(--mikels-green)' }}
+            >
+              <Plus className="w-5 h-5" />
+              Nuevo Post
+            </button>
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-300 hover:opacity-80"
+              style={{ 
+                backgroundColor: 'var(--mikels-gray-lighter)',
+                color: 'var(--mikels-gray-dark)'
+              }}
+            >
+              <LogOut className="w-5 h-5" />
+              Salir
+            </button>
+          </div>
         </div>
       </header>
 
@@ -410,7 +799,7 @@ const BlogAdmin = () => {
 
         {/* Lista de Posts */}
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-          <div className="p-6 border-b" style={{ borderColor: 'var(--mikels-gray-lighter)' }}>
+          <div className="p-6 border-b flex items-center justify-between" style={{ borderColor: 'var(--mikels-gray-lighter)' }}>
             <h2 
               className="text-lg font-bold"
               style={{ 
@@ -421,6 +810,13 @@ const BlogAdmin = () => {
             >
               Todos los Posts
             </h2>
+            <button
+              onClick={() => fetchPosts(token)}
+              className="text-sm px-3 py-1 rounded-lg transition-colors hover:bg-gray-100"
+              style={{ color: 'var(--mikels-gray-medium)' }}
+            >
+              Actualizar
+            </button>
           </div>
           
           {loading ? (
@@ -441,9 +837,17 @@ const BlogAdmin = () => {
           ) : posts.length === 0 ? (
             <div className="text-center py-12">
               <FileText className="w-12 h-12 mx-auto mb-4" style={{ color: 'var(--mikels-gray-light)' }} />
-              <p style={{ color: 'var(--mikels-gray-medium)' }}>
-                No hay posts todavía. Envía un email a blog@mikels.es para crear uno.
+              <p className="mb-4" style={{ color: 'var(--mikels-gray-medium)' }}>
+                No hay posts todavía.
               </p>
+              <button
+                onClick={openCreateForm}
+                className="px-6 py-3 rounded-lg font-semibold text-white transition-all duration-300 hover:opacity-90"
+                style={{ backgroundColor: 'var(--mikels-green)' }}
+              >
+                <Plus className="w-5 h-5 inline mr-2" />
+                Crear primer post
+              </button>
             </div>
           ) : (
             <div className="divide-y" style={{ borderColor: 'var(--mikels-gray-lighter)' }}>
@@ -493,6 +897,14 @@ const BlogAdmin = () => {
                         </a>
                       )}
                       
+                      <button
+                        onClick={() => openEditForm(post)}
+                        className="p-2 rounded-lg transition-colors hover:bg-blue-50"
+                        title="Editar"
+                      >
+                        <Edit className="w-5 h-5" style={{ color: '#3b82f6' }} />
+                      </button>
+                      
                       {post.status === 'draft' && (
                         <button
                           onClick={() => handlePublish(post)}
@@ -522,34 +934,6 @@ const BlogAdmin = () => {
               ))}
             </div>
           )}
-        </div>
-
-        {/* Instrucciones */}
-        <div className="mt-8 bg-white rounded-xl shadow-sm p-6">
-          <h3 
-            className="text-lg font-bold mb-4"
-            style={{ 
-              fontFamily: 'Georgia, serif', 
-              fontStyle: 'italic',
-              color: 'var(--mikels-gray-dark)' 
-            }}
-          >
-            Cómo publicar posts
-          </h3>
-          <div className="space-y-3 text-sm" style={{ color: 'var(--mikels-gray-medium)' }}>
-            <p>
-              <strong>Publicar:</strong> Envía un email a <code className="bg-gray-100 px-2 py-1 rounded">blog@mikels.es</code> con el título en el asunto y el contenido en el cuerpo.
-            </p>
-            <p>
-              <strong>Borrador:</strong> Añade <code className="bg-gray-100 px-2 py-1 rounded">[DRAFT]</code> al inicio del asunto.
-            </p>
-            <p>
-              <strong>Categoría:</strong> Añade <code className="bg-gray-100 px-2 py-1 rounded">[Categoría]</code> al asunto. Ej: <code className="bg-gray-100 px-2 py-1 rounded">[Recetas] Mi receta favorita</code>
-            </p>
-            <p>
-              <strong>Eliminar por email:</strong> Envía un email con asunto <code className="bg-gray-100 px-2 py-1 rounded">[DELETE] slug-del-post</code>
-            </p>
-          </div>
         </div>
       </div>
 
