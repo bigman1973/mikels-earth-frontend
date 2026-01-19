@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react'; // v2
+
 
 const API_URL = 'https://mikels-earth-backend-production.up.railway.app/api/blog';
 
