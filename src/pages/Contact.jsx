@@ -102,12 +102,12 @@ const Contact = () => {
                   <div>
                     <p className="font-semibold text-gray-900">WhatsApp</p>
                     <a 
-                      href="https://wa.me/436789070062172" 
+                      href="https://wa.me/34621144701" 
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-primary hover:underline"
                     >
-                      +43 6789 0700 62172
+                      +34 621 14 47 01
                     </a>
                   </div>
                 </div>

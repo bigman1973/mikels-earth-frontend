@@ -156,7 +156,7 @@ const Horeca = () => {
     }
   };
 
-  const whatsappNumber = '436789070062172';
+  const whatsappNumber = '34621144701';
   const whatsappMessage = encodeURIComponent('Hola, estoy interesado en realizar un pedido HORECA para mi establecimiento.');
   const whatsappLink = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 
@@ -725,7 +725,7 @@ const Horeca = () => {
               <div>
                 <p className="font-semibold mb-1">WhatsApp</p>
                 <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="text-green-100 hover:text-white transition-colors">
-                  +43 6789 0700 62172
+                  +34 621 14 47 01
                 </a>
               </div>
             </div>
