@@ -28,8 +28,32 @@ const ProductCard = ({ product }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 group"
+      className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 group relative"
     >
+      {/* Badges clickeables FUERA del Link */}
+      {product.badges && product.badges.length > 0 && (
+        <div className={`absolute ${product.soldOut ? 'top-12' : 'top-3'} left-3 flex flex-col gap-2 z-20`}>
+          {product.badges.map((badge, index) => (
+            badge.action ? (
+              <button 
+                key={index}
+                onClick={(e) => handleBadgeClick(e, badge)}
+                className={`${badge.color} text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg uppercase tracking-wide cursor-pointer hover:scale-105 transition-transform`}
+              >
+                {badge.text}
+              </button>
+            ) : (
+              <div 
+                key={index}
+                className={`${badge.color} text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg uppercase tracking-wide`}
+              >
+                {badge.text}
+              </div>
+            )
+          ))}
+        </div>
+      )}
+      
       <Link to={`/producto/${product.slug}`} className="block">
         {/* Image container */}
         <div className="relative h-64 bg-gray-200 overflow-hidden">
@@ -64,20 +88,7 @@ const ProductCard = ({ product }) => {
             </div>
           )}
           
-          {/* Badges personalizados del producto */}
-          {product.badges && product.badges.length > 0 && (
-            <div className={`absolute ${product.soldOut ? 'top-12' : 'top-3'} left-3 flex flex-col gap-2`}>
-              {product.badges.map((badge, index) => (
-                <div 
-                  key={index}
-                  onClick={badge.action ? (e) => handleBadgeClick(e, badge) : undefined}
-                  className={`${badge.color} text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg uppercase tracking-wide ${badge.action ? 'cursor-pointer hover:scale-105 transition-transform' : ''}`}
-                >
-                  {badge.text}
-                </div>
-              ))}
-            </div>
-          )}
+          {/* Badges ahora están fuera del Link para ser clickeables */}
           
           {/* Badge de suscripción disponible - ELIMINADO para mantener imagen premium */}
 
