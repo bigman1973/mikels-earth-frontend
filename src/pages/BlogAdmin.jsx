@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   Layout, Plus, FileText, CheckCircle, Clock, LogOut, 
   Pencil, Trash2, Eye, Image as ImageIcon, Upload, 
-  X, AlertCircle, Send, Code
+  X, AlertCircle, Send, Code, Bold, Italic, List
 } from 'lucide-react';
 
 const API_URL = 'https://mikels-earth-backend-production.up.railway.app/api/blog';
@@ -19,6 +19,7 @@ const BlogAdmin = ( ) => {
   const [isUploading, setIsUploading] = useState(false);
   const [stats, setStats] = useState({ total: 0, published: 0, drafts: 0 });
   const editorRef = useRef(null);
+  const imagePreviewRef = useRef(null);
 
   const [formData, setFormData] = useState({
     title: '', content: '', category: 'General', image_url: '', status: 'draft'
@@ -32,41 +33,6 @@ const BlogAdmin = ( ) => {
       setLoading(false);
     }
   }, [token]);
-
-  // Cargar el editor TinyMCE dinámicamente para evitar errores de Vercel
-  useEffect(() => {
-    if (showForm && !window.tinymce) {
-      const script = document.createElement('script');
-      script.src = 'https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js';
-      script.referrerPolicy = 'origin';
-      script.onload = ( ) => {
-        initEditor();
-      };
-      document.head.appendChild(script);
-    } else if (showForm && window.tinymce) {
-      setTimeout(initEditor, 100);
-    }
-  }, [showForm]);
-
-  const initEditor = () => {
-    if (window.tinymce) {
-      window.tinymce.remove('#editor-container');
-      window.tinymce.init({
-        selector: '#editor-container',
-        height: 400,
-        menubar: false,
-        plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table code help wordcount',
-        toolbar: 'undo redo | blocks | bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
-        setup: (editor) => {
-          editorRef.current = editor;
-          editor.on('change', () => {
-            setFormData(prev => ({ ...prev, content: editor.getContent() }));
-          });
-        },
-        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
-      });
-    }
-  };
 
   const fetchPosts = async () => {
     try {
@@ -138,14 +104,31 @@ const BlogAdmin = ( ) => {
       if (response.ok) {
         const url = data.url || data.secure_url;
         setFormData(prev => ({ ...prev, image_url: url }));
+        if (imagePreviewRef.current) {
+          imagePreviewRef.current.src = url + '?t=' + Date.now();
+        }
       } else { alert('Error al subir imagen: ' + (data.error || 'Verifica Cloudinary')); }
     } catch (err) { alert('Error de conexión al subir imagen'); }
     finally { setIsUploading(false); }
   };
 
+  const applyFormat = (command, value = null) => {
+    document.execCommand(command, false, value);
+    if (editorRef.current) {
+      editorRef.current.focus();
+    }
+  };
+
+  const handleEditorChange = () => {
+    if (editorRef.current) {
+      setFormData(prev => ({ ...prev, content: editorRef.current.innerHTML }));
+    }
+  };
+
   const handleSubmit = async (status) => {
-    const content = editorRef.current ? editorRef.current.getContent() : formData.content;
-    if (!formData.title || !content) {
+    const content = editorRef.current ? editorRef.current.innerHTML : formData.content;
+    if (!formData.title || !content || content === '  
+') {
       alert('Por favor, rellena el título y el contenido');
       return;
     }
@@ -211,8 +194,8 @@ const BlogAdmin = ( ) => {
             </div>
           )}
           <form onSubmit={handleLogin} className="space-y-6">
-            <input type="text" className="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none" placeholder="Usuario" value={loginData.username} onChange={(e) => setLoginData({...loginData, username: e.target.value})} required />
-            <input type="password" className="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none" placeholder="Contraseña" value={loginData.password} onChange={(e) => setLoginData({...loginData, password: e.target.value})} required />
+            <input type="text" className="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-[#CD545B]" placeholder="Usuario" value={loginData.username} onChange={(e) => setLoginData({...loginData, username: e.target.value})} required />
+            <input type="password" className="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-[#CD545B]" placeholder="Contraseña" value={loginData.password} onChange={(e) => setLoginData({...loginData, password: e.target.value})} required />
             <button type="submit" className="w-full bg-[#CD545B] text-white py-3 rounded-xl font-medium hover:bg-[#b44a50] transition-colors">Iniciar Sesión</button>
           </form>
         </div>
@@ -273,16 +256,37 @@ const BlogAdmin = ( ) => {
                           <input type="file" className="hidden" onChange={handleImageUpload} disabled={isUploading} accept="image/*" />
                         </label>
                         {formData.image_url && (
-                          <div className="w-32 h-32 rounded-xl border overflow-hidden bg-white shadow-inner">
-                            <img src={formData.image_url} className="w-full h-full object-cover" alt="Preview" key={formData.image_url} />
+                          <div className="w-32 h-32 rounded-xl border overflow-hidden bg-white shadow-inner flex items-center justify-center">
+                            <img ref={imagePreviewRef} src={formData.image_url} className="w-full h-full object-cover" alt="Preview" onError={(e) => { e.target.src = formData.image_url; }} />
                           </div>
                         )}
                       </div>
                     </div>
                   </div>
-                  <div className="h-full min-h-[400px]">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Contenido</label>
-                    <textarea id="editor-container" defaultValue={formData.content}></textarea>
+                  <div className="h-full min-h-[400px] space-y-2">
+                    <label className="block text-sm font-medium text-gray-700">Contenido</label>
+                    <div className="border rounded-xl overflow-hidden bg-white">
+                      <div className="bg-gray-50 border-b p-3 flex gap-2 flex-wrap">
+                        <button onClick={() => applyFormat('bold')} className="p-2 hover:bg-gray-200 rounded font-bold text-sm" title="Negrita">B</button>
+                        <button onClick={() => applyFormat('italic')} className="p-2 hover:bg-gray-200 rounded italic text-sm" title="Cursiva">I</button>
+                        <button onClick={() => applyFormat('underline')} className="p-2 hover:bg-gray-200 rounded underline text-sm" title="Subrayado">U</button>
+                        <div className="border-l border-gray-300"></div>
+                        <button onClick={() => applyFormat('insertUnorderedList')} className="p-2 hover:bg-gray-200 rounded text-sm" title="Lista">• Lista</button>
+                        <button onClick={() => applyFormat('insertOrderedList')} className="p-2 hover:bg-gray-200 rounded text-sm" title="Lista numerada">1. Lista</button>
+                        <div className="border-l border-gray-300"></div>
+                        <button onClick={() => applyFormat('createLink', prompt('Introduce la URL:'))} className="p-2 hover:bg-gray-200 rounded text-sm" title="Enlace">🔗 Enlace</button>
+                        <button onClick={() => applyFormat('removeFormat')} className="p-2 hover:bg-gray-200 rounded text-sm" title="Limpiar formato">✕ Limpiar</button>
+                      </div>
+                      <div 
+                        ref={editorRef}
+                        contentEditable 
+                        className="w-full min-h-[300px] p-4 outline-none overflow-y-auto text-base"
+                        onInput={handleEditorChange}
+                        suppressContentEditableWarning
+                        dangerouslySetInnerHTML={{ __html: formData.content }}
+                      />
+                    </div>
+                    <p className="text-xs text-gray-400 italic">Puedes pegar texto directamente desde tu correo y mantendrá el formato básico.</p>
                   </div>
                 </div>
               </div>
@@ -304,7 +308,7 @@ const BlogAdmin = ( ) => {
                 <tr key={post.id} className="hover:bg-gray-50 group">
                   <td className="px-6 py-4 flex items-center gap-4">
                     <div className="w-12 h-12 rounded-lg bg-gray-100 overflow-hidden">
-                      {post.featured_image && <img src={post.featured_image} className="w-full h-full object-cover" />}
+                      {post.featured_image && <img src={post.featured_image} className="w-full h-full object-cover" alt={post.title} />}
                     </div>
                     <span className="font-medium">{post.title}</span>
                   </td>
@@ -330,6 +334,7 @@ const BlogAdmin = ( ) => {
 };
 
 export default BlogAdmin;
+
 
 
 
