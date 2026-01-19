@@ -1,8 +1,23 @@
 import { Link } from 'react-router-dom';
 import { ShoppingCart, Tag } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useCart } from '../../context/CartContext';
+import { useNavigate } from 'react-router-dom';
 
 const ProductCard = ({ product }) => {
+  const { addItem } = useCart();
+  const navigate = useNavigate();
+
+  const handleBadgeClick = (e, badge) => {
+    if (badge.action === 'addPackDuo') {
+      e.preventDefault();
+      e.stopPropagation();
+      // Añadir 2 unidades al carrito (Pack Dúo)
+      addItem(product, 2);
+      // Navegar al carrito o mostrar confirmación
+      navigate(`/producto/${product.slug}?packDuo=true`);
+    }
+  };
   const hasSubscription = product.subscriptionAvailable;
   // Calcular el descuento máximo disponible según las frecuencias
   const maxDiscount = hasSubscription && product.subscriptionFrequencies && product.subscriptionFrequencies.length > 0
@@ -57,7 +72,8 @@ const ProductCard = ({ product }) => {
               {product.badges.map((badge, index) => (
                 <div 
                   key={index}
-                  className={`${badge.color} text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg uppercase tracking-wide`}
+                  onClick={badge.action ? (e) => handleBadgeClick(e, badge) : undefined}
+                  className={`${badge.color} text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg uppercase tracking-wide ${badge.action ? 'cursor-pointer hover:scale-105 transition-transform' : ''}`}
                 >
                   {badge.text}
                 </div>

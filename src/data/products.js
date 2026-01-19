@@ -156,7 +156,7 @@ export const products = [
     freeShipping: true,
     limitedEdition: true,
     badges: [
-      { text: "🍂 Único TEMPRANO NOVIEMBRE", color: "bg-gradient-to-r from-orange-600 to-amber-600" },
+      { text: "📦 PACK DÚO", color: "bg-gradient-to-r from-green-600 to-emerald-600", action: "addPackDuo" },
       { text: "🎁 PROMOCIÓN: Hasta 25% dto", color: "bg-gradient-to-r from-red-600 to-pink-600" }
     ]
   },
