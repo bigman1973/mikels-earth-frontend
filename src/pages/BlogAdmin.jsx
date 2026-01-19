@@ -123,8 +123,7 @@ const BlogAdmin = () => {
 
   const handleSubmit = async (status) => {
     const content = editorRef.current ? editorRef.current.innerHTML : formData.content;
-    if (!formData.title || !content || content === '  
-') {
+    if (!formData.title || !content || content.trim() === '') {
       alert('Por favor, rellena el título y el contenido');
       return;
     }
