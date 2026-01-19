@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 
 const API_URL = 'https://mikels-earth-backend-production.up.railway.app/api/blog';
 
-const BlogAdmin = ( ) => {
+const BlogAdminPage = ( ) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginData, setLoginData] = useState({ username: '', password: '' });
   const [token, setToken] = useState(localStorage.getItem('blog_admin_token') || '');
@@ -197,11 +197,11 @@ const BlogAdmin = ( ) => {
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb', paddingBottom: '5rem' }}>
       <header style={{ backgroundColor: 'white', borderBottom: '1px solid #e5e7eb', position: 'sticky', top: 0, zIndex: 30 }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 1rem', height: '4rem', display: 'flex', justifyContent: 'between', alignItems: 'center' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 1rem', height: '4rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <span style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>Mikel's Blog Admin</span>
           </div>
-          <button onClick={handleLogout} style={{ marginLeft: 'auto', background: 'none', border: 'none', color: '#6b7280', cursor: 'pointer' }}>Cerrar Sesión</button>
+          <button onClick={handleLogout} style={{ background: 'none', border: 'none', color: '#6b7280', cursor: 'pointer' }}>Cerrar Sesión</button>
         </div>
       </header>
       <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem 1rem' }}>
@@ -318,7 +318,7 @@ const BlogAdmin = ( ) => {
   );
 };
 
-export default BlogAdmin;
+export default BlogAdminPage;
 
 
 
