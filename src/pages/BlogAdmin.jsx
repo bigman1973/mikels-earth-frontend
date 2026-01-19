@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 
 const API_URL = 'https://mikels-earth-backend-production.up.railway.app/api/blog';
 
-const BlogAdmin = ( ) => {
+const BlogAdmin = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginData, setLoginData] = useState({ username: '', password: '' });
   const [token, setToken] = useState(localStorage.getItem('blog_admin_token') || '');
