@@ -31,21 +31,37 @@ const BlogAdmin = () => {
   }, [token]);
 
   const fetchPosts = async () => {
+    const currentToken = localStorage.getItem('blog_admin_token') || token;
+    if (!currentToken) {
+      setLoading(false);
+      return;
+    }
     try {
       setLoading(true);
       const response = await fetch(`${API_URL}/admin/posts`, {
-        headers: { 'Authorization': `Bearer ${token}` }
+        method: 'GET',
+        headers: { 
+          'Authorization': `Bearer ${currentToken}`,
+          'Content-Type': 'application/json'
+        },
+        mode: 'cors'
       });
-      if (response.status === 401) { handleLogout(); return; }
+      if (response.status === 401) {
+        console.log('Token inválido o expirado, cerrando sesión...');
+        handleLogout();
+        return;
+      }
       const data = await response.json();
       if (response.ok) {
         setPosts(data.posts || []);
         calculateStats(data.posts || []);
+        setError(null);
       } else {
         setError(data.error || 'Error al cargar noticias');
       }
     } catch (err) {
-      setError('Error de conexión con el servidor');
+      console.error('Error de conexión:', err);
+      setError('Error de conexión. Intenta recargar la página.');
     } finally {
       setLoading(false);
     }
@@ -59,22 +75,33 @@ const BlogAdmin = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError(null);
+    setLoading(true);
     try {
       const response = await fetch(`${API_URL}/admin/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(loginData)
+        body: JSON.stringify(loginData),
+        mode: 'cors'
       });
       const data = await response.json();
-      if (response.ok) {
-        setToken(data.token);
+      if (response.ok && data.token) {
+        // Guardar el token primero
         localStorage.setItem('blog_admin_token', data.token);
+        setToken(data.token);
         setIsLoggedIn(true);
-        fetchPosts();
+        // Esperar un momento antes de cargar los posts
+        setTimeout(() => {
+          fetchPosts();
+        }, 100);
       } else {
         setError(data.error || 'Credenciales incorrectas');
+        setLoading(false);
       }
-    } catch (err) { setError('Error de conexión'); }
+    } catch (err) {
+      console.error('Error de login:', err);
+      setError('Error de conexión. Verifica tu conexión a internet.');
+      setLoading(false);
+    }
   };
 
   const handleLogout = () => {
