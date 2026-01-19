@@ -1,9 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  Layout, Plus, FileText, CheckCircle, Clock, LogOut, 
-  Pencil, Trash2, Eye, Image as ImageIcon, Upload, 
-  X, AlertCircle, Send, Code, Bold, Italic, List
-} from 'lucide-react';
 
 const API_URL = 'https://mikels-earth-backend-production.up.railway.app/api/blog';
 
@@ -178,25 +173,21 @@ const BlogAdmin = ( ) => {
 
   if (!isLoggedIn) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="bg-white w-full max-w-md rounded-2xl shadow-xl p-8 border border-gray-100">
-          <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-[#CD545B]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Layout className="w-8 h-8 text-[#CD545B]" />
-            </div>
-            <h1 className="text-2xl font-serif font-bold text-gray-900">Mikel's Earth</h1>
-            <p className="text-gray-500">Panel de Administración</p>
+      <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+        <div style={{ backgroundColor: 'white', width: '100%', maxWidth: '400px', borderRadius: '1rem', boxShadow: '0 10px 25px rgba(0,0,0,0.1)', padding: '2rem', border: '1px solid #f3f4f6' }}>
+          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+            <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#111827', marginBottom: '0.5rem' }}>Mikel's Earth</h1>
+            <p style={{ color: '#6b7280' }}>Panel de Administración</p>
           </div>
           {error && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-100 rounded-xl flex items-center gap-3 text-red-700">
-              <AlertCircle className="w-5 h-5 flex-shrink-0" />
-              <p className="text-sm">{error}</p>
+            <div style={{ marginBottom: '1.5rem', padding: '1rem', backgroundColor: '#fef2f2', border: '1px solid #fee2e2', borderRadius: '0.75rem', color: '#b91c1c', fontSize: '0.875rem' }}>
+              {error}
             </div>
           )}
-          <form onSubmit={handleLogin} className="space-y-6">
-            <input type="text" className="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-[#CD545B]" placeholder="Usuario" value={loginData.username} onChange={(e) => setLoginData({...loginData, username: e.target.value})} required />
-            <input type="password" className="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none focus:ring-2 focus:ring-[#CD545B]" placeholder="Contraseña" value={loginData.password} onChange={(e) => setLoginData({...loginData, password: e.target.value})} required />
-            <button type="submit" className="w-full bg-[#CD545B] text-white py-3 rounded-xl font-medium hover:bg-[#b44a50] transition-colors">Iniciar Sesión</button>
+          <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <input type="text" style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '0.75rem', border: '1px solid #d1d5db', outline: 'none' }} placeholder="Usuario" value={loginData.username} onChange={(e) => setLoginData({...loginData, username: e.target.value})} required />
+            <input type="password" style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '0.75rem', border: '1px solid #d1d5db', outline: 'none' }} placeholder="Contraseña" value={loginData.password} onChange={(e) => setLoginData({...loginData, password: e.target.value})} required />
+            <button type="submit" style={{ width: '100%', backgroundColor: '#CD545B', color: 'white', padding: '0.75rem', borderRadius: '0.75rem', fontWeight: '500', border: 'none', cursor: 'pointer' }}>Iniciar Sesión</button>
           </form>
         </div>
       </div>
@@ -204,124 +195,118 @@ const BlogAdmin = ( ) => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-30">
-        <div className="max-w-7xl mx-auto px-4 h-16 flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <Layout className="w-6 h-6 text-[#CD545B]" />
-            <span className="font-serif text-xl font-bold">Mikel's Blog Admin</span>
+    <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb', paddingBottom: '5rem' }}>
+      <header style={{ backgroundColor: 'white', borderBottom: '1px solid #e5e7eb', position: 'sticky', top: 0, zIndex: 30 }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 1rem', height: '4rem', display: 'flex', justifyContent: 'between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>Mikel's Blog Admin</span>
           </div>
-          <button onClick={handleLogout} className="flex items-center gap-2 text-gray-500 hover:text-red-600"><LogOut className="w-5 h-5" />Cerrar Sesión</button>
+          <button onClick={handleLogout} style={{ marginLeft: 'auto', background: 'none', border: 'none', color: '#6b7280', cursor: 'pointer' }}>Cerrar Sesión</button>
         </div>
       </header>
-      <main className="max-w-7xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4">
-            <div className="p-3 bg-blue-50 rounded-xl"><FileText className="w-6 h-6 text-blue-600" /></div>
-            <div><p className="text-sm text-gray-500">Total</p><p className="text-2xl font-bold">{stats.total}</p></div>
+      <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem 1rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
+          <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '1rem', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', border: '1px solid #f3f4f6' }}>
+            <p style={{ fontSize: '0.875rem', color: '#6b7280' }}>Total</p>
+            <p style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{stats.total}</p>
           </div>
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4">
-            <div className="p-3 bg-green-50 rounded-xl"><CheckCircle className="w-6 h-6 text-green-600" /></div>
-            <div><p className="text-sm text-gray-500">Publicadas</p><p className="text-2xl font-bold">{stats.published}</p></div>
+          <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '1rem', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', border: '1px solid #f3f4f6' }}>
+            <p style={{ fontSize: '0.875rem', color: '#6b7280' }}>Publicadas</p>
+            <p style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{stats.published}</p>
           </div>
-          <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4">
-            <div className="p-3 bg-amber-50 rounded-xl"><Clock className="w-6 h-6 text-amber-600" /></div>
-            <div><p className="text-sm text-gray-500">Borradores</p><p className="text-2xl font-bold">{stats.drafts}</p></div>
+          <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '1rem', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', border: '1px solid #f3f4f6' }}>
+            <p style={{ fontSize: '0.875rem', color: '#6b7280' }}>Borradores</p>
+            <p style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{stats.drafts}</p>
           </div>
         </div>
-        <div className="flex justify-between items-center mb-8">
-          <h2 className="text-2xl font-serif">Gestión de Noticias</h2>
-          <button onClick={() => { setEditingPost(null); setFormData({ title: '', content: '', category: 'General', image_url: '', status: 'draft' }); setShowForm(true); }} className="bg-[#B7BF10] text-white px-8 py-3 rounded-xl font-bold flex items-center gap-2 shadow-lg"><Plus className="w-5 h-5" />Nueva Noticia</button>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+          <h2 style={{ fontSize: '1.5rem' }}>Gestión de Noticias</h2>
+          <button onClick={() => { setEditingPost(null); setFormData({ title: '', content: '', category: 'General', image_url: '', status: 'draft' }); setShowForm(true); }} style={{ backgroundColor: '#B7BF10', color: 'white', padding: '0.75rem 1.5rem', borderRadius: '0.75rem', fontWeight: 'bold', border: 'none', cursor: 'pointer' }}>+ Nueva Noticia</button>
         </div>
         {showForm && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
-            <div className="bg-white w-full max-w-5xl rounded-2xl shadow-2xl my-8">
-              <div className="p-6 border-b flex justify-between items-center sticky top-0 bg-white z-10">
-                <h3 className="text-xl font-serif font-bold">{editingPost ? 'Editar Noticia' : 'Crear Nueva Noticia'}</h3>
-                <button onClick={() => setShowForm(false)}><X className="w-6 h-6 text-gray-400" /></button>
+          <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+            <div style={{ backgroundColor: 'white', width: '100%', maxWidth: '1000px', borderRadius: '1rem', boxShadow: '0 25px 50px rgba(0,0,0,0.25)', maxHeight: '90vh', overflowY: 'auto' }}>
+              <div style={{ padding: '1.5rem', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'sticky', top: 0, backgroundColor: 'white' }}>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>{editingPost ? 'Editar Noticia' : 'Crear Nueva Noticia'}</h3>
+                <button onClick={() => setShowForm(false)} style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer' }}>×</button>
               </div>
-              <div className="p-6 space-y-6 max-h-[75vh] overflow-y-auto">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-4">
-                    <input type="text" className="w-full px-4 py-3 rounded-xl border outline-none" placeholder="Título de la noticia..." value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} />
-                    <select className="w-full px-4 py-3 rounded-xl border outline-none" value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})}>
-                      <option value="General">Categoría: General</option><option value="Recetas">Recetas</option><option value="Salud">Salud</option><option value="Tradición">Tradición</option><option value="Eventos">Eventos</option>
+              <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    <input type="text" style={{ width: '100%', padding: '0.75rem', borderRadius: '0.75rem', border: '1px solid #d1d5db' }} placeholder="Título de la noticia..." value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} />
+                    <select style={{ width: '100%', padding: '0.75rem', borderRadius: '0.75rem', border: '1px solid #d1d5db' }} value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})}>
+                      <option value="General">Categoría: General</option>
+                      <option value="Recetas">Recetas</option>
+                      <option value="Salud">Salud</option>
+                      <option value="Tradición">Tradición</option>
+                      <option value="Eventos">Eventos</option>
                     </select>
-                    <div className="space-y-2">
-                      <label className="block text-sm font-medium text-gray-700">Imagen de portada</label>
-                      <div className="flex gap-3">
-                        <label className="flex-1 cursor-pointer bg-gray-100 border-2 border-dashed border-gray-300 rounded-xl p-4 flex flex-col items-center justify-center hover:bg-gray-200 transition-all">
-                          <Upload className="w-8 h-8 text-gray-400 mb-2" />
-                          <span className="text-sm text-gray-500">{isUploading ? 'Subiendo...' : 'Haz clic para subir'}</span>
-                          <input type="file" className="hidden" onChange={handleImageUpload} disabled={isUploading} accept="image/*" />
-                        </label>
-                        {formData.image_url && (
-                          <div className="w-32 h-32 rounded-xl border overflow-hidden bg-white shadow-inner flex items-center justify-center">
-                            <img ref={imagePreviewRef} src={formData.image_url} className="w-full h-full object-cover" alt="Preview" onError={(e) => { e.target.src = formData.image_url; }} />
-                          </div>
-                        )}
-                      </div>
+                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                      <label style={{ flex: 1, cursor: 'pointer', backgroundColor: '#f3f4f6', border: '2px dashed #d1d5db', borderRadius: '0.75rem', padding: '1rem', textAlign: 'center' }}>
+                        <span style={{ fontSize: '0.875rem', color: '#6b7280' }}>{isUploading ? 'Subiendo...' : 'Subir Imagen'}</span>
+                        <input type="file" style={{ display: 'none' }} onChange={handleImageUpload} disabled={isUploading} accept="image/*" />
+                      </label>
+                      {formData.image_url && (
+                        <div style={{ width: '80px', height: '80px', borderRadius: '0.75rem', overflow: 'hidden', border: '1px solid #e5e7eb' }}>
+                          <img ref={imagePreviewRef} src={formData.image_url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="Preview" />
+                        </div>
+                      )}
                     </div>
                   </div>
-                  <div className="h-full min-h-[400px] space-y-2">
-                    <label className="block text-sm font-medium text-gray-700">Contenido</label>
-                    <div className="border rounded-xl overflow-hidden bg-white">
-                      <div className="bg-gray-50 border-b p-3 flex gap-2 flex-wrap">
-                        <button onClick={() => applyFormat('bold')} className="p-2 hover:bg-gray-200 rounded font-bold text-sm" title="Negrita">B</button>
-                        <button onClick={() => applyFormat('italic')} className="p-2 hover:bg-gray-200 rounded italic text-sm" title="Cursiva">I</button>
-                        <button onClick={() => applyFormat('underline')} className="p-2 hover:bg-gray-200 rounded underline text-sm" title="Subrayado">U</button>
-                        <div className="border-l border-gray-300"></div>
-                        <button onClick={() => applyFormat('insertUnorderedList')} className="p-2 hover:bg-gray-200 rounded text-sm" title="Lista">• Lista</button>
-                        <button onClick={() => applyFormat('insertOrderedList')} className="p-2 hover:bg-gray-200 rounded text-sm" title="Lista numerada">1. Lista</button>
-                        <div className="border-l border-gray-300"></div>
-                        <button onClick={() => applyFormat('createLink', prompt('Introduce la URL:'))} className="p-2 hover:bg-gray-200 rounded text-sm" title="Enlace">🔗 Enlace</button>
-                        <button onClick={() => applyFormat('removeFormat')} className="p-2 hover:bg-gray-200 rounded text-sm" title="Limpiar formato">✕ Limpiar</button>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                    <label style={{ fontSize: '0.875rem', fontWeight: '500' }}>Contenido</label>
+                    <div style={{ border: '1px solid #d1d5db', borderRadius: '0.75rem', overflow: 'hidden' }}>
+                      <div style={{ backgroundColor: '#f9fafb', borderBottom: '1px solid #d1d5db', padding: '0.5rem', display: 'flex', gap: '0.5rem' }}>
+                        <button onClick={() => applyFormat('bold')} style={{ padding: '0.25rem 0.5rem', fontWeight: 'bold', cursor: 'pointer' }}>B</button>
+                        <button onClick={() => applyFormat('italic')} style={{ padding: '0.25rem 0.5rem', fontStyle: 'italic', cursor: 'pointer' }}>I</button>
+                        <button onClick={() => applyFormat('insertUnorderedList')} style={{ padding: '0.25rem 0.5rem', cursor: 'pointer' }}>• Lista</button>
                       </div>
                       <div 
                         ref={editorRef}
                         contentEditable 
-                        className="w-full min-h-[300px] p-4 outline-none overflow-y-auto text-base"
+                        style={{ width: '100%', minHeight: '250px', padding: '1rem', outline: 'none', backgroundColor: 'white' }}
                         onInput={handleEditorChange}
                         suppressContentEditableWarning
                         dangerouslySetInnerHTML={{ __html: formData.content }}
                       />
                     </div>
-                    <p className="text-xs text-gray-400 italic">Puedes pegar texto directamente desde tu correo y mantendrá el formato básico.</p>
                   </div>
                 </div>
               </div>
-              <div className="p-6 border-t flex justify-end gap-4 bg-gray-50 rounded-b-2xl">
-                <button onClick={() => setShowForm(false)} className="px-6 py-3 text-gray-600">Cancelar</button>
-                <button onClick={() => handleSubmit('draft')} className="px-6 py-3 bg-gray-200 rounded-xl">Borrador</button>
-                <button onClick={() => handleSubmit('published')} className="px-8 py-3 bg-[#CD545B] text-white rounded-xl shadow-lg">Publicar</button>
+              <div style={{ padding: '1.5rem', borderTop: '1px solid #e5e7eb', display: 'flex', justifyContent: 'flex-end', gap: '1rem', backgroundColor: '#f9fafb' }}>
+                <button onClick={() => setShowForm(false)} style={{ padding: '0.75rem 1.5rem', background: 'none', border: 'none', cursor: 'pointer' }}>Cancelar</button>
+                <button onClick={() => handleSubmit('draft')} style={{ padding: '0.75rem 1.5rem', backgroundColor: '#e5e7eb', borderRadius: '0.75rem', border: 'none', cursor: 'pointer' }}>Borrador</button>
+                <button onClick={() => handleSubmit('published')} style={{ padding: '0.75rem 1.5rem', backgroundColor: '#CD545B', color: 'white', borderRadius: '0.75rem', border: 'none', cursor: 'pointer' }}>Publicar</button>
               </div>
             </div>
           </div>
         )}
-        <div className="bg-white rounded-2xl shadow-sm border overflow-hidden">
-          <table className="w-full text-left">
-            <thead className="bg-gray-50 border-b">
-              <tr><th className="px-6 py-4">Noticia</th><th className="px-6 py-4">Estado</th><th className="px-6 py-4 text-right">Acciones</th></tr>
+        <div style={{ backgroundColor: 'white', borderRadius: '1rem', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', border: '1px solid #f3f4f6', overflow: 'hidden' }}>
+          <table style={{ width: '100%', textAlign: 'left', borderCollapse: 'collapse' }}>
+            <thead style={{ backgroundColor: '#f9fafb', borderBottom: '1px solid #e5e7eb' }}>
+              <tr>
+                <th style={{ padding: '1rem' }}>Noticia</th>
+                <th style={{ padding: '1rem' }}>Estado</th>
+                <th style={{ padding: '1rem', textAlign: 'right' }}>Acciones</th>
+              </tr>
             </thead>
-            <tbody className="divide-y">
+            <tbody>
               {posts.map((post) => (
-                <tr key={post.id} className="hover:bg-gray-50 group">
-                  <td className="px-6 py-4 flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-lg bg-gray-100 overflow-hidden">
-                      {post.featured_image && <img src={post.featured_image} className="w-full h-full object-cover" alt={post.title} />}
+                <tr key={post.id} style={{ borderBottom: '1px solid #f3f4f6' }}>
+                  <td style={{ padding: '1rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <div style={{ width: '40px', height: '40px', borderRadius: '0.5rem', backgroundColor: '#f3f4f6', overflow: 'hidden' }}>
+                      {post.featured_image && <img src={post.featured_image} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt={post.title} />}
                     </div>
-                    <span className="font-medium">{post.title}</span>
+                    <span style={{ fontWeight: '500' }}>{post.title}</span>
                   </td>
-                  <td className="px-6 py-4">
-                    <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${post.status === 'published' ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'}`}>
+                  <td style={{ padding: '1rem' }}>
+                    <span style={{ padding: '0.25rem 0.75rem', borderRadius: '1rem', fontSize: '0.75rem', backgroundColor: post.status === 'published' ? '#dcfce7' : '#fef3c7', color: post.status === 'published' ? '#166534' : '#92400e' }}>
                       {post.status === 'published' ? 'Publicado' : 'Borrador'}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-right">
-                    <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button onClick={() => startEdit(post)} className="p-2 text-gray-400 hover:text-amber-600"><Pencil className="w-5 h-5" /></button>
-                      <button onClick={() => handleDelete(post.id)} className="p-2 text-gray-400 hover:text-red-600"><Trash2 className="w-5 h-5" /></button>
-                    </div>
+                  <td style={{ padding: '1rem', textAlign: 'right' }}>
+                    <button onClick={() => startEdit(post)} style={{ marginRight: '0.5rem', background: 'none', border: 'none', color: '#6b7280', cursor: 'pointer' }}>Editar</button>
+                    <button onClick={() => handleDelete(post.id)} style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer' }}>Eliminar</button>
                   </td>
                 </tr>
               ))}
@@ -334,6 +319,7 @@ const BlogAdmin = ( ) => {
 };
 
 export default BlogAdmin;
+
 
 
 
