@@ -134,7 +134,7 @@ const BlogAdmin = () => {
       const response = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ ...formData, content, status })
+        body: JSON.stringify({ title: formData.title, content, category: formData.category, featured_image: formData.image_url, status })
       });
       if (response.ok) {
         setShowForm(false);
