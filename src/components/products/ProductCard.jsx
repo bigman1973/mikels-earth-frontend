@@ -2,11 +2,9 @@ import { Link } from 'react-router-dom';
 import { ShoppingCart, Tag } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useCart } from '../../context/CartContext';
-import { useNavigate } from 'react-router-dom';
 
 const ProductCard = ({ product }) => {
-  const { addItem } = useCart();
-  const navigate = useNavigate();
+  const { addItem, toggleCart } = useCart();
 
   const handleBadgeClick = (e, badge) => {
     if (badge.action === 'addPackDuo') {
@@ -14,8 +12,8 @@ const ProductCard = ({ product }) => {
       e.stopPropagation();
       // Añadir 2 unidades al carrito (Pack Dúo)
       addItem(product, 2);
-      // Navegar al carrito o mostrar confirmación
-      navigate(`/producto/${product.slug}?packDuo=true`);
+      // Abrir directamente el carrito
+      toggleCart();
     }
   };
   const hasSubscription = product.subscriptionAvailable;
