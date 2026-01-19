@@ -4,16 +4,16 @@ import { motion } from 'framer-motion';
 import { useCart } from '../../context/CartContext';
 
 const ProductCard = ({ product }) => {
-  const { addItem, toggleCart } = useCart();
+  const { addToCart, toggleCart, setIsCartOpen } = useCart();
 
   const handleBadgeClick = (e, badge) => {
     if (badge.action === 'addPackDuo') {
       e.preventDefault();
       e.stopPropagation();
       // Añadir 2 unidades al carrito (Pack Dúo)
-      addItem(product, 2);
+      addToCart(product, 2);
       // Abrir directamente el carrito
-      toggleCart();
+      setIsCartOpen(true);
     }
   };
   const hasSubscription = product.subscriptionAvailable;
