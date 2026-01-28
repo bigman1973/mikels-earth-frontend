@@ -204,6 +204,7 @@ export const products = [
     id: 3,
     name: "Aceite de Oliva Virgen Extra Mikel's Fruit (Equilibrado)",
     slug: "aceite-oliva-equilibrado",
+    soldOut: true,
     description: "Aceite de oliva virgen extra equilibrado. Versátil y perfecto para todo tipo de platos.",
     longDescription: "Nuestro aceite de oliva virgen extra equilibrado es el todoterreno de la cocina. Con un perfil organoléptico balanceado entre suavidad e intensidad, es perfecto tanto para cocinar como para aliñar. Prensado en frío para preservar todas sus propiedades antioxidantes y su perfil excepcional. Ideal para el uso diario en cualquier preparación culinaria.",
     price: 10.00,

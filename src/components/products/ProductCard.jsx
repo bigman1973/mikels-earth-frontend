@@ -138,16 +138,23 @@ const ProductCard = ({ product }) => {
               )}
             </div>
             
-            <button
-              className="bg-primary text-white p-3 rounded-full hover:bg-primary/90 transition-all duration-300 transform hover:scale-110 shadow-md"
-              onClick={(e) => {
-                e.preventDefault();
-                // TODO: Añadir al carrito directamente
-              }}
-              aria-label="Añadir al carrito"
-            >
-              <ShoppingCart className="w-5 h-5" />
-            </button>
+            {product.soldOut ? (
+              <div className="bg-gray-400 text-white px-4 py-2 rounded-full text-sm font-semibold cursor-not-allowed">
+                Agotado
+              </div>
+            ) : (
+              <button
+                className="bg-primary text-white p-3 rounded-full hover:bg-primary/90 transition-all duration-300 transform hover:scale-110 shadow-md"
+                onClick={(e) => {
+                  e.preventDefault();
+                  addToCart(product, 1);
+                  setIsCartOpen(true);
+                }}
+                aria-label="Añadir al carrito"
+              >
+                <ShoppingCart className="w-5 h-5" />
+              </button>
+            )}
           </div>
 
           {/* Stock indicator - oculto temporalmente */}
