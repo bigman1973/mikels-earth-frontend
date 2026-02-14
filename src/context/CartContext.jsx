@@ -126,6 +126,11 @@ export const CartProvider = ({ children }) => {
         oneTimeDiscount: 10,
         subscriptionDiscount: 0,
         name: 'BIENVENIDA10'
+      },
+      'IRVIANCESTRAL': {
+        oneTimeDiscount: 10,
+        subscriptionDiscount: 0,
+        name: 'IRVIANCESTRAL'
       }
     };
     
