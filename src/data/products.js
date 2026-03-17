@@ -544,10 +544,10 @@ export const products = [
   {
 
     id: 10,
-    name: "Pack Navidad Completo Mikel's Earth",
+    name: "Pack Completo Mikel's Earth",
     slug: "pack-navidad-completo",
-    description: "El regalo perfecto para Navidad. Pack completo con aceites premium, conservas artesanales y estuche degustación.",
-    longDescription: "Sorprende esta Navidad con el pack más completo de Mikel's Earth. Una selección cuidadosamente elegida que reúne lo mejor de nuestra tradición familiar.\n\n**CONTENIDO DETALLADO DEL PACK:**\n\n**Fuera del estuche:**\n- 1 × Aceite de Oliva Virgen Extra 5L (garrafa)\n- 1 × Aceite Temprano 500ml sin filtrar (con estuche verde oscuro)\n- 1 × Paraguayo en Almíbar 720g\n- 1 × Nectarina en Almíbar 720g\n\n**Dentro del estuche kraft de degustación:**\n- 1 × Mermelada de Paraguayo Artesanal 250g\n- 4 × Botellas de aceite 14ml (formato degustación para probar diferentes perfiles)\n\nUn regalo que transmite calidad, tradición y amor por lo artesanal. Perfecto para compartir en familia o regalar a los amantes de la gastronomía de calidad.",
+    description: "El regalo perfecto. Pack completo con aceites premium, conservas artesanales y estuche degustación.",
+    longDescription: "Sorprende con el pack más completo de Mikel's Earth. Una selección cuidadosamente elegida que reúne lo mejor de nuestra tradición familiar.\n\n**CONTENIDO DETALLADO DEL PACK:**\n\n**Fuera del estuche:**\n- 1 × Aceite de Oliva Virgen Extra 5L (garrafa)\n- 1 × Aceite Temprano 500ml sin filtrar (con estuche verde oscuro)\n- 1 × Paraguayo en Almíbar 720g\n- 1 × Nectarina en Almíbar 720g\n\n**Dentro del estuche kraft de degustación:**\n- 1 × Mermelada de Paraguayo Artesanal 250g\n- 4 × Botellas de aceite 14ml (formato degustación para probar diferentes perfiles)\n\nUn regalo que transmite calidad, tradición y amor por lo artesanal. Perfecto para compartir en familia o regalar a los amantes de la gastronomía de calidad.",
     price: 81.90,
     originalPrice: null,
     currency: "EUR",
@@ -559,7 +559,7 @@ export const products = [
       "/images/pack-navidad-cocina.jpg"
     ],
     category: "Packs",
-    tags: ["Vegano", "Sin Gluten", "Regalo", "Premium", "Navidad", "Pack Completo"],
+    tags: ["Vegano", "Sin Gluten", "Regalo", "Premium", "Pack Completo"],
     stock: 15,
     weight: "7306g (5L + 500ml + 720g + 720g + 250g + 56ml)",
     ingredients: "Aceite 5L, Aceite Temprano 500ml, Paraguayo en almíbar 720g, Nectarina en almíbar 720g, Mermelada de paraguayo 250g, 4 botellas de aceite degustación 14ml, Estuche kraft premium",
@@ -586,7 +586,7 @@ export const products = [
     },
     freeShipping: true,
     featured: true,
-    specialOccasion: "Navidad",
+
     includes: [
       "1x Aceite de Oliva Virgen Extra 5L (garrafa)",
       "1x Aceite Temprano 500ml sin filtrar (con estuche)",
@@ -596,7 +596,7 @@ export const products = [
       "4x Botellas de aceite degustación 14ml",
       "1x Estuche kraft premium con historia de Mikel's"
     ],
-    claims: ["Pack completo premium", "Envío gratuito", "Edición especial Navidad", "Incluye estuche degustación", "7 productos + estuche"],
+    claims: ["Pack completo premium", "Envío gratuito", "Incluye estuche degustación", "7 productos + estuche"],
     relatedProducts: ["pack-fruta-premium", "pack-temprano-premium"]
   }
 ];
