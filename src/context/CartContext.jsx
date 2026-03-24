@@ -220,7 +220,7 @@ export const CartProvider = ({ children }) => {
     // Aplicar descuento adicional si hay código
     if (appliedDiscount) {
       cart.forEach(item => {
-        const itemTotal = item.price * item.quantity;
+        const itemTotal = getItemPrice(item) * item.quantity;
         const discount = item.purchaseType === 'subscription' 
           ? appliedDiscount.subscriptionDiscount 
           : appliedDiscount.oneTimeDiscount;
