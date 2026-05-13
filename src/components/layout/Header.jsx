@@ -10,7 +10,7 @@ const Header = () => {
 
   return (
     <header className="w-full">
-      {/* Top bar con redes sociales */}
+      {/* Top bar con redes sociales + HORECA */}
       <div className="bg-mikels-dark text-white py-2" style={{backgroundColor: 'var(--mikels-gray-dark)'}}>
         <div className="container mx-auto px-4 flex justify-between items-center">
           <div className="flex gap-3">
@@ -69,6 +69,18 @@ const Header = () => {
               <span className="text-xs font-medium">Blog</span>
             </Link>
           </div>
+          {/* HORECA a la derecha en la barra superior, sin destacar */}
+          <div className="flex items-center">
+            <Link 
+              to="/horeca" 
+              className="text-xs font-medium hover:text-accent transition-colors uppercase tracking-wide flex items-center gap-1"
+            >
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/>
+              </svg>
+              HORECA B2B
+            </Link>
+          </div>
         </div>
       </div>
 
@@ -91,6 +103,23 @@ const Header = () => {
           <div className="flex items-center justify-between h-14">
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-6 mx-auto">
+              {/* TIENDA como primer campo, destacado */}
+              <Link 
+                to="/tienda" 
+                className="text-sm font-bold uppercase tracking-wide px-4 py-1.5 rounded transition-all"
+                style={{
+                  backgroundColor: 'var(--mikels-olive)',
+                  color: '#fff',
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.backgroundColor = 'var(--mikels-olive-dark, #5a6b2a)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.backgroundColor = 'var(--mikels-olive)';
+                }}
+              >
+                Tienda
+              </Link>
               <Link 
                 to="/la-familia" 
                 className="text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
@@ -127,20 +156,6 @@ const Header = () => {
               >
                 Recetario
               </Link>
-              <Link 
-                to="/tienda" 
-                className="text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
-              >
-                Tienda
-              </Link>
-              <Link 
-                to="/horeca" 
-                className="text-sm font-bold bg-gradient-to-r from-orange-600 to-amber-600 text-white px-4 py-2 rounded-full hover:from-orange-700 hover:to-amber-700 transition-all shadow-lg uppercase tracking-wide relative"
-              >
-                🏛️ HORECA
-                <span className="absolute -top-1 -right-1 bg-green-500 text-white text-[10px] px-1.5 py-0.5 rounded-full font-bold">B2B</span>
-              </Link>
-
             </div>
 
             {/* Right icons */}
@@ -186,6 +201,18 @@ const Header = () => {
           {mobileMenuOpen && (
             <div className="md:hidden py-4 border-t border-white/10">
               <div className="flex flex-col space-y-3">
+                {/* TIENDA como primer campo, destacado en móvil */}
+                <Link 
+                  to="/tienda" 
+                  className="text-sm font-bold uppercase text-center py-2 rounded"
+                  style={{
+                    backgroundColor: 'var(--mikels-olive)',
+                    color: '#fff',
+                  }}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Tienda
+                </Link>
                 <Link 
                   to="/la-familia" 
                   className="text-sm font-medium hover:text-secondary transition-colors uppercase"
@@ -229,18 +256,11 @@ const Header = () => {
                   Recetario
                 </Link>
                 <Link 
-                  to="/tienda" 
+                  to="/horeca" 
                   className="text-sm font-medium hover:text-secondary transition-colors uppercase"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Tienda
-                </Link>
-                <Link 
-                  to="/horeca" 
-                  className="text-sm font-bold bg-gradient-to-r from-orange-600 to-amber-600 text-white px-4 py-2 rounded-full hover:from-orange-700 hover:to-amber-700 transition-all shadow-lg uppercase text-center"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  🏛️ HORECA (B2B)
+                  HORECA B2B
                 </Link>
 
                 <div className="flex items-center gap-4 pt-3 border-t border-white/10">
@@ -269,4 +289,3 @@ const Header = () => {
 };
 
 export default Header;
-
