@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { X, Mail, Gift } from 'lucide-react';
+import { X, Mail, Gift, Copy, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const NewsletterPopup = () => {
@@ -10,6 +10,8 @@ const NewsletterPopup = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState({ text: '', type: '' });
   const [showSuccess, setShowSuccess] = useState(false);
+  const [couponCode, setCouponCode] = useState('');
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     // Check if popup was already shown today
@@ -44,6 +46,24 @@ const NewsletterPopup = () => {
     }
   };
 
+  const handleCopyCoupon = async () => {
+    try {
+      await navigator.clipboard.writeText(couponCode);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      // Fallback para navegadores que no soportan clipboard API
+      const textArea = document.createElement('textarea');
+      textArea.value = couponCode;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -71,8 +91,9 @@ const NewsletterPopup = () => {
 
       if (response.ok && data.success) {
         setShowSuccess(true);
+        setCouponCode(data.coupon_code || '');
         setMessage({ 
-          text: '¡Suscripción exitosa! Revisa tu email', 
+          text: '¡Suscripción exitosa!', 
           type: 'success' 
         });
       } else {
@@ -179,20 +200,46 @@ const NewsletterPopup = () => {
                     </p>
                   </form>
                 ) : (
-                  /* Success state */
+                  /* Success state con cupón */
                   <div className="text-center space-y-4">
-                    <div className="bg-green-50 border-2 border-green-200 rounded-lg p-6">
-                      <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <Mail className="w-8 h-8 text-white" />
+                    <div className="bg-green-50 border-2 border-green-200 rounded-lg p-5">
+                      <div className="w-14 h-14 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <Gift className="w-7 h-7 text-white" />
                       </div>
                       <h3 className="text-xl font-bold text-green-800 mb-2">
                         ¡Bienvenido/a a Mikel's Earth!
                       </h3>
-                      <p className="text-green-700 mb-3">
-                        Te hemos enviado un email con tu cupón de <strong>10% de descuento</strong>
+                      <p className="text-green-700 mb-4">
+                        Aquí tienes tu cupón de <strong>10% de descuento</strong>:
                       </p>
+                      
+                      {/* Cupón con botón de copiar */}
+                      {couponCode && (
+                        <div className="bg-white border-2 border-dashed border-primary rounded-lg p-3 mb-3">
+                          <div className="flex items-center justify-center gap-2">
+                            <span className="text-xl font-bold text-primary tracking-wider">
+                              {couponCode}
+                            </span>
+                            <button
+                              onClick={handleCopyCoupon}
+                              className="p-2 hover:bg-primary/10 rounded-lg transition-colors"
+                              title="Copiar cupón"
+                            >
+                              {copied ? (
+                                <Check className="w-5 h-5 text-green-600" />
+                              ) : (
+                                <Copy className="w-5 h-5 text-primary" />
+                              )}
+                            </button>
+                          </div>
+                          {copied && (
+                            <p className="text-xs text-green-600 mt-1">¡Copiado!</p>
+                          )}
+                        </div>
+                      )}
+
                       <p className="text-sm text-green-600">
-                        Revisa tu bandeja de entrada (y spam por si acaso)
+                        También te lo hemos enviado por email
                       </p>
                     </div>
 
