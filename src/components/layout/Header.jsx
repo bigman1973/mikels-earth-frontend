@@ -103,19 +103,13 @@ const Header = () => {
           <div className="flex items-center justify-between h-14">
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-6 mx-auto">
-              {/* TIENDA como primer campo, destacado */}
+              {/* TIENDA como primer campo, destacado con color rojo corporativo */}
               <Link 
                 to="/tienda" 
-                className="text-sm font-bold uppercase tracking-wide px-4 py-1.5 rounded transition-all"
+                className="text-base font-bold uppercase tracking-wider transition-all hover:opacity-80"
                 style={{
-                  backgroundColor: 'var(--mikels-olive)',
-                  color: '#fff',
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.backgroundColor = 'var(--mikels-olive-dark, #5a6b2a)';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.backgroundColor = 'var(--mikels-olive)';
+                  color: 'var(--mikels-red)',
+                  textShadow: '0 0 1px rgba(205, 84, 91, 0.3)',
                 }}
               >
                 Tienda
@@ -204,10 +198,9 @@ const Header = () => {
                 {/* TIENDA como primer campo, destacado en móvil */}
                 <Link 
                   to="/tienda" 
-                  className="text-sm font-bold uppercase text-center py-2 rounded"
+                  className="text-base font-bold uppercase text-center py-2"
                   style={{
-                    backgroundColor: 'var(--mikels-olive)',
-                    color: '#fff',
+                    color: 'var(--mikels-red)',
                   }}
                   onClick={() => setMobileMenuOpen(false)}
                 >
