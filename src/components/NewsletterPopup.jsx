@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { X, Mail, Gift } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const NewsletterPopup = () => {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,6 +39,9 @@ const NewsletterPopup = () => {
 
   const handleClose = () => {
     setIsOpen(false);
+    if (showSuccess) {
+      navigate('/tienda');
+    }
   };
 
   const handleSubmit = async (e) => {
