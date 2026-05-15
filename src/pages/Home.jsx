@@ -1,11 +1,16 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { ArrowRight, Heart, Leaf, Award, Users } from 'lucide-react';
 import Newsletter from '../components/common/Newsletter';
 
 const Home = () => {
   return (
     <div className="bg-white">
+      <Helmet>
+        <title>Mikel's Earth | Productos Naturales y Aceite de Oliva Gourmet desde 1819</title>
+        <meta name="description" content="Productos naturales y aceite de oliva gourmet elaborados de forma artesanal desde 1819. Tradición familiar, calidad y experiencias gastronómicas únicas." />
+      </Helmet>
       {/* Hero Section - Inmersivo */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Imagen de fondo con olivos */}

@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { Helmet } from 'react-helmet-async';
 import { ChefHat, Clock, Users, Flame } from 'lucide-react';
 
 const Recetario = () => {
@@ -175,6 +176,10 @@ const Recetario = () => {
 
   return (
     <div className="bg-white">
+      <Helmet>
+        <title>Recetas con aceite de oliva | Cocina mediterránea</title>
+        <meta name="description" content="Descubre recetas con aceite de oliva y cocina mediterránea. Ideas fáciles y saludables para disfrutar del AOVE en tu día a día." />
+      </Helmet>
       {/* Hero Section */}
       <section className="relative h-[70vh] bg-gradient-to-b from-secondary/20 to-white flex items-center justify-center">
         <motion.div
@@ -185,7 +190,7 @@ const Recetario = () => {
         >
           <ChefHat className="mx-auto text-secondary mb-4" size={60} />
           <h1 className="text-5xl md:text-7xl font-script text-primary mb-6">
-            Recetario
+            Recetas con aceite de oliva y cocina mediterránea
           </h1>
           <p className="text-xl md:text-2xl text-primary/70 max-w-3xl mx-auto">
             Inspírate con nuestras recetas y descubre nuevas formas de disfrutar nuestras joyas

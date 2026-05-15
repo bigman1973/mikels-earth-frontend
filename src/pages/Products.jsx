@@ -1,7 +1,7 @@
 import { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { products, categories } from '../data/products';
 import ProductCard from '../components/products/ProductCard';
-
 import { Filter } from 'lucide-react';
 
 const Products = () => {
@@ -37,11 +37,15 @@ const Products = () => {
 
   return (
     <div className="min-h-screen py-16 bg-gray-50">
+      <Helmet>
+        <title>Tienda Online Mikel's Earth | Productos Naturales y Aceite de Oliva Gourmet</title>
+        <meta name="description" content="Compra online productos naturales, conservas artesanales y aceite de oliva gourmet. Calidad, tradición y elaboración artesanal directa del productor." />
+      </Helmet>
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-primary mb-4">
-            La Despensa de Mikel
+            La despensa de Mikel's Earth
           </h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
             Bienvenido/a a la tienda online. Cada compra que realizas aquí no solo te acerca a productos 

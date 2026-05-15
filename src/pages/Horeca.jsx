@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { Helmet } from 'react-helmet-async';
 import { Building2, Phone, Mail, MapPin, MessageSquare, Check, AlertCircle } from 'lucide-react';
 
 const Horeca = () => {
@@ -162,6 +163,10 @@ const Horeca = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <Helmet>
+        <title>Aceite de oliva para hostelería | AOVE al por mayor HORECA</title>
+        <meta name="description" content="Compra aceite de oliva al por mayor para hostelería. AOVE premium directo del productor para restaurantes y negocios Horeca." />
+      </Helmet>
       {/* Hero Section */}
       <div 
         className="relative bg-gradient-to-r from-primary to-green-800 text-white py-20"
@@ -182,7 +187,7 @@ const Horeca = () => {
               <span className="font-semibold">B2B - Profesionales</span>
             </div>
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              HORECA - Mikel's Earth
+              Aceite de oliva para hostelería y profesionales Horeca
             </h1>
             <p className="text-xl md:text-2xl mb-4 text-green-100">
               Aceite de Calidad Premium para tu Negocio
