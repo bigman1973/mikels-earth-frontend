@@ -31,7 +31,7 @@ const ProductDetail = () => {
       <div className="min-h-screen py-16 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-primary mb-4">Producto no encontrado</h1>
-          <Link to="/productos" className="text-primary hover:underline">
+          <Link to="/tienda" className="text-primary hover:underline">
             Volver a la tienda
           </Link>
         </div>
@@ -128,7 +128,7 @@ const ProductDetail = () => {
         {/* Breadcrumb */}
         <div className="mb-8">
           <Link 
-            to="/productos" 
+            to="/tienda" 
             className="inline-flex items-center gap-2 text-primary hover:underline"
           >
             <ArrowLeft className="w-4 h-4" />

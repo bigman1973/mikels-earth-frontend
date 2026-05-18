@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
+import { Navigate } from 'react-router-dom';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import CartDrawer from './components/cart/CartDrawer';
@@ -43,6 +44,7 @@ function App() {
               <Route path="/experiencias" element={<Experiencias />} />
               <Route path="/recetario" element={<Recetario />} />
               <Route path="/tienda" element={<Products />} />
+              <Route path="/productos" element={<Navigate to="/tienda" replace />} />
               <Route path="/producto/:slug" element={<ProductDetail />} />
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/order-success" element={<OrderSuccess />} />

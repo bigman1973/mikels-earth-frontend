@@ -92,7 +92,7 @@ const OrderSuccess = () => {
 
           <div className="space-y-3">
             <Link
-              to="/productos"
+              to="/tienda"
               className="block w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors"
             >
               Seguir Comprando
