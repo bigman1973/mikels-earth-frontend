@@ -150,6 +150,12 @@ const Header = () => {
               >
                 Recetario
               </Link>
+              <Link 
+                to="/opiniones" 
+                className="text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
+              >
+                Opiniones
+              </Link>
             </div>
 
             {/* Right icons */}
@@ -247,6 +253,13 @@ const Header = () => {
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Recetario
+                </Link>
+                <Link 
+                  to="/opiniones" 
+                  className="text-sm font-medium hover:text-secondary transition-colors uppercase"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Opiniones
                 </Link>
                 <Link 
                   to="/horeca" 

@@ -5,6 +5,7 @@ import { useCart } from '../context/CartContext';
 import { ShoppingCart, ArrowLeft, Check, Repeat, Tag, Package, Leaf } from 'lucide-react';
 import { motion } from 'framer-motion';
 import SoldOutNotification from '../components/SoldOutNotification';
+import ProductReviews from '../components/ProductReviews';
 
 const ProductDetail = () => {
   const { slug } = useParams();
@@ -880,6 +881,9 @@ const ProductDetail = () => {
             </div>
           </motion.div>
         </div>
+
+        {/* Product Reviews section */}
+        <ProductReviews productSlug={slug} productName={product.name} />
 
         {/* Related products section */}
         <div className="mt-16">
