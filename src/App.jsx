@@ -22,6 +22,7 @@ import BlogPost from './pages/BlogPost';
 import BlogAdmin from './pages/BlogAdmin';
 import Contact from './pages/Contact';
 import Horeca from './pages/Horeca';
+import Opiniones from './pages/Opiniones';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Terms from './pages/Terms';
 import './App.css';
@@ -51,6 +52,7 @@ function App() {
               <Route path="/admin/blog" element={<BlogAdmin />} />
               <Route path="/contacto" element={<Contact />} />
               <Route path="/horeca" element={<Horeca />} />
+              <Route path="/opiniones" element={<Opiniones />} />
               <Route path="/politica-privacidad" element={<PrivacyPolicy />} />
               <Route path="/terminos" element={<Terms />} />
             </Routes>

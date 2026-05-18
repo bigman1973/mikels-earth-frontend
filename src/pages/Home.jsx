@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { ArrowRight, Heart, Leaf, Award, Users } from 'lucide-react';
 import Newsletter from '../components/common/Newsletter';
+import ReviewCarousel from '../components/ReviewCarousel';
 
 const Home = () => {
   return (
@@ -303,6 +304,9 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* Reseñas */}
+      <ReviewCarousel />
 
       {/* Newsletter */}
       <section className="py-20 bg-white">
