@@ -5,7 +5,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 const FloatingNewsletterButton = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [email, setEmail] = useState('');
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: ''
+  });
   const [status, setStatus] = useState('idle'); // idle, loading, success, error
   const [message, setMessage] = useState('');
 
@@ -24,8 +29,34 @@ const FloatingNewsletterButton = () => {
     return () => window.removeEventListener('scroll', toggleVisibility);
   }, []);
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    if (status === 'error') {
+      setMessage('');
+      setStatus('idle');
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!formData.firstName.trim()) {
+      setStatus('error');
+      setMessage('Por favor, introduce tu nombre');
+      return;
+    }
+    if (!formData.lastName.trim()) {
+      setStatus('error');
+      setMessage('Por favor, introduce tus apellidos');
+      return;
+    }
+    if (!formData.email || !formData.email.includes('@')) {
+      setStatus('error');
+      setMessage('Por favor, introduce un email válido');
+      return;
+    }
+    
     setStatus('loading');
     setMessage('');
 
@@ -35,15 +66,21 @@ const FloatingNewsletterButton = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ 
+          email: formData.email,
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          phone: formData.phone || undefined,
+          source: 'floating_button'
+        }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
         setStatus('success');
-        setMessage('¡Gracias por suscribirte! Revisa tu email para confirmar.');
-        setEmail('');
+        setMessage('¡Gracias por suscribirte! Revisa tu email para ver tu cupón.');
+        setFormData({ firstName: '', lastName: '', email: '', phone: '' });
         
         // Cerrar el modal después de 3 segundos
         setTimeout(() => {
@@ -145,14 +182,46 @@ const FloatingNewsletterButton = () => {
               </div>
 
               {/* Formulario */}
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-3">
+                <div className="grid grid-cols-2 gap-3">
+                  <input
+                    type="text"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    placeholder="Nombre *"
+                    disabled={status === 'loading' || status === 'success'}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all disabled:bg-gray-100 disabled:cursor-not-allowed text-sm"
+                  />
+                  <input
+                    type="text"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    placeholder="Apellidos *"
+                    disabled={status === 'loading' || status === 'success'}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all disabled:bg-gray-100 disabled:cursor-not-allowed text-sm"
+                  />
+                </div>
                 <div>
                   <input
                     type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Tu email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="tu@email.com *"
                     required
+                    disabled={status === 'loading' || status === 'success'}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
+                  />
+                </div>
+                <div>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    placeholder="Teléfono (opcional)"
                     disabled={status === 'loading' || status === 'success'}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
                   />
