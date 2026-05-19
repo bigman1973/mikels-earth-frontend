@@ -146,8 +146,8 @@ export const CartProvider = ({ children }) => {
       return { success: true, message: 'Código aplicado correctamente' };
     }
     
-    // Si no es estático, verificar si es un cupón único (formato MIKELS10-XXXXXXXX)
-    if (normalizedCode.startsWith('MIKELS10-')) {
+    // Si no es estático, verificar si es un cupón único (formatos MIKELS10-xxx, VUELVE10-xxx, GRACIAS10-xxx)
+    if (normalizedCode.startsWith('MIKELS10-') || normalizedCode.startsWith('VUELVE10-') || normalizedCode.startsWith('GRACIAS10-')) {
       try {
         // Llamar al backend principal para validar el cupón
         const response = await fetch(`${import.meta.env.VITE_API_URL}/api/coupon/validate`, {
