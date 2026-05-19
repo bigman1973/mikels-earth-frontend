@@ -85,6 +85,32 @@ const Checkout = () => {
     setError(null);
     
     try {
+      // Enviar evento de Started Checkout para carrito abandonado
+      try {
+        const cartItems = cart.map(item => ({
+          id: item.id,
+          name: item.name,
+          image: item.image,
+          price: getItemPrice(item),
+          quantity: item.quantity,
+          slug: item.slug || ''
+        }));
+        
+        await fetch(`${import.meta.env.VITE_API_URL}/api/abandoned-cart/`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: formData.email,
+            customer_name: formData.name,
+            items: cartItems,
+            total: getCartTotal(),
+            discount_code: appliedDiscount?.code || null
+          })
+        });
+      } catch (abandonedCartErr) {
+        console.log('Abandoned cart tracking error (non-blocking):', abandonedCartErr);
+      }
+      
       // Separate one-time purchases from subscriptions
       const oneTimePurchases = cart.filter(item => item.purchaseType === 'one-time');
       const subscriptions = cart.filter(item => item.purchaseType === 'subscription');
