@@ -789,7 +789,7 @@ const ProductDetail = () => {
 
               {/* Action buttons or Sold Out Notification */}
               {product.soldOut ? (
-                <SoldOutNotification productName={product.name} />
+                <SoldOutNotification productName={product.name} productSlug={product.slug} />
               ) : (
                 <div className="space-y-3">
                   <button

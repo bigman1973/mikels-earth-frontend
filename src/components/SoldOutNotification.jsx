@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Bell, Check, AlertCircle } from 'lucide-react';
 import { API_URL } from '../config/api';
 
-const SoldOutNotification = ({ productName }) => {
+const SoldOutNotification = ({ productName, productSlug }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -17,16 +17,16 @@ const SoldOutNotification = ({ productName }) => {
     setErrorMessage('');
 
     try {
-      const response = await fetch(`${API_URL}/api/notification/notify-me`, {
+      const response = await fetch(`${API_URL}/api/product-notify/subscribe`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           product_name: productName,
-          customer_name: formData.name,
-          customer_email: formData.email,
-          customer_phone: formData.phone
+          product_id: productSlug,
+          name: formData.name,
+          email: formData.email
         }),
       });
 
@@ -65,7 +65,7 @@ const SoldOutNotification = ({ productName }) => {
           ¡Solicitud Recibida!
         </h3>
         <p className="text-green-700">
-          Te avisaremos por email cuando el producto esté disponible.
+          Te avisaremos por email cuando <strong>{productName}</strong> esté disponible.
         </p>
       </div>
     );
@@ -87,12 +87,12 @@ const SoldOutNotification = ({ productName }) => {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="notify-name" className="block text-sm font-medium text-gray-700 mb-1">
             Nombre *
           </label>
           <input
             type="text"
-            id="name"
+            id="notify-name"
             name="name"
             value={formData.name}
             onChange={handleChange}
@@ -103,12 +103,12 @@ const SoldOutNotification = ({ productName }) => {
         </div>
 
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="notify-email" className="block text-sm font-medium text-gray-700 mb-1">
             Email *
           </label>
           <input
             type="email"
-            id="email"
+            id="notify-email"
             name="email"
             value={formData.email}
             onChange={handleChange}
@@ -119,12 +119,12 @@ const SoldOutNotification = ({ productName }) => {
         </div>
 
         <div>
-          <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="notify-phone" className="block text-sm font-medium text-gray-700 mb-1">
             Teléfono (opcional)
           </label>
           <input
             type="tel"
-            id="phone"
+            id="notify-phone"
             name="phone"
             value={formData.phone}
             onChange={handleChange}
@@ -163,4 +163,3 @@ const SoldOutNotification = ({ productName }) => {
 };
 
 export default SoldOutNotification;
-
