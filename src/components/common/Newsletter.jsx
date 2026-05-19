@@ -3,13 +3,41 @@ import { Mail, Send } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Newsletter = ({ variant = 'default' }) => {
-  const [email, setEmail] = useState('');
+  const [formData, setFormData] = useState({
+    email: '',
+    firstName: '',
+    lastName: '',
+    phone: ''
+  });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    setError('');
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validación
+    if (!formData.firstName.trim()) {
+      setError('Por favor, introduce tu nombre');
+      return;
+    }
+    if (!formData.lastName.trim()) {
+      setError('Por favor, introduce tus apellidos');
+      return;
+    }
+    if (!formData.email.trim() || !formData.email.includes('@')) {
+      setError('Por favor, introduce un email válido');
+      return;
+    }
+    
     setLoading(true);
+    setError('');
     
     try {
       // Paso 1: Generar cupón único en el microservicio
@@ -19,7 +47,7 @@ const Newsletter = ({ variant = 'default' }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email: formData.email }),
       });
       
       if (!couponResponse.ok) {
@@ -36,22 +64,28 @@ const Newsletter = ({ variant = 'default' }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, coupon_code: couponCode }),
+        body: JSON.stringify({ 
+          email: formData.email, 
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          phone: formData.phone || undefined,
+          coupon_code: couponCode 
+        }),
       });
       
       if (response.ok) {
         setSubmitted(true);
-        setEmail('');
+        setFormData({ email: '', firstName: '', lastName: '', phone: '' });
         
         // Reset después de 5 segundos
         setTimeout(() => setSubmitted(false), 5000);
       } else {
-        console.error('Error subscribing to newsletter');
-        alert('Hubo un error al suscribirte. Por favor, inténtalo de nuevo.');
+        const data = await response.json().catch(() => ({}));
+        setError(data.message || 'Hubo un error al suscribirte. Por favor, inténtalo de nuevo.');
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('Hubo un error al suscribirte. Por favor, inténtalo de nuevo.');
+      setError('Hubo un error al suscribirte. Por favor, inténtalo de nuevo.');
     } finally {
       setLoading(false);
     }
@@ -88,24 +122,57 @@ const Newsletter = ({ variant = 'default' }) => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onSubmit={handleSubmit}
-              className="flex gap-2"
+              className="space-y-2"
             >
+              <div className="grid grid-cols-2 gap-2">
+                <input
+                  type="text"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  required
+                  placeholder="Nombre *"
+                  className="px-3 py-2 border border-gray-300 rounded-lg focus:border-secondary focus:outline-none text-sm"
+                  disabled={loading}
+                />
+                <input
+                  type="text"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  required
+                  placeholder="Apellidos *"
+                  className="px-3 py-2 border border-gray-300 rounded-lg focus:border-secondary focus:outline-none text-sm"
+                  disabled={loading}
+                />
+              </div>
               <input
                 type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
                 required
-                placeholder="tu@email.com"
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:border-secondary focus:outline-none text-sm"
+                placeholder="tu@email.com *"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-secondary focus:outline-none text-sm"
                 disabled={loading}
               />
+              <input
+                type="tel"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                placeholder="Teléfono (opcional)"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-secondary focus:outline-none text-sm"
+                disabled={loading}
+              />
+              {error && <p className="text-red-600 text-xs">{error}</p>}
               <button
                 type="submit"
                 disabled={loading}
-                className="bg-secondary text-primary px-4 py-2 rounded-lg font-bold hover:bg-secondary/90 transition-colors disabled:opacity-50 flex items-center gap-1"
+                className="w-full bg-secondary text-primary px-4 py-2 rounded-lg font-bold hover:bg-secondary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-1"
               >
                 <Send size={16} />
-                {loading ? '...' : 'OK'}
+                {loading ? 'Enviando...' : 'Suscribirme'}
               </button>
             </motion.form>
           )}
@@ -141,7 +208,7 @@ const Newsletter = ({ variant = 'default' }) => {
                 ¡Bienvenido a la familia!
               </p>
               <p className="text-gray-600">
-                Revisa tu email para confirmar tu suscripción
+                Revisa tu email para ver tu cupón de bienvenida
               </p>
             </motion.div>
           ) : (
@@ -151,21 +218,54 @@ const Newsletter = ({ variant = 'default' }) => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onSubmit={handleSubmit}
-              className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
+              className="space-y-3 max-w-md mx-auto"
             >
+              <div className="grid grid-cols-2 gap-3">
+                <input
+                  type="text"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  required
+                  placeholder="Nombre *"
+                  className="px-4 py-3 border-2 border-white/30 bg-white/10 text-white placeholder-white/60 rounded-lg focus:border-secondary focus:outline-none backdrop-blur-sm"
+                  disabled={loading}
+                />
+                <input
+                  type="text"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  required
+                  placeholder="Apellidos *"
+                  className="px-4 py-3 border-2 border-white/30 bg-white/10 text-white placeholder-white/60 rounded-lg focus:border-secondary focus:outline-none backdrop-blur-sm"
+                  disabled={loading}
+                />
+              </div>
               <input
                 type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
                 required
-                placeholder="tu@email.com"
-                className="flex-1 px-4 py-3 border-2 border-white/30 bg-white/10 text-white placeholder-white/60 rounded-lg focus:border-secondary focus:outline-none backdrop-blur-sm"
+                placeholder="tu@email.com *"
+                className="w-full px-4 py-3 border-2 border-white/30 bg-white/10 text-white placeholder-white/60 rounded-lg focus:border-secondary focus:outline-none backdrop-blur-sm"
                 disabled={loading}
               />
+              <input
+                type="tel"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                placeholder="Teléfono (opcional)"
+                className="w-full px-4 py-3 border-2 border-white/30 bg-white/10 text-white placeholder-white/60 rounded-lg focus:border-secondary focus:outline-none backdrop-blur-sm"
+                disabled={loading}
+              />
+              {error && <p className="text-red-300 text-sm">{error}</p>}
               <button
                 type="submit"
                 disabled={loading}
-                className="bg-secondary text-primary px-6 py-3 rounded-lg font-bold hover:bg-secondary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2 whitespace-nowrap"
+                className="w-full bg-secondary text-primary px-6 py-3 rounded-lg font-bold hover:bg-secondary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2 whitespace-nowrap"
               >
                 <Send size={20} />
                 {loading ? 'Enviando...' : 'Suscribirme'}
@@ -185,4 +285,3 @@ const Newsletter = ({ variant = 'default' }) => {
 };
 
 export default Newsletter;
-

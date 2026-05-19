@@ -6,7 +6,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 const NewsletterPopup = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
-  const [email, setEmail] = useState('');
+  const [formData, setFormData] = useState({
+    email: '',
+    firstName: '',
+    lastName: '',
+    phone: ''
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState({ text: '', type: '' });
   const [showSuccess, setShowSuccess] = useState(false);
@@ -46,6 +51,12 @@ const NewsletterPopup = () => {
     }
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    setMessage({ text: '', type: '' });
+  };
+
   const handleCopyCoupon = async () => {
     try {
       await navigator.clipboard.writeText(couponCode);
@@ -67,7 +78,15 @@ const NewsletterPopup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!email || !email.includes('@')) {
+    if (!formData.firstName.trim()) {
+      setMessage({ text: 'Por favor, introduce tu nombre', type: 'error' });
+      return;
+    }
+    if (!formData.lastName.trim()) {
+      setMessage({ text: 'Por favor, introduce tus apellidos', type: 'error' });
+      return;
+    }
+    if (!formData.email || !formData.email.includes('@')) {
       setMessage({ text: 'Por favor, introduce un email válido', type: 'error' });
       return;
     }
@@ -82,7 +101,10 @@ const NewsletterPopup = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: email,
+          email: formData.email,
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          phone: formData.phone || undefined,
           source: 'popup'
         }),
       });
@@ -125,7 +147,7 @@ const NewsletterPopup = () => {
             onClick={handleClose}
             className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
           >
-            {/* Popup - Más pequeño y discreto */}
+            {/* Popup */}
             <motion.div
               initial={{ scale: 0.9, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -167,13 +189,45 @@ const NewsletterPopup = () => {
 
                 {!showSuccess ? (
                   /* Form */
-                  <form onSubmit={handleSubmit} className="space-y-4">
+                  <form onSubmit={handleSubmit} className="space-y-3">
+                    <div className="grid grid-cols-2 gap-3">
+                      <input
+                        type="text"
+                        name="firstName"
+                        value={formData.firstName}
+                        onChange={handleChange}
+                        placeholder="Nombre *"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+                        disabled={isSubmitting}
+                      />
+                      <input
+                        type="text"
+                        name="lastName"
+                        value={formData.lastName}
+                        onChange={handleChange}
+                        placeholder="Apellidos *"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
+                        disabled={isSubmitting}
+                      />
+                    </div>
                     <div>
                       <input
                         type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="tu@email.com"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        placeholder="tu@email.com *"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                    <div>
+                      <input
+                        type="tel"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        placeholder="Teléfono (opcional)"
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                         disabled={isSubmitting}
                       />

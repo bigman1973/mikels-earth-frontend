@@ -48,10 +48,11 @@ const Checkout = () => {
   };
 
   const validateForm = () => {
-    const required = ['name', 'email', 'address', 'city', 'postal_code'];
+    const required = ['name', 'email', 'phone', 'address', 'city', 'postal_code'];
+    const fieldLabels = { name: 'Nombre', email: 'Email', phone: 'Teléfono', address: 'Dirección', city: 'Ciudad', postal_code: 'Código Postal' };
     for (const field of required) {
       if (!formData[field]) {
-        setError(`Por favor, completa el campo: ${field}`);
+        setError(`Por favor, completa el campo: ${fieldLabels[field] || field}`);
         return false;
       }
     }
@@ -147,7 +148,7 @@ const Checkout = () => {
               Añade productos a tu carrito para continuar con la compra
             </p>
             <button
-              onClick={() => navigate('/productos')}
+              onClick={() => navigate('/tienda')}
               className="bg-primary text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors"
             >
               Ver Productos
@@ -213,7 +214,7 @@ const Checkout = () => {
 
                   <div>
                     <label className="block text-sm font-semibold text-primary mb-2">
-                      Teléfono
+                      Teléfono *
                     </label>
                     <input
                       type="tel"
