@@ -18,7 +18,7 @@ const Home = () => {
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: 'url(/images/hero-olivos-background.jpeg)',
+            backgroundImage: 'url(/images/hero-olivos-background.webp)',
             filter: 'grayscale(100%)'
           }}
         >

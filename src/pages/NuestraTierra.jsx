@@ -10,7 +10,7 @@ const NuestraTierra = () => {
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: 'url(/images/finca-moncloa-hero.jpg)'
+            backgroundImage: 'url(/images/finca-moncloa-hero.webp)'
           }}
         >
           {/* Overlay para mejorar legibilidad */}

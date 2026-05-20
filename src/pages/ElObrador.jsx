@@ -101,7 +101,7 @@ const ElObrador = () => {
                 title: "La Elaboración Artesanal",
                 subtitle: "El Punto Exacto, No el Camino Fácil",
                 icon: <Clock className="text-secondary" size={48} />,
-                image: "/images/Elaboracionartesanal.png",
+                image: "/images/Elaboracionartesanal.webp",
                 content: [
                   "En las fábricas industriales, la fruta se cuece durante horas hasta convertirse en una masa homogénea. Luego añaden espesantes para darle textura, conservantes para alargar su vida, y aromas para recuperar lo que el exceso de calor destruyó.",
                   "Nosotros hacemos lo contrario.",
@@ -117,7 +117,7 @@ const ElObrador = () => {
                 title: "El Envasado Uno a Uno",
                 subtitle: "Nuestra Firma Personal en Cada Producto",
                 icon: <Eye className="text-secondary" size={48} />,
-                image: "/images/ElEnvasadounoauno.png",
+                image: "/images/ElEnvasadounoauno.webp",
                 content: [
                   "Cada frasco es llenado a mano. Cada tapa se cierra manualmente. Cada etiqueta se coloca con cuidado.",
                   "Es nuestro sello de garantía. Nuestra firma personal. Cuando recibes un producto de Mikel's Earth, sabes que pasó por nuestras manos, que lo revisamos, que está perfecto.",

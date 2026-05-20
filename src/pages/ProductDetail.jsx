@@ -1,5 +1,5 @@
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { products } from '../data/products';
 import { useCart } from '../context/CartContext';
 import { ShoppingCart, ArrowLeft, Check, Repeat, Tag, Package, Leaf } from 'lucide-react';
@@ -7,12 +7,52 @@ import { motion } from 'framer-motion';
 import SoldOutNotification from '../components/SoldOutNotification';
 import ProductReviews from '../components/ProductReviews';
 
+const API_URL = import.meta.env.VITE_API_URL || 'https://mikels-earth-backend-production.up.railway.app';
+
+// Componente de estrellas inline
+const StarRating = ({ rating, count }) => {
+  if (!rating || count === 0) return null;
+  return (
+    <div className="flex items-center gap-2 mb-4">
+      <div className="flex">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <svg
+            key={star}
+            className={`w-5 h-5 ${star <= Math.round(rating) ? 'text-yellow-400' : 'text-gray-300'}`}
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+          </svg>
+        ))}
+      </div>
+      <span className="text-sm text-gray-600 font-medium">{rating.toFixed(1)}</span>
+      <span className="text-sm text-gray-400">({count} {count === 1 ? 'opinión' : 'opiniones'})</span>
+    </div>
+  );
+};
+
 const ProductDetail = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useCart();
   
   const product = products.find(p => p.slug === slug);
+
+  // Fetch rating stats para mostrar estrellas debajo del título
+  const [reviewStats, setReviewStats] = useState({ average: 0, count: 0 });
+  useEffect(() => {
+    if (slug) {
+      fetch(`${API_URL}/api/reviews/stats?product=${slug}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.average_rating !== undefined) {
+            setReviewStats({ average: data.average_rating, count: data.total_reviews || 0 });
+          }
+        })
+        .catch(() => {});
+    }
+  }, [slug]);
   
   // Cantidad inicial siempre es 1
   const [quantity, setQuantity] = useState(1);
@@ -208,9 +248,12 @@ const ProductDetail = () => {
               </p>
 
               {/* Product name */}
-              <h1 className="text-3xl md:text-4xl font-bold text-primary mb-4">
+              <h1 className="text-3xl md:text-4xl font-bold text-primary mb-2">
                 {product.name}
               </h1>
+
+              {/* Star Rating */}
+              <StarRating rating={reviewStats.average} count={reviewStats.count} />
 
               {/* Tags */}
               <div className="flex flex-wrap gap-2 mb-6">
@@ -807,6 +850,28 @@ const ProductDetail = () => {
                   </button>
                 </div>
               )}
+
+              {/* Trust badges - Mensajes de confianza */}
+              <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <svg className="w-5 h-5 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>Envío 24/48h</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <svg className="w-5 h-5 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  <span>Devolución 30 días</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <svg className="w-5 h-5 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                  <span>Pago 100% seguro</span>
+                </div>
+              </div>
 
               {/* Additional info */}
               <div className="mt-8 pt-8 border-t border-gray-200">

@@ -28,6 +28,16 @@ const Opiniones = () => {
   
   // Formulario
   const [showForm, setShowForm] = useState(false);
+
+  // Auto-abrir formulario si viene con #nueva-resena
+  useEffect(() => {
+    if (window.location.hash === '#nueva-resena') {
+      setShowForm(true);
+      setTimeout(() => {
+        document.getElementById('nueva-resena')?.scrollIntoView({ behavior: 'smooth' });
+      }, 300);
+    }
+  }, []);
   const [formData, setFormData] = useState({
     customer_name: '',
     customer_email: '',
@@ -283,6 +293,7 @@ const Opiniones = () => {
       </section>
 
       {/* Review Form */}
+      <div id="nueva-resena"></div>
       <AnimatePresence>
         {showForm && (
           <motion.section

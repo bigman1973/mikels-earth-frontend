@@ -11,7 +11,7 @@ const Recetario = () => {
       difficulty: 'Fácil',
       time: '5 min',
       servings: '2',
-      image: '/images/pan-tomate.png',
+      image: '/images/pan-tomate.webp',
       description: 'La manera más simple y deliciosa de disfrutar nuestro aceite Temprano. Un desayuno que te transporta al Mediterráneo.',
       ingredients: [
         '2 rebanadas de pan de masa madre',
@@ -37,7 +37,7 @@ const Recetario = () => {
       difficulty: 'Fácil',
       time: '15 min',
       servings: '4',
-      image: '/images/ensalada-paraguayo.png',
+      image: '/images/ensalada-paraguayo.webp',
       description: 'Una combinación sorprendente que equilibra lo dulce del paraguayo con la cremosidad de la burrata. Perfecta para verano.',
       ingredients: [
         '1 frasco de Paraguayo en Almíbar',
@@ -95,7 +95,7 @@ const Recetario = () => {
       difficulty: 'Fácil',
       time: '10 min',
       servings: '4',
-      image: '/images/postre-paraguayo.png',
+      image: '/images/postre-paraguayo.webp',
       description: 'Un postre simple pero espectacular. El calor carameliza el almíbar y el contraste con el helado es mágico.',
       ingredients: [
         '1 frasco de Paraguayo en Almíbar',
@@ -122,7 +122,7 @@ const Recetario = () => {
       difficulty: 'Fácil',
       time: '20 min',
       servings: '4',
-      image: '/images/pasta-aglio.png',
+      image: '/images/pasta-aglio.webp',
       description: 'La receta italiana m\u00e1s simple, elevada con nuestro ecol\u00f3gico. Cuando menos es m\u00e1s.',
       ingredients: [
         '400g de espaguetis',
@@ -151,7 +151,7 @@ const Recetario = () => {
       difficulty: 'Muy Fácil',
       time: '5 min',
       servings: '1',
-      image: '/images/yogur-paraguayo.png',
+      image: '/images/yogur-paraguayo.webp',
       description: 'Un desayuno saludable y delicioso. El paraguayo añade dulzor natural sin azúcares añadidos.',
       ingredients: [
         'Yogur griego natural',

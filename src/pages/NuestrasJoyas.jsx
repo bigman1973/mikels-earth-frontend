@@ -9,7 +9,7 @@ const NuestrasJoyas = () => {
       name: 'Paraguayo en Almíbar',
       tagline: 'La Joya de Alcarràs',
       icon: <Sparkles className="text-secondary" size={48} />,
-      image: '/images/paraguayo-principal.png',
+      image: '/images/paraguayo-principal.webp',
       description: 'El melocotón plano que conquistó nuestros corazones hace más de un siglo. Cultivado en Alcarràs, seleccionado a mano, cocido con paciencia y envasado con amor.',
       features: [
         'Melocot\u00f3n plano de Alcarr\u00e0s',

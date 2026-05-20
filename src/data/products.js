@@ -11,7 +11,7 @@ export const products = [
     image: "/images/aceite-5l-portada.jpg",
     images: [
       "/images/aceite-5l-portada.jpg",
-      "/images/aceite-5l-finca-principal.jpg",
+      "/images/aceite-5l-finca-principal.webp",
       "/images/aceite-5l-lifestyle-1.jpg",
       "/images/aceite-5l-lifestyle-2.jpg",
       "/images/aceite-5l-lifestyle-3.jpg",
@@ -63,12 +63,12 @@ export const products = [
     longDescription: "Nuestro paraguayo en almíbar es el producto estrella de Mikel's Earth. Cultivado en los campos de Alcarràs, cada fruta es seleccionada cuidadosamente y preparada siguiendo métodos artesanales transmitidos de generación en generación. El proceso de elaboración respeta los tiempos naturales de la fruta, conservando su sabor auténtico y propiedades nutritivas. Sin conservantes, sin colorantes, solo fruta de calidad y almíbar natural.",
     price: 14.90,
     currency: "EUR",
-    image: "/images/paraguayo-principal.png",
+    image: "/images/paraguayo-principal.webp",
     images: [
-      "/images/paraguayo-principal.png",
-      "/images/paraguayo-terraza.png",
-      "/images/paraguayo-mujer.png",
-      "/images/paraguayo-cocina.png"
+      "/images/paraguayo-principal.webp",
+      "/images/paraguayo-terraza.webp",
+      "/images/paraguayo-mujer.webp",
+      "/images/paraguayo-cocina.webp"
     ],
     category: "Conservas",
     tags: ["Vegano", "Sin Gluten", "Artesanal", "Local"],
@@ -108,8 +108,8 @@ export const products = [
     image: "/images/aceite-temprano-principal.jpeg",
     images: [
       "/images/aceite-temprano-principal.jpeg",
-      "/images/aceite-temprano-estuche-blanco.png",
-      "/images/aceite-temprano-lifestyle-ceo.png"
+      "/images/aceite-temprano-estuche-blanco.webp",
+      "/images/aceite-temprano-lifestyle-ceo.webp"
     ],
     category: "Aceites",
     tags: ["Vegano", "Sin Gluten", "Prensado en Frío", "Sin Filtrar", "Edición Limitada", "Premium", "Regalo"],
@@ -172,8 +172,8 @@ export const products = [
     image: "/images/nectarina-principal.jpg",
     images: [
       "/images/nectarina-principal.jpg",
-      "/images/nectarina-desayuno-1.png",
-      "/images/nectarina-desayuno-2.png",
+      "/images/nectarina-desayuno-1.webp",
+      "/images/nectarina-desayuno-2.webp",
       "/images/nectarina-picnic.jpg"
     ],
     category: "Conservas",
@@ -209,12 +209,12 @@ export const products = [
     longDescription: "Nuestro aceite de oliva virgen extra equilibrado es el todoterreno de la cocina. Con un perfil organoléptico balanceado entre suavidad e intensidad, es perfecto tanto para cocinar como para aliñar. Prensado en frío para preservar todas sus propiedades antioxidantes y su perfil excepcional. Ideal para el uso diario en cualquier preparación culinaria.",
     price: 10.00,
     currency: "EUR",
-    image: "/images/aceite-equilibrado-principal.png",
+    image: "/images/aceite-equilibrado-principal.webp",
     images: [
-      "/images/aceite-equilibrado-principal.png",
+      "/images/aceite-equilibrado-principal.webp",
       "/images/aceite-equilibrado-caracteristicas.png",
-      "/images/aceite-equilibrado-estuche.png",
-      "/images/aceite-equilibrado-finca.jpg"
+      "/images/aceite-equilibrado-estuche.webp",
+      "/images/aceite-equilibrado-finca.webp"
     ],
     category: "Aceites",
     tags: ["Vegano", "Sin Gluten", "Prensado en Frío", "Versátil"],
@@ -267,9 +267,9 @@ export const products = [
     image: "/images/aceite-ecologico-principal.jpg",
     images: [
       "/images/aceite-ecologico-principal.jpg",
-      "/images/aceite-ecologico-estuche-blanco.png",
-      "/images/aceite-ecologico-lifestyle-terraza.png",
-      "/images/aceite-ecologico-lifestyle-campo.png"
+      "/images/aceite-ecologico-estuche-blanco.webp",
+      "/images/aceite-ecologico-lifestyle-terraza.webp",
+      "/images/aceite-ecologico-lifestyle-campo.webp"
     ],
     category: "Aceites",
     tags: ["Vegano", "Sin Gluten", "Prensado en Frío", "Ecológico", "Premiado", "Alto en Polifenoles"],
@@ -332,8 +332,8 @@ export const products = [
     images: [
       "/images/pack-degustacion-abierto.jpeg",
       "/images/pack-degustacion-principal.jpeg",
-      "/images/pack-degustacion-caja.png",
-      "/images/pack-degustacion-ceo.png"
+      "/images/pack-degustacion-caja.webp",
+      "/images/pack-degustacion-ceo.webp"
     ],
     category: "Packs",
     tags: ["Vegano", "Sin Gluten", "Regalo", "Premium", "Degustación"],
@@ -371,12 +371,12 @@ export const products = [
     longDescription: "Paraguayo (melocotón plano), agua, azúcar, zumo de limón natural.\n\n4 ingredientes. Punto.\n\nSin conservantes. Sin colorantes. Sin espesantes.\n\nElaborada con la misma fruta que utilizamos para nuestro paraguayo en almíbar, esta mermelada artesanal captura todo el sabor del verano en un frasco. Con un 60% de fruta (3 veces más que la industria en general), el resultado es una mermelada de textura suave y sabor intenso que te transportará a los campos de Alcarràs con cada cucharada.",
     price: 6.50,
     currency: "EUR",
-    image: "/images/mermelada-principal.png",
+    image: "/images/mermelada-principal.webp",
     images: [
-      "/images/mermelada-principal.png",
-      "/images/mermelada-desayuno.png",
-      "/images/mermelada-lifestyle.png",
-      "/images/mermelada-tarros.png"
+      "/images/mermelada-principal.webp",
+      "/images/mermelada-desayuno.webp",
+      "/images/mermelada-lifestyle.webp",
+      "/images/mermelada-tarros.webp"
     ],
     category: "Conservas",
     tags: ["Vegano", "Sin Gluten", "Artesanal", "Local", "Alto en Fruta"],
@@ -462,7 +462,7 @@ export const products = [
     images: [
       "/images/pack-fruta-principal.jpg",
       "/images/pack-fruta-estuche.jpg",
-      "/images/pack-fruta-lifestyle.jpg",
+      "/images/pack-fruta-lifestyle.webp",
       "/images/pack-fruta-detalle.jpg"
     ],
     category: "Packs",
