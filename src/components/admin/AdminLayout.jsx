@@ -13,23 +13,23 @@ const NAV_ITEMS = [
 function LoadingScreen() {
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-      <div className="flex flex-col items-center gap-6">
-        {/* Logo con animación de pulso */}
-        <div className="relative">
+      <div className="flex flex-col items-center gap-8">
+        {/* Logo con animación */}
+        <div className="relative flex items-center justify-center">
           <img 
             src="/logo-mikels-earth.svg" 
             alt="Mikel's Earth" 
-            className="w-24 h-24 object-contain animate-pulse"
+            className="w-44 h-44 object-contain animate-pulse"
+            style={{ filter: 'brightness(0) invert(1)' }}
           />
           {/* Anillo giratorio alrededor del logo */}
-          <div className="absolute inset-0 -m-3">
-            <div className="w-[120px] h-[120px] border-2 border-transparent border-t-green-500 border-r-green-500/30 rounded-full animate-spin"></div>
+          <div className="absolute inset-0 -m-4 flex items-center justify-center">
+            <div className="w-[220px] h-[220px] border-2 border-transparent border-t-green-500 border-r-green-500/30 rounded-full animate-spin"></div>
           </div>
         </div>
         {/* Texto */}
         <div className="text-center">
-          <p className="text-white text-sm font-medium">Mikel's Earth</p>
-          <p className="text-gray-500 text-xs mt-1 animate-pulse">Cargando panel de administración...</p>
+          <p className="text-gray-400 text-sm animate-pulse">Cargando panel de administración...</p>
         </div>
       </div>
     </div>
@@ -53,7 +53,7 @@ export default function AdminLayout({ children }) {
       {/* Sidebar - Desktop */}
       <aside className="hidden md:flex md:flex-col w-64 bg-gray-800 border-r border-gray-700">
         <div className="p-4 border-b border-gray-700 flex items-center gap-3">
-          <img src="/logo-mikels-earth.svg" alt="Mikel's Earth" className="w-8 h-8 object-contain" />
+          <img src="/logo-mikels-earth.svg" alt="Mikel's Earth" className="w-8 h-8 object-contain" style={{ filter: 'brightness(0) invert(1)' }} />
           <div>
             <h1 className="text-sm font-bold text-white">Mikel's Earth</h1>
             <p className="text-[10px] text-gray-400">Panel de Administración</p>
@@ -100,7 +100,7 @@ export default function AdminLayout({ children }) {
       <header className="md:hidden bg-gray-800 border-b border-gray-700 p-3">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <img src="/logo-mikels-earth.svg" alt="" className="w-6 h-6 object-contain" />
+            <img src="/logo-mikels-earth.svg" alt="" className="w-6 h-6 object-contain" style={{ filter: 'brightness(0) invert(1)' }} />
             <h1 className="text-sm font-bold text-white">Admin</h1>
           </div>
           <div className="flex items-center gap-3">

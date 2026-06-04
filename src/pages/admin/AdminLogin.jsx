@@ -22,7 +22,8 @@ export default function AdminLogin() {
             <img 
               src="/logo-mikels-earth.svg" 
               alt="Mikel's Earth" 
-              className="w-24 h-24 object-contain animate-pulse"
+              className="w-36 h-36 object-contain animate-pulse"
+              style={{ filter: 'brightness(0) invert(1)' }}
             />
             <div className="absolute inset-0 -m-3">
               <div className="w-[120px] h-[120px] border-2 border-transparent border-t-green-500 border-r-green-500/30 rounded-full animate-spin"></div>
@@ -54,7 +55,8 @@ export default function AdminLogin() {
             <img 
               src="/logo-mikels-earth.svg" 
               alt="Mikel's Earth" 
-              className="w-20 h-20 mx-auto mb-4 object-contain"
+              className="w-28 h-28 mx-auto mb-4 object-contain"
+              style={{ filter: 'brightness(0) invert(1)' }}
             />
             <h1 className="text-xl font-bold text-white">Mikel's Earth</h1>
             <p className="text-gray-400 text-sm mt-1">Panel de Administración</p>
