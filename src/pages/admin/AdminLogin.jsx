@@ -17,7 +17,10 @@ export default function AdminLogin() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="text-white">Cargando...</div>
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-2 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-gray-400 text-sm">Verificando sesión...</p>
+        </div>
       </div>
     );
   }
@@ -32,47 +35,61 @@ export default function AdminLogin() {
 
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <div className="bg-gray-800 rounded-2xl p-8 shadow-xl border border-gray-700">
-          {/* Logo */}
+      <div className="w-full max-w-sm">
+        <div className="bg-gray-800 rounded-2xl p-8 shadow-2xl border border-gray-700">
+          {/* Logo y título */}
           <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold text-white mb-2">Mikel's Earth</h1>
-            <p className="text-gray-400 text-sm">Panel de Administración</p>
+            <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-green-500 to-green-700 rounded-2xl flex items-center justify-center shadow-lg">
+              <span className="text-2xl font-bold text-white">M</span>
+            </div>
+            <h1 className="text-xl font-bold text-white">Mikel's Earth</h1>
+            <p className="text-gray-400 text-sm mt-1">Panel de Administración</p>
           </div>
 
           {/* Error */}
           {error && (
-            <div className="mb-6 p-3 bg-red-900/30 border border-red-700 rounded-lg">
-              <p className="text-red-300 text-sm">
+            <div className="mb-6 p-3 bg-red-900/30 border border-red-700/50 rounded-lg">
+              <p className="text-red-300 text-sm text-center">
                 {errorMessages[error] || `Error: ${error}`}
               </p>
             </div>
           )}
 
-          {/* Login Button */}
+          {/* Botón Microsoft - Estilo oficial */}
           <button
             onClick={login}
-            className="w-full flex items-center justify-center gap-3 bg-white hover:bg-gray-100 text-gray-800 font-medium py-3 px-4 rounded-lg transition-colors"
+            className="w-full flex items-center justify-center gap-3 bg-[#2F2F2F] hover:bg-[#3C3C3C] active:bg-[#1A1A1A] text-white font-medium py-3.5 px-5 rounded-lg border border-[#4A4A4A] hover:border-[#6A6A6A] transition-all duration-200 shadow-md hover:shadow-lg cursor-pointer select-none"
           >
-            <svg className="w-5 h-5" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
+            <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
               <rect x="1" y="1" width="9" height="9" fill="#f25022"/>
               <rect x="11" y="1" width="9" height="9" fill="#7fba00"/>
               <rect x="1" y="11" width="9" height="9" fill="#00a4ef"/>
               <rect x="11" y="11" width="9" height="9" fill="#ffb900"/>
             </svg>
-            Iniciar sesión con Microsoft
+            <span>Iniciar sesión con Microsoft</span>
           </button>
 
-          {/* Info */}
-          <div className="mt-6 text-center">
-            <p className="text-xs text-gray-500">
-              Acceso restringido a dominios corporativos:
+          {/* Separador */}
+          <div className="mt-8 pt-6 border-t border-gray-700">
+            <p className="text-xs text-gray-500 text-center">
+              Acceso restringido a dominios corporativos
             </p>
-            <p className="text-xs text-gray-400 mt-1">
-              @lfgd.es · @farmsplanet.es · @mikels.es · @internetoperadores.com
-            </p>
+            <div className="flex flex-wrap justify-center gap-x-2 gap-y-1 mt-2">
+              <span className="text-xs text-gray-400">@lfgd.es</span>
+              <span className="text-xs text-gray-600">·</span>
+              <span className="text-xs text-gray-400">@farmsplanet.es</span>
+              <span className="text-xs text-gray-600">·</span>
+              <span className="text-xs text-gray-400">@mikels.es</span>
+              <span className="text-xs text-gray-600">·</span>
+              <span className="text-xs text-gray-400">@internetoperadores.com</span>
+            </div>
           </div>
         </div>
+
+        {/* Footer */}
+        <p className="text-center text-xs text-gray-600 mt-4">
+          Protegido por Microsoft Entra ID
+        </p>
       </div>
     </div>
   );

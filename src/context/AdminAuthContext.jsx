@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { API_URL } from '../config/api';
 
 const AdminAuthContext = createContext(null);
@@ -7,19 +8,21 @@ export function AdminAuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem('admin_token'));
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
 
+  // Capturar token de la URL si viene del callback de Microsoft
   useEffect(() => {
-    // Capturar token de la URL si viene del callback de Microsoft
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(location.search);
     const urlToken = params.get('token');
     if (urlToken) {
       localStorage.setItem('admin_token', urlToken);
       setToken(urlToken);
-      // Limpiar la URL
-      window.history.replaceState({}, '', window.location.pathname);
+      // Limpiar la URL sin recargar
+      window.history.replaceState({}, '', location.pathname);
     }
-  }, []);
+  }, [location]);
 
+  // Fetch user cuando hay token
   useEffect(() => {
     if (token) {
       fetchUser();
@@ -38,7 +41,9 @@ export function AdminAuthProvider({ children }) {
         setUser(data);
       } else {
         // Token inválido o expirado
-        logout();
+        localStorage.removeItem('admin_token');
+        setToken(null);
+        setUser(null);
       }
     } catch (err) {
       console.error('Error fetching admin user:', err);
@@ -48,7 +53,6 @@ export function AdminAuthProvider({ children }) {
   };
 
   const login = () => {
-    // Redirigir al endpoint de login de Microsoft
     window.location.href = `${API_URL}/api/auth/microsoft/login`;
   };
 
@@ -59,17 +63,23 @@ export function AdminAuthProvider({ children }) {
   };
 
   const authFetch = async (url, options = {}) => {
+    if (!token) return null;
     const headers = {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`,
       ...options.headers
     };
-    const res = await fetch(url, { ...options, headers });
-    if (res.status === 401) {
-      logout();
+    try {
+      const res = await fetch(url, { ...options, headers });
+      if (res.status === 401) {
+        logout();
+        return null;
+      }
+      return res;
+    } catch (err) {
+      console.error('authFetch error:', err);
       return null;
     }
-    return res;
   };
 
   return (
