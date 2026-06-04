@@ -10,16 +10,38 @@ const NAV_ITEMS = [
   { path: '/admin/usuarios', label: 'Usuarios', icon: '⚙️' },
 ];
 
+function LoadingScreen() {
+  return (
+    <div className="min-h-screen bg-gray-900 flex items-center justify-center">
+      <div className="flex flex-col items-center gap-6">
+        {/* Logo con animación de pulso */}
+        <div className="relative">
+          <img 
+            src="/logo-mikels-earth.svg" 
+            alt="Mikel's Earth" 
+            className="w-24 h-24 object-contain animate-pulse"
+          />
+          {/* Anillo giratorio alrededor del logo */}
+          <div className="absolute inset-0 -m-3">
+            <div className="w-[120px] h-[120px] border-2 border-transparent border-t-green-500 border-r-green-500/30 rounded-full animate-spin"></div>
+          </div>
+        </div>
+        {/* Texto */}
+        <div className="text-center">
+          <p className="text-white text-sm font-medium">Mikel's Earth</p>
+          <p className="text-gray-500 text-xs mt-1 animate-pulse">Cargando panel de administración...</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function AdminLayout({ children }) {
   const { user, loading, logout } = useAdminAuth();
   const location = useLocation();
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="text-white text-xl">Cargando...</div>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   if (!user) {
@@ -30,9 +52,12 @@ export default function AdminLayout({ children }) {
     <div className="min-h-screen bg-gray-900 flex flex-col md:flex-row">
       {/* Sidebar - Desktop */}
       <aside className="hidden md:flex md:flex-col w-64 bg-gray-800 border-r border-gray-700">
-        <div className="p-4 border-b border-gray-700">
-          <h1 className="text-lg font-bold text-white">Mikel's Earth</h1>
-          <p className="text-xs text-gray-400 mt-1">Panel de Administración</p>
+        <div className="p-4 border-b border-gray-700 flex items-center gap-3">
+          <img src="/logo-mikels-earth.svg" alt="Mikel's Earth" className="w-8 h-8 object-contain" />
+          <div>
+            <h1 className="text-sm font-bold text-white">Mikel's Earth</h1>
+            <p className="text-[10px] text-gray-400">Panel de Administración</p>
+          </div>
         </div>
 
         <nav className="flex-1 p-3 space-y-1">
@@ -59,14 +84,14 @@ export default function AdminLayout({ children }) {
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm text-white truncate">{user.name}</p>
-              <p className="text-xs text-gray-400 truncate">{user.role}</p>
+              <p className="text-xs text-gray-400 truncate capitalize">{user.role}</p>
             </div>
           </div>
           <button
             onClick={logout}
-            className="w-full text-left text-xs text-gray-400 hover:text-red-400 transition-colors"
+            className="w-full text-left text-xs text-gray-400 hover:text-red-400 transition-colors py-1"
           >
-            Cerrar sesión
+            ← Cerrar sesión
           </button>
         </div>
       </aside>
@@ -74,13 +99,16 @@ export default function AdminLayout({ children }) {
       {/* Mobile Header */}
       <header className="md:hidden bg-gray-800 border-b border-gray-700 p-3">
         <div className="flex items-center justify-between mb-3">
-          <h1 className="text-sm font-bold text-white">Mikel's Admin</h1>
           <div className="flex items-center gap-2">
+            <img src="/logo-mikels-earth.svg" alt="" className="w-6 h-6 object-contain" />
+            <h1 className="text-sm font-bold text-white">Admin</h1>
+          </div>
+          <div className="flex items-center gap-3">
             <span className="text-xs text-gray-400">{user.name?.split(' ')[0]}</span>
-            <button onClick={logout} className="text-xs text-red-400">Salir</button>
+            <button onClick={logout} className="text-xs text-red-400 hover:text-red-300">Salir</button>
           </div>
         </div>
-        <nav className="flex gap-1 overflow-x-auto pb-1">
+        <nav className="flex gap-1 overflow-x-auto pb-1 scrollbar-hide">
           {NAV_ITEMS.map(item => (
             <Link
               key={item.path}

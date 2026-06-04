@@ -1,37 +1,39 @@
-import { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { createContext, useContext, useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import { API_URL } from '../config/api';
 
 const AdminAuthContext = createContext(null);
 
+// Capturar token de la URL inmediatamente (antes del primer render)
+function getInitialToken() {
+  const params = new URLSearchParams(window.location.search);
+  const urlToken = params.get('token');
+  if (urlToken) {
+    localStorage.setItem('admin_token', urlToken);
+    // Limpiar URL inmediatamente
+    window.history.replaceState({}, '', window.location.pathname);
+    return urlToken;
+  }
+  return localStorage.getItem('admin_token');
+}
+
 export function AdminAuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('admin_token'));
-  const [loading, setLoading] = useState(true);
-  const location = useLocation();
+  const [token, setToken] = useState(getInitialToken);
+  const [loading, setLoading] = useState(!!getInitialToken()); // Solo loading si hay token que verificar
+  const fetchedRef = useRef(false);
 
-  // Capturar token de la URL si viene del callback de Microsoft
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const urlToken = params.get('token');
-    if (urlToken) {
-      localStorage.setItem('admin_token', urlToken);
-      setToken(urlToken);
-      // Limpiar la URL sin recargar
-      window.history.replaceState({}, '', location.pathname);
-    }
-  }, [location]);
-
-  // Fetch user cuando hay token
-  useEffect(() => {
-    if (token) {
+    if (token && !fetchedRef.current) {
+      fetchedRef.current = true;
       fetchUser();
-    } else {
+    } else if (!token) {
       setLoading(false);
     }
   }, [token]);
 
   const fetchUser = async () => {
+    setLoading(true);
     try {
       const res = await fetch(`${API_URL}/api/auth/me`, {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -40,7 +42,6 @@ export function AdminAuthProvider({ children }) {
         const data = await res.json();
         setUser(data);
       } else {
-        // Token inválido o expirado
         localStorage.removeItem('admin_token');
         setToken(null);
         setUser(null);
@@ -60,6 +61,7 @@ export function AdminAuthProvider({ children }) {
     localStorage.removeItem('admin_token');
     setToken(null);
     setUser(null);
+    fetchedRef.current = false;
   };
 
   const authFetch = async (url, options = {}) => {

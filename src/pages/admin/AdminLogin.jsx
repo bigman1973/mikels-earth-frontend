@@ -17,9 +17,21 @@ export default function AdminLogin() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-8 h-8 border-2 border-green-500 border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-gray-400 text-sm">Verificando sesión...</p>
+        <div className="flex flex-col items-center gap-6">
+          <div className="relative">
+            <img 
+              src="/logo-mikels-earth.svg" 
+              alt="Mikel's Earth" 
+              className="w-24 h-24 object-contain animate-pulse"
+            />
+            <div className="absolute inset-0 -m-3">
+              <div className="w-[120px] h-[120px] border-2 border-transparent border-t-green-500 border-r-green-500/30 rounded-full animate-spin"></div>
+            </div>
+          </div>
+          <div className="text-center">
+            <p className="text-white text-sm font-medium">Mikel's Earth</p>
+            <p className="text-gray-500 text-xs mt-1 animate-pulse">Verificando sesión...</p>
+          </div>
         </div>
       </div>
     );
@@ -37,11 +49,13 @@ export default function AdminLogin() {
     <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
         <div className="bg-gray-800 rounded-2xl p-8 shadow-2xl border border-gray-700">
-          {/* Logo y título */}
+          {/* Logo */}
           <div className="text-center mb-8">
-            <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-green-500 to-green-700 rounded-2xl flex items-center justify-center shadow-lg">
-              <span className="text-2xl font-bold text-white">M</span>
-            </div>
+            <img 
+              src="/logo-mikels-earth.svg" 
+              alt="Mikel's Earth" 
+              className="w-20 h-20 mx-auto mb-4 object-contain"
+            />
             <h1 className="text-xl font-bold text-white">Mikel's Earth</h1>
             <p className="text-gray-400 text-sm mt-1">Panel de Administración</p>
           </div>
@@ -55,12 +69,12 @@ export default function AdminLogin() {
             </div>
           )}
 
-          {/* Botón Microsoft - Estilo oficial */}
+          {/* Botón Microsoft - Estilo profesional */}
           <button
             onClick={login}
-            className="w-full flex items-center justify-center gap-3 bg-[#2F2F2F] hover:bg-[#3C3C3C] active:bg-[#1A1A1A] text-white font-medium py-3.5 px-5 rounded-lg border border-[#4A4A4A] hover:border-[#6A6A6A] transition-all duration-200 shadow-md hover:shadow-lg cursor-pointer select-none"
+            className="w-full flex items-center justify-center gap-3 bg-[#2F2F2F] hover:bg-[#3C3C3C] active:bg-[#1A1A1A] text-white font-medium py-3.5 px-5 rounded-lg border border-[#4A4A4A] hover:border-[#6A6A6A] transition-all duration-200 shadow-md hover:shadow-lg cursor-pointer select-none group"
           >
-            <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
+            <svg className="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
               <rect x="1" y="1" width="9" height="9" fill="#f25022"/>
               <rect x="11" y="1" width="9" height="9" fill="#7fba00"/>
               <rect x="1" y="11" width="9" height="9" fill="#00a4ef"/>
