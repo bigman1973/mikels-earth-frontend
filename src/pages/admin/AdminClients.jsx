@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAdminAuth } from '../../context/AdminAuthContext';
 import { API_URL } from '../../config/api';
 import AdminLayout from '../../components/admin/AdminLayout';
 
 export default function AdminClients() {
   const { authFetch } = useAdminAuth();
+  const navigate = useNavigate();
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -98,7 +100,7 @@ export default function AdminClients() {
                 </thead>
                 <tbody className="divide-y divide-white/5">
                   {filteredClients.map((client, i) => (
-                    <tr key={i} className="hover:bg-white/[0.02] transition-colors">
+                    <tr key={i} onClick={() => client.id && navigate(`/admin/clientes/${client.id}`)} className="hover:bg-white/[0.02] transition-colors cursor-pointer">
                       <td className="px-5 py-3.5">
                         <div className="flex items-center gap-3">
                           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-500/20 to-blue-500/20 border border-white/10 flex items-center justify-center flex-shrink-0">
@@ -134,7 +136,7 @@ export default function AdminClients() {
             {/* Mobile Cards */}
             <div className="md:hidden space-y-3">
               {filteredClients.map((client, i) => (
-                <div key={i} className="bg-white/[0.02] rounded-xl border border-white/5 p-4 hover:border-white/10 transition-colors">
+                <div key={i} onClick={() => client.id && navigate(`/admin/clientes/${client.id}`)} className="bg-white/[0.02] rounded-xl border border-white/5 p-4 hover:border-white/10 transition-colors cursor-pointer">
                   <div className="flex items-center gap-3 mb-2">
                     <div className="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-500/20 to-blue-500/20 border border-white/10 flex items-center justify-center flex-shrink-0">
                       <span className="text-sm font-bold text-emerald-400">

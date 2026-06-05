@@ -35,6 +35,7 @@ import AdminProducts from './pages/admin/AdminProducts';
 import AdminStock from './pages/admin/AdminStock';
 import AdminOrders from './pages/admin/AdminOrders';
 import AdminClients from './pages/admin/AdminClients';
+import AdminClientDetail from './pages/admin/AdminClientDetail';
 import AdminUsers from './pages/admin/AdminUsers';
 import './App.css';
 
@@ -51,6 +52,7 @@ function App() {
             <Route path="/admin/stock" element={<AdminStock />} />
             <Route path="/admin/pedidos" element={<AdminOrders />} />
             <Route path="/admin/clientes" element={<AdminClients />} />
+            <Route path="/admin/clientes/:clientId" element={<AdminClientDetail />} />
             <Route path="/admin/usuarios" element={<AdminUsers />} />
 
             {/* ====== TIENDA PÚBLICA (con Header/Footer) ====== */}
