@@ -8,11 +8,8 @@ export default function AdminClientDetail() {
   const { clientId } = useParams();
   const navigate = useNavigate();
   const { authFetch } = useAdminAuth();
-  const [client, setClient] = useState(null);
-  const [documents, setDocuments] = useState([]);
-  const [stats, setStats] = useState({});
+  const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState('all'); // all, online, offline
   const [expandedDoc, setExpandedDoc] = useState(null);
 
   useEffect(() => {
@@ -24,10 +21,8 @@ export default function AdminClientDetail() {
     try {
       const res = await authFetch(`${API_URL}/api/admin/clients/${clientId}`);
       if (res && res.ok) {
-        const data = await res.json();
-        setClient(data.client);
-        setDocuments(data.documents || []);
-        setStats(data.stats || {});
+        const result = await res.json();
+        setData(result);
       } else {
         console.error('Error loading client detail');
       }
@@ -38,14 +33,15 @@ export default function AdminClientDetail() {
     }
   };
 
-  const filteredDocs = documents.filter(d => {
-    if (filter === 'all') return true;
-    return d.channel === filter;
-  });
-
-  const formatDate = (timestamp) => {
-    if (!timestamp) return '—';
-    const date = new Date(timestamp * 1000);
+  const formatDate = (val) => {
+    if (!val) return '—';
+    // Si es un timestamp (número), convertir
+    if (typeof val === 'number') {
+      const date = new Date(val * 1000);
+      return date.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' });
+    }
+    // Si es un ISO string
+    const date = new Date(val);
     return date.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' });
   };
 
@@ -67,7 +63,7 @@ export default function AdminClientDetail() {
     );
   }
 
-  if (!client) {
+  if (!data || !data.client) {
     return (
       <AdminLayout>
         <div className="flex flex-col items-center justify-center py-32 gap-4">
@@ -79,6 +75,9 @@ export default function AdminClientDetail() {
       </AdminLayout>
     );
   }
+
+  const client = data.client;
+  const isWebClient = data.source === 'web';
 
   return (
     <AdminLayout>
@@ -98,15 +97,28 @@ export default function AdminClientDetail() {
         <div className="bg-white/[0.02] rounded-2xl border border-white/5 p-6 md:p-8 mb-6">
           <div className="flex flex-col md:flex-row md:items-start gap-6">
             {/* Avatar */}
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-blue-500/20 border border-white/10 flex items-center justify-center flex-shrink-0">
-              <span className="text-2xl font-bold text-emerald-400">
+            <div className={`w-16 h-16 rounded-2xl border flex items-center justify-center flex-shrink-0 ${
+              isWebClient
+                ? 'bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 border-emerald-500/20'
+                : 'bg-gradient-to-br from-amber-500/20 to-orange-500/20 border-amber-500/20'
+            }`}>
+              <span className={`text-2xl font-bold ${isWebClient ? 'text-emerald-400' : 'text-amber-400'}`}>
                 {client.name ? client.name.charAt(0).toUpperCase() : '?'}
               </span>
             </div>
 
             {/* Info */}
             <div className="flex-1 min-w-0">
-              <h1 className="text-2xl font-bold text-white mb-1 truncate">{client.name}</h1>
+              <div className="flex items-center gap-3 mb-1">
+                <h1 className="text-2xl font-bold text-white truncate">{client.name}</h1>
+                <span className={`text-[10px] font-semibold px-2.5 py-1 rounded-lg border ${
+                  isWebClient
+                    ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                    : 'bg-amber-500/10 text-amber-400 border-amber-500/20'
+                }`}>
+                  {isWebClient ? 'Web' : 'B2B / Contado'}
+                </span>
+              </div>
               <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-gray-400 mt-3">
                 {client.email && (
                   <div className="flex items-center gap-2">
@@ -135,167 +147,280 @@ export default function AdminClientDetail() {
               </div>
               {(client.address || client.city) && (
                 <p className="text-xs text-gray-500 mt-2">
-                  {[client.address, client.postal_code, client.city, client.province].filter(Boolean).join(', ')}
+                  {[client.address, client.postal_code, client.city, client.province, client.country].filter(Boolean).join(', ')}
                 </p>
               )}
             </div>
 
-            {/* Total facturado */}
+            {/* Total */}
             <div className="flex-shrink-0 text-right">
-              <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Total facturado</p>
-              <p className="text-3xl font-bold text-emerald-400 font-mono">
-                {formatCurrency(client.total_invoiced)}
+              <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">
+                {isWebClient ? 'Total gastado' : 'Total facturado'}
+              </p>
+              <p className={`text-3xl font-bold font-mono ${isWebClient ? 'text-emerald-400' : 'text-amber-400'}`}>
+                {formatCurrency(isWebClient ? data.stats?.total_spent : client.total_invoiced)}
               </p>
             </div>
           </div>
         </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-          <div className="bg-white/[0.02] rounded-xl border border-white/5 p-4">
-            <p className="text-xs text-gray-500 mb-1">Total documentos</p>
-            <p className="text-xl font-bold text-white">{stats.total_documents || 0}</p>
-          </div>
-          <div className="bg-white/[0.02] rounded-xl border border-white/5 p-4">
-            <p className="text-xs text-gray-500 mb-1">Compras online</p>
-            <p className="text-xl font-bold text-blue-400">{stats.count_online || 0}</p>
-            <p className="text-[10px] text-gray-600 mt-0.5">{formatCurrency(stats.total_online)}</p>
-          </div>
-          <div className="bg-white/[0.02] rounded-xl border border-white/5 p-4">
-            <p className="text-xs text-gray-500 mb-1">Compras offline</p>
-            <p className="text-xl font-bold text-amber-400">{stats.count_offline || 0}</p>
-            <p className="text-[10px] text-gray-600 mt-0.5">{formatCurrency(stats.total_offline)}</p>
-          </div>
-          <div className="bg-white/[0.02] rounded-xl border border-white/5 p-4">
-            <p className="text-xs text-gray-500 mb-1">Total gastado</p>
-            <p className="text-xl font-bold text-emerald-400 font-mono">{formatCurrency(stats.total_all)}</p>
-          </div>
-        </div>
+        {/* ===== WEB CLIENT VIEW ===== */}
+        {isWebClient && (
+          <>
+            {/* Stats Cards */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+              <div className="bg-white/[0.02] rounded-xl border border-white/5 p-4">
+                <p className="text-xs text-gray-500 mb-1">Total pedidos</p>
+                <p className="text-xl font-bold text-white">{data.stats?.total_orders || 0}</p>
+              </div>
+              <div className="bg-white/[0.02] rounded-xl border border-white/5 p-4">
+                <p className="text-xs text-gray-500 mb-1">Total gastado</p>
+                <p className="text-xl font-bold text-emerald-400 font-mono">{formatCurrency(data.stats?.total_spent)}</p>
+              </div>
+              <div className="bg-white/[0.02] rounded-xl border border-white/5 p-4">
+                <p className="text-xs text-gray-500 mb-1">Tickets generados</p>
+                <p className="text-xl font-bold text-cyan-400">{data.stats?.tickets_generated || 0}</p>
+              </div>
+              <div className="bg-white/[0.02] rounded-xl border border-white/5 p-4">
+                <p className="text-xs text-gray-500 mb-1">Tickets pendientes</p>
+                <p className={`text-xl font-bold ${(data.stats?.tickets_pending || 0) > 0 ? 'text-red-400' : 'text-gray-500'}`}>
+                  {data.stats?.tickets_pending || 0}
+                </p>
+              </div>
+            </div>
 
-        {/* Filter tabs */}
-        <div className="flex items-center gap-2 mb-5">
-          {[
-            { key: 'all', label: 'Todos', count: documents.length },
-            { key: 'online', label: 'Online (Web)', count: stats.count_online || 0 },
-            { key: 'offline', label: 'Offline (Otros)', count: stats.count_offline || 0 },
-          ].map(tab => (
-            <button
-              key={tab.key}
-              onClick={() => setFilter(tab.key)}
-              className={`px-4 py-2 text-xs font-medium rounded-lg border transition-all ${
-                filter === tab.key
-                  ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
-                  : 'bg-white/[0.02] text-gray-400 border-white/5 hover:border-white/10'
-              }`}
-            >
-              {tab.label} ({tab.count})
-            </button>
-          ))}
-        </div>
+            {/* Orders list */}
+            <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Pedidos web</h2>
+            {(data.orders || []).length === 0 ? (
+              <div className="text-center py-16 bg-white/[0.02] rounded-2xl border border-white/5">
+                <p className="text-gray-500 text-sm">No hay pedidos</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {(data.orders || []).map((order) => (
+                  <div
+                    key={order.id}
+                    className="bg-white/[0.02] rounded-xl border border-white/5 overflow-hidden hover:border-white/10 transition-colors"
+                  >
+                    <div
+                      className="p-4 md:p-5 cursor-pointer"
+                      onClick={() => setExpandedDoc(expandedDoc === order.id ? null : order.id)}
+                    >
+                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          {/* Ticket status badge */}
+                          {order.has_ticket ? (
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-semibold rounded-lg border bg-cyan-500/10 text-cyan-400 border-cyan-500/20 flex-shrink-0">
+                              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                              </svg>
+                              {order.ticket_holded}
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-semibold rounded-lg border bg-red-500/10 text-red-400 border-red-500/20 flex-shrink-0">
+                              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                              Ticket pendiente
+                            </span>
+                          )}
 
-        {/* Documents list */}
-        {filteredDocs.length === 0 ? (
-          <div className="text-center py-16 bg-white/[0.02] rounded-2xl border border-white/5">
-            <p className="text-gray-500 text-sm">No hay documentos para este filtro</p>
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {filteredDocs.map((doc) => (
-              <div
-                key={`${doc.type}-${doc.id}`}
-                className="bg-white/[0.02] rounded-xl border border-white/5 overflow-hidden hover:border-white/10 transition-colors"
-              >
-                {/* Document header */}
-                <div
-                  className="p-4 md:p-5 cursor-pointer"
-                  onClick={() => setExpandedDoc(expandedDoc === doc.id ? null : doc.id)}
-                >
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
-                    <div className="flex items-center gap-3 flex-1 min-w-0">
-                      {/* Channel badge */}
-                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-semibold rounded-lg border flex-shrink-0 ${
-                        doc.channel === 'online'
-                          ? 'bg-blue-500/10 text-blue-400 border-blue-500/20'
-                          : 'bg-amber-500/10 text-amber-400 border-amber-500/20'
-                      }`}>
-                        <span className="w-1.5 h-1.5 rounded-full bg-current"></span>
-                        {doc.channel === 'online' ? 'Web' : 'Otro'}
-                      </span>
+                          {/* Order number */}
+                          <span className="text-sm text-white font-mono font-medium">
+                            {order.order_number || `#${order.id}`}
+                          </span>
 
-                      {/* Type badge */}
-                      <span className={`text-[10px] font-medium px-2 py-0.5 rounded border ${
-                        doc.is_ticket
-                          ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20'
-                          : doc.type === 'invoice'
-                            ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
-                            : 'bg-purple-500/10 text-purple-400 border-purple-500/20'
-                      }`}>
-                        {doc.is_ticket ? 'Ticket' : doc.type === 'invoice' ? 'Factura' : 'Pedido'}
-                      </span>
+                          {/* Date */}
+                          <span className="text-xs text-gray-500 hidden md:inline">
+                            {formatDate(order.date)}
+                          </span>
 
-                      {/* Number */}
-                      <span className="text-sm text-white font-mono font-medium truncate">
-                        {doc.number || '—'}
-                      </span>
+                          {/* Payment status */}
+                          <span className={`text-[10px] font-medium px-2 py-0.5 rounded border ${
+                            order.payment_status === 'paid'
+                              ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                              : 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20'
+                          }`}>
+                            {order.payment_status === 'paid' ? 'Pagado' : order.payment_status || '—'}
+                          </span>
+                        </div>
 
-                      {/* Date */}
-                      <span className="text-xs text-gray-500 hidden md:inline">
-                        {formatDate(doc.date)}
-                      </span>
+                        <div className="flex items-center gap-4">
+                          <span className="text-xs text-gray-500 md:hidden">
+                            {formatDate(order.date)}
+                          </span>
+                          <span className="text-sm font-bold text-white font-mono">
+                            {formatCurrency(order.total)}
+                          </span>
+                          <svg
+                            className={`w-4 h-4 text-gray-500 transition-transform ${expandedDoc === order.id ? 'rotate-180' : ''}`}
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
+                      </div>
                     </div>
 
-                    <div className="flex items-center gap-4">
-                      <span className="text-xs text-gray-500 md:hidden">
-                        {formatDate(doc.date)}
-                      </span>
-                      <span className="text-sm font-bold text-white font-mono">
-                        {formatCurrency(doc.total)}
-                      </span>
-                      <svg
-                        className={`w-4 h-4 text-gray-500 transition-transform ${expandedDoc === doc.id ? 'rotate-180' : ''}`}
-                        fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Expanded items */}
-                {expandedDoc === doc.id && doc.items && doc.items.length > 0 && (
-                  <div className="border-t border-white/5 px-4 md:px-5 py-3 bg-white/[0.01]">
-                    <table className="w-full text-xs">
-                      <thead>
-                        <tr className="text-gray-500">
-                          <th className="text-left pb-2 font-medium">Producto</th>
-                          <th className="text-center pb-2 font-medium">Uds.</th>
-                          <th className="text-right pb-2 font-medium">Importe</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-white/5">
-                        {doc.items.map((item, idx) => (
-                          <tr key={idx}>
-                            <td className="py-1.5 text-gray-300 pr-4 truncate max-w-[200px]">{item.name}</td>
-                            <td className="py-1.5 text-gray-400 text-center">{item.units}</td>
-                            <td className="py-1.5 text-white text-right font-mono">{formatCurrency(item.subtotal)}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                    {doc.notes && (
-                      <p className="text-[10px] text-gray-600 mt-2 italic">Notas: {doc.notes}</p>
+                    {/* Expanded items */}
+                    {expandedDoc === order.id && order.items && order.items.length > 0 && (
+                      <div className="border-t border-white/5 px-4 md:px-5 py-3 bg-white/[0.01]">
+                        <table className="w-full text-xs">
+                          <thead>
+                            <tr className="text-gray-500">
+                              <th className="text-left pb-2 font-medium">Producto</th>
+                              <th className="text-center pb-2 font-medium">Uds.</th>
+                              <th className="text-right pb-2 font-medium">Importe</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-white/5">
+                            {order.items.map((item, idx) => (
+                              <tr key={idx}>
+                                <td className="py-1.5 text-gray-300 pr-4 truncate max-w-[200px]">{item.name || item.product_name || '—'}</td>
+                                <td className="py-1.5 text-gray-400 text-center">{item.quantity || item.units || 1}</td>
+                                <td className="py-1.5 text-white text-right font-mono">{formatCurrency(item.price || item.subtotal || 0)}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
                     )}
                   </div>
-                )}
+                ))}
               </div>
-            ))}
-          </div>
+            )}
+          </>
+        )}
+
+        {/* ===== B2B CLIENT VIEW ===== */}
+        {!isWebClient && (
+          <>
+            {/* Stats Cards */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+              <div className="bg-white/[0.02] rounded-xl border border-white/5 p-4">
+                <p className="text-xs text-gray-500 mb-1">Total documentos</p>
+                <p className="text-xl font-bold text-white">{data.stats?.total_documents || 0}</p>
+              </div>
+              <div className="bg-white/[0.02] rounded-xl border border-white/5 p-4">
+                <p className="text-xs text-gray-500 mb-1">Facturas</p>
+                <p className="text-xl font-bold text-emerald-400">{data.stats?.count_invoices || 0}</p>
+                <p className="text-[10px] text-gray-600 mt-0.5">{formatCurrency(data.stats?.total_invoices)}</p>
+              </div>
+              <div className="bg-white/[0.02] rounded-xl border border-white/5 p-4">
+                <p className="text-xs text-gray-500 mb-1">Tickets</p>
+                <p className="text-xl font-bold text-cyan-400">{data.stats?.count_tickets || 0}</p>
+                <p className="text-[10px] text-gray-600 mt-0.5">{formatCurrency(data.stats?.total_tickets)}</p>
+              </div>
+              <div className="bg-white/[0.02] rounded-xl border border-white/5 p-4">
+                <p className="text-xs text-gray-500 mb-1">Pedidos venta</p>
+                <p className="text-xl font-bold text-purple-400">{data.stats?.count_salesorders || 0}</p>
+                <p className="text-[10px] text-gray-600 mt-0.5">{formatCurrency(data.stats?.total_salesorders)}</p>
+              </div>
+            </div>
+
+            {/* Documents list */}
+            <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Historial de documentos</h2>
+            {(data.documents || []).length === 0 ? (
+              <div className="text-center py-16 bg-white/[0.02] rounded-2xl border border-white/5">
+                <p className="text-gray-500 text-sm">No hay documentos para este cliente</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {(data.documents || []).map((doc) => (
+                  <div
+                    key={`${doc.type}-${doc.id}`}
+                    className="bg-white/[0.02] rounded-xl border border-white/5 overflow-hidden hover:border-white/10 transition-colors"
+                  >
+                    <div
+                      className="p-4 md:p-5 cursor-pointer"
+                      onClick={() => setExpandedDoc(expandedDoc === doc.id ? null : doc.id)}
+                    >
+                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          {/* Type badge */}
+                          <span className={`text-[10px] font-semibold px-2.5 py-1 rounded-lg border flex-shrink-0 ${
+                            doc.is_ticket
+                              ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20'
+                              : doc.type === 'invoice'
+                                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                                : doc.type === 'salesreceipt'
+                                  ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20'
+                                  : 'bg-purple-500/10 text-purple-400 border-purple-500/20'
+                          }`}>
+                            {doc.is_ticket ? 'Ticket' : doc.type === 'invoice' ? 'Factura' : doc.type === 'salesreceipt' ? 'Ticket' : 'Pedido'}
+                          </span>
+
+                          {/* Number */}
+                          <span className="text-sm text-white font-mono font-medium truncate">
+                            {doc.number || '—'}
+                          </span>
+
+                          {/* Date */}
+                          <span className="text-xs text-gray-500 hidden md:inline">
+                            {formatDate(doc.date)}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center gap-4">
+                          <span className="text-xs text-gray-500 md:hidden">
+                            {formatDate(doc.date)}
+                          </span>
+                          <span className="text-sm font-bold text-white font-mono">
+                            {formatCurrency(doc.total)}
+                          </span>
+                          <svg
+                            className={`w-4 h-4 text-gray-500 transition-transform ${expandedDoc === doc.id ? 'rotate-180' : ''}`}
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Expanded items */}
+                    {expandedDoc === doc.id && doc.items && doc.items.length > 0 && (
+                      <div className="border-t border-white/5 px-4 md:px-5 py-3 bg-white/[0.01]">
+                        <table className="w-full text-xs">
+                          <thead>
+                            <tr className="text-gray-500">
+                              <th className="text-left pb-2 font-medium">Producto</th>
+                              <th className="text-center pb-2 font-medium">Uds.</th>
+                              <th className="text-right pb-2 font-medium">Importe</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-white/5">
+                            {doc.items.map((item, idx) => (
+                              <tr key={idx}>
+                                <td className="py-1.5 text-gray-300 pr-4 truncate max-w-[200px]">{item.name}</td>
+                                <td className="py-1.5 text-gray-400 text-center">{item.units}</td>
+                                <td className="py-1.5 text-white text-right font-mono">{formatCurrency(item.subtotal)}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                        {(doc.notes || doc.desc) && (
+                          <p className="text-[10px] text-gray-600 mt-2 italic">
+                            {doc.desc && <span>{doc.desc}</span>}
+                            {doc.notes && <span> · {doc.notes}</span>}
+                          </p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
         )}
 
         {/* Footer */}
         <div className="mt-5 mb-10">
           <p className="text-xs text-gray-600">
-            Mostrando {filteredDocs.length} de {documents.length} documentos · Datos sincronizados con Holded
+            {isWebClient
+              ? `${data.orders?.length || 0} pedidos web · Datos de Stripe/DB local`
+              : `${data.documents?.length || 0} documentos · Datos sincronizados con Holded`
+            }
           </p>
         </div>
       </div>
