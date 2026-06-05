@@ -192,15 +192,16 @@ export default function AdminOrders() {
           </div>
         ) : (
           <div className="space-y-3">
-            {filteredOrders.map((order) => {
+            {filteredOrders.map((order, index) => {
               const status = statusConfig[order.status] || statusConfig.pending;
+              const orderNum = orders.length - orders.indexOf(order);
               return (
                 <div key={order.id} className="bg-white/[0.02] rounded-xl border border-white/5 p-5 hover:border-white/10 transition-colors">
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     {/* Order info */}
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-1.5">
-                        <span className="text-sm text-white font-bold font-mono">#{order.id}</span>
+                        <span className="text-sm text-white font-bold font-mono">#{orderNum}</span>
                         <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-semibold rounded-lg border ${colorMap[status.color]}`}>
                           <span className="w-1.5 h-1.5 rounded-full bg-current"></span>
                           {status.label}
