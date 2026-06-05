@@ -224,11 +224,13 @@ export default function AdminClientDetail() {
 
                       {/* Type badge */}
                       <span className={`text-[10px] font-medium px-2 py-0.5 rounded border ${
-                        doc.type === 'invoice'
-                          ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
-                          : 'bg-purple-500/10 text-purple-400 border-purple-500/20'
+                        doc.is_ticket
+                          ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20'
+                          : doc.type === 'invoice'
+                            ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                            : 'bg-purple-500/10 text-purple-400 border-purple-500/20'
                       }`}>
-                        {doc.type === 'invoice' ? 'Factura' : 'Pedido'}
+                        {doc.is_ticket ? 'Ticket' : doc.type === 'invoice' ? 'Factura' : 'Pedido'}
                       </span>
 
                       {/* Number */}
