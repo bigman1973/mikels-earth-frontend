@@ -72,7 +72,7 @@ export default function AdminClientDetail() {
       <AdminLayout>
         <div className="flex flex-col items-center justify-center py-32 gap-4">
           <p className="text-gray-400">Cliente no encontrado</p>
-          <button onClick={() => navigate('/admin/clients')} className="text-emerald-400 text-sm hover:underline">
+          <button onClick={() => navigate('/admin/clientes')} className="text-emerald-400 text-sm hover:underline">
             ← Volver a clientes
           </button>
         </div>
@@ -85,7 +85,7 @@ export default function AdminClientDetail() {
       <div className="max-w-7xl mx-auto">
         {/* Back button */}
         <button
-          onClick={() => navigate('/admin/clients')}
+          onClick={() => navigate('/admin/clientes')}
           className="flex items-center gap-2 text-gray-400 hover:text-white text-sm mb-6 transition-colors"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
