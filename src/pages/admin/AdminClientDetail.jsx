@@ -51,7 +51,7 @@ export default function AdminClientDetail() {
 
   const formatCurrency = (amount) => {
     if (!amount && amount !== 0) return '0,00€';
-    return `${parseFloat(amount).toFixed(2).replace('.', ',')}€`;
+    return parseFloat(amount).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '€';
   };
 
   if (loading) {

@@ -119,7 +119,7 @@ export default function AdminClients() {
                       </td>
                       <td className="px-5 py-3.5 text-right">
                         <span className="text-sm text-emerald-400 font-bold font-mono">
-                          {client.total_invoiced ? `${client.total_invoiced.toFixed(2)}€` : '0€'}
+                          {client.total_invoiced ? client.total_invoiced.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '€' : '0€'}
                         </span>
                       </td>
                     </tr>
@@ -148,7 +148,7 @@ export default function AdminClients() {
                       <p className="text-xs text-gray-500 truncate">{client.email || '—'}</p>
                     </div>
                     <span className="text-sm text-emerald-400 font-bold font-mono flex-shrink-0">
-                      {client.total_invoiced ? `${client.total_invoiced.toFixed(2)}€` : '0€'}
+                      {client.total_invoiced ? client.total_invoiced.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '€' : '0€'}
                     </span>
                   </div>
                   {(client.phone || client.mobile) && (

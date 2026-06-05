@@ -134,7 +134,7 @@ export default function AdminOrders() {
             <p className="text-xs text-purple-400/70 mt-1">En tránsito</p>
           </div>
           <div className="bg-emerald-500/5 rounded-xl border border-emerald-500/10 p-4">
-            <p className="text-2xl font-bold text-emerald-400">{stats.revenue.toFixed(2)}€</p>
+            <p className="text-2xl font-bold text-emerald-400">{stats.revenue.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}€</p>
             <p className="text-xs text-emerald-400/70 mt-1">Facturación</p>
           </div>
         </div>
@@ -224,7 +224,7 @@ export default function AdminOrders() {
                     {/* Amount + Actions */}
                     <div className="flex items-center gap-4">
                       <span className="text-lg text-white font-bold font-mono">
-                        {order.total ? `${order.total.toFixed(2)}€` : '—'}
+                        {order.total ? order.total.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '€' : '—'}
                       </span>
                       <div className="flex gap-2">
                         {!order.holded_id && (

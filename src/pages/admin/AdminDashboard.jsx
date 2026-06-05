@@ -219,7 +219,7 @@ export default function AdminDashboard() {
                             <p className="text-xs text-gray-500 mt-0.5">{formatDate(order.date)}</p>
                           </div>
                           <div className="text-right ml-3">
-                            <p className="text-sm font-bold text-emerald-400">{order.total ? `${order.total.toFixed(2)}€` : '—'}</p>
+                            <p className="text-sm font-bold text-emerald-400">{order.total ? order.total.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '€' : '—'}</p>
                             <StatusBadge status={order.status} />
                           </div>
                         </div>
