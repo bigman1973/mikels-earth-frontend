@@ -11,6 +11,8 @@ export default function AdminOrders() {
   const [filter, setFilter] = useState('all');
   const [actionLoading, setActionLoading] = useState(null);
   const [expandedOrder, setExpandedOrder] = useState(null);
+  const [syncing, setSyncing] = useState(false);
+  const [syncMessage, setSyncMessage] = useState(null);
 
   useEffect(() => {
     loadOrders();
@@ -87,12 +89,42 @@ export default function AdminOrders() {
     }
   };
 
+  const syncStripe = async () => {
+    setSyncing(true);
+    setSyncMessage(null);
+    try {
+      const res = await authFetch(`${API_URL}/api/admin/orders/sync-stripe`, { method: 'POST' });
+      if (!res) {
+        setSyncMessage({ type: 'error', text: 'Sesión expirada. Cierra sesión y vuelve a iniciar.' });
+        return;
+      }
+      if (res.ok) {
+        const data = await res.json();
+        if (data.updated && data.updated.length > 0) {
+          setSyncMessage({ type: 'success', text: `\u2705 ${data.updated.length} pedido(s) actualizado(s): ${data.updated.map(u => u.order + ' \u2192 ' + u.new_status).join(', ')}` });
+          loadOrders();
+        } else {
+          setSyncMessage({ type: 'success', text: '\u2705 Todo sincronizado. No hay reembolsos nuevos.' });
+        }
+      } else {
+        const err = await res.json().catch(() => ({ error: 'Error desconocido' }));
+        setSyncMessage({ type: 'error', text: `Error: ${err.error}` });
+      }
+    } catch (err) {
+      setSyncMessage({ type: 'error', text: `Error de conexión: ${err.message}` });
+    } finally {
+      setSyncing(false);
+    }
+  };
+
   const statusConfig = {
     pending: { label: 'Pendiente', color: 'amber' },
     paid: { label: 'Pagado', color: 'blue' },
     shipped: { label: 'Enviado', color: 'purple' },
     delivered: { label: 'Entregado', color: 'emerald' },
     cancelled: { label: 'Cancelado', color: 'red' },
+    refunded: { label: 'Reembolsado', color: 'red' },
+    partially_refunded: { label: 'Reembolso parcial', color: 'orange' },
   };
 
   const colorMap = {
@@ -101,6 +133,7 @@ export default function AdminOrders() {
     purple: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
     emerald: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
     red: 'bg-red-500/10 text-red-400 border-red-500/20',
+    orange: 'bg-orange-500/10 text-orange-400 border-orange-500/20',
   };
 
   const filteredOrders = orders.filter(o => {
@@ -110,6 +143,7 @@ export default function AdminOrders() {
       o.order_number?.toLowerCase().includes(search.toLowerCase()) ||
       o.id?.toString().includes(search);
     if (filter === 'all') return matchesSearch;
+    if (filter === 'refunded') return matchesSearch && ['refunded', 'partially_refunded', 'cancelled'].includes(o.payment_status);
     return matchesSearch && o.status === filter;
   });
 
@@ -117,8 +151,9 @@ export default function AdminOrders() {
     total: orders.length,
     pending: orders.filter(o => o.status === 'pending' || o.status === 'paid').length,
     shipped: orders.filter(o => o.status === 'shipped').length,
-    revenue: orders.filter(o => o.status !== 'cancelled').reduce((sum, o) => sum + (o.total || 0), 0),
+    revenue: orders.filter(o => !['cancelled', 'refunded'].includes(o.payment_status)).reduce((sum, o) => sum + (o.total || 0), 0),
     invoiced: orders.filter(o => o.holded_invoice_id).length,
+    refunded: orders.filter(o => ['refunded', 'partially_refunded', 'cancelled'].includes(o.payment_status)).length,
   };
 
   return (
@@ -132,16 +167,28 @@ export default function AdminOrders() {
               Gestión de pedidos · Facturación inteligente (F/T)
             </p>
           </div>
-          <button
-            onClick={loadOrders}
-            disabled={loading}
-            className="flex items-center gap-2 px-4 py-2.5 bg-white/5 hover:bg-white/10 text-gray-300 text-sm rounded-xl border border-white/10 transition-all disabled:opacity-50"
-          >
-            <svg className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-            </svg>
-            Actualizar
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={syncStripe}
+              disabled={syncing}
+              className="flex items-center gap-2 px-4 py-2.5 bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 text-sm rounded-xl border border-purple-500/20 transition-all disabled:opacity-50"
+            >
+              <svg className={`w-4 h-4 ${syncing ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              {syncing ? 'Sincronizando...' : 'Sync Stripe'}
+            </button>
+            <button
+              onClick={loadOrders}
+              disabled={loading}
+              className="flex items-center gap-2 px-4 py-2.5 bg-white/5 hover:bg-white/10 text-gray-300 text-sm rounded-xl border border-white/10 transition-all disabled:opacity-50"
+            >
+              <svg className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              Actualizar
+            </button>
+          </div>
         </div>
 
         {/* Stats */}
@@ -166,7 +213,23 @@ export default function AdminOrders() {
             <p className="text-2xl font-bold text-cyan-400">{stats.invoiced}</p>
             <p className="text-xs text-cyan-400/70 mt-1">Facturados/Ticket</p>
           </div>
+          {stats.refunded > 0 && (
+            <div className="bg-red-500/5 rounded-xl border border-red-500/10 p-4">
+              <p className="text-2xl font-bold text-red-400">{stats.refunded}</p>
+              <p className="text-xs text-red-400/70 mt-1">Anulados</p>
+            </div>
+          )}
         </div>
+
+        {/* Sync message */}
+        {syncMessage && (
+          <div className={`mb-4 p-3 rounded-xl border text-sm flex items-center justify-between ${
+            syncMessage.type === 'success' ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' : 'bg-red-500/10 border-red-500/20 text-red-400'
+          }`}>
+            <span>{syncMessage.text}</span>
+            <button onClick={() => setSyncMessage(null)} className="ml-3 opacity-60 hover:opacity-100">✕</button>
+          </div>
+        )}
 
         {/* Filters */}
         <div className="flex flex-col sm:flex-row gap-3 mb-6">
@@ -189,6 +252,7 @@ export default function AdminOrders() {
               { key: 'paid', label: 'Pagado' },
               { key: 'shipped', label: 'Enviado' },
               { key: 'delivered', label: 'Entregado' },
+              { key: 'refunded', label: 'Anulado' },
             ].map(f => (
               <button
                 key={f.key}
@@ -266,7 +330,9 @@ export default function AdminOrders() {
 
                       {/* Amount + Actions */}
                       <div className="flex items-center gap-4">
-                        <span className="text-lg text-white font-bold font-mono">
+                        <span className={`text-lg font-bold font-mono ${
+                          ['refunded', 'partially_refunded', 'cancelled'].includes(order.payment_status) ? 'text-red-400 line-through' : 'text-white'
+                        }`}>
                           {order.total ? order.total.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '€' : '—'}
                         </span>
                         <div className="flex gap-2">
