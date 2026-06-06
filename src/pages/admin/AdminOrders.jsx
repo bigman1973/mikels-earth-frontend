@@ -336,43 +336,54 @@ export default function AdminOrders() {
                           {order.total ? order.total.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '€' : '—'}
                         </span>
                         <div className="flex gap-2">
-                          {!order.holded_id && (
-                            <button
-                              onClick={() => createInHolded(order.id)}
-                              disabled={actionLoading === `holded-${order.id}`}
-                              className="flex items-center gap-1.5 px-3 py-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 text-xs rounded-lg border border-blue-500/20 transition-all disabled:opacity-50 font-medium"
-                            >
+                          {['refunded', 'partially_refunded', 'cancelled'].includes(order.payment_status) ? (
+                            <span className="flex items-center gap-1.5 px-3 py-2 bg-red-500/10 text-red-400 text-xs rounded-lg border border-red-500/20 font-medium">
                               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                               </svg>
-                              {actionLoading === `holded-${order.id}` ? 'Creando...' : 'Holded'}
-                            </button>
-                          )}
-                          {!order.holded_invoice_id ? (
-                            <button
-                              onClick={() => createInvoice(order.id)}
-                              disabled={actionLoading === `invoice-${order.id}`}
-                              className={`flex items-center gap-1.5 px-3 py-2 text-xs rounded-lg border transition-all disabled:opacity-50 font-medium ${
-                                willBeInvoice 
-                                  ? 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border-emerald-500/20'
-                                  : 'bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border-cyan-500/20'
-                              }`}
-                            >
-                              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                              </svg>
-                              {actionLoading === `invoice-${order.id}` 
-                                ? 'Generando...' 
-                                : willBeInvoice ? 'Factura (F)' : 'Ticket (T)'
-                              }
-                            </button>
-                          ) : (
-                            <span className="flex items-center gap-1.5 px-3 py-2 bg-white/5 text-gray-400 text-xs rounded-lg border border-white/10 font-medium">
-                              <svg className="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                              </svg>
-                              {order.holded_doc_number || 'Generado'}
+                              Anulado
                             </span>
+                          ) : (
+                            <>
+                              {!order.holded_id && (
+                                <button
+                                  onClick={() => createInHolded(order.id)}
+                                  disabled={actionLoading === `holded-${order.id}`}
+                                  className="flex items-center gap-1.5 px-3 py-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 text-xs rounded-lg border border-blue-500/20 transition-all disabled:opacity-50 font-medium"
+                                >
+                                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                  </svg>
+                                  {actionLoading === `holded-${order.id}` ? 'Creando...' : 'Holded'}
+                                </button>
+                              )}
+                              {!order.holded_invoice_id ? (
+                                <button
+                                  onClick={() => createInvoice(order.id)}
+                                  disabled={actionLoading === `invoice-${order.id}`}
+                                  className={`flex items-center gap-1.5 px-3 py-2 text-xs rounded-lg border transition-all disabled:opacity-50 font-medium ${
+                                    willBeInvoice 
+                                      ? 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border-emerald-500/20'
+                                      : 'bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border-cyan-500/20'
+                                  }`}
+                                >
+                                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                  </svg>
+                                  {actionLoading === `invoice-${order.id}` 
+                                    ? 'Generando...' 
+                                    : willBeInvoice ? 'Factura (F)' : 'Ticket (T)'
+                                  }
+                                </button>
+                              ) : (
+                                <span className="flex items-center gap-1.5 px-3 py-2 bg-white/5 text-gray-400 text-xs rounded-lg border border-white/10 font-medium">
+                                  <svg className="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                  </svg>
+                                  {order.holded_doc_number || 'Generado'}
+                                </span>
+                              )}
+                            </>
                           )}
                         </div>
                       </div>
