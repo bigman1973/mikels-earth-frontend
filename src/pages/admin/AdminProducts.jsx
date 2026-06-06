@@ -74,18 +74,21 @@ export default function AdminProducts() {
   };
 
   // Calcular margen para cada producto
+  // Precio web incluye IVA, coste y holded_price son sin IVA
+  // Para calcular margen real: precio web sin IVA vs coste
   const productsWithMargin = useMemo(() => {
     return products.map(p => {
       const cost = p.cost || 0;
       const webPrice = p.web_price || 0;
-      const holdedPrice = p.holded_price || 0;
+      const ivaRate = p.iva_rate || 0.04; // 4% por defecto (AOVE)
+      const webPriceNoIva = webPrice > 0 ? webPrice / (1 + ivaRate) : 0;
       let marginPercent = null;
       let marginAbsolute = null;
-      if (webPrice > 0 && cost > 0) {
-        marginAbsolute = webPrice - cost;
-        marginPercent = ((webPrice - cost) / cost) * 100;
+      if (webPriceNoIva > 0 && cost > 0) {
+        marginAbsolute = webPriceNoIva - cost;
+        marginPercent = ((webPriceNoIva - cost) / cost) * 100;
       }
-      return { ...p, cost, marginPercent, marginAbsolute };
+      return { ...p, cost, marginPercent, marginAbsolute, webPriceNoIva, ivaRate };
     });
   }, [products]);
 
@@ -98,6 +101,7 @@ export default function AdminProducts() {
       if (filter === 'price_diff') return matchesSearch && p.synced === false;
       if (filter === 'no_stock') return matchesSearch && (p.stock <= 0);
       if (filter === 'web_only') return matchesSearch && p.web_price;
+      if (filter === 'web_no_holded') return matchesSearch && p.source === 'web_only';
       return matchesSearch;
     });
 
@@ -143,7 +147,7 @@ export default function AdminProducts() {
           <div>
             <h1 className="text-2xl font-bold text-white tracking-tight">Productos</h1>
             <p className="text-gray-500 text-sm mt-1">
-              {products.length} productos en Holded · {webStats.count} en la web · Margen medio: {webStats.avgMargin.toFixed(1)}%
+              {products.length} en Holded · {webStats.count} en web · Margen medio: {webStats.avgMargin.toFixed(1)}% · <span className="text-gray-600">(Coste y Holded = sin IVA | Web = con IVA)</span>
             </p>
           </div>
           <div className="flex gap-2">
@@ -216,6 +220,7 @@ export default function AdminProducts() {
             {[
               { key: 'web_only', label: 'En Web' },
               { key: 'all', label: 'Todos' },
+              { key: 'web_no_holded', label: 'Solo Web' },
               { key: 'price_diff', label: 'Precio ≠' },
               { key: 'no_stock', label: 'Sin Stock' },
             ].map(f => (
@@ -254,12 +259,15 @@ export default function AdminProducts() {
                       <th className="text-left px-3 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">SKU</th>
                       <th className="text-right px-3 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">
                         <span className="text-red-400">Coste</span>
+                        <span className="block text-[9px] text-gray-600 normal-case">sin IVA</span>
                       </th>
                       <th className="text-right px-3 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">
                         <span className="text-gray-400">PVP Holded</span>
+                        <span className="block text-[9px] text-gray-600 normal-case">sin IVA</span>
                       </th>
                       <th className="text-right px-3 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">
                         <span className="text-emerald-400">Precio Web</span>
+                        <span className="block text-[9px] text-gray-600 normal-case">con IVA</span>
                       </th>
                       <th className="text-right px-3 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">
                         <span className="text-blue-400">Margen</span>
