@@ -1,14 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useAdminAuth } from '../../context/AdminAuthContext';
 import { API_URL } from '../../config/api';
 import { Link } from 'react-router-dom';
 import AdminLayout from '../../components/admin/AdminLayout';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 
 export default function AdminDashboard() {
   const { authFetch, user } = useAdminAuth();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [orders, setOrders] = useState([]);
 
   useEffect(() => {
     loadDashboard();
@@ -18,18 +20,53 @@ export default function AdminDashboard() {
     setLoading(true);
     setError(null);
     try {
-      const res = await authFetch(`${API_URL}/api/admin/dashboard`);
-      if (res && res.ok) {
-        const json = await res.json();
+      const [dashRes, ordersRes] = await Promise.all([
+        authFetch(`${API_URL}/api/admin/dashboard`),
+        authFetch(`${API_URL}/api/admin/orders`)
+      ]);
+      if (dashRes && dashRes.ok) {
+        const json = await dashRes.json();
         setData(json);
       } else {
         setError('No se pudieron cargar los datos.');
+      }
+      if (ordersRes && ordersRes.ok) {
+        const ordersJson = await ordersRes.json();
+        setOrders(ordersJson.orders || []);
       }
     } catch (err) {
       setError('Error de conexión con el servidor.');
     } finally {
       setLoading(false);
     }
+  };
+
+  // Calcular datos mensuales de ventas
+  const monthlyData = useMemo(() => {
+    const months = {};
+    orders.forEach(o => {
+      if (!o.created_at) return;
+      // Excluir pedidos cancelados/reembolsados
+      if (['cancelled', 'refunded'].includes(o.payment_status)) return;
+      const d = new Date(o.created_at);
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      if (!months[key]) {
+        months[key] = { month: key, orders: 0, revenue: 0, avgTicket: 0 };
+      }
+      months[key].orders += 1;
+      months[key].revenue += (o.total || 0);
+    });
+    // Calcular ticket medio
+    Object.values(months).forEach(m => {
+      m.avgTicket = m.orders > 0 ? m.revenue / m.orders : 0;
+    });
+    return Object.values(months).sort((a, b) => a.month.localeCompare(b.month));
+  }, [orders]);
+
+  const formatMonthLabel = (key) => {
+    const [year, month] = key.split('-');
+    const d = new Date(year, parseInt(month) - 1);
+    return d.toLocaleDateString('es-ES', { month: 'short', year: '2-digit' }).replace('.', '');
   };
 
   const formatDate = (dateStr) => {
@@ -231,6 +268,96 @@ export default function AdminDashboard() {
                 </div>
               </div>
             </div>
+
+            {/* Evolución Mensual de Ventas */}
+            {monthlyData.length > 0 && (
+              <div className="bg-white/[0.02] rounded-2xl border border-white/5 overflow-hidden mb-6">
+                <div className="px-5 py-4 border-b border-white/5 flex items-center justify-between">
+                  <h2 className="text-sm font-semibold text-white flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+                    Evolución Mensual de Ventas
+                  </h2>
+                  <div className="flex items-center gap-4 text-[10px] text-gray-500">
+                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-sm bg-emerald-500"></span>Facturación</span>
+                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-sm bg-blue-400"></span>Pedidos</span>
+                  </div>
+                </div>
+                <div className="p-5">
+                  <div className="h-64">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart data={monthlyData} margin={{ top: 5, right: 10, left: 10, bottom: 5 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                        <XAxis 
+                          dataKey="month" 
+                          tickFormatter={formatMonthLabel}
+                          tick={{ fill: '#9ca3af', fontSize: 11 }}
+                          axisLine={{ stroke: 'rgba(255,255,255,0.1)' }}
+                          tickLine={false}
+                        />
+                        <YAxis 
+                          yAxisId="revenue"
+                          tick={{ fill: '#9ca3af', fontSize: 11 }}
+                          axisLine={false}
+                          tickLine={false}
+                          tickFormatter={(v) => `${v.toFixed(0)}€`}
+                        />
+                        <YAxis 
+                          yAxisId="orders"
+                          orientation="right"
+                          tick={{ fill: '#9ca3af', fontSize: 11 }}
+                          axisLine={false}
+                          tickLine={false}
+                        />
+                        <Tooltip 
+                          contentStyle={{ backgroundColor: '#1f2937', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', fontSize: '12px' }}
+                          labelStyle={{ color: '#fff', marginBottom: '4px' }}
+                          labelFormatter={formatMonthLabel}
+                          formatter={(value, name) => {
+                            if (name === 'revenue') return [`${value.toFixed(2)}€`, 'Facturación'];
+                            if (name === 'orders') return [value, 'Pedidos'];
+                            return [value, name];
+                          }}
+                        />
+                        <Bar yAxisId="revenue" dataKey="revenue" fill="#10b981" radius={[6, 6, 0, 0]} opacity={0.85} />
+                        <Bar yAxisId="orders" dataKey="orders" fill="#60a5fa" radius={[6, 6, 0, 0]} opacity={0.7} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+
+                  {/* Tabla resumen mensual */}
+                  <div className="mt-5 overflow-x-auto">
+                    <table className="w-full text-xs">
+                      <thead>
+                        <tr className="border-b border-white/5">
+                          <th className="text-left py-2 px-3 text-gray-500 font-medium">Mes</th>
+                          <th className="text-right py-2 px-3 text-gray-500 font-medium">Pedidos</th>
+                          <th className="text-right py-2 px-3 text-gray-500 font-medium">Facturación</th>
+                          <th className="text-right py-2 px-3 text-gray-500 font-medium">Ticket Medio</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {[...monthlyData].reverse().map(m => (
+                          <tr key={m.month} className="border-b border-white/5 hover:bg-white/[0.02]">
+                            <td className="py-2.5 px-3 text-white font-medium capitalize">{formatMonthLabel(m.month)}</td>
+                            <td className="py-2.5 px-3 text-right text-gray-300">{m.orders}</td>
+                            <td className="py-2.5 px-3 text-right text-emerald-400 font-mono font-medium">{m.revenue.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}€</td>
+                            <td className="py-2.5 px-3 text-right text-blue-400 font-mono">{m.avgTicket.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}€</td>
+                          </tr>
+                        ))}
+                        <tr className="border-t-2 border-white/10 font-bold">
+                          <td className="py-2.5 px-3 text-white">TOTAL</td>
+                          <td className="py-2.5 px-3 text-right text-white">{monthlyData.reduce((s, m) => s + m.orders, 0)}</td>
+                          <td className="py-2.5 px-3 text-right text-emerald-400 font-mono">{monthlyData.reduce((s, m) => s + m.revenue, 0).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}€</td>
+                          <td className="py-2.5 px-3 text-right text-blue-400 font-mono">
+                            {(monthlyData.reduce((s, m) => s + m.revenue, 0) / Math.max(monthlyData.reduce((s, m) => s + m.orders, 0), 1)).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}€
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* System Status */}
             <div className="bg-white/[0.02] rounded-2xl border border-white/5 overflow-hidden">

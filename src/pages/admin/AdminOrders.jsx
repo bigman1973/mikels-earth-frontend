@@ -13,6 +13,7 @@ export default function AdminOrders() {
   const [expandedOrder, setExpandedOrder] = useState(null);
   const [syncing, setSyncing] = useState(false);
   const [syncMessage, setSyncMessage] = useState(null);
+  const [monthFilter, setMonthFilter] = useState('all');
 
   useEffect(() => {
     loadOrders();
@@ -136,15 +137,37 @@ export default function AdminOrders() {
     orange: 'bg-orange-500/10 text-orange-400 border-orange-500/20',
   };
 
+  // Generar opciones de meses disponibles a partir de los pedidos
+  const monthOptions = (() => {
+    const months = new Set();
+    orders.forEach(o => {
+      if (o.created_at) {
+        const d = new Date(o.created_at);
+        const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+        months.add(key);
+      }
+    });
+    return Array.from(months).sort().reverse();
+  })();
+
   const filteredOrders = orders.filter(o => {
     const matchesSearch = !search || 
       o.customer_email?.toLowerCase().includes(search.toLowerCase()) ||
       o.customer_name?.toLowerCase().includes(search.toLowerCase()) ||
       o.order_number?.toLowerCase().includes(search.toLowerCase()) ||
       o.id?.toString().includes(search);
-    if (filter === 'all') return matchesSearch;
-    if (filter === 'refunded') return matchesSearch && ['refunded', 'partially_refunded', 'cancelled'].includes(o.payment_status);
-    return matchesSearch && o.status === filter;
+    
+    // Filtro por mes
+    const matchesMonth = monthFilter === 'all' || (() => {
+      if (!o.created_at) return false;
+      const d = new Date(o.created_at);
+      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      return key === monthFilter;
+    })();
+
+    if (filter === 'all') return matchesSearch && matchesMonth;
+    if (filter === 'refunded') return matchesSearch && matchesMonth && ['refunded', 'partially_refunded', 'cancelled'].includes(o.payment_status);
+    return matchesSearch && matchesMonth && o.status === filter;
   });
 
   const stats = {
@@ -245,6 +268,18 @@ export default function AdminOrders() {
               className="w-full pl-10 pr-4 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition-all"
             />
           </div>
+          <select
+            value={monthFilter}
+            onChange={(e) => setMonthFilter(e.target.value)}
+            className="px-3 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition-all appearance-none cursor-pointer min-w-[140px]"
+          >
+            <option value="all" className="bg-gray-900">Todos los meses</option>
+            {monthOptions.map(m => {
+              const [year, month] = m.split('-');
+              const label = new Date(year, parseInt(month) - 1).toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
+              return <option key={m} value={m} className="bg-gray-900">{label.charAt(0).toUpperCase() + label.slice(1)}</option>;
+            })}
+          </select>
           <div className="flex gap-1 bg-white/[0.03] p-1 rounded-xl border border-white/5 overflow-x-auto">
             {[
               { key: 'all', label: 'Todos' },
