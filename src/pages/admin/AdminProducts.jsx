@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useAdminAuth } from '../../context/AdminAuthContext';
 import { API_URL } from '../../config/api';
 import AdminLayout from '../../components/admin/AdminLayout';
@@ -8,11 +8,12 @@ export default function AdminProducts() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
-  const [filter, setFilter] = useState('all');
+  const [filter, setFilter] = useState('web_only');
   const [syncing, setSyncing] = useState(false);
   const [message, setMessage] = useState(null);
   const [editingPrice, setEditingPrice] = useState(null);
   const [newPrice, setNewPrice] = useState('');
+  const [sortBy, setSortBy] = useState('margin_desc');
 
   useEffect(() => {
     loadProducts();
@@ -72,16 +73,67 @@ export default function AdminProducts() {
     }
   };
 
-  const filteredProducts = products.filter(p => {
-    const matchesSearch = !search || 
-      p.name?.toLowerCase().includes(search.toLowerCase()) ||
-      p.sku?.toLowerCase().includes(search.toLowerCase());
-    
-    if (filter === 'price_diff') return matchesSearch && p.synced === false;
-    if (filter === 'no_stock') return matchesSearch && (p.stock <= 0);
-    if (filter === 'web_only') return matchesSearch && p.web_price;
-    return matchesSearch;
-  });
+  // Calcular margen para cada producto
+  const productsWithMargin = useMemo(() => {
+    return products.map(p => {
+      const cost = p.cost || 0;
+      const webPrice = p.web_price || 0;
+      const holdedPrice = p.holded_price || 0;
+      let marginPercent = null;
+      let marginAbsolute = null;
+      if (webPrice > 0 && cost > 0) {
+        marginAbsolute = webPrice - cost;
+        marginPercent = ((webPrice - cost) / cost) * 100;
+      }
+      return { ...p, cost, marginPercent, marginAbsolute };
+    });
+  }, [products]);
+
+  const filteredProducts = useMemo(() => {
+    let filtered = productsWithMargin.filter(p => {
+      const matchesSearch = !search || 
+        p.name?.toLowerCase().includes(search.toLowerCase()) ||
+        p.sku?.toLowerCase().includes(search.toLowerCase());
+      
+      if (filter === 'price_diff') return matchesSearch && p.synced === false;
+      if (filter === 'no_stock') return matchesSearch && (p.stock <= 0);
+      if (filter === 'web_only') return matchesSearch && p.web_price;
+      return matchesSearch;
+    });
+
+    // Ordenar
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case 'margin_desc': return (b.marginPercent || -999) - (a.marginPercent || -999);
+        case 'margin_asc': return (a.marginPercent || 999) - (b.marginPercent || 999);
+        case 'price_desc': return (b.web_price || 0) - (a.web_price || 0);
+        case 'price_asc': return (a.web_price || 0) - (b.web_price || 0);
+        case 'cost_desc': return (b.cost || 0) - (a.cost || 0);
+        case 'cost_asc': return (a.cost || 0) - (b.cost || 0);
+        case 'name_asc': return (a.name || '').localeCompare(b.name || '');
+        case 'name_desc': return (b.name || '').localeCompare(a.name || '');
+        default: return 0;
+      }
+    });
+
+    return filtered;
+  }, [productsWithMargin, search, filter, sortBy]);
+
+  // Stats de productos en web
+  const webStats = useMemo(() => {
+    const webProducts = productsWithMargin.filter(p => p.web_price);
+    const totalCost = webProducts.reduce((s, p) => s + (p.cost || 0), 0);
+    const totalWebPrice = webProducts.reduce((s, p) => s + (p.web_price || 0), 0);
+    const avgMargin = webProducts.filter(p => p.marginPercent !== null).length > 0
+      ? webProducts.filter(p => p.marginPercent !== null).reduce((s, p) => s + p.marginPercent, 0) / webProducts.filter(p => p.marginPercent !== null).length
+      : 0;
+    return {
+      count: webProducts.length,
+      avgMargin,
+      totalCost,
+      totalWebPrice
+    };
+  }, [productsWithMargin]);
 
   return (
     <AdminLayout>
@@ -91,7 +143,7 @@ export default function AdminProducts() {
           <div>
             <h1 className="text-2xl font-bold text-white tracking-tight">Productos</h1>
             <p className="text-gray-500 text-sm mt-1">
-              {products.length} productos en Holded · Comparación y sincronización manual
+              {products.length} productos en Holded · {webStats.count} en la web · Margen medio: {webStats.avgMargin.toFixed(1)}%
             </p>
           </div>
           <div className="flex gap-2">
@@ -146,17 +198,31 @@ export default function AdminProducts() {
               className="w-full pl-10 pr-4 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition-all"
             />
           </div>
-          <div className="flex gap-1 bg-white/[0.03] p-1 rounded-xl border border-white/5">
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="px-3 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition-all appearance-none cursor-pointer min-w-[150px]"
+          >
+            <option value="margin_desc" className="bg-gray-900">Mayor margen</option>
+            <option value="margin_asc" className="bg-gray-900">Menor margen</option>
+            <option value="price_desc" className="bg-gray-900">Mayor precio web</option>
+            <option value="price_asc" className="bg-gray-900">Menor precio web</option>
+            <option value="cost_desc" className="bg-gray-900">Mayor coste</option>
+            <option value="cost_asc" className="bg-gray-900">Menor coste</option>
+            <option value="name_asc" className="bg-gray-900">A-Z</option>
+            <option value="name_desc" className="bg-gray-900">Z-A</option>
+          </select>
+          <div className="flex gap-1 bg-white/[0.03] p-1 rounded-xl border border-white/5 overflow-x-auto">
             {[
+              { key: 'web_only', label: 'En Web' },
               { key: 'all', label: 'Todos' },
               { key: 'price_diff', label: 'Precio ≠' },
               { key: 'no_stock', label: 'Sin Stock' },
-              { key: 'web_only', label: 'En Web' },
             ].map(f => (
               <button
                 key={f.key}
                 onClick={() => setFilter(f.key)}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap ${
                   filter === f.key 
                     ? 'bg-white/10 text-white' 
                     : 'text-gray-500 hover:text-gray-300'
@@ -180,105 +246,120 @@ export default function AdminProducts() {
           <>
             {/* Desktop Table */}
             <div className="hidden md:block bg-white/[0.02] rounded-2xl border border-white/5 overflow-hidden">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-white/5">
-                    <th className="text-left px-5 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">Producto</th>
-                    <th className="text-left px-5 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">SKU</th>
-                    <th className="text-right px-5 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">Precio Holded</th>
-                    <th className="text-right px-5 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">Precio Web</th>
-                    <th className="text-right px-5 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">Stock</th>
-                    <th className="text-center px-5 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">Estado</th>
-                    <th className="text-right px-5 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">Acciones</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-white/5">
-                  {filteredProducts.map((product, i) => (
-                    <tr key={i} className="hover:bg-white/[0.02] transition-colors group">
-                      <td className="px-5 py-3.5">
-                        <p className="text-sm text-white font-medium truncate max-w-[250px]">{product.name}</p>
-                        {product.web_name && product.web_name !== product.name && (
-                          <p className="text-[11px] text-gray-500 truncate mt-0.5">Web: {product.web_name}</p>
-                        )}
-                      </td>
-                      <td className="px-5 py-3.5">
-                        <span className="text-xs text-gray-500 font-mono">{product.sku || '—'}</span>
-                      </td>
-                      <td className="px-5 py-3.5 text-right">
-                        <span className="text-sm text-gray-300 font-medium font-mono">
-                          {product.holded_price ? `${product.holded_price.toFixed(2)}€` : '—'}
-                        </span>
-                      </td>
-                      <td className="px-5 py-3.5 text-right">
-                        {editingPrice === i ? (
-                          <div className="flex items-center justify-end gap-2">
-                            <input
-                              type="number"
-                              step="0.01"
-                              value={newPrice}
-                              onChange={(e) => setNewPrice(e.target.value)}
-                              className="w-24 px-2.5 py-1.5 bg-white/5 border border-emerald-500/30 rounded-lg text-sm text-white text-right focus:outline-none focus:border-emerald-500/50 font-mono"
-                              autoFocus
-                              onKeyDown={(e) => { if (e.key === 'Enter') updateWebPrice(product.holded_id); if (e.key === 'Escape') setEditingPrice(null); }}
-                            />
-                            <button onClick={() => updateWebPrice(product.holded_id)} className="p-1 text-emerald-400 hover:text-emerald-300 transition-colors">
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-                            </button>
-                            <button onClick={() => setEditingPrice(null)} className="p-1 text-gray-500 hover:text-gray-300 transition-colors">
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-                            </button>
-                          </div>
-                        ) : (
-                          <span className={`text-sm font-medium font-mono ${
-                            product.synced === false ? 'text-amber-400' : 
-                            product.web_price ? 'text-emerald-400' : 'text-gray-500'
-                          }`}>
-                            {product.web_price ? `${product.web_price.toFixed(2)}€` : 'No en web'}
-                          </span>
-                        )}
-                      </td>
-                      <td className="px-5 py-3.5 text-right">
-                        <span className={`text-xs font-bold px-2.5 py-1 rounded-lg ${
-                          product.stock <= 0 ? 'bg-red-500/10 text-red-400 border border-red-500/20' :
-                          product.stock < 20 ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' :
-                          product.stock < 50 ? 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20' :
-                          'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                        }`}>
-                          {product.stock}
-                        </span>
-                      </td>
-                      <td className="px-5 py-3.5 text-center">
-                        {product.synced === true && (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-emerald-500/10 text-emerald-400 text-[10px] rounded-lg border border-emerald-500/20 font-medium">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                            Sync
-                          </span>
-                        )}
-                        {product.synced === false && (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-amber-500/10 text-amber-400 text-[10px] rounded-lg border border-amber-500/20 font-medium">
-                            <span className="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
-                            Diferente
-                          </span>
-                        )}
-                        {product.synced === null && (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-white/5 text-gray-400 text-[10px] rounded-lg border border-white/10 font-medium">
-                            <span className="w-1.5 h-1.5 rounded-full bg-gray-500"></span>
-                            Solo Holded
-                          </span>
-                        )}
-                      </td>
-                      <td className="px-5 py-3.5 text-right">
-                        <button
-                          onClick={() => { setEditingPrice(i); setNewPrice(product.web_price || product.holded_price || ''); }}
-                          className="opacity-0 group-hover:opacity-100 text-xs text-emerald-400 hover:text-emerald-300 transition-all font-medium px-3 py-1.5 bg-emerald-500/10 rounded-lg border border-emerald-500/20"
-                        >
-                          Editar
-                        </button>
-                      </td>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-white/5">
+                      <th className="text-left px-4 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">Producto</th>
+                      <th className="text-left px-3 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">SKU</th>
+                      <th className="text-right px-3 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                        <span className="text-red-400">Coste</span>
+                      </th>
+                      <th className="text-right px-3 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                        <span className="text-gray-400">PVP Holded</span>
+                      </th>
+                      <th className="text-right px-3 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                        <span className="text-emerald-400">Precio Web</span>
+                      </th>
+                      <th className="text-right px-3 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                        <span className="text-blue-400">Margen</span>
+                      </th>
+                      <th className="text-right px-3 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">Stock</th>
+                      <th className="text-right px-3 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">Acciones</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-white/5">
+                    {filteredProducts.map((product, i) => (
+                      <tr key={i} className="hover:bg-white/[0.02] transition-colors group">
+                        <td className="px-4 py-3.5">
+                          <p className="text-sm text-white font-medium truncate max-w-[220px]">{product.name}</p>
+                          {product.web_name && product.web_name !== product.name && (
+                            <p className="text-[11px] text-gray-500 truncate mt-0.5">Web: {product.web_name}</p>
+                          )}
+                        </td>
+                        <td className="px-3 py-3.5">
+                          <span className="text-xs text-gray-500 font-mono">{product.sku || '—'}</span>
+                        </td>
+                        <td className="px-3 py-3.5 text-right">
+                          <span className="text-sm text-red-400/80 font-mono">
+                            {product.cost > 0 ? `${product.cost.toFixed(2)}€` : '—'}
+                          </span>
+                        </td>
+                        <td className="px-3 py-3.5 text-right">
+                          <span className="text-sm text-gray-300 font-mono">
+                            {product.holded_price ? `${product.holded_price.toFixed(2)}€` : '—'}
+                          </span>
+                        </td>
+                        <td className="px-3 py-3.5 text-right">
+                          {editingPrice === i ? (
+                            <div className="flex items-center justify-end gap-1">
+                              <input
+                                type="number"
+                                step="0.01"
+                                value={newPrice}
+                                onChange={(e) => setNewPrice(e.target.value)}
+                                className="w-20 px-2 py-1.5 bg-white/5 border border-emerald-500/30 rounded-lg text-sm text-white text-right focus:outline-none focus:border-emerald-500/50 font-mono"
+                                autoFocus
+                                onKeyDown={(e) => { if (e.key === 'Enter') updateWebPrice(product.holded_id); if (e.key === 'Escape') setEditingPrice(null); }}
+                              />
+                              <button onClick={() => updateWebPrice(product.holded_id)} className="p-1 text-emerald-400 hover:text-emerald-300 transition-colors">
+                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                              </button>
+                              <button onClick={() => setEditingPrice(null)} className="p-1 text-gray-500 hover:text-gray-300 transition-colors">
+                                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                              </button>
+                            </div>
+                          ) : (
+                            <span className={`text-sm font-medium font-mono ${
+                              product.synced === false ? 'text-amber-400' : 
+                              product.web_price ? 'text-emerald-400' : 'text-gray-600'
+                            }`}>
+                              {product.web_price ? `${product.web_price.toFixed(2)}€` : 'No en web'}
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-3 py-3.5 text-right">
+                          {product.marginPercent !== null ? (
+                            <div className="text-right">
+                              <span className={`text-sm font-bold font-mono ${
+                                product.marginPercent >= 50 ? 'text-emerald-400' :
+                                product.marginPercent >= 30 ? 'text-blue-400' :
+                                product.marginPercent >= 15 ? 'text-amber-400' :
+                                'text-red-400'
+                              }`}>
+                                {product.marginPercent.toFixed(1)}%
+                              </span>
+                              <p className="text-[10px] text-gray-500 font-mono mt-0.5">
+                                +{product.marginAbsolute.toFixed(2)}€
+                              </p>
+                            </div>
+                          ) : (
+                            <span className="text-xs text-gray-600">—</span>
+                          )}
+                        </td>
+                        <td className="px-3 py-3.5 text-right">
+                          <span className={`text-xs font-bold px-2 py-1 rounded-lg ${
+                            product.stock <= 0 ? 'bg-red-500/10 text-red-400 border border-red-500/20' :
+                            product.stock < 20 ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' :
+                            product.stock < 50 ? 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20' :
+                            'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                          }`}>
+                            {product.stock}
+                          </span>
+                        </td>
+                        <td className="px-3 py-3.5 text-right">
+                          <button
+                            onClick={() => { setEditingPrice(i); setNewPrice(product.web_price || product.holded_price || ''); }}
+                            className="opacity-0 group-hover:opacity-100 text-xs text-emerald-400 hover:text-emerald-300 transition-all font-medium px-2.5 py-1.5 bg-emerald-500/10 rounded-lg border border-emerald-500/20"
+                          >
+                            Editar
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
               {filteredProducts.length === 0 && (
                 <div className="text-center py-16">
                   <svg className="w-10 h-10 text-gray-700 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -299,41 +380,61 @@ export default function AdminProducts() {
                       <p className="text-sm text-white font-medium">{product.name}</p>
                       <p className="text-xs text-gray-500 font-mono mt-0.5">{product.sku || '—'}</p>
                     </div>
-                    <span className={`text-xs font-bold px-2 py-0.5 rounded-lg flex-shrink-0 ${
-                      product.stock <= 0 ? 'bg-red-500/10 text-red-400 border border-red-500/20' :
-                      product.stock < 20 ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' :
-                      'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                    }`}>
-                      {product.stock} uds
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex gap-5">
-                      <div>
-                        <p className="text-[10px] text-gray-500 uppercase tracking-wider font-medium">Holded</p>
-                        <p className="text-sm text-gray-300 font-medium font-mono">{product.holded_price ? `${product.holded_price.toFixed(2)}€` : '—'}</p>
-                      </div>
-                      <div>
-                        <p className="text-[10px] text-gray-500 uppercase tracking-wider font-medium">Web</p>
-                        <p className={`text-sm font-medium font-mono ${
-                          product.synced === false ? 'text-amber-400' : 
-                          product.web_price ? 'text-emerald-400' : 'text-gray-500'
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      {product.marginPercent !== null && (
+                        <span className={`text-xs font-bold px-2 py-0.5 rounded-lg ${
+                          product.marginPercent >= 50 ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
+                          product.marginPercent >= 30 ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' :
+                          product.marginPercent >= 15 ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' :
+                          'bg-red-500/10 text-red-400 border border-red-500/20'
                         }`}>
-                          {product.web_price ? `${product.web_price.toFixed(2)}€` : 'No'}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      {product.synced === false && (
-                        <span className="w-2 h-2 rounded-full bg-amber-400"></span>
+                          {product.marginPercent.toFixed(1)}%
+                        </span>
                       )}
-                      <button
-                        onClick={() => { setEditingPrice(i); setNewPrice(product.web_price || product.holded_price || ''); }}
-                        className="text-xs text-emerald-400 font-medium px-3 py-1.5 bg-emerald-500/10 rounded-lg border border-emerald-500/20"
-                      >
-                        Editar
-                      </button>
+                      <span className={`text-xs font-bold px-2 py-0.5 rounded-lg ${
+                        product.stock <= 0 ? 'bg-red-500/10 text-red-400 border border-red-500/20' :
+                        product.stock < 20 ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' :
+                        'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                      }`}>
+                        {product.stock} uds
+                      </span>
                     </div>
+                  </div>
+                  <div className="grid grid-cols-4 gap-2">
+                    <div>
+                      <p className="text-[10px] text-gray-500 uppercase tracking-wider font-medium">Coste</p>
+                      <p className="text-sm text-red-400/80 font-mono">{product.cost > 0 ? `${product.cost.toFixed(2)}€` : '—'}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-gray-500 uppercase tracking-wider font-medium">Holded</p>
+                      <p className="text-sm text-gray-300 font-mono">{product.holded_price ? `${product.holded_price.toFixed(2)}€` : '—'}</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-gray-500 uppercase tracking-wider font-medium">Web</p>
+                      <p className={`text-sm font-mono ${product.web_price ? 'text-emerald-400' : 'text-gray-500'}`}>
+                        {product.web_price ? `${product.web_price.toFixed(2)}€` : 'No'}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[10px] text-gray-500 uppercase tracking-wider font-medium">Margen</p>
+                      <p className={`text-sm font-bold font-mono ${
+                        product.marginPercent === null ? 'text-gray-600' :
+                        product.marginPercent >= 50 ? 'text-emerald-400' :
+                        product.marginPercent >= 30 ? 'text-blue-400' :
+                        product.marginPercent >= 15 ? 'text-amber-400' :
+                        'text-red-400'
+                      }`}>
+                        {product.marginPercent !== null ? `${product.marginPercent.toFixed(1)}%` : '—'}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-end mt-3 pt-3 border-t border-white/5">
+                    <button
+                      onClick={() => { setEditingPrice(i); setNewPrice(product.web_price || product.holded_price || ''); }}
+                      className="text-xs text-emerald-400 font-medium px-3 py-1.5 bg-emerald-500/10 rounded-lg border border-emerald-500/20"
+                    >
+                      Editar precio
+                    </button>
                   </div>
                 </div>
               ))}
