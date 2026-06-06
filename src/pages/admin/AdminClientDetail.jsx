@@ -11,6 +11,8 @@ export default function AdminClientDetail() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [expandedDoc, setExpandedDoc] = useState(null);
+  const [docItems, setDocItems] = useState({}); // Cache de items cargados bajo demanda
+  const [loadingItems, setLoadingItems] = useState(null); // ID del doc que está cargando items
 
   useEffect(() => {
     loadClientDetail();
@@ -33,14 +35,43 @@ export default function AdminClientDetail() {
     }
   };
 
+  // Cargar items de un documento bajo demanda
+  const loadDocumentItems = async (docType, docId) => {
+    if (docItems[docId]) return; // Ya cargado
+    setLoadingItems(docId);
+    try {
+      const res = await authFetch(`${API_URL}/api/admin/documents/${docType}/${docId}`);
+      if (res && res.ok) {
+        const result = await res.json();
+        setDocItems(prev => ({ ...prev, [docId]: result.items || [] }));
+      }
+    } catch (err) {
+      console.error('Error loading document items:', err);
+    } finally {
+      setLoadingItems(null);
+    }
+  };
+
+  const handleExpandDoc = (doc) => {
+    const docId = doc.id;
+    if (expandedDoc === docId) {
+      setExpandedDoc(null);
+      return;
+    }
+    setExpandedDoc(docId);
+    // Si es un documento B2B de Holded y no tiene items cargados, cargarlos
+    if (!data?.source?.startsWith('web') && !docItems[docId]) {
+      const docType = doc.type || 'invoice';
+      loadDocumentItems(docType, docId);
+    }
+  };
+
   const formatDate = (val) => {
     if (!val) return '—';
-    // Si es un timestamp (número), convertir
     if (typeof val === 'number') {
       const date = new Date(val * 1000);
       return date.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' });
     }
-    // Si es un ISO string
     const date = new Date(val);
     return date.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' });
   };
@@ -158,7 +189,7 @@ export default function AdminClientDetail() {
                 {isWebClient ? 'Total gastado' : 'Total facturado'}
               </p>
               <p className={`text-3xl font-bold font-mono ${isWebClient ? 'text-emerald-400' : 'text-amber-400'}`}>
-                {formatCurrency(isWebClient ? data.stats?.total_spent : client.total_invoiced)}
+                {formatCurrency(isWebClient ? data.stats?.total_spent : (data.stats?.total_all || client.total_invoiced))}
               </p>
             </div>
           </div>
@@ -333,22 +364,27 @@ export default function AdminClientDetail() {
                   >
                     <div
                       className="p-4 md:p-5 cursor-pointer"
-                      onClick={() => setExpandedDoc(expandedDoc === doc.id ? null : doc.id)}
+                      onClick={() => handleExpandDoc(doc)}
                     >
                       <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
                         <div className="flex items-center gap-3 flex-1 min-w-0">
                           {/* Type badge */}
                           <span className={`text-[10px] font-semibold px-2.5 py-1 rounded-lg border flex-shrink-0 ${
-                            doc.is_ticket
+                            doc.type === 'salesreceipt'
                               ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20'
                               : doc.type === 'invoice'
                                 ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
-                                : doc.type === 'salesreceipt'
-                                  ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20'
-                                  : 'bg-purple-500/10 text-purple-400 border-purple-500/20'
+                                : 'bg-purple-500/10 text-purple-400 border-purple-500/20'
                           }`}>
-                            {doc.is_ticket ? 'Ticket' : doc.type === 'invoice' ? 'Factura' : doc.type === 'salesreceipt' ? 'Ticket' : 'Pedido'}
+                            {doc.type === 'salesreceipt' ? 'Ticket' : doc.type === 'invoice' ? 'Factura' : 'Pedido'}
                           </span>
+
+                          {/* Draft badge */}
+                          {doc.is_draft && (
+                            <span className="text-[10px] font-medium px-2 py-0.5 rounded border bg-gray-500/10 text-gray-400 border-gray-500/20">
+                              Borrador
+                            </span>
+                          )}
 
                           {/* Number */}
                           <span className="text-sm text-white font-mono font-medium truncate">
@@ -378,32 +414,37 @@ export default function AdminClientDetail() {
                       </div>
                     </div>
 
-                    {/* Expanded items */}
-                    {expandedDoc === doc.id && doc.items && doc.items.length > 0 && (
+                    {/* Expanded items - loaded on demand */}
+                    {expandedDoc === doc.id && (
                       <div className="border-t border-white/5 px-4 md:px-5 py-3 bg-white/[0.01]">
-                        <table className="w-full text-xs">
-                          <thead>
-                            <tr className="text-gray-500">
-                              <th className="text-left pb-2 font-medium">Producto</th>
-                              <th className="text-center pb-2 font-medium">Uds.</th>
-                              <th className="text-right pb-2 font-medium">Importe</th>
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-white/5">
-                            {doc.items.map((item, idx) => (
-                              <tr key={idx}>
-                                <td className="py-1.5 text-gray-300 pr-4 truncate max-w-[200px]">{item.name}</td>
-                                <td className="py-1.5 text-gray-400 text-center">{item.units}</td>
-                                <td className="py-1.5 text-white text-right font-mono">{formatCurrency(item.subtotal)}</td>
+                        {loadingItems === doc.id ? (
+                          <div className="flex items-center gap-2 py-2">
+                            <div className="w-4 h-4 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+                            <span className="text-xs text-gray-500">Cargando desglose...</span>
+                          </div>
+                        ) : (docItems[doc.id] && docItems[doc.id].length > 0) ? (
+                          <table className="w-full text-xs">
+                            <thead>
+                              <tr className="text-gray-500">
+                                <th className="text-left pb-2 font-medium">Producto</th>
+                                <th className="text-center pb-2 font-medium">Uds.</th>
+                                <th className="text-center pb-2 font-medium">Precio ud.</th>
+                                <th className="text-right pb-2 font-medium">Importe</th>
                               </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                        {(doc.notes || doc.desc) && (
-                          <p className="text-[10px] text-gray-600 mt-2 italic">
-                            {doc.desc && <span>{doc.desc}</span>}
-                            {doc.notes && <span> · {doc.notes}</span>}
-                          </p>
+                            </thead>
+                            <tbody className="divide-y divide-white/5">
+                              {docItems[doc.id].map((item, idx) => (
+                                <tr key={idx}>
+                                  <td className="py-1.5 text-gray-300 pr-4 truncate max-w-[200px]">{item.name || '—'}</td>
+                                  <td className="py-1.5 text-gray-400 text-center">{item.units}</td>
+                                  <td className="py-1.5 text-gray-400 text-center font-mono">{formatCurrency(item.price)}</td>
+                                  <td className="py-1.5 text-white text-right font-mono">{formatCurrency(item.subtotal)}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        ) : (
+                          <p className="text-xs text-gray-500 py-2">No hay desglose disponible para este documento</p>
                         )}
                       </div>
                     )}
