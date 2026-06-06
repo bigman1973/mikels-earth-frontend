@@ -35,14 +35,20 @@ export default function AdminOrders() {
     setActionLoading(`holded-${orderId}`);
     try {
       const res = await authFetch(`${API_URL}/api/admin/orders/${orderId}/create-in-holded`, { method: 'POST' });
-      if (res && res.ok) {
+      if (!res) {
+        alert('Sesión expirada. Cierra sesión y vuelve a iniciar con Microsoft.');
+        return;
+      }
+      if (res.ok) {
+        alert('✅ Pedido creado en Holded');
         loadOrders();
       } else {
-        const err = await res.json();
+        const err = await res.json().catch(() => ({ error: `Error HTTP ${res.status}` }));
         alert(`Error: ${err.error}`);
       }
     } catch (err) {
-      alert('Error de conexión');
+      console.error('createInHolded error:', err);
+      alert(`Error de conexión: ${err.message || 'No se pudo conectar con el servidor'}`);
     } finally {
       setActionLoading(null);
     }
@@ -57,12 +63,16 @@ export default function AdminOrders() {
     setActionLoading(`invoice-${orderId}`);
     try {
       const res = await authFetch(`${API_URL}/api/admin/orders/${orderId}/invoice`, { method: 'POST' });
-      if (res && res.ok) {
+      if (!res) {
+        alert('Sesión expirada. Cierra sesión y vuelve a iniciar con Microsoft.');
+        return;
+      }
+      if (res.ok) {
         const data = await res.json();
         alert(`✅ ${data.doc_type_label} creado: ${data.doc_number || 'OK'}`);
         loadOrders();
       } else {
-        const err = await res.json();
+        const err = await res.json().catch(() => ({ error: `Error HTTP ${res.status}` }));
         if (err.already_exists) {
           alert(`⚠️ Este pedido ya tiene documento: ${err.doc_number}`);
         } else {
@@ -70,7 +80,8 @@ export default function AdminOrders() {
         }
       }
     } catch (err) {
-      alert('Error de conexión');
+      console.error('createInvoice error:', err);
+      alert(`Error de conexión: ${err.message || 'No se pudo conectar con el servidor'}`);
     } finally {
       setActionLoading(null);
     }
