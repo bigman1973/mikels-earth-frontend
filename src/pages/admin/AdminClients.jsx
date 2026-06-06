@@ -1,8 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAdminAuth } from '../../context/AdminAuthContext';
 import { API_URL } from '../../config/api';
 import AdminLayout from '../../components/admin/AdminLayout';
+
+const SORT_OPTIONS = [
+  { value: 'name_asc', label: 'Alfabético A-Z', icon: '↑' },
+  { value: 'name_desc', label: 'Alfabético Z-A', icon: '↓' },
+  { value: 'amount_desc', label: 'Mayor importe', icon: '€↓' },
+  { value: 'amount_asc', label: 'Menor importe', icon: '€↑' },
+  { value: 'date_desc', label: 'Más reciente', icon: '🕐' },
+  { value: 'date_asc', label: 'Más antiguo', icon: '🕐' },
+];
 
 export default function AdminClients() {
   const { authFetch } = useAdminAuth();
@@ -11,11 +20,24 @@ export default function AdminClients() {
   const [webClients, setWebClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
-  const [activeTab, setActiveTab] = useState('web'); // 'web' o 'b2b'
+  const [activeTab, setActiveTab] = useState('web');
+  const [sortBy, setSortBy] = useState('amount_desc');
+  const [showSortMenu, setShowSortMenu] = useState(false);
 
   useEffect(() => {
     loadClients();
   }, []);
+
+  // Cerrar menú de sort al hacer clic fuera
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (showSortMenu && !e.target.closest('.sort-dropdown')) {
+        setShowSortMenu(false);
+      }
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [showSortMenu]);
 
   const loadClients = async () => {
     setLoading(true);
@@ -53,6 +75,52 @@ export default function AdminClients() {
            c.email?.toLowerCase().includes(q) ||
            c.phone?.includes(q);
   });
+
+  // Sorting logic
+  const sortedClients = useMemo(() => {
+    const sorted = [...filteredClients];
+    
+    sorted.sort((a, b) => {
+      switch (sortBy) {
+        case 'name_asc':
+          return (a.name || '').localeCompare(b.name || '', 'es');
+        case 'name_desc':
+          return (b.name || '').localeCompare(a.name || '', 'es');
+        case 'amount_desc': {
+          const amountA = activeTab === 'web' ? (a.total_spent || 0) : (a.total_invoiced || 0);
+          const amountB = activeTab === 'web' ? (b.total_spent || 0) : (b.total_invoiced || 0);
+          return amountB - amountA;
+        }
+        case 'amount_asc': {
+          const amountA2 = activeTab === 'web' ? (a.total_spent || 0) : (a.total_invoiced || 0);
+          const amountB2 = activeTab === 'web' ? (b.total_spent || 0) : (b.total_invoiced || 0);
+          return amountA2 - amountB2;
+        }
+        case 'date_desc': {
+          const dateA = activeTab === 'web' ? (a.last_order || '') : (a.last_invoice_date || '');
+          const dateB = activeTab === 'web' ? (b.last_order || '') : (b.last_invoice_date || '');
+          if (!dateA && !dateB) return 0;
+          if (!dateA) return 1;
+          if (!dateB) return -1;
+          return new Date(dateB) - new Date(dateA);
+        }
+        case 'date_asc': {
+          const dateA2 = activeTab === 'web' ? (a.last_order || '') : (a.last_invoice_date || '');
+          const dateB2 = activeTab === 'web' ? (b.last_order || '') : (b.last_invoice_date || '');
+          if (!dateA2 && !dateB2) return 0;
+          if (!dateA2) return 1;
+          if (!dateB2) return -1;
+          return new Date(dateA2) - new Date(dateB2);
+        }
+        default:
+          return 0;
+      }
+    });
+    
+    return sorted;
+  }, [filteredClients, sortBy, activeTab]);
+
+  const currentSortLabel = SORT_OPTIONS.find(o => o.value === sortBy)?.label || 'Ordenar';
 
   return (
     <AdminLayout>
@@ -107,9 +175,10 @@ export default function AdminClients() {
           </button>
         </div>
 
-        {/* Search */}
-        <div className="mb-6">
-          <div className="relative max-w-md">
+        {/* Search + Sort Row */}
+        <div className="flex flex-col sm:flex-row gap-3 mb-6">
+          {/* Search */}
+          <div className="relative flex-1 max-w-md">
             <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
@@ -120,6 +189,46 @@ export default function AdminClients() {
               onChange={(e) => setSearch(e.target.value)}
               className="w-full pl-10 pr-4 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition-all"
             />
+          </div>
+
+          {/* Sort Dropdown */}
+          <div className="relative sort-dropdown">
+            <button
+              onClick={(e) => { e.stopPropagation(); setShowSortMenu(!showSortMenu); }}
+              className="flex items-center gap-2 px-4 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-sm text-gray-300 hover:border-white/20 hover:bg-white/[0.05] transition-all whitespace-nowrap"
+            >
+              <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
+              </svg>
+              <span>{currentSortLabel}</span>
+              <svg className={`w-3 h-3 text-gray-500 transition-transform ${showSortMenu ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            {showSortMenu && (
+              <div className="absolute right-0 top-full mt-2 w-52 bg-[#1a1a1d] border border-white/10 rounded-xl shadow-2xl shadow-black/50 overflow-hidden z-50">
+                {SORT_OPTIONS.map((option) => (
+                  <button
+                    key={option.value}
+                    onClick={() => { setSortBy(option.value); setShowSortMenu(false); }}
+                    className={`w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center gap-2 ${
+                      sortBy === option.value
+                        ? 'bg-emerald-500/10 text-emerald-400'
+                        : 'text-gray-300 hover:bg-white/5'
+                    }`}
+                  >
+                    <span className="w-5 text-center text-xs opacity-60">{option.icon}</span>
+                    <span>{option.label}</span>
+                    {sortBy === option.value && (
+                      <svg className="w-3.5 h-3.5 ml-auto text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                      </svg>
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
@@ -147,7 +256,7 @@ export default function AdminClients() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
-                  {filteredClients.map((client, i) => (
+                  {sortedClients.map((client, i) => (
                     <tr key={i} onClick={() => navigate(`/admin/clientes/${client.id}`)} className="hover:bg-white/[0.02] transition-colors cursor-pointer">
                       <td className="px-5 py-3.5">
                         <div className="flex items-center gap-3">
@@ -181,7 +290,7 @@ export default function AdminClients() {
                   ))}
                 </tbody>
               </table>
-              {filteredClients.length === 0 && (
+              {sortedClients.length === 0 && (
                 <div className="text-center py-16">
                   <p className="text-gray-500 text-sm">No se encontraron clientes web</p>
                 </div>
@@ -190,7 +299,7 @@ export default function AdminClients() {
 
             {/* Mobile Cards - Web */}
             <div className="md:hidden space-y-3">
-              {filteredClients.map((client, i) => (
+              {sortedClients.map((client, i) => (
                 <div key={i} onClick={() => navigate(`/admin/clientes/${client.id}`)} className="bg-white/[0.02] rounded-xl border border-white/5 p-4 hover:border-emerald-500/20 transition-colors cursor-pointer">
                   <div className="flex items-center gap-3 mb-2">
                     <div className="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 border border-emerald-500/20 flex items-center justify-center flex-shrink-0">
@@ -226,7 +335,7 @@ export default function AdminClients() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
-                  {filteredClients.map((client, i) => (
+                  {sortedClients.map((client, i) => (
                     <tr key={i} onClick={() => client.id && navigate(`/admin/clientes/${client.id}`)} className="hover:bg-white/[0.02] transition-colors cursor-pointer">
                       <td className="px-5 py-3.5">
                         <div className="flex items-center gap-3">
@@ -253,7 +362,7 @@ export default function AdminClients() {
                   ))}
                 </tbody>
               </table>
-              {filteredClients.length === 0 && (
+              {sortedClients.length === 0 && (
                 <div className="text-center py-16">
                   <p className="text-gray-500 text-sm">No se encontraron clientes B2B</p>
                 </div>
@@ -262,7 +371,7 @@ export default function AdminClients() {
 
             {/* Mobile Cards - B2B */}
             <div className="md:hidden space-y-3">
-              {filteredClients.map((client, i) => (
+              {sortedClients.map((client, i) => (
                 <div key={i} onClick={() => client.id && navigate(`/admin/clientes/${client.id}`)} className="bg-white/[0.02] rounded-xl border border-white/5 p-4 hover:border-amber-500/20 transition-colors cursor-pointer">
                   <div className="flex items-center gap-3 mb-2">
                     <div className="w-9 h-9 rounded-full bg-gradient-to-br from-amber-500/20 to-orange-500/20 border border-amber-500/20 flex items-center justify-center flex-shrink-0">
@@ -290,7 +399,7 @@ export default function AdminClients() {
         {/* Footer */}
         <div className="mt-5">
           <p className="text-xs text-gray-600">
-            Mostrando {filteredClients.length} de {currentClients.length} clientes {activeTab === 'web' ? 'web' : 'B2B/Contado'}
+            Mostrando {sortedClients.length} de {currentClients.length} clientes {activeTab === 'web' ? 'web' : 'B2B/Contado'}
           </p>
         </div>
       </div>
