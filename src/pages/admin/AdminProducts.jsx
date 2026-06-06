@@ -270,7 +270,12 @@ export default function AdminProducts() {
                         <span className="block text-[9px] text-gray-600 normal-case">con IVA</span>
                       </th>
                       <th className="text-right px-3 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                        <span className="text-yellow-400">Base Web</span>
+                        <span className="block text-[9px] text-gray-600 normal-case">sin IVA</span>
+                      </th>
+                      <th className="text-right px-3 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">
                         <span className="text-blue-400">Margen</span>
+                        <span className="block text-[9px] text-gray-600 normal-case">base vs coste</span>
                       </th>
                       <th className="text-right px-3 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">Stock</th>
                       <th className="text-right px-3 py-3.5 text-xs font-semibold text-gray-400 uppercase tracking-wider">Acciones</th>
@@ -324,6 +329,14 @@ export default function AdminProducts() {
                             }`}>
                               {product.web_price ? `${product.web_price.toFixed(2)}€` : 'No en web'}
                             </span>
+                          )}
+                        </td>
+                        <td className="px-3 py-3.5 text-right">
+                          <span className="text-sm text-yellow-400/80 font-mono">
+                            {product.webPriceNoIva > 0 ? `${product.webPriceNoIva.toFixed(2)}€` : '—'}
+                          </span>
+                          {product.webPriceNoIva > 0 && (
+                            <p className="text-[9px] text-gray-600 mt-0.5">IVA {(product.ivaRate * 100).toFixed(0)}%</p>
                           )}
                         </td>
                         <td className="px-3 py-3.5 text-right">
