@@ -444,17 +444,26 @@ export default function AdminOrders() {
                                     </svg>
                                     {order.holded_doc_number || 'Generado'}
                                   </span>
-                                  <button
-                                    onClick={() => sendEmail(order.id)}
-                                    disabled={actionLoading === `email-${order.id}`}
-                                    className="flex items-center gap-1.5 px-3 py-2 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 text-xs rounded-lg border border-indigo-500/20 transition-all disabled:opacity-50 font-medium"
-                                    title={`Enviar a ${order.customer_email}`}
-                                  >
-                                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                    </svg>
-                                    {actionLoading === `email-${order.id}` ? 'Enviando...' : 'Enviar'}
-                                  </button>
+                                  {order.email_sent ? (
+                                    <span className="flex items-center gap-1.5 px-3 py-2 bg-emerald-500/10 text-emerald-400 text-xs rounded-lg border border-emerald-500/20 font-medium">
+                                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                      </svg>
+                                      Enviada ✓
+                                    </span>
+                                  ) : (
+                                    <button
+                                      onClick={() => sendEmail(order.id)}
+                                      disabled={actionLoading === `email-${order.id}`}
+                                      className="flex items-center gap-1.5 px-3 py-2 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 text-xs rounded-lg border border-indigo-500/20 transition-all disabled:opacity-50 font-medium"
+                                      title={`Enviar a ${order.customer_email}`}
+                                    >
+                                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                      </svg>
+                                      {actionLoading === `email-${order.id}` ? 'Enviando...' : 'Enviar'}
+                                    </button>
+                                  )}
                                 </>
                               )}
                             </>
