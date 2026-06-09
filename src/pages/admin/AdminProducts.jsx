@@ -265,7 +265,7 @@ export default function AdminProducts() {
 
   const MarginBadge = ({ percent, label }) => {
     if (percent === null || percent === undefined) return <span className="text-xs text-gray-600">—</span>;
-    const color = percent >= 40 ? 'text-emerald-400' : percent >= 25 ? 'text-blue-400' : percent >= 10 ? 'text-amber-400' : 'text-red-400';
+    const color = percent >= 70 ? 'text-emerald-400' : percent >= 60 ? 'text-amber-400' : 'text-red-400';
     return (
       <div className="text-right">
         <span className={`text-sm font-bold font-mono ${color}`}>{percent.toFixed(1)}%</span>
