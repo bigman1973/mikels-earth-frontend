@@ -90,6 +90,32 @@ export default function AdminOrders() {
     }
   };
 
+  const sendEmail = async (orderId) => {
+    const order = orders.find(o => o.id === orderId);
+    if (!confirm(`Se enviará el documento por email a ${order?.customer_email}. ¿Continuar?`)) return;
+    
+    setActionLoading(`email-${orderId}`);
+    try {
+      const res = await authFetch(`${API_URL}/api/admin/orders/${orderId}/send-email`, { method: 'POST' });
+      if (!res) {
+        alert('Sesión expirada. Cierra sesión y vuelve a iniciar con Microsoft.');
+        return;
+      }
+      if (res.ok) {
+        const data = await res.json();
+        alert(`✅ Documento enviado a ${data.email}`);
+      } else {
+        const err = await res.json().catch(() => ({ error: `Error HTTP ${res.status}` }));
+        alert(`Error: ${err.error}`);
+      }
+    } catch (err) {
+      console.error('sendEmail error:', err);
+      alert(`Error de conexión: ${err.message || 'No se pudo conectar con el servidor'}`);
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
   const syncStripe = async () => {
     setSyncing(true);
     setSyncMessage(null);
@@ -411,12 +437,25 @@ export default function AdminOrders() {
                                   }
                                 </button>
                               ) : (
-                                <span className="flex items-center gap-1.5 px-3 py-2 bg-white/5 text-gray-400 text-xs rounded-lg border border-white/10 font-medium">
-                                  <svg className="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                  </svg>
-                                  {order.holded_doc_number || 'Generado'}
-                                </span>
+                                <>
+                                  <span className="flex items-center gap-1.5 px-3 py-2 bg-white/5 text-gray-400 text-xs rounded-lg border border-white/10 font-medium">
+                                    <svg className="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    {order.holded_doc_number || 'Generado'}
+                                  </span>
+                                  <button
+                                    onClick={() => sendEmail(order.id)}
+                                    disabled={actionLoading === `email-${order.id}`}
+                                    className="flex items-center gap-1.5 px-3 py-2 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 text-xs rounded-lg border border-indigo-500/20 transition-all disabled:opacity-50 font-medium"
+                                    title={`Enviar a ${order.customer_email}`}
+                                  >
+                                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                    </svg>
+                                    {actionLoading === `email-${order.id}` ? 'Enviando...' : 'Enviar'}
+                                  </button>
+                                </>
                               )}
                             </>
                           )}
