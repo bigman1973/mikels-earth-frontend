@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useAdminAuth } from '../../context/AdminAuthContext';
 import { API_URL } from '../../config/api';
 import AdminLayout from '../../components/admin/AdminLayout';
+import ProductEditor from '../../components/admin/ProductEditor';
 
 export default function AdminProducts() {
   const { authFetch } = useAdminAuth();
@@ -26,6 +27,10 @@ export default function AdminProducts() {
   const [editingComponent, setEditingComponent] = useState(null);
   const [editComponentCost, setEditComponentCost] = useState('');
   const [savingComponent, setSavingComponent] = useState(false);
+
+  // Editor modal
+  const [editorOpen, setEditorOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null);
 
   useEffect(() => {
     loadProducts();
@@ -373,6 +378,15 @@ export default function AdminProducts() {
           </div>
           <div className="flex gap-2">
             <button
+              onClick={() => { setEditingProduct(null); setEditorOpen(true); }}
+              className="flex items-center gap-2 px-4 py-2.5 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 text-sm rounded-xl border border-blue-500/20 transition-all font-medium"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+              Nuevo producto
+            </button>
+            <button
               onClick={syncFromHolded}
               disabled={syncing}
               className="flex items-center gap-2 px-4 py-2.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-sm rounded-xl border border-emerald-500/20 transition-all disabled:opacity-50 font-medium"
@@ -519,9 +533,17 @@ export default function AdminProducts() {
                             </span>
                           </td>
                           <td className="px-2 py-3 text-center">
-                            <span className={`text-xs px-2 py-1 rounded-lg transition-all ${expandedProduct === i ? 'bg-emerald-500/20 text-emerald-400' : 'bg-white/5 text-gray-500 hover:text-gray-300'}`}>
-                              {expandedProduct === i ? '▲' : '▼'}
-                            </span>
+                            <div className="flex items-center gap-1 justify-center">
+                              <button
+                                onClick={(e) => { e.stopPropagation(); setEditingProduct(product); setEditorOpen(true); }}
+                                className="text-[10px] px-2 py-1 bg-blue-500/10 text-blue-400 rounded-lg border border-blue-500/20 hover:bg-blue-500/20 transition-all"
+                              >
+                                Editar
+                              </button>
+                              <span className={`text-xs px-2 py-1 rounded-lg transition-all ${expandedProduct === i ? 'bg-emerald-500/20 text-emerald-400' : 'bg-white/5 text-gray-500 hover:text-gray-300'}`}>
+                                {expandedProduct === i ? '▲' : '▼'}
+                              </span>
+                            </div>
                           </td>
                         </tr>
                         
@@ -686,6 +708,14 @@ export default function AdminProducts() {
           </>
         )}
       </div>
+      {/* Modal Editor */}
+      {editorOpen && (
+        <ProductEditor
+          product={editingProduct}
+          onClose={() => { setEditorOpen(false); setEditingProduct(null); }}
+          onSaved={() => { loadProducts(); }}
+        />
+      )}
     </AdminLayout>
   );
 }
