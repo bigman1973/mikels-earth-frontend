@@ -698,21 +698,24 @@ export default function ProductEditor({ product, onClose, onSaved }) {
             <div className="space-y-4">
               <div className="space-y-3">
                 {[
-                  { field: 'active', label: 'Producto activo (visible en la web)', color: 'emerald' },
-                  { field: 'soldOut', label: 'Agotado (muestra mensaje de agotado)', color: 'red' },
-                  { field: 'featured', label: 'Destacado', color: 'amber' },
-                  { field: 'freeShipping', label: 'Envío gratuito', color: 'blue' },
-                  { field: 'limitedEdition', label: 'Edición limitada', color: 'purple' }
-                ].map(({ field, label, color }) => (
-                  <label key={field} className="flex items-center gap-3 p-3 bg-white/[0.02] rounded-lg border border-white/5 cursor-pointer hover:bg-white/[0.04] transition-all">
-                    <input
-                      type="checkbox"
-                      checked={form[field]}
-                      onChange={(e) => handleChange(field, e.target.checked)}
-                      className={`w-4 h-4 rounded border-white/20 bg-white/5 text-${color}-500 focus:ring-${color}-500/20`}
-                    />
-                    <span className="text-sm text-gray-300">{label}</span>
-                  </label>
+                  { field: 'active', label: 'Producto activo (visible en la web)', color: 'emerald', desc: 'Si se desactiva, el producto desaparece de la tienda online. Los clientes no podrán verlo ni comprarlo. Útil para productos de temporada o descatalogados.' },
+                  { field: 'soldOut', label: 'Agotado (muestra mensaje de agotado)', color: 'red', desc: 'El producto sigue visible en la web pero no se puede comprar. Se muestra un mensaje personalizable (ej: "En cosecha - Disponible pronto") en lugar del botón de compra.' },
+                  { field: 'featured', label: 'Destacado', color: 'amber', desc: 'El producto aparece en la sección de destacados de la página principal. Ideal para promocionar productos nuevos o de temporada.' },
+                  { field: 'freeShipping', label: 'Envío gratuito', color: 'blue', desc: 'Se muestra un badge de "Envío gratis" en la ficha del producto. El cliente no paga gastos de envío al comprar este producto.' },
+                  { field: 'limitedEdition', label: 'Edición limitada', color: 'purple', desc: 'Se muestra un badge de "Edición Limitada" en la ficha del producto. Genera urgencia y exclusividad para el cliente.' }
+                ].map(({ field, label, color, desc }) => (
+                  <div key={field} className="p-3 bg-white/[0.02] rounded-lg border border-white/5 hover:bg-white/[0.04] transition-all">
+                    <label className="flex items-center gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={form[field]}
+                        onChange={(e) => handleChange(field, e.target.checked)}
+                        className={`w-4 h-4 rounded border-white/20 bg-white/5 text-${color}-500 focus:ring-${color}-500/20`}
+                      />
+                      <span className="text-sm text-gray-300">{label}</span>
+                    </label>
+                    <p className="text-[11px] text-gray-500 mt-1.5 ml-7 leading-relaxed">{desc}</p>
+                  </div>
                 ))}
               </div>
               {form.soldOut && (
