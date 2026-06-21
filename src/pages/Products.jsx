@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { products, categories } from '../data/products';
+import { useProducts } from '../hooks/useProducts';
 import ProductCard from '../components/products/ProductCard';
 import { Filter } from 'lucide-react';
 
 const Products = () => {
+  const { products, categories } = useProducts();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('default');
 
