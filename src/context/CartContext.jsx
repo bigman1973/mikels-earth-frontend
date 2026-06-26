@@ -102,84 +102,42 @@ export const CartProvider = ({ children }) => {
     setCart([]);
   };
   const applyDiscountCode = async (code) => {
-    // Validar código de descuento
-    const normalizedCode = code.trim().toUpperCase();
+    // Validar código de descuento contra el backend (todos los cupones centralizados)
+    const normalizedCode = code.trim();
     
-    // Definir códigos estáticos disponibles (solo para compras únicas)
-    const staticDiscountCodes = {
-      'ME2025': {
-        oneTimeDiscount: 10,
-        subscriptionDiscount: 0,
-        name: 'ME2025'
-      },
-      'MIKELSFRIENDS': {
-        oneTimeDiscount: 10,
-        subscriptionDiscount: 0,
-        name: 'MIKELSFRIENDS'
-      },
-      'MIKELSFAMILY': {
-        oneTimeDiscount: 20,
-        subscriptionDiscount: 0,
-        name: 'MIKELSFAMILY'
-      },
-      'BIENVENIDA10': {
-        oneTimeDiscount: 10,
-        subscriptionDiscount: 0,
-        name: 'BIENVENIDA10'
-      },
-      'IRVIANCESTRAL': {
-        oneTimeDiscount: 10,
-        subscriptionDiscount: 0,
-        name: 'IRVIANCESTRAL'
-      }
-    };
+    if (!normalizedCode) {
+      return { success: false, message: 'Introduce un código de descuento' };
+    }
     
-    // Verificar si es un código estático
-    if (staticDiscountCodes[normalizedCode]) {
-      const discount = staticDiscountCodes[normalizedCode];
-      setDiscountCode(normalizedCode);
-      setAppliedDiscount({
-        code: normalizedCode,
-        oneTimeDiscount: discount.oneTimeDiscount,
-        subscriptionDiscount: discount.subscriptionDiscount
+    try {
+      // Validar TODOS los cupones contra el backend (manuales, newsletter, post-compra, etc.)
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://mikels-earth-backend-production.up.railway.app';
+      const response = await fetch(`${apiUrl}/api/coupon/validate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ code: normalizedCode })
       });
-      return { success: true, message: 'Código aplicado correctamente' };
-    }
-    
-    // Si no es estático, verificar si es un cupón único (formatos MIKELS10-xxx, VUELVE10-xxx, GRACIAS10-xxx)
-    if (normalizedCode.startsWith('MIKELS10-') || normalizedCode.startsWith('VUELVE10-') || normalizedCode.startsWith('GRACIAS10-')) {
-      try {
-        // Llamar al backend principal para validar el cupón
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/coupon/validate`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ code: normalizedCode })
+      
+      const data = await response.json();
+      
+      if (data.valid) {
+        setDiscountCode(data.coupon.code);
+        setAppliedDiscount({
+          code: data.coupon.code,
+          oneTimeDiscount: data.coupon.discount_percentage,
+          subscriptionDiscount: 0,
+          email: data.coupon.email
         });
-        
-        const data = await response.json();
-        
-        if (data.valid) {
-          setDiscountCode(normalizedCode);
-          setAppliedDiscount({
-            code: normalizedCode,
-            oneTimeDiscount: data.coupon.discount_percentage,
-            subscriptionDiscount: 0,
-            email: data.coupon.email
-          });
-          return { success: true, message: 'Cupón aplicado correctamente' };
-        } else {
-          return { success: false, message: data.message || 'Cupón no válido' };
-        }
-      } catch (error) {
-        console.error('Error validating coupon:', error);
-        return { success: false, message: 'Error al validar el cupón' };
+        return { success: true, message: 'Cupón aplicado correctamente' };
+      } else {
+        return { success: false, message: data.message || 'Cupón no válido' };
       }
+    } catch (error) {
+      console.error('Error validating coupon:', error);
+      return { success: false, message: 'Error al validar el cupón. Inténtalo de nuevo.' };
     }
-    
-    // Si no es ni estático ni cupón único
-    return { success: false, message: 'Código no válido' };
   };
 
   const removeDiscountCode = () => {
