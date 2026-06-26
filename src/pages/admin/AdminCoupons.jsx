@@ -469,11 +469,11 @@ export default function AdminCoupons() {
                         {/* Savings */}
                         <div className="text-center md:text-right">
                           {coupon.estimated_savings > 0 ? (
-                            <span className="text-sm font-medium text-red-400">-{coupon.estimated_savings.toFixed(2)}€</span>
+                            <span className={`text-sm font-medium ${coupon.savings_source === 'stripe' ? 'text-green-400' : 'text-red-400'}`}>-{coupon.estimated_savings.toFixed(2)}€</span>
                           ) : (
                             <span className="text-sm text-gray-600">—</span>
                           )}
-                          <p className="text-[10px] text-gray-600">ahorro est.</p>
+                          <p className="text-[10px] text-gray-600">{coupon.savings_source === 'stripe' ? 'ahorro real' : 'ahorro est.'}</p>
                         </div>
 
                         {/* Expiry */}
