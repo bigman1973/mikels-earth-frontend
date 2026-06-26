@@ -478,10 +478,14 @@ export default function AdminProducts() {
                         <tr key={`row-${i}`} className={`hover:bg-white/[0.02] transition-colors cursor-pointer ${expandedProduct === i ? 'bg-white/[0.03]' : ''}`} onClick={() => toggleExpand(product, i)}>
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-2">
+                              <span className={`w-2 h-2 rounded-full flex-shrink-0 ${product.active !== false ? 'bg-emerald-400' : 'bg-red-400'}`} title={product.active !== false ? 'Activo' : 'Inactivo'}></span>
                               <div>
-                                <p className="text-sm text-white font-medium truncate max-w-[200px]">{product.name}</p>
+                                <p className={`text-sm font-medium truncate max-w-[200px] ${product.active !== false ? 'text-white' : 'text-gray-500 line-through'}`}>{product.name}</p>
                                 <div className="flex items-center gap-2 mt-0.5">
                                   <p className="text-[10px] text-gray-500 font-mono">{product.sku || '—'}</p>
+                                  {product.active === false && (
+                                    <span className="text-[9px] px-1.5 py-0.5 bg-red-500/10 text-red-400 rounded border border-red-500/20">INACTIVO</span>
+                                  )}
                                   {isPack(product.sku) && (
                                     <span className="text-[9px] px-1.5 py-0.5 bg-indigo-500/10 text-indigo-400 rounded border border-indigo-500/20">PACK</span>
                                   )}

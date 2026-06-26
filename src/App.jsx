@@ -37,6 +37,7 @@ import AdminOrders from './pages/admin/AdminOrders';
 import AdminClients from './pages/admin/AdminClients';
 import AdminClientDetail from './pages/admin/AdminClientDetail';
 import AdminUsers from './pages/admin/AdminUsers';
+import AdminCoupons from './pages/admin/AdminCoupons';
 import './App.css';
 
 function App() {
@@ -54,6 +55,7 @@ function App() {
             <Route path="/admin/clientes" element={<AdminClients />} />
             <Route path="/admin/clientes/:clientId" element={<AdminClientDetail />} />
             <Route path="/admin/usuarios" element={<AdminUsers />} />
+            <Route path="/admin/cupones" element={<AdminCoupons />} />
 
             {/* ====== TIENDA PÚBLICA (con Header/Footer) ====== */}
             <Route path="/*" element={
