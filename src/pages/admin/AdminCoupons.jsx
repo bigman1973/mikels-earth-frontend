@@ -180,10 +180,11 @@ export default function AdminCoupons() {
   };
 
   const getStatusBadge = (coupon) => {
-    if (!coupon.active) return <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-red-500/10 text-red-400 border border-red-500/20">Inactivo</span>;
     if (coupon.is_expired) return <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-orange-500/10 text-orange-400 border border-orange-500/20">Caducado</span>;
-    if (coupon.max_uses && coupon.current_uses >= coupon.max_uses) return <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-500/10 text-gray-400 border border-gray-500/20">Agotado</span>;
-    if (coupon.used) return <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-500/10 text-gray-400 border border-gray-500/20">Usado</span>;
+    if (coupon.used || (coupon.max_uses && coupon.current_uses >= coupon.max_uses) || (coupon.total_uses > 0 && coupon.single_use)) {
+      return <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-gray-500/10 text-gray-400 border border-gray-500/20">Agotado</span>;
+    }
+    if (!coupon.active) return <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-red-500/10 text-red-400 border border-red-500/20">Inactivo</span>;
     return <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Activo</span>;
   };
 
