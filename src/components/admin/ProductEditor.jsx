@@ -176,17 +176,38 @@ export default function ProductEditor({ product, onClose, onSaved }) {
   };
 
   const handleFileSelect = (e, field) => {
-    const file = e.target.files[0];
-    if (file) uploadImage(file, field);
+    const files = Array.from(e.target.files);
+    if (field === 'gallery' && files.length > 1) {
+      // Subir múltiples imágenes a la galería secuencialmente
+      const uploadSequentially = async () => {
+        for (const file of files) {
+          if (file.type.startsWith('image/')) {
+            await uploadImage(file, 'gallery');
+          }
+        }
+      };
+      uploadSequentially();
+    } else if (files[0]) {
+      uploadImage(files[0], field);
+    }
+    // Reset input para permitir re-seleccionar los mismos archivos
+    e.target.value = '';
   };
 
   // Drag & Drop
   const handleDrop = (e, field) => {
     e.preventDefault();
     setDragOver(false);
-    const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith('image/')) {
-      uploadImage(file, field);
+    const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+    if (field === 'gallery' && files.length > 1) {
+      const uploadSequentially = async () => {
+        for (const file of files) {
+          await uploadImage(file, 'gallery');
+        }
+      };
+      uploadSequentially();
+    } else if (files[0]) {
+      uploadImage(files[0], field);
     }
   };
 
@@ -575,7 +596,7 @@ export default function ProductEditor({ product, onClose, onSaved }) {
                   </div>
                 )}
                 
-                <input ref={fileInputGallery} type="file" accept="image/*" className="hidden" onChange={(e) => handleFileSelect(e, 'gallery')} />
+                <input ref={fileInputGallery} type="file" accept="image/*" multiple className="hidden" onChange={(e) => handleFileSelect(e, 'gallery')} />
               </div>
             </div>
           )}
