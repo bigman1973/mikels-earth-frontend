@@ -67,10 +67,13 @@ export function AdminAuthProvider({ children }) {
   const authFetch = async (url, options = {}) => {
     if (!token) return null;
     const headers = {
-      'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`,
       ...options.headers
     };
+    // Solo añadir Content-Type: application/json si NO es FormData
+    if (!(options.body instanceof FormData)) {
+      headers['Content-Type'] = 'application/json';
+    }
     try {
       const res = await fetch(url, { ...options, headers });
       if (res.status === 401) {
