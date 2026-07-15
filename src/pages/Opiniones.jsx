@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
-import { Star, CheckCircle, Send } from 'lucide-react';
+import { Star, CheckCircle, Send, Info } from 'lucide-react';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://mikels-earth-backend-production.up.railway.app';
 
@@ -232,7 +232,7 @@ const Opiniones = () => {
               </div>
               <div className="text-center md:border-l md:pl-8">
                 <div className="text-3xl font-bold text-primary">{stats.total_reviews}</div>
-                <p className="text-gray-500">opiniones verificadas</p>
+                <p className="text-gray-500">opiniones de clientes</p>
               </div>
               <div className="hidden md:block md:border-l md:pl-8">
                 {[5, 4, 3, 2, 1].map(star => (
@@ -255,6 +255,33 @@ const Opiniones = () => {
           </div>
         </section>
       )}
+
+      {/* Nota de transparencia sobre Compra Verificada */}
+      <section className="py-6 border-b bg-green-50/50">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <details className="group">
+              <summary className="flex items-center gap-2 cursor-pointer text-sm text-gray-600 hover:text-gray-800 transition-colors">
+                <Info size={16} className="text-green-600" />
+                <span>¿Qué significa <span className="inline-flex items-center gap-1 text-xs text-green-600 bg-green-100 px-1.5 py-0.5 rounded-full font-medium"><CheckCircle size={10} /> Compra verificada</span>?</span>
+              </summary>
+              <div className="mt-3 pl-6 text-sm text-gray-600 leading-relaxed space-y-2">
+                <p>
+                  El distintivo <strong className="text-green-700">“Compra verificada”</strong> indica que hemos podido confirmar que la persona que deja la opinión ha realizado una compra real en nuestra tienda. 
+                  Nuestro sistema cruza automáticamente el email del autor de la reseña con nuestros registros de pedidos completados.
+                </p>
+                <p>
+                  Las opiniones que no llevan este distintivo son igualmente válidas y reales — simplemente no hemos podido vincularlas automáticamente a un pedido 
+                  (por ejemplo, si el cliente usó un email diferente al de su compra, o si dejó la opinión desde el formulario público).
+                </p>
+                <p className="text-xs text-gray-500 italic">
+                  Todas las opiniones publicadas son revisadas por nuestro equipo antes de aparecer en la web. No editamos ni censuramos opiniones negativas.
+                </p>
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
 
       {/* Filters + CTA */}
       <section className="py-8 border-b">
