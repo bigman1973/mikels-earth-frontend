@@ -45,8 +45,15 @@ export const createCheckoutSession = async (cartItems, customerInfo) => {
     });
 
     if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || 'Error al crear la sesión de pago');
+      const errorData = await response.json();
+      if (errorData.error === 'PRICE_MISMATCH') {
+        // Precios desactualizados - lanzar error especial con los datos de actualización
+        const err = new Error(errorData.message || 'Los precios han cambiado');
+        err.code = 'PRICE_MISMATCH';
+        err.priceUpdates = errorData.price_updates;
+        throw err;
+      }
+      throw new Error(errorData.error || 'Error al crear la sesión de pago');
     }
 
     const { sessionId, url, order_number } = await response.json();

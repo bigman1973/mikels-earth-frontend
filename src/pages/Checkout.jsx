@@ -6,10 +6,11 @@ import { motion } from 'framer-motion';
 import { createCheckoutSession, createSubscriptionCheckout } from '../services/stripeService';
 
 const Checkout = () => {
-  const { cart, getCartTotal, clearCart, getItemPrice, appliedDiscount, getDiscountAmount } = useCart();
+  const { cart, getCartTotal, clearCart, getItemPrice, appliedDiscount, getDiscountAmount, updateItemPrices } = useCart();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [priceMismatchWarning, setPriceMismatchWarning] = useState(null);
   
   const [formData, setFormData] = useState({
     name: '',
@@ -83,6 +84,7 @@ const Checkout = () => {
     
     setLoading(true);
     setError(null);
+    setPriceMismatchWarning(null);
     
     try {
       // Enviar evento de Started Checkout para carrito abandonado
@@ -155,7 +157,20 @@ const Checkout = () => {
       
     } catch (err) {
       console.error('Checkout error:', err);
-      setError(err.message || 'Hubo un error al procesar tu pedido. Por favor, inténtalo de nuevo.');
+      
+      if (err.code === 'PRICE_MISMATCH' && err.priceUpdates) {
+        // Actualizar los precios del carrito con los valores correctos de la DB
+        updateItemPrices(err.priceUpdates);
+        
+        // Mostrar aviso amigable al usuario
+        const productNames = err.priceUpdates.map(u => u.product).join(', ');
+        setPriceMismatchWarning(
+          `Los precios de algunos productos han cambiado (${productNames}). Tu carrito ha sido actualizado con los precios actuales. Por favor, revisa el total y continúa con tu compra.`
+        );
+        setError(null);
+      } else {
+        setError(err.message || 'Hubo un error al procesar tu pedido. Por favor, inténtalo de nuevo.');
+      }
     } finally {
       setLoading(false);
     }
@@ -427,6 +442,18 @@ const Checkout = () => {
               {error && (
                 <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
                   {error}
+                </div>
+              )}
+
+              {priceMismatchWarning && (
+                <div className="mb-6 p-4 bg-amber-50 border border-amber-300 rounded-lg text-amber-800">
+                  <div className="flex items-start gap-2">
+                    <span className="text-lg">⚠️</span>
+                    <div>
+                      <p className="font-semibold">Precios actualizados</p>
+                      <p className="text-sm mt-1">{priceMismatchWarning}</p>
+                    </div>
+                  </div>
                 </div>
               )}
             </motion.div>

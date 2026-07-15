@@ -204,6 +204,23 @@ export const CartProvider = ({ children }) => {
     return discountAmount;
   };
 
+  // Actualizar precios de items en el carrito (usado por validación PRICE_MISMATCH en checkout)
+  const updateItemPrices = (priceUpdates) => {
+    setCart(prevCart => {
+      const newCart = [...prevCart];
+      priceUpdates.forEach(update => {
+        const itemIndex = newCart.findIndex(item => 
+          item.name === update.product || 
+          (item.slug && item.slug === update.slug)
+        );
+        if (itemIndex > -1) {
+          newCart[itemIndex] = { ...newCart[itemIndex], price: update.current_price };
+        }
+      });
+      return newCart;
+    });
+  };
+
   const getCartCount = () => {
     return cart.reduce((count, item) => count + item.quantity, 0);
   };
@@ -221,6 +238,7 @@ export const CartProvider = ({ children }) => {
     getCartTotal,
     getCartCount,
     getItemPrice,
+    updateItemPrices,
     isCartOpen,
     toggleCart,
     setIsCartOpen,
