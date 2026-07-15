@@ -77,7 +77,7 @@ const FloatingNewsletterButton = () => {
 
       const data = await response.json();
 
-      if (response.ok) {
+      if (response.ok && data.success) {
         setStatus('success');
         setMessage('¡Gracias por suscribirte! Revisa tu email para ver tu cupón.');
         setFormData({ firstName: '', lastName: '', email: '', phone: '' });
@@ -88,6 +88,9 @@ const FloatingNewsletterButton = () => {
           setStatus('idle');
           setMessage('');
         }, 3000);
+      } else if (response.ok && data.already_subscribed) {
+        setStatus('error');
+        setMessage(data.message || '¡Ya estás suscrito/a! Revisa tu email original para tu cupón.');
       } else {
         setStatus('error');
         setMessage(data.error || 'Ha ocurrido un error. Por favor, inténtalo de nuevo.');

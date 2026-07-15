@@ -162,6 +162,31 @@ export default function AdminCoupons() {
     }
   };
 
+  const syncCoupons = async () => {
+    setActionLoading('sync');
+    setMessage(null);
+    try {
+      const res = await authFetch(`${API_URL}/api/admin/coupons/sync-used`, { method: 'POST' });
+      if (res && res.ok) {
+        const data = await res.json();
+        const syncCount = data.synced?.length || 0;
+        setMessage({ 
+          type: 'success', 
+          text: syncCount > 0 
+            ? `✅ ${syncCount} cupón(es) sincronizado(s) como usados` 
+            : '✅ Todos los cupones ya están actualizados'
+        });
+        loadCoupons();
+      } else {
+        setMessage({ type: 'error', text: 'Error al sincronizar cupones' });
+      }
+    } catch (err) {
+      setMessage({ type: 'error', text: 'Error de conexión al sincronizar' });
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
   const deleteCoupon = async (coupon) => {
     if (!confirm(`¿Eliminar el cupón "${coupon.code}"? Esta acción no se puede deshacer.`)) return;
     setActionLoading(`delete-${coupon.id}`);
@@ -285,6 +310,14 @@ export default function AdminCoupons() {
             <p className="text-sm text-gray-500 mt-1">Gestiona los códigos de descuento de la tienda</p>
           </div>
           <div className="flex items-center gap-2">
+            <button onClick={syncCoupons} disabled={actionLoading === 'sync'}
+              className="px-3 py-2 rounded-lg text-xs font-medium bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/20 transition-colors flex items-center gap-1.5"
+              title="Sincronizar cupones usados con Stripe">
+              <svg className={`w-3.5 h-3.5 ${actionLoading === 'sync' ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              {actionLoading === 'sync' ? 'Sincronizando...' : 'Sync Stripe'}
+            </button>
             <button onClick={loadCoupons} className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 border border-white/10 transition-colors">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />

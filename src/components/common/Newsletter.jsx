@@ -73,15 +73,19 @@ const Newsletter = ({ variant = 'default' }) => {
         }),
       });
       
-      if (response.ok) {
+      const responseData = await response.json().catch(() => ({}));
+      
+      if (response.ok && responseData.success) {
         setSubmitted(true);
         setFormData({ email: '', firstName: '', lastName: '', phone: '' });
         
         // Reset después de 5 segundos
         setTimeout(() => setSubmitted(false), 5000);
+      } else if (response.ok && responseData.already_subscribed) {
+        // Email ya suscrito previamente
+        setError(responseData.message || '¡Ya estás suscrito/a! Revisa tu email original para tu cupón.');
       } else {
-        const data = await response.json().catch(() => ({}));
-        setError(data.message || 'Hubo un error al suscribirte. Por favor, inténtalo de nuevo.');
+        setError(responseData.message || 'Hubo un error al suscribirte. Por favor, inténtalo de nuevo.');
       }
     } catch (error) {
       console.error('Error:', error);

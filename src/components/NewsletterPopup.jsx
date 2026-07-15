@@ -118,6 +118,12 @@ const NewsletterPopup = () => {
           text: '¡Suscripción exitosa!', 
           type: 'success' 
         });
+      } else if (response.ok && data.already_subscribed) {
+        // Email ya suscrito previamente
+        setMessage({ 
+          text: data.message || '¡Ya estás suscrito/a! Revisa tu email original para tu cupón.', 
+          type: 'error' 
+        });
       } else {
         setMessage({ 
           text: data.message || 'Error al suscribirse. Inténtalo de nuevo.', 
