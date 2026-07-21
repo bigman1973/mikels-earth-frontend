@@ -265,19 +265,17 @@ const Opiniones = () => {
             <details className="group">
               <summary className="flex items-center gap-2 cursor-pointer text-sm text-gray-600 hover:text-gray-800 transition-colors">
                 <Info size={16} className="text-green-600" />
-                <span>¿Qué significa <span className="inline-flex items-center gap-1 text-xs text-green-600 bg-green-100 px-1.5 py-0.5 rounded-full font-medium"><CheckCircle size={10} /> Compra verificada</span>?</span>
+                <span>{t('reviews.what_means')} <span className="inline-flex items-center gap-1 text-xs text-green-600 bg-green-100 px-1.5 py-0.5 rounded-full font-medium"><CheckCircle size={10} /> {t('reviews.verified_purchase')}</span>?</span>
               </summary>
               <div className="mt-3 pl-6 text-sm text-gray-600 leading-relaxed space-y-2">
                 <p>
-                  El distintivo <strong className="text-green-700">“Compra verificada”</strong> indica que hemos podido confirmar que la persona que deja la opinión ha realizado una compra real en nuestra tienda. 
-                  Nuestro sistema cruza automáticamente el email del autor de la reseña con nuestros registros de pedidos completados.
+                  {t('reviews.verified_explanation_1')}
                 </p>
                 <p>
-                  Las opiniones que no llevan este distintivo son igualmente válidas y reales — simplemente no hemos podido vincularlas automáticamente a un pedido 
-                  (por ejemplo, si el cliente usó un email diferente al de su compra, o si dejó la opinión desde el formulario público).
+                  {t('reviews.verified_explanation_2')}
                 </p>
                 <p className="text-xs text-gray-500 italic">
-                  Todas las opiniones publicadas son revisadas por nuestro equipo antes de aparecer en la web. No editamos ni censuramos opiniones negativas.
+                  {t('reviews.verified_explanation_3')}
                 </p>
               </div>
             </details>

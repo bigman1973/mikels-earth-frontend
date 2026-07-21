@@ -101,7 +101,7 @@ const BlogPost = () => {
           className="w-12 h-12 animate-spin mb-4" 
           style={{ color: 'var(--mikels-red)' }} 
         />
-        <p style={{ color: 'var(--mikels-gray-medium)' }}>Cargando noticia...</p>
+        <p style={{ color: 'var(--mikels-gray-medium)' }}>{t('blog.loading')}</p>
       </div>
     );
   }
@@ -120,7 +120,7 @@ const BlogPost = () => {
           {error}
         </h1>
         <p className="mb-6" style={{ color: 'var(--mikels-gray-medium)' }}>
-          La noticia que buscas no existe o ha sido eliminada.
+          {t('blog.not_found_desc')}
         </p>
         <Link
           to="/blog"
@@ -131,7 +131,7 @@ const BlogPost = () => {
           }}
         >
           <ArrowLeft className="w-5 h-5" />
-          Volver al Blog
+          {t('blog.back_to_blog')}
         </Link>
       </div>
     );
@@ -148,7 +148,7 @@ const BlogPost = () => {
             style={{ color: 'var(--mikels-red)' }}
           >
             <ArrowLeft className="w-4 h-4" />
-            Volver al Blog
+            {t('blog.back_to_blog')}
           </Link>
         </div>
       </div>
@@ -295,7 +295,7 @@ const BlogPost = () => {
                 }}
               >
                 <Share2 className="w-5 h-5" />
-                Compartir esta noticia
+                {t('blog.share_post')}
               </h3>
               <div className="flex flex-wrap gap-3">
                 <button

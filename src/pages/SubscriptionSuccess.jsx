@@ -64,7 +64,7 @@ const SubscriptionSuccess = () => {
             <div className="bg-accent/30 rounded-lg p-6 mb-8">
               <div className="flex items-center justify-center gap-2 text-primary mb-2">
                 <Mail className="w-5 h-5" />
-                <span className="font-semibold">Confirmación enviada a:</span>
+                <span className="font-semibold">{t('order_success.confirmation_sent')}</span>
               </div>
               <p className="text-gray-700">{sessionData.customer_email}</p>
             </div>

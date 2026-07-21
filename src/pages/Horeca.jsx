@@ -166,8 +166,8 @@ const Horeca = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Helmet>
-        <title>Aceite de oliva para hostelería | AOVE al por mayor HORECA</title>
-        <meta name="description" content="Compra aceite de oliva al por mayor para hostelería. AOVE premium directo del productor para restaurantes y negocios Horeca." />
+        <title>{t('horeca.meta_title')}</title>
+        <meta name="description" content={t('horeca.meta_description')} />
       </Helmet>
       {/* Hero Section */}
       <div 

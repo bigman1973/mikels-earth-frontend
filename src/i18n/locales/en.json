@@ -302,7 +302,7 @@
     "seo_title": "Customer Reviews | Mikel's Earth",
     "page_title": "Reviews",
     "subtitle": "The best recommendation comes from those who have already tried us",
-    "verified_purchase": "Verified purchase",
+    "verified_purchase": "Verified Purchase",
     "write_review": "Write a review",
     "submit": "Submit my review",
     "submitting": "Submitting...",
@@ -335,7 +335,11 @@
     "title_optional": "Title (optional)",
     "your_review": "Your review",
     "loading": "Loading reviews...",
-    "no_reviews_filter": "No reviews for this filter yet."
+    "no_reviews_filter": "No reviews for this filter yet.",
+    "what_means": "What does",
+    "verified_explanation_1": "The \"Verified Purchase\" badge indicates that we have been able to confirm that the person leaving the review has made a real purchase in our shop. Our system automatically cross-references the reviewer's email with our completed order records.",
+    "verified_explanation_2": "Reviews without this badge are equally valid and real — we simply could not automatically link them to an order (for example, if the customer used a different email from their purchase, or left the review via the public form).",
+    "verified_explanation_3": "All published reviews are checked by our team before appearing on the website. We do not edit or censor negative reviews."
   },
   "family": {
     "title": "The Family",
@@ -679,13 +683,18 @@
     "info_email": "Email",
     "info_whatsapp": "WhatsApp",
     "info_address": "Address",
-    "contact_whatsapp": "Contact via WhatsApp"
+    "contact_whatsapp": "Contact via WhatsApp",
+    "meta_title": "Olive Oil for Hospitality | Wholesale EVOO for HORECA",
+    "meta_description": "Buy wholesale olive oil for hospitality. Premium EVOO direct from the producer for restaurants and Horeca businesses."
   },
   "blog": {
     "title": "Blog",
-    "loading": "Loading news...",
+    "loading": "Loading article...",
     "no_posts": "No articles available yet",
-    "read_more": "Read more"
+    "read_more": "Read more",
+    "not_found_desc": "The article you are looking for does not exist or has been removed.",
+    "back_to_blog": "Back to Blog",
+    "share_post": "Share this article"
   },
   "recipes": {
     "title": "Recipe Book",

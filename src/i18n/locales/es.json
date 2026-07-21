@@ -335,7 +335,11 @@
     "title_optional": "Título (opcional)",
     "your_review": "Tu opinión",
     "loading": "Cargando opiniones...",
-    "no_reviews_filter": "Aún no hay opiniones para este filtro."
+    "no_reviews_filter": "Aún no hay opiniones para este filtro.",
+    "what_means": "¿Qué significa",
+    "verified_explanation_1": "El distintivo \"Compra verificada\" indica que hemos podido confirmar que la persona que deja la opinión ha realizado una compra real en nuestra tienda. Nuestro sistema cruza automáticamente el email del autor de la reseña con nuestros registros de pedidos completados.",
+    "verified_explanation_2": "Las opiniones que no llevan este distintivo son igualmente válidas y reales — simplemente no hemos podido vincularlas automáticamente a un pedido (por ejemplo, si el cliente usó un email diferente al de su compra, o si dejó la opinión desde el formulario público).",
+    "verified_explanation_3": "Todas las opiniones publicadas son revisadas por nuestro equipo antes de aparecer en la web. No editamos ni censuramos opiniones negativas."
   },
   "family": {
     "title": "La Familia",
@@ -655,13 +659,18 @@
     "info_email": "Email",
     "info_whatsapp": "WhatsApp",
     "info_address": "Dirección",
-    "contact_whatsapp": "Contactar por WhatsApp"
+    "contact_whatsapp": "Contactar por WhatsApp",
+    "meta_title": "Aceite de oliva para hostelería | AOVE al por mayor HORECA",
+    "meta_description": "Compra aceite de oliva al por mayor para hostelería. AOVE premium directo del productor para restaurantes y negocios Horeca."
   },
   "blog": {
     "title": "Blog",
-    "loading": "Cargando noticias...",
+    "loading": "Cargando noticia...",
     "no_posts": "Aún no hay artículos disponibles",
-    "read_more": "Leer más"
+    "read_more": "Leer más",
+    "not_found_desc": "La noticia que buscas no existe o ha sido eliminada.",
+    "back_to_blog": "Volver al Blog",
+    "share_post": "Compartir esta noticia"
   },
   "recipes": {
     "title": "Recetario",
