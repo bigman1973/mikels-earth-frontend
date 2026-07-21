@@ -291,6 +291,32 @@ export default function ProductEditor({ product, onClose, onSaved }) {
     }
   };
 
+  const [translating, setTranslating] = useState(false);
+  const [translateResult, setTranslateResult] = useState(null);
+
+  const handleAutoTranslate = async () => {
+    if (!product) return;
+    setTranslating(true);
+    setTranslateResult(null);
+    setError(null);
+    try {
+      const res = await authFetch(`${API_URL}/api/admin/web-products/${product.id}/auto-translate`, {
+        method: 'POST'
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setTranslateResult(data.translations);
+        setSuccess('✓ Producto traducido al inglés correctamente');
+      } else {
+        setError(data.error || 'Error al traducir');
+      }
+    } catch (err) {
+      setError('Error de conexión al traducir');
+    } finally {
+      setTranslating(false);
+    }
+  };
+
   const tabs = [
     { id: 'basic', label: 'Básico', icon: '📝' },
     { id: 'media', label: 'Imágenes', icon: '🖼️' },
@@ -755,9 +781,21 @@ export default function ProductEditor({ product, onClose, onSaved }) {
           )}
         </div>
 
+        {/* Translation result preview */}
+        {translateResult && (
+          <div className="px-6 py-3 border-t border-white/5 bg-blue-500/5">
+            <p className="text-xs text-blue-400 font-medium mb-2">🌐 Traducción generada (EN):</p>
+            <div className="space-y-1 text-xs text-gray-300">
+              {translateResult.name_en && <p><span className="text-gray-500">Nombre:</span> {translateResult.name_en}</p>}
+              {translateResult.description_en && <p><span className="text-gray-500">Descripción:</span> {translateResult.description_en}</p>}
+              {translateResult.long_description_en && <p className="line-clamp-2"><span className="text-gray-500">Desc. larga:</span> {translateResult.long_description_en}</p>}
+            </div>
+          </div>
+        )}
+
         {/* Footer */}
         <div className="flex items-center justify-between px-6 py-4 border-t border-white/10 bg-white/[0.02]">
-          <div>
+          <div className="flex gap-2">
             {!isNew && (
               <button
                 onClick={handleToggleActive}
@@ -768,6 +806,15 @@ export default function ProductEditor({ product, onClose, onSaved }) {
                 }`}
               >
                 {form.active ? '🚫 Desactivar' : '✓ Activar'}
+              </button>
+            )}
+            {!isNew && (
+              <button
+                onClick={handleAutoTranslate}
+                disabled={translating}
+                className="px-4 py-2 text-xs rounded-lg border transition-all font-medium bg-blue-500/10 text-blue-400 border-blue-500/20 hover:bg-blue-500/20 disabled:opacity-50"
+              >
+                {translating ? '⏳ Traduciendo...' : '🌐 Auto-traducir EN'}
               </button>
             )}
           </div>

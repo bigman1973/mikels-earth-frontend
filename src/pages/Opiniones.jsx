@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
 import { Star, Send, CheckCircle, Info, Globe } from 'lucide-react';
 
-const API_URL = import.meta.env.VITE_API_URL || '';
+const API_URL = import.meta.env.VITE_API_URL || 'https://mikels-earth-backend-production.up.railway.app';
 
 const PRODUCTS = [
   { slug: 'paraguayo-almibar', name: 'Paraguayo en Almíbar' },
