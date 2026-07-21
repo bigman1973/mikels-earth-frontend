@@ -51,8 +51,8 @@ export const products = [
     freeShipping: true,
     claims: ["Solo 6.60€/litro", "Envío gratis", "Compra 3+ y ahorra 9%", "Formato ahorro", "De nuestros olivares de Córdoba y Lleida"],
     badges: [
-      { text: "Más Vendido", color: "bg-red-600" },
-      { text: "Directo del Campo", color: "bg-green-600" }
+      { text: "Más Vendido", textKey: "best_seller", color: "bg-red-600" },
+      { text: "Directo del Campo", textKey: "from_field", color: "bg-green-600" }
     ]
   },
   {
@@ -93,7 +93,7 @@ export const products = [
       discount: 8
     },
     badges: [
-      { text: "🌍 ÚNICO EN EL MUNDO", color: "bg-gradient-to-r from-blue-600 to-purple-600" }
+      { text: "🌍 ÚNICO EN EL MUNDO", textKey: "unique_world", color: "bg-gradient-to-r from-blue-600 to-purple-600" }
     ]
   },
   {
@@ -156,8 +156,8 @@ export const products = [
     freeShipping: true,
     limitedEdition: true,
     badges: [
-      { text: "📦 PACK DÚO", color: "bg-gradient-to-r from-green-600 to-emerald-600", action: "addPackDuo" },
-      { text: "🎁 PROMOCIÓN: Hasta 25% dto", color: "bg-gradient-to-r from-red-600 to-pink-600" }
+      { text: "📦 PACK DÚO", textKey: "pack_duo", color: "bg-gradient-to-r from-green-600 to-emerald-600", action: "addPackDuo" },
+      { text: "🎁 PROMOCIÓN: Hasta 25% dto", textKey: "promo_25", color: "bg-gradient-to-r from-red-600 to-pink-600" }
     ]
   },
   {
@@ -315,8 +315,8 @@ export const products = [
     featured: true,
     award: "Medalla de Oro - Japón & Nueva York",
     badges: [
-      { text: "🏅 MEDALLA DE ORO", color: "bg-gradient-to-r from-yellow-500 to-yellow-600" },
-      { text: "PREMIADO", color: "bg-gradient-to-r from-purple-600 to-purple-700" }
+      { text: "🏅 MEDALLA DE ORO", textKey: "gold_medal", color: "bg-gradient-to-r from-yellow-500 to-yellow-600" },
+      { text: "PREMIADO", textKey: "awarded", color: "bg-gradient-to-r from-purple-600 to-purple-700" }
     ]
   },
   {
@@ -487,7 +487,7 @@ export const products = [
     ],
     claims: ["Estuche de madera incluido", "Fruta 100% artesanal", "Sin aditivos", "Regalo perfecto", "Ahorra 1,30€ + estuche gratis"],
     badges: [
-      { text: "🎁 REGALO PREMIUM", color: "bg-gradient-to-r from-amber-600 to-orange-600" }
+      { text: "🎁 REGALO PREMIUM", textKey: "premium_gift", color: "bg-gradient-to-r from-amber-600 to-orange-600" }
     ]
   },
   {
@@ -538,7 +538,7 @@ export const products = [
     ],
     claims: ["Estuche premium incluido", "Edición limitada", "Sin filtrar", "3x más antioxidantes", "Solo 4,10€ más por el estuche"],
     badges: [
-      { text: "🍂 EDICIÓN TEMPRANO", color: "bg-gradient-to-r from-orange-600 to-amber-600" }
+      { text: "🍂 EDICIÓN TEMPRANO", textKey: "early_edition", color: "bg-gradient-to-r from-orange-600 to-amber-600" }
     ]
   },
   {

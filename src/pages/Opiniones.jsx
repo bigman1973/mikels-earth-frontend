@@ -1,45 +1,35 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Helmet } from 'react-helmet-async';
-import { Star, CheckCircle, Send, Info } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { Helmet } from 'react-helmet-async';
+import { Star, Send, CheckCircle, Info, Globe } from 'lucide-react';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://mikels-earth-backend-production.up.railway.app';
+const API_URL = import.meta.env.VITE_API_URL || '';
 
-// Productos disponibles para reseñar
 const PRODUCTS = [
-  { slug: 'aceite-temprano-500ml', name: 'Aceite de Oliva Virgen Extra Temprano 500ml' },
-  { slug: 'aceite-5l', name: 'Aceite de Oliva Virgen Extra 5L' },
   { slug: 'paraguayo-almibar', name: 'Paraguayo en Almíbar' },
-  { slug: 'nectarina-almibar', name: 'Nectarina en Almíbar' },
-  { slug: 'mermelada-paraguayo', name: 'Mermelada de Paraguayo Artesanal' },
-  { slug: 'pack-degustacion', name: 'Pack Degustación Premium' },
-  { slug: 'pack-temprano', name: 'Pack Temprano Premium' },
-  { slug: 'pack-fruta', name: 'Pack Fruta Premium' },
-  { slug: 'pack-completo', name: 'Pack Completo Mikel\'s Earth' },
-  { slug: 'estuche-regalo', name: 'Estuche de Regalo Premium' },
+  { slug: 'aceite-oliva-virgen-extra-5l', name: 'Aceite de Oliva Virgen Extra 5L' },
+  { slug: 'aceite-arbequina-500ml', name: 'Aceite Arbequina 500ml' },
+  { slug: 'aceite-picual-500ml', name: 'Aceite Picual 500ml' },
+  { slug: 'aceite-hojiblanca-500ml', name: 'Aceite Hojiblanca 500ml' },
+  { slug: 'aceite-ecologico-500ml', name: 'Aceite Ecológico 500ml' },
+  { slug: 'estuche-regalo-premium', name: 'Estuche Regalo Premium' },
+  { slug: 'aceite-temprano-500ml', name: 'Aceite Temprano 500ml' }
 ];
 
 const Opiniones = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [reviews, setReviews] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false);
   const [filter, setFilter] = useState('all');
   const [sort, setSort] = useState('newest');
-  
-  // Formulario
-  const [showForm, setShowForm] = useState(false);
-
-  // Auto-abrir formulario si viene con #nueva-resena
-  useEffect(() => {
-    if (window.location.hash === '#nueva-resena') {
-      setShowForm(true);
-      setTimeout(() => {
-        document.getElementById('nueva-resena')?.scrollIntoView({ behavior: 'smooth' });
-      }, 300);
-    }
-  }, []);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitResult, setSubmitResult] = useState(null);
+  const [hoverRating, setHoverRating] = useState(0);
+  const [translatedReviews, setTranslatedReviews] = useState({});
+  const [translatingId, setTranslatingId] = useState(null);
   const [formData, setFormData] = useState({
     customer_name: '',
     customer_email: '',
@@ -50,9 +40,6 @@ const Opiniones = () => {
     comment: '',
     order_number: ''
   });
-  const [submitting, setSubmitting] = useState(false);
-  const [submitResult, setSubmitResult] = useState(null);
-  const [hoverRating, setHoverRating] = useState(0);
 
   useEffect(() => {
     fetchReviews();
@@ -60,16 +47,14 @@ const Opiniones = () => {
   }, [filter, sort]);
 
   const fetchReviews = async () => {
+    setLoading(true);
     try {
-      let url = `${API_URL}/api/reviews?sort=${sort}&limit=50`;
-      if (filter !== 'all') {
-        url += `&product_slug=${filter}`;
-      }
-      const response = await fetch(url);
-      if (response.ok) {
-        const data = await response.json();
-        setReviews(data.reviews || []);
-      }
+      const params = new URLSearchParams();
+      if (filter !== 'all') params.append('product', filter);
+      params.append('sort', sort);
+      const response = await fetch(`${API_URL}/api/reviews?${params}`);
+      const data = await response.json();
+      setReviews(data.reviews || []);
     } catch (error) {
       console.error('Error fetching reviews:', error);
     } finally {
@@ -80,10 +65,8 @@ const Opiniones = () => {
   const fetchStats = async () => {
     try {
       const response = await fetch(`${API_URL}/api/reviews/stats`);
-      if (response.ok) {
-        const data = await response.json();
-        setStats(data);
-      }
+      const data = await response.json();
+      setStats(data);
     } catch (error) {
       console.error('Error fetching stats:', error);
     }
@@ -100,14 +83,14 @@ const Opiniones = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (formData.rating === 0) {
-      setSubmitResult({ success: false, message: 'Por favor, selecciona una puntuación' });
+      setSubmitResult({ success: false, message: t('reviews.error_no_rating', 'Por favor, selecciona una puntuación') });
       return;
     }
-    
+
     if (!formData.product_slug) {
-      setSubmitResult({ success: false, message: 'Por favor, selecciona un producto' });
+      setSubmitResult({ success: false, message: t('reviews.error_no_product', 'Por favor, selecciona un producto') });
       return;
     }
 
@@ -139,18 +122,50 @@ const Opiniones = () => {
           comment: '',
           order_number: ''
         });
-        // Refresh reviews
         setTimeout(() => {
           fetchReviews();
           fetchStats();
         }, 1000);
       } else {
-        setSubmitResult({ success: false, message: data.error || 'Error al enviar la reseña' });
+        setSubmitResult({ success: false, message: data.error || t('reviews.error_submit', 'Error al enviar la reseña') });
       }
     } catch (error) {
-      setSubmitResult({ success: false, message: 'Error de conexión. Inténtalo de nuevo.' });
+      setSubmitResult({ success: false, message: t('reviews.error_connection', 'Error de conexión. Inténtalo de nuevo.') });
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleTranslate = async (reviewId, text, title) => {
+    if (translatedReviews[reviewId]) {
+      // Toggle back to original
+      setTranslatedReviews(prev => {
+        const copy = { ...prev };
+        delete copy[reviewId];
+        return copy;
+      });
+      return;
+    }
+
+    setTranslatingId(reviewId);
+    try {
+      const targetLang = i18n.language === 'es' ? 'en' : 'es';
+      const response = await fetch(`${API_URL}/api/translate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, title: title || '', target: targetLang })
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setTranslatedReviews(prev => ({
+          ...prev,
+          [reviewId]: { comment: data.translated_text, title: data.translated_title || '' }
+        }));
+      }
+    } catch (error) {
+      console.error('Translation error:', error);
+    } finally {
+      setTranslatingId(null);
     }
   };
 
@@ -188,7 +203,7 @@ const Opiniones = () => {
 
   const formatDate = (dateStr) => {
     const date = new Date(dateStr);
-    return date.toLocaleDateString('es-ES', {
+    return date.toLocaleDateString(i18n.language === 'es' ? 'es-ES' : 'en-GB', {
       day: 'numeric',
       month: 'long',
       year: 'numeric'
@@ -199,7 +214,7 @@ const Opiniones = () => {
     <div className="bg-white min-h-screen">
       <Helmet>
         <title>{t('reviews.seo_title')}</title>
-        <meta name="description" content="Lee las opiniones de nuestros clientes sobre los productos artesanales de Mikel's Earth. Aceite de oliva, conservas y más desde 1819." />
+        <meta name="description" content={t('reviews.subtitle')} />
       </Helmet>
 
       {/* Hero */}
@@ -258,7 +273,7 @@ const Opiniones = () => {
         </section>
       )}
 
-      {/* Nota de transparencia sobre Compra Verificada */}
+      {/* Verified Purchase Info */}
       <section className="py-6 border-b bg-green-50/50">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
@@ -268,15 +283,9 @@ const Opiniones = () => {
                 <span>{t('reviews.what_means')} <span className="inline-flex items-center gap-1 text-xs text-green-600 bg-green-100 px-1.5 py-0.5 rounded-full font-medium"><CheckCircle size={10} /> {t('reviews.verified_purchase')}</span>?</span>
               </summary>
               <div className="mt-3 pl-6 text-sm text-gray-600 leading-relaxed space-y-2">
-                <p>
-                  {t('reviews.verified_explanation_1')}
-                </p>
-                <p>
-                  {t('reviews.verified_explanation_2')}
-                </p>
-                <p className="text-xs text-gray-500 italic">
-                  {t('reviews.verified_explanation_3')}
-                </p>
+                <p>{t('reviews.verified_explanation_1')}</p>
+                <p>{t('reviews.verified_explanation_2')}</p>
+                <p className="text-xs text-gray-500 italic">{t('reviews.verified_explanation_3')}</p>
               </div>
             </details>
           </div>
@@ -313,7 +322,7 @@ const Opiniones = () => {
               className="bg-secondary text-white px-6 py-3 rounded-lg font-semibold hover:bg-secondary/90 transition-colors inline-flex items-center gap-2"
             >
               <Send size={18} />
-              Dejar mi opinión
+              {t('reviews.write_review')}
             </button>
           </div>
         </div>
@@ -333,10 +342,7 @@ const Opiniones = () => {
               <div className="max-w-2xl mx-auto bg-accent/5 rounded-2xl p-8">
                 <h3 className="text-2xl font-bold text-primary mb-2">{t('reviews.share_experience')}</h3>
                 <p className="text-gray-600 mb-6">
-                  Tu opinión nos ayuda a mejorar y ayuda a otros a descubrir nuestros productos.
-                  <span className="block mt-1 text-secondary font-semibold">
-                    ¡Recibirás un cupón del 10% de descuento como agradecimiento!
-                  </span>
+                  {t('reviews_page.share_experience', 'Tu opinión nos ayuda a mejorar y ayuda a otros a descubrir nuestros productos.')}
                 </p>
 
                 <form onSubmit={handleSubmit} className="space-y-5">
@@ -349,7 +355,7 @@ const Opiniones = () => {
                         value={formData.customer_name}
                         onChange={(e) => setFormData(prev => ({ ...prev, customer_name: e.target.value }))}
                         className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                        placeholder="Tu nombre"
+                        placeholder={t('reviews.name')}
                       />
                     </div>
                     <div>
@@ -394,7 +400,7 @@ const Opiniones = () => {
                       value={formData.title}
                       onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
                       className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                      placeholder="Resume tu experiencia en una frase"
+                      placeholder={t('reviews.title_optional')}
                     />
                   </div>
 
@@ -406,20 +412,20 @@ const Opiniones = () => {
                       value={formData.comment}
                       onChange={(e) => setFormData(prev => ({ ...prev, comment: e.target.value }))}
                       className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none"
-                      placeholder="Cuéntanos qué te ha parecido el producto... (mínimo 10 caracteres)"
+                      placeholder={t('reviews.your_review')}
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Nº de pedido (opcional)
+                      {t('reviews_page.form_order', 'Nº de pedido (opcional)')}
                     </label>
                     <input
                       type="text"
                       value={formData.order_number}
                       onChange={(e) => setFormData(prev => ({ ...prev, order_number: e.target.value }))}
                       className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary/20 focus:border-primary"
-                      placeholder="MKE-XXXX (para verificar tu compra)"
+                      placeholder="MKE-XXXX"
                     />
                   </div>
 
@@ -428,7 +434,7 @@ const Opiniones = () => {
                       <p className="font-medium">{submitResult.message}</p>
                       {submitResult.coupon && (
                         <p className="mt-2">
-                          Tu código de descuento: <span className="font-bold text-lg">{submitResult.coupon}</span>
+                          {t('reviews_page.form_success', 'Tu código de descuento:')} <span className="font-bold text-lg">{submitResult.coupon}</span>
                         </p>
                       )}
                     </div>
@@ -439,7 +445,7 @@ const Opiniones = () => {
                     disabled={submitting}
                     className="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {submitting ? 'Enviando...' : 'Enviar mi opinión'}
+                    {submitting ? t('reviews.submitting') : t('reviews.submit')}
                   </button>
                 </form>
               </div>
@@ -464,48 +470,71 @@ const Opiniones = () => {
                   onClick={() => setShowForm(true)}
                   className="mt-4 text-secondary font-semibold hover:text-secondary/80"
                 >
-                  ¡Sé el primero en opinar!
+                  {t('reviews.be_first')}
                 </button>
               </div>
             ) : (
               <div className="space-y-6">
-                {reviews.map((review, index) => (
-                  <motion.div
-                    key={review.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.05 }}
-                    className="bg-white border border-gray-100 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow"
-                  >
-                    <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3">
-                      <div>
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="font-bold text-primary">{review.customer_name}</span>
-                          {review.is_verified_purchase && (
-                            <span className="inline-flex items-center gap-1 text-xs text-green-600 bg-green-50 px-2 py-0.5 rounded-full">
-                              <CheckCircle size={12} />
-                              Compra verificada
-                            </span>
-                          )}
+                {reviews.map((review, index) => {
+                  const isTranslated = !!translatedReviews[review.id];
+                  const displayComment = isTranslated ? translatedReviews[review.id].comment : review.comment;
+                  const displayTitle = isTranslated ? translatedReviews[review.id].title : review.title;
+
+                  return (
+                    <motion.div
+                      key={review.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                      className="bg-white border border-gray-100 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow"
+                    >
+                      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3">
+                        <div>
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="font-bold text-primary">{review.customer_name}</span>
+                            {review.is_verified_purchase && (
+                              <span className="inline-flex items-center gap-1 text-xs text-green-600 bg-green-50 px-2 py-0.5 rounded-full">
+                                <CheckCircle size={12} />
+                                {t('reviews.verified_purchase')}
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-sm text-gray-500">{review.product_name}</p>
                         </div>
-                        <p className="text-sm text-gray-500">{review.product_name}</p>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="flex gap-0.5">
-                          {renderStars(review.rating)}
+                        <div className="flex items-center gap-2">
+                          <div className="flex gap-0.5">
+                            {renderStars(review.rating)}
+                          </div>
+                          <span className="text-sm text-gray-400">
+                            {formatDate(review.created_at)}
+                          </span>
                         </div>
-                        <span className="text-sm text-gray-400">
-                          {formatDate(review.created_at)}
-                        </span>
                       </div>
-                    </div>
-                    
-                    {review.title && (
-                      <h4 className="font-semibold text-gray-800 mt-3">{review.title}</h4>
-                    )}
-                    <p className="text-gray-700 mt-2 leading-relaxed">{review.comment}</p>
-                  </motion.div>
-                ))}
+
+                      {displayTitle && (
+                        <h4 className="font-semibold text-gray-800 mt-3">{displayTitle}</h4>
+                      )}
+                      <p className="text-gray-700 mt-2 leading-relaxed">{displayComment}</p>
+
+                      {/* Translate button */}
+                      <div className="mt-3 flex items-center">
+                        <button
+                          onClick={() => handleTranslate(review.id, review.comment, review.title)}
+                          disabled={translatingId === review.id}
+                          className="inline-flex items-center gap-1.5 text-xs text-gray-500 hover:text-primary transition-colors disabled:opacity-50"
+                        >
+                          <Globe size={14} />
+                          {translatingId === review.id
+                            ? t('translate_btn.translating')
+                            : isTranslated
+                              ? t('translate_btn.show_original')
+                              : t('translate_btn.translate')
+                          }
+                        </button>
+                      </div>
+                    </motion.div>
+                  );
+                })}
               </div>
             )}
           </div>
@@ -516,17 +545,17 @@ const Opiniones = () => {
       <section className="py-16 bg-primary/5">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold text-primary mb-4">
-            ¿Has probado nuestros productos?
+            {t('reviews_page.have_tried', '¿Has probado nuestros productos?')}
           </h2>
           <p className="text-lg text-gray-600 mb-6 max-w-xl mx-auto">
-            Comparte tu experiencia y recibe un <span className="font-bold text-secondary">10% de descuento</span> en tu próxima compra como agradecimiento.
+            {t('reviews_page.share_experience', 'Comparte tu experiencia y recibe un 10% de descuento en tu próxima compra como agradecimiento.')}
           </p>
           <button
             onClick={() => { setShowForm(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
             className="bg-secondary text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-secondary/90 transition-colors inline-flex items-center gap-2"
           >
             <Star size={20} />
-            Dejar mi opinión
+            {t('reviews.write_review')}
           </button>
         </div>
       </section>

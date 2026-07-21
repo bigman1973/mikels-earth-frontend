@@ -30,7 +30,7 @@ const StarRating = ({ rating, count }) => {
         ))}
       </div>
       <span className="text-sm text-gray-600 font-medium">{rating.toFixed(1)}</span>
-      <span className="text-sm text-gray-400">({count} {count === 1 ? 'opinión' : 'opiniones'})</span>
+      <span className="text-sm text-gray-400">({count === 1 ? t('product_detail.review_count_one', { count }) : t('product_detail.reviews_count', { count })})</span>
     </div>
   );
 };
@@ -249,7 +249,7 @@ const ProductDetail = () => {
             <div className="bg-white rounded-lg shadow-lg p-8">
               {/* Category */}
               <p className="text-sm text-primary/60 uppercase tracking-wide mb-2 font-semibold">
-                {product.category}
+                {t(`categories.${product.category.toLowerCase()}`, product.category)}
               </p>
 
               {/* Product name */}
@@ -268,7 +268,7 @@ const ProductDetail = () => {
                     className="inline-flex items-center gap-1 text-xs bg-accent/50 text-primary px-3 py-1 rounded-full"
                   >
                     <Leaf className="w-3 h-3" />
-                    {tag}
+                    {t(`tags.${tag.toLowerCase().replace(/\s+/g, '_').replace(/[áàä]/g,'a').replace(/[éèë]/g,'e').replace(/[íìï]/g,'i').replace(/[óòö]/g,'o').replace(/[úùü]/g,'u').replace(/ñ/g,'n')}`, tag)}
                   </span>
                 ))}
               </div>
@@ -286,7 +286,7 @@ const ProductDetail = () => {
                       key={index}
                       className={`${badge.color} text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg uppercase tracking-wide`}
                     >
-                      {badge.text}
+                      {badge.textKey ? t(`badges.${badge.textKey}`, badge.text) : badge.text}
                     </span>
                   ))}
                 </div>
@@ -310,28 +310,28 @@ const ProductDetail = () => {
                 </div>
                 {purchaseType === 'subscription' && selectedFrequency && (
                   <div className="text-sm text-gray-600">
-                    Ahorras {selectedFrequency.discount}% con suscripción {selectedFrequency.label.toLowerCase()}
+                    {t('product_detail.save_with_subscription', { percent: selectedFrequency.discount, label: selectedFrequency.label.toLowerCase() })}
                   </div>
                 )}
                 {hasDiscount && (
                   <div className="bg-green-50 border-2 border-green-500 rounded-lg p-3 space-y-1">
                     <div className="text-sm text-green-700 font-bold">
-                      ✅ ¡Descuento aplicado! Ahorras {discountPercent}% ({discountLabel})
+                      ✅ {t('product_detail.discount_applied', { percent: discountPercent, label: discountLabel })}
                     </div>
                     <div className="text-xs text-green-600">
-                      Precio por unidad: {currentPrice.toFixed(2)}€ (antes {product.price.toFixed(2)}€)
+                      {t('product_detail.price_per_unit', { price: currentPrice.toFixed(2), original: product.price.toFixed(2) })}
                     </div>
                     <div className="text-lg font-bold text-green-700">
-                      Total: {(currentPrice * quantity).toFixed(2)}€
+                      {t('product_detail.total_price', { price: (currentPrice * quantity).toFixed(2) })}
                       <span className="text-sm font-normal text-green-600 ml-2">
-                        (ahorras {((product.price - currentPrice) * quantity).toFixed(2)}€)
+                        ({t('product_detail.you_save', { amount: ((product.price - currentPrice) * quantity).toFixed(2) })})
                       </span>
                     </div>
                   </div>
                 )}
                 {product.tieredDiscount && !hasDiscount && purchaseType === 'one-time' && (
                   <div className="text-sm text-gray-600 space-y-2">
-                    <p className="font-semibold text-base">🎁 Descuentos por volumen:</p>
+                    <p className="font-semibold text-base">🎁 {t('product_detail.volume_discounts')}</p>
                     {product.tieredDiscount.map((tier, index) => {
                       const isBestValue = tier.minQuantity === 36; // Destacar la opción 3+1
                       const isFreeShipping = tier.freeShipping === true; // Pack Duo con envío gratis
@@ -353,16 +353,16 @@ const ProductDetail = () => {
                         >
                           <div className="flex items-center justify-between mb-1">
                             <span className="font-semibold">
-                              {actualQuantity} unidades ({tier.label})
+                              {actualQuantity} {t('product_detail.units')} ({tier.label})
                             </span>
                             {isBestValue && (
                               <span className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white text-xs font-bold px-2 py-1 rounded-full">
-                                ⭐ MEJOR VALOR
+                                ⭐ {t('product_detail.best_value')}
                               </span>
                             )}
                             {isFreeShipping && (
                               <span className="bg-gradient-to-r from-green-500 to-blue-500 text-white text-xs font-bold px-2 py-1 rounded-full">
-                                🚚 ENVÍO GRATIS
+                                🚚 {t('product_detail.free_shipping_badge')}
                               </span>
                             )}
                           </div>
@@ -370,11 +370,11 @@ const ProductDetail = () => {
                             <p className="text-xs text-gray-600 mb-1 italic">{tier.description}</p>
                           )}
                           <div className="text-xs space-y-0.5 mb-2">
-                            {tier.discount > 0 && <p className="text-green-600 font-semibold">{tier.discount}% descuento</p>}
-                            <p>{pricePerUnit.toFixed(2)}€/unidad</p>
+                            {tier.discount > 0 && <p className="text-green-600 font-semibold">{t('product_detail.discount_percent', { percent: tier.discount })}</p>}
+                            <p>{pricePerUnit.toFixed(2)}{t('product_detail.per_unit')}</p>
                             <p className="font-bold text-primary">
-                              Total: {totalPrice.toFixed(2)}€
-                              {savings > 0 && <span className="text-green-600 ml-1">(ahorras {savings.toFixed(2)}€)</span>}
+                              {t('product_detail.total_price', { price: totalPrice.toFixed(2) })}
+                              {savings > 0 && <span className="text-green-600 ml-1">({t('product_detail.you_save', { amount: savings.toFixed(2) })})</span>}
                             </p>
                           </div>
                           <button
@@ -388,7 +388,7 @@ const ProductDetail = () => {
                                 : 'bg-primary hover:bg-primary-dark'
                             }`}
                           >
-                            {isBestValue ? '¡QUIERO MI CAJA GRATIS!' : isFreeShipping ? 'Añadir Pack Duo al carrito' : `Añadir ${tier.actualQuantity || tier.minQuantity} unidades al carrito`}
+                            {isBestValue ? t('product_detail.want_free_box') : isFreeShipping ? t('product_detail.add_pack_duo') : t('product_detail.add_units_to_cart', { count: tier.actualQuantity || tier.minQuantity })}
                           </button>
                         </div>
                       );
@@ -400,12 +400,12 @@ const ProductDetail = () => {
                 )}
                 {product.volumeDiscount && !hasDiscount && purchaseType === 'one-time' && (
                   <div className="text-sm text-gray-600">
-                    Compra {product.volumeDiscount.minQuantity} o más unidades y ahorra {product.volumeDiscount.discount}%
+                    {t('product_detail.volume_discount_text', { min: product.volumeDiscount.minQuantity, percent: product.volumeDiscount.discount })}
                   </div>
                 )}
                 {purchaseType === 'one-time' && product.subscriptionAvailable && product.subscriptionFrequencies && product.subscriptionFrequencies.length > 0 && (
                   <div className="text-sm text-gray-600">
-                    o desde {(product.price * (1 - Math.max(...product.subscriptionFrequencies.map(f => f.discount)) / 100)).toFixed(2)}€ con suscripción
+                    {t('product_detail.or_from_subscription', { price: (product.price * (1 - Math.max(...product.subscriptionFrequencies.map(f => f.discount)) / 100)).toFixed(2) })}
                   </div>
                 )}
               </div>
@@ -413,7 +413,7 @@ const ProductDetail = () => {
               {/* Purchase type selector */}
               <div className="mb-6">
                 <label className="block text-sm font-semibold text-primary mb-3">
-                  Tipo de compra
+                  {t('product_detail.purchase_type')}
                 </label>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <button
@@ -470,10 +470,10 @@ const ProductDetail = () => {
                         )}
                       </div>
                       <div className="text-lg font-bold text-primary">
-                        Benefíciate de hasta un {maxSubscriptionDiscount}% de descuento
+                        {t('product_detail.subscription_benefit', { percent: maxSubscriptionDiscount })}
                       </div>
                       <div className="text-xs text-gray-600 mt-1">
-                        El precio final depende de la frecuencia elegida
+                        {t('product_detail.subscription_price_note')}
                       </div>
                     </button>
                   )}
@@ -484,7 +484,7 @@ const ProductDetail = () => {
               {purchaseType === 'subscription' && product.subscriptionAvailable && (
                 <div className="mb-6">
                   <label className="block text-sm font-semibold text-primary mb-3">
-                    Frecuencia de entrega
+                    {t('product_detail.delivery_frequency')}
                   </label>
                   <div className="grid grid-cols-1 gap-2">
                     {product.subscriptionFrequencies.map((freq) => (
@@ -501,7 +501,7 @@ const ProductDetail = () => {
                           <div>
                             <div className="font-semibold">{freq.label}</div>
                             <div className="text-sm text-gray-600">
-                              Ahorra {freq.discount}% · {(product.price * (1 - freq.discount / 100)).toFixed(2)}€/unidad
+                              {t('product_detail.save_percent', { percent: freq.discount })} · {(product.price * (1 - freq.discount / 100)).toFixed(2)}{t('product_detail.per_unit')}
                             </div>
                           </div>
                           {subscriptionFrequency === freq.value && (
@@ -516,7 +516,7 @@ const ProductDetail = () => {
                   <div className="mt-4 space-y-4">
                     <div>
                       <label className="block text-sm font-semibold text-primary mb-3">
-                        Día de la semana preferible
+                        {t('product_detail.preferred_day')}
                       </label>
                       <select
                         value={preferredDeliveryDay}
@@ -578,7 +578,7 @@ const ProductDetail = () => {
               {product.variants && product.variants.length > 0 && product.slug === 'estuche-regalo' ? (
                 <div className="mb-6">
                   <label className="block text-sm font-semibold text-primary mb-3">
-                    Selecciona los diseños y cantidades (máximo 12 estuches de cada tipo)
+                    {t('product_detail.select_designs')}
                   </label>
                   <div className="space-y-4">
                     {product.variants.map((variant) => {
@@ -632,14 +632,14 @@ const ProductDetail = () => {
                   </div>
                   <div className="mt-4 p-3 bg-gray-100 rounded-lg">
                     <p className="text-sm font-semibold text-center">
-                      Total: {Object.values(variantQuantities).reduce((sum, q) => sum + q, 0)} estuches seleccionados
+                      {t('product_detail.total_cases_selected', { count: Object.values(variantQuantities).reduce((sum, q) => sum + q, 0) })}
                     </p>
                   </div>
                 </div>
               ) : product.variants && product.variants.length > 0 ? (
                 <div className="mb-6">
                   <label className="block text-sm font-semibold text-primary mb-3">
-                    Selecciona el diseño
+                    {t('product_detail.select_design')}
                   </label>
                   <div className="grid grid-cols-3 gap-3">
                     {product.variants.map((variant) => (
@@ -678,7 +678,7 @@ const ProductDetail = () => {
               {product.slug !== 'estuche-regalo' && (
               <div className="mb-6">
                 <label className="block text-sm font-semibold text-primary mb-3">
-                  Cantidad
+                  {t('product_detail.quantity')}
                 </label>
                 <div className="flex items-center gap-3">
                   <button
@@ -713,13 +713,13 @@ const ProductDetail = () => {
                   {/* Stock oculto temporalmente */}
                   {false && product.stock < 10 && (
                     <span className="text-sm text-orange-600 font-semibold ml-2">
-                      Solo quedan {product.stock}
+                      {t('product_detail.only_left', { count: product.stock })}
                     </span>
                   )}
                 </div>
                 {purchaseType === 'subscription' && product.volumeDiscount?.minQuantity && (
                   <p className="text-sm text-primary/70 mt-2">
-                    Mínimo {product.volumeDiscount.minQuantity} unidades para suscripción
+                    {t('product_detail.min_subscription', { min: product.volumeDiscount.minQuantity })}
                   </p>
                 )}
               </div>
@@ -958,7 +958,7 @@ const ProductDetail = () => {
         {/* Related products section */}
         <div className="mt-16">
           <h2 className="text-3xl font-bold text-primary mb-8 text-center">
-            También te puede interesar
+            {t('product_detail.related_products')}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {(product.relatedProducts
