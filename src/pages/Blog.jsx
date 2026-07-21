@@ -106,7 +106,7 @@ const Blog = () => {
                 className="w-12 h-12 animate-spin mb-4" 
                 style={{ color: 'var(--mikels-red)' }} 
               />
-              <p style={{ color: 'var(--mikels-gray-medium)' }}>Cargando noticias...</p>
+              <p style={{ color: 'var(--mikels-gray-medium)' }}>{t('blog.loading')}</p>
             </div>
           ) : error ? (
             <div className="text-center py-20">

@@ -214,7 +214,7 @@ const Opiniones = () => {
               {t('reviews.page_title')}
             </h1>
             <p className="text-xl text-white/80 max-w-2xl mx-auto">
-              La mejor recomendación es la de quienes ya nos han probado
+              {t('reviews.subtitle')}
             </p>
           </motion.div>
         </div>
@@ -230,11 +230,11 @@ const Opiniones = () => {
                 <div className="flex justify-center gap-1 mt-2">
                   {renderStars(Math.round(stats.average_rating), 20)}
                 </div>
-                <p className="text-gray-500 mt-1">de 5 estrellas</p>
+                <p className="text-gray-500 mt-1">{t('reviews.of_5_stars')}</p>
               </div>
               <div className="text-center md:border-l md:pl-8">
                 <div className="text-3xl font-bold text-primary">{stats.total_reviews}</div>
-                <p className="text-gray-500">opiniones de clientes</p>
+                <p className="text-gray-500">{t('reviews.customer_reviews')}</p>
               </div>
               <div className="hidden md:block md:border-l md:pl-8">
                 {[5, 4, 3, 2, 1].map(star => (
@@ -295,7 +295,7 @@ const Opiniones = () => {
                 onChange={(e) => setFilter(e.target.value)}
                 className="border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary"
               >
-                <option value="all">Todos los productos</option>
+                <option value="all">{t('reviews.all_products')}</option>
                 {PRODUCTS.map(p => (
                   <option key={p.slug} value={p.slug}>{p.name}</option>
                 ))}
@@ -305,9 +305,9 @@ const Opiniones = () => {
                 onChange={(e) => setSort(e.target.value)}
                 className="border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary"
               >
-                <option value="newest">Más recientes</option>
-                <option value="highest">Mejor puntuación</option>
-                <option value="lowest">Menor puntuación</option>
+                <option value="newest">{t('reviews.most_recent')}</option>
+                <option value="highest">{t('reviews.highest_rated')}</option>
+                <option value="lowest">{t('reviews.lowest_rated')}</option>
               </select>
             </div>
             <button
@@ -333,7 +333,7 @@ const Opiniones = () => {
           >
             <div className="container mx-auto px-4 py-10">
               <div className="max-w-2xl mx-auto bg-accent/5 rounded-2xl p-8">
-                <h3 className="text-2xl font-bold text-primary mb-2">Comparte tu experiencia</h3>
+                <h3 className="text-2xl font-bold text-primary mb-2">{t('reviews.share_experience')}</h3>
                 <p className="text-gray-600 mb-6">
                   Tu opinión nos ayuda a mejorar y ayuda a otros a descubrir nuestros productos.
                   <span className="block mt-1 text-secondary font-semibold">
@@ -344,7 +344,7 @@ const Opiniones = () => {
                 <form onSubmit={handleSubmit} className="space-y-5">
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Nombre *</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">{t('reviews.name')} *</label>
                       <input
                         type="text"
                         required
@@ -355,7 +355,7 @@ const Opiniones = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">{t('reviews.email')} *</label>
                       <input
                         type="email"
                         required
@@ -368,14 +368,14 @@ const Opiniones = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Producto *</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">{t('reviews.product')} *</label>
                     <select
                       required
                       value={formData.product_slug}
                       onChange={(e) => handleProductChange(e.target.value)}
                       className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary/20 focus:border-primary"
                     >
-                      <option value="">Selecciona un producto</option>
+                      <option value="">{t('reviews.select_product')}</option>
                       {PRODUCTS.map(p => (
                         <option key={p.slug} value={p.slug}>{p.name}</option>
                       ))}
@@ -383,14 +383,14 @@ const Opiniones = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Puntuación *</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">{t('reviews.rating')} *</label>
                     <div className="flex gap-1">
                       {renderInteractiveStars()}
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Título (opcional)</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">{t('reviews.title_optional')}</label>
                     <input
                       type="text"
                       value={formData.title}
@@ -401,7 +401,7 @@ const Opiniones = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Tu opinión *</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">{t('reviews.your_review')} *</label>
                     <textarea
                       required
                       rows={4}
@@ -457,11 +457,11 @@ const Opiniones = () => {
             {loading ? (
               <div className="text-center py-12">
                 <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary mx-auto"></div>
-                <p className="text-gray-500 mt-4">Cargando opiniones...</p>
+                <p className="text-gray-500 mt-4">{t('reviews.loading')}</p>
               </div>
             ) : reviews.length === 0 ? (
               <div className="text-center py-12">
-                <p className="text-gray-500 text-lg">Aún no hay opiniones para este filtro.</p>
+                <p className="text-gray-500 text-lg">{t('reviews.no_reviews_filter')}</p>
                 <button
                   onClick={() => setShowForm(true)}
                   className="mt-4 text-secondary font-semibold hover:text-secondary/80"

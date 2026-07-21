@@ -63,8 +63,8 @@ const RecoverCart = () => {
       <div className="min-h-screen flex items-center justify-center bg-[#faf8f4]">
         <div className="text-center">
           <Loader2 className="w-12 h-12 animate-spin text-[#2d5016] mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-[#2d5016]">Recuperando tu carrito...</h2>
-          <p className="text-gray-600 mt-2">Un momento, estamos cargando tus productos.</p>
+          <h2 className="text-xl font-semibold text-[#2d5016]">{t('recover_cart.recovering')}</h2>
+          <p className="text-gray-600 mt-2">{t('recover_cart.loading')}</p>
         </div>
       </div>
     );
@@ -75,13 +75,13 @@ const RecoverCart = () => {
       <div className="min-h-screen flex items-center justify-center bg-[#faf8f4]">
         <div className="text-center max-w-md mx-auto px-4">
           <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-gray-800 mb-2">Carrito no disponible</h2>
+          <h2 className="text-xl font-semibold text-gray-800 mb-2">{t('recover_cart.unavailable')}</h2>
           <p className="text-gray-600 mb-6">{error}</p>
           <button
             onClick={() => navigate('/tienda')}
             className="bg-[#2d5016] text-white px-6 py-3 rounded-lg hover:bg-[#1e3a0f] transition-colors"
           >
-            Ir a la tienda
+            {t('recover_cart.go_to_shop')}
           </button>
         </div>
       </div>
@@ -92,11 +92,11 @@ const RecoverCart = () => {
     <div className="min-h-screen flex items-center justify-center bg-[#faf8f4]">
       <div className="text-center max-w-md mx-auto px-4">
         <ShoppingBag className="w-12 h-12 text-[#2d5016] mx-auto mb-4" />
-        <h2 className="text-xl font-semibold text-[#2d5016] mb-2">¡Carrito recuperado!</h2>
+        <h2 className="text-xl font-semibold text-[#2d5016] mb-2">{t('recover_cart.recovered')}</h2>
         <p className="text-gray-600 mb-2">
           Hemos cargado {cartData?.items?.length || 0} producto(s) en tu carrito.
         </p>
-        <p className="text-sm text-gray-500">Redirigiendo al checkout...</p>
+        <p className="text-sm text-gray-500">{t('recover_cart.redirecting')}</p>
       </div>
     </div>
   );

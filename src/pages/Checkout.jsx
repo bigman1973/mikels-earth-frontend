@@ -322,15 +322,15 @@ const Checkout = () => {
                       onChange={handleInputChange}
                       className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary"
                     >
-                      <option value="España">España</option>
+                      <option value="España">{t('checkout.spain')}</option>
                       <option value="Portugal">Portugal</option>
-                      <option value="Francia">Francia</option>
+                      <option value="Francia">{t('checkout.france')}</option>
                     </select>
                   </div>
 
                   <div className="md:col-span-2">
                     <label className="block text-sm font-semibold text-primary mb-2">
-                      Notas del Pedido (Opcional)
+                      {t('checkout.order_notes')}
                     </label>
                     <textarea
                       name="notes"

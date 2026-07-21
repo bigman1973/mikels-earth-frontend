@@ -75,7 +75,7 @@ const ProductDetail = () => {
     return (
       <div className="min-h-screen py-16 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-primary mb-4">Producto no encontrado</h1>
+          <h1 className="text-2xl font-bold text-primary mb-4">{t('product_detail.not_found')}</h1>
           <Link to="/tienda" className="text-primary hover:underline">
             {t('product_detail.back_to_shop')}
           </Link>
@@ -300,7 +300,7 @@ const ProductDetail = () => {
               {/* Weight */}
               <div className="flex items-center gap-2 text-sm text-gray-600 mb-6">
                 <Package className="w-4 h-4" />
-                <span>Contenido: {product.weight}</span>
+                <span>{t('product_detail.content')}: {product.weight}</span>
               </div>
 
               {/* Price */}
@@ -394,7 +394,7 @@ const ProductDetail = () => {
                       );
                     })}
                     <div className="border-t-2 border-gray-300 pt-2 mt-3">
-                      <p className="text-sm font-semibold mb-2">O elige cantidad personalizada:</p>
+                      <p className="text-sm font-semibold mb-2">{t('product_detail.custom_quantity')}</p>
                     </div>
                   </div>
                 )}
@@ -432,7 +432,7 @@ const ProductDetail = () => {
                     }`}
                   >
                     <div className="flex items-center justify-between mb-2">
-                      <span className="font-semibold">Compra única</span>
+                      <span className="font-semibold">{t('product_detail.single_purchase')}</span>
                       {purchaseType === 'one-time' && (
                         <Check className="w-5 h-5 text-primary" />
                       )}
@@ -463,7 +463,7 @@ const ProductDetail = () => {
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
                           <Repeat className="w-4 h-4" />
-                          <span className="font-semibold">Suscripción</span>
+                          <span className="font-semibold">{t('product_detail.subscription')}</span>
                         </div>
                         {purchaseType === 'subscription' && (
                           <Check className="w-5 h-5 text-primary" />
@@ -523,41 +523,41 @@ const ProductDetail = () => {
                         onChange={(e) => setPreferredDeliveryDay(e.target.value)}
                         className="w-full p-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary transition-all"
                       >
-                        <option value="">Selecciona un día</option>
-                        <option value="monday">Lunes</option>
-                        <option value="tuesday">Martes</option>
-                        <option value="wednesday">Miércoles</option>
-                        <option value="thursday">Jueves</option>
-                        <option value="friday">Viernes</option>
+                        <option value="">{t('product_detail.select_day')}</option>
+                        <option value="monday">{t('product_detail.monday')}</option>
+                        <option value="tuesday">{t('product_detail.tuesday')}</option>
+                        <option value="wednesday">{t('product_detail.wednesday')}</option>
+                        <option value="thursday">{t('product_detail.thursday')}</option>
+                        <option value="friday">{t('product_detail.friday')}</option>
                       </select>
                     </div>
                     
                     <div>
                       <label className="block text-sm font-semibold text-primary mb-3">
-                        Franja horaria preferible
+                        {t('product_detail.select_time')}
                       </label>
                       <select
                         value={preferredTimeSlot}
                         onChange={(e) => setPreferredTimeSlot(e.target.value)}
                         className="w-full p-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary transition-all"
                       >
-                        <option value="">Selecciona una franja</option>
-                        <option value="morning">Mañana (9:00 - 14:00)</option>
-                        <option value="afternoon">Tarde (14:00 - 18:00)</option>
-                        <option value="evening">Noche (18:00 - 21:00)</option>
+                        <option value="">{t('product_detail.select_time')}</option>
+                        <option value="morning">{t('product_detail.morning')}</option>
+                        <option value="afternoon">{t('product_detail.afternoon')}</option>
+                        <option value="evening">{t('product_detail.evening')}</option>
                       </select>
                     </div>
                     
                     <div>
                       <label className="block text-sm font-semibold text-primary mb-3">
-                        Día del mes preferible
+                        {t('product_detail.select_day')}
                       </label>
                       <select
                         value={preferredDayOfMonth}
                         onChange={(e) => setPreferredDayOfMonth(e.target.value)}
                         className="w-full p-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary transition-all"
                       >
-                        <option value="">Selecciona un día</option>
+                        <option value="">{t('product_detail.select_day')}</option>
                         {Array.from({ length: 31 }, (_, i) => i + 1).map(day => (
                           <option key={day} value={day}>{day}</option>
                         ))}
@@ -568,7 +568,7 @@ const ProductDetail = () => {
                   {/* Subscription terms notice */}
                   <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                     <p className="text-sm text-gray-700">
-                      <span className="font-semibold text-primary">Condiciones de suscripción:</span> Esta suscripción tiene una duración de 12 meses. Los precios se revisan anualmente. Al finalizar el periodo, podrás cancelar o renovar tu suscripción.
+                      <span className="font-semibold text-primary">{t('product_detail.subscription_terms')}</span> {t('product_detail.subscription_terms_text')}
                     </p>
                   </div>
                 </div>
@@ -728,7 +728,7 @@ const ProductDetail = () => {
               {/* Addons section */}
               {product.addons && product.addons.length > 0 && (
                 <div className="mb-6">
-                  <h3 className="text-sm font-semibold text-primary mb-3">Complementos opcionales</h3>
+                  <h3 className="text-sm font-semibold text-primary mb-3">{t('product_detail.optional_addons')}</h3>
                   <div className="space-y-3">
                     {product.addons.map((addon, idx) => {
                       const addonProduct = products.find(p => p.slug === addon.productSlug);
@@ -761,7 +761,7 @@ const ProductDetail = () => {
                                 <div>
                                   <span className="text-sm font-medium text-gray-700">{addon.label}</span>
                                   {addon.variantId && (
-                                    <span className="text-xs text-gray-500 block">Modelo: {addon.variantId.replace('-', ' ')}</span>
+                                    <span className="text-xs text-gray-500 block">{t('product_detail.model')}: {addon.variantId.replace('-', ' ')}</span>
                                   )}
                                 </div>
                                 {addonProduct && (
@@ -774,7 +774,7 @@ const ProductDetail = () => {
                           {isSelected && (
                             <div className="ml-8">
                               <label className="block text-xs font-semibold text-gray-600 mb-2">
-                                Cantidad de estuches
+                                {t('product_detail.quantity')}
                               </label>
                               <div className="flex items-center gap-2">
                                 <button
@@ -844,7 +844,7 @@ const ProductDetail = () => {
                     onClick={handleBuyNow}
                     className="w-full bg-primary text-white py-4 rounded-lg font-semibold text-lg hover:bg-primary/90 transition-all shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
                   >
-                    Comprar Ahora
+                    {t('product_detail.buy_now')}
                   </button>
                   <button
                     onClick={handleAddToCart}
@@ -880,37 +880,37 @@ const ProductDetail = () => {
 
               {/* Additional info */}
               <div className="mt-8 pt-8 border-t border-gray-200">
-                <h3 className="font-bold text-primary mb-3">{product.category === 'Packs' ? 'Material' : 'Ingredientes'}</h3>
+                <h3 className="font-bold text-primary mb-3">{product.category === 'Packs' ? t('product_detail.material') : t('product_detail.ingredients')}</h3>
                 <p className="text-sm text-gray-700 mb-4">{product.ingredients}</p>
 
                 {product.nutritionalInfo && (
                   <>
                     {product.nutritionalInfo.perfilSabor ? (
                       <>
-                        <h3 className="font-bold text-primary mb-3">Perfil de Sabor</h3>
+                        <h3 className="font-bold text-primary mb-3">{t('product_detail.flavor_profile')}</h3>
                         <div className="space-y-3 mb-4">
                           <div className="flex items-center justify-between">
-                            <span className="text-gray-700 font-medium">Frutado:</span>
+                            <span className="text-gray-700 font-medium">{t('product_detail.fruity')}</span>
                             <span className="font-semibold text-primary">{product.nutritionalInfo.perfilSabor.frutado}</span>
                           </div>
                           <div className="flex items-center justify-between">
-                            <span className="text-gray-700 font-medium">Amargo:</span>
+                            <span className="text-gray-700 font-medium">{t('product_detail.bitter')}</span>
                             <span className="font-semibold text-primary">{product.nutritionalInfo.perfilSabor.amargo}</span>
                           </div>
                           <div className="flex items-center justify-between">
-                            <span className="text-gray-700 font-medium">Picante:</span>
+                            <span className="text-gray-700 font-medium">{t('product_detail.spicy')}</span>
                             <span className="font-semibold text-primary">{product.nutritionalInfo.perfilSabor.picante}</span>
                           </div>
                         </div>
                         {product.nutritionalInfo.notasCata && (
                           <div className="mb-4">
-                            <h3 className="font-bold text-primary mb-3 mt-6">Notas de Cata</h3>
+                            <h3 className="font-bold text-primary mb-3 mt-6">{t('product_detail.tasting_notes')}</h3>
                             <p className="text-sm text-gray-700 italic">{product.nutritionalInfo.notasCata}</p>
                           </div>
                         )}
                         {product.nutritionalInfo.idealPara && (
                           <>
-                            <h3 className="font-bold text-primary mb-3 mt-6">Ideal Para</h3>
+                            <h3 className="font-bold text-primary mb-3 mt-6">{t('product_detail.ideal_for')}</h3>
                             <ul className="space-y-2">
                               {product.nutritionalInfo.idealPara.map((uso, idx) => (
                                 <li key={idx} className="flex items-start gap-2 text-sm text-gray-700">
@@ -924,22 +924,22 @@ const ProductDetail = () => {
                       </>
                     ) : (
                       <>
-                        <h3 className="font-bold text-primary mb-3">Información Nutricional (por 100g/ml)</h3>
+                        <h3 className="font-bold text-primary mb-3">{t('product_detail.nutrition_info')}</h3>
                         <div className="grid grid-cols-2 gap-2 text-sm">
                           <div className="bg-gray-50 p-2 rounded">
-                            <span className="text-gray-600">Calorías:</span>
+                            <span className="text-gray-600">{t('product_detail.calories')}</span>
                             <span className="font-semibold ml-2">{product.nutritionalInfo.calories}</span>
                           </div>
                           <div className="bg-gray-50 p-2 rounded">
-                            <span className="text-gray-600">Carbohidratos:</span>
+                            <span className="text-gray-600">{t('product_detail.carbs')}</span>
                             <span className="font-semibold ml-2">{product.nutritionalInfo.carbs}</span>
                           </div>
                           <div className="bg-gray-50 p-2 rounded">
-                            <span className="text-gray-600">Proteínas:</span>
+                            <span className="text-gray-600">{t('product_detail.protein')}</span>
                             <span className="font-semibold ml-2">{product.nutritionalInfo.protein}</span>
                           </div>
                           <div className="bg-gray-50 p-2 rounded">
-                            <span className="text-gray-600">Grasas:</span>
+                            <span className="text-gray-600">{t('product_detail.fats')}</span>
                             <span className="font-semibold ml-2">{product.nutritionalInfo.fat}</span>
                           </div>
                         </div>

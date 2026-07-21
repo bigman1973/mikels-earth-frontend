@@ -61,9 +61,9 @@ const CartDrawer = () => {
               {cart.length === 0 ? (
                 <div className="text-center py-12">
                   <ShoppingBag className="w-16 h-16 mx-auto text-gray-300 mb-4" />
-                  <p className="text-gray-500 mb-2">Tu carrito está vacío</p>
+                  <p className="text-gray-500 mb-2">{t('cart.empty')}</p>
                   <p className="text-sm text-gray-400">
-                    Añade productos para comenzar tu compra
+                    {t('cart.add_products')}
                   </p>
                 </div>
               ) : (

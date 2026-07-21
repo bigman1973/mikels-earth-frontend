@@ -179,7 +179,7 @@ const Recetario = () => {
   return (
     <div className="bg-white">
       <Helmet>
-        <title>Recetas con aceite de oliva | Cocina mediterránea</title>
+        <title>{t('recipes.seo_title')}</title>
         <meta name="description" content="Descubre recetas con aceite de oliva y cocina mediterránea. Ideas fáciles y saludables para disfrutar del AOVE en tu día a día." />
       </Helmet>
       {/* Hero Section */}
@@ -285,7 +285,7 @@ const Recetario = () => {
                     <div className="mt-4 pt-4 border-t border-gray-200 space-y-4">
                       {/* Ingredientes */}
                       <div>
-                        <h4 className="font-bold text-primary mb-2">Ingredientes:</h4>
+                        <h4 className="font-bold text-primary mb-2">{t('recipes.ingredients')}:</h4>
                         <ul className="space-y-1">
                           {recipe.ingredients.map((ing, idx) => (
                             <li key={idx} className="text-sm text-gray-700 flex items-start gap-2">
@@ -298,7 +298,7 @@ const Recetario = () => {
 
                       {/* Pasos */}
                       <div>
-                        <h4 className="font-bold text-primary mb-2">Preparación:</h4>
+                        <h4 className="font-bold text-primary mb-2">{t('recipes.preparation')}:</h4>
                         <ol className="space-y-2">
                           {recipe.steps.map((step, idx) => (
                             <li key={idx} className="text-sm text-gray-700 flex gap-2">

@@ -293,7 +293,7 @@ const NewsletterPopup = () => {
                             </button>
                           </div>
                           {copied && (
-                            <p className="text-xs text-green-600 mt-1">¡Copiado!</p>
+                            <p className="text-xs text-green-600 mt-1">{t('newsletter.copied')}</p>
                           )}
                         </div>
                       )}

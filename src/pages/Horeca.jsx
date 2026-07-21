@@ -27,12 +27,12 @@ const Horeca = () => {
   const [message, setMessage] = useState('');
 
   const establishmentTypes = [
-    'Restaurante',
-    'Hotel',
-    'Bar/Cafetería',
-    'Catering',
-    'Tienda Gourmet',
-    'Otro'
+    { value: 'Restaurante', label: t('horeca.type_restaurant') },
+    { value: 'Hotel', label: t('horeca.type_hotel') },
+    { value: 'Bar/Cafetería', label: t('horeca.type_bar') },
+    { value: 'Catering', label: t('horeca.type_catering') },
+    { value: 'Tienda Gourmet', label: t('horeca.type_gourmet') },
+    { value: 'Otro', label: t('horeca.type_other') }
   ];
 
   const handleChange = (e) => {
@@ -186,7 +186,7 @@ const Horeca = () => {
           >
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
               <Building2 className="w-5 h-5" />
-              <span className="font-semibold">B2B - Profesionales</span>
+              <span className="font-semibold">{t('horeca.badge_b2b')}</span>
             </div>
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
               {t('horeca.hero_title', { defaultValue: 'Aceite de oliva para hostelería y profesionales Horeca' })}
@@ -226,7 +226,7 @@ const Horeca = () => {
       {/* Productos Disponibles */}
       <div className="container mx-auto px-4 py-16">
         <h2 className="text-3xl font-bold text-center text-primary mb-12">
-          Productos Disponibles para HORECA
+          {t('horeca.products_title')}
         </h2>
         
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-16">
@@ -246,30 +246,30 @@ const Horeca = () => {
             </div>
             <div className="p-6">
               <div className="inline-block bg-red-600 text-white text-xs px-3 py-1 rounded-full mb-3">
-                Más Vendido
+                {t('horeca.best_seller')}
               </div>
               <h3 className="text-2xl font-bold text-primary mb-2">
-                Aceite de Oliva Virgen Extra 5L
+                {t('horeca.oil_5l_name')}
               </h3>
               <p className="text-gray-600 mb-4">
-                Caja de 3 garrafas de 5 litros
+                {t('horeca.oil_5l_desc')}
               </p>
               <ul className="space-y-2 text-sm text-gray-700">
                 <li className="flex items-start gap-2">
                   <Check className="w-5 h-5 text-green-600 flex-shrink-0" />
-                  <span>15 litros en total por caja</span>
+                  <span>{t('horeca.oil_5l_f1')}</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="w-5 h-5 text-green-600 flex-shrink-0" />
-                  <span>Variedades Picual, Hojiblanca y Arbequina</span>
+                  <span>{t('horeca.oil_5l_f2')}</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="w-5 h-5 text-green-600 flex-shrink-0" />
-                  <span>Prensado en frío, baja acidez</span>
+                  <span>{t('horeca.oil_5l_f3')}</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="w-5 h-5 text-green-600 flex-shrink-0" />
-                  <span>Ideal para uso intensivo en cocina</span>
+                  <span>{t('horeca.oil_5l_f4')}</span>
                 </li>
               </ul>
             </div>
@@ -291,30 +291,30 @@ const Horeca = () => {
             </div>
             <div className="p-6">
               <div className="inline-block bg-gradient-to-r from-orange-600 to-amber-600 text-white text-xs px-3 py-1 rounded-full mb-3">
-                Edición Limitada
+                {t('horeca.limited_edition')}
               </div>
               <h3 className="text-2xl font-bold text-primary mb-2">
-                Aceite Temprano 500ml
+                {t('horeca.temprano_name')}
               </h3>
               <p className="text-gray-600 mb-4">
-                Sin filtrar - Premium
+                {t('horeca.temprano_desc')}
               </p>
               <ul className="space-y-2 text-sm text-gray-700">
                 <li className="flex items-start gap-2">
                   <Check className="w-5 h-5 text-green-600 flex-shrink-0" />
-                  <span>Cosecha temprana de aceitunas verdes</span>
+                  <span>{t('horeca.temprano_f1')}</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="w-5 h-5 text-green-600 flex-shrink-0" />
-                  <span>3x más polifenoles y antioxidantes</span>
+                  <span>{t('horeca.temprano_f2')}</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="w-5 h-5 text-green-600 flex-shrink-0" />
-                  <span>Verde intenso, ligeramente picante</span>
+                  <span>{t('horeca.temprano_f3')}</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <Check className="w-5 h-5 text-green-600 flex-shrink-0" />
-                  <span>Perfecto para platos premium en crudo</span>
+                  <span>{t('horeca.temprano_f4')}</span>
                 </li>
               </ul>
             </div>
@@ -329,23 +329,23 @@ const Horeca = () => {
           className="max-w-3xl mx-auto bg-white rounded-lg shadow-xl p-8"
         >
           <h2 className="text-3xl font-bold text-primary mb-2 text-center">
-            Solicitar Pedido Profesional
+            {t('horeca.form_title')}
           </h2>
           <p className="text-center text-gray-600 mb-8">
-            Rellena el formulario y recibirás una propuesta personalizada por email
+            {t('horeca.form_subtitle')}
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Datos del Establecimiento */}
+            {/* Establishment Details */}
             <div>
               <h3 className="text-lg font-semibold text-primary mb-4 flex items-center gap-2">
                 <Building2 className="w-5 h-5" />
-                Datos del Establecimiento
+                {t('horeca.establishment_section')}
               </h3>
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Nombre del Establecimiento *
+                    {t('horeca.establishment_name')}
                   </label>
                   <input
                     type="text"
@@ -359,7 +359,7 @@ const Horeca = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Tipo de Establecimiento *
+                    {t('horeca.establishment_type')}
                   </label>
                   <select
                     name="establishmentType"
@@ -368,25 +368,25 @@ const Horeca = () => {
                     required
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                   >
-                    <option value="">Seleccionar...</option>
+                    <option value="">{t('horeca.select_placeholder')}</option>
                     {establishmentTypes.map(type => (
-                      <option key={type} value={type}>{type}</option>
+                      <option key={type.value} value={type.value}>{type.label}</option>
                     ))}
                   </select>
                 </div>
               </div>
             </div>
 
-            {/* Datos de Contacto */}
+            {/* Contact Details */}
             <div>
               <h3 className="text-lg font-semibold text-primary mb-4 flex items-center gap-2">
                 <Phone className="w-5 h-5" />
-                Datos de Contacto
+                {t('horeca.contact_section')}
               </h3>
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Nombre de Contacto *
+                    {t('horeca.contact_name')}
                   </label>
                   <input
                     type="text"
@@ -400,7 +400,7 @@ const Horeca = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Teléfono *
+                    {t('horeca.phone')}
                   </label>
                   <input
                     type="tel"
@@ -432,7 +432,7 @@ const Horeca = () => {
             {/* Productos */}
             <div>
               <h3 className="text-lg font-semibold text-primary mb-4">
-                Productos
+                {t('horeca.products_section')}
               </h3>
               <div className="space-y-4">
                 <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
@@ -441,7 +441,7 @@ const Horeca = () => {
                     <p className="text-sm text-gray-600">15 litros en total por caja</p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <label className="text-sm font-medium text-gray-700">Cantidad:</label>
+                    <label className="text-sm font-medium text-gray-700">{t('horeca.quantity')}</label>
                     <input
                       type="number"
                       name="aceite5L"
@@ -450,17 +450,17 @@ const Horeca = () => {
                       min="0"
                       className="w-20 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                     />
-                    <span className="text-sm text-gray-600">cajas</span>
+                    <span className="text-sm text-gray-600">{t('horeca.boxes')}</span>
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                   <div className="flex-1">
-                    <p className="font-semibold text-gray-900">🍂 Aceite Temprano 500ml</p>
-                    <p className="text-sm text-gray-600">Sin filtrar - Edición limitada</p>
+                    <p className="font-semibold text-gray-900">🍂>{t('horeca.temprano_name')}</p>
+                    <p className="text-sm text-gray-600">{t('horeca.temprano_order_desc')}</p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <label className="text-sm font-medium text-gray-700">Cantidad:</label>
+                    <label className="text-sm font-medium text-gray-700">{t('horeca.quantity')}</label>
                     <input
                       type="number"
                       name="aceiteTemprano"
@@ -469,17 +469,17 @@ const Horeca = () => {
                       min="0"
                       className="w-20 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                     />
-                    <span className="text-sm text-gray-600">uds</span>
+                    <span className="text-sm text-gray-600">{t('horeca.units')}</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Dirección de Entrega */}
+            {/* Delivery Address */}
             <div>
               <h3 className="text-lg font-semibold text-primary mb-4 flex items-center gap-2">
                 <MapPin className="w-5 h-5" />
-                Dirección de Entrega
+                {t('horeca.delivery_section')}
               </h3>
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="md:col-span-2">
@@ -545,7 +545,7 @@ const Horeca = () => {
             <div>
               <h3 className="text-lg font-semibold text-primary mb-4 flex items-center gap-2">
                 <MessageSquare className="w-5 h-5" />
-                Comentarios Adicionales (opcional)
+                {t('horeca.comments_section')}
               </h3>
               <textarea
                 name="comments"
@@ -553,7 +553,7 @@ const Horeca = () => {
                 onChange={handleChange}
                 rows="4"
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="Horarios de entrega preferidos, necesidades especiales, etc."
+                placeholder={t('horeca.comments_placeholder')}
               />
             </div>
 
@@ -569,13 +569,12 @@ const Horeca = () => {
                   id="newsletter-checkbox"
                 />
                 <label htmlFor="newsletter-checkbox" className="text-sm text-gray-700 flex-1">
-                  <span className="font-semibold text-primary">✉️ Suscribirme al newsletter</span>
+                  <span className="font-semibold text-primary">{t('horeca.newsletter_subscribe')}</span>
                   <p className="mt-1 text-gray-600">
-                    Recibe los mejores consejos, recetas exclusivas y ofertas especiales. 
-                    Puedes anular la suscripción en cualquier momento.
+                    {t('horeca.newsletter_text')}
                   </p>
                   <p className="mt-2 text-green-700 font-semibold">
-                    🎁 ¡Obtén un 10% de descuento en tu primera compra online!
+                    {t('horeca.newsletter_discount')}
                   </p>
                 </label>
               </div>
@@ -592,7 +591,7 @@ const Horeca = () => {
                 className="mt-1"
               />
               <label className="text-sm text-gray-700">
-                Acepto la <a href="/politica-privacidad" className="text-primary hover:underline" target="_blank">política de privacidad</a> *
+                {t('horeca.privacy_accept')} <a href="/politica-privacidad" className="text-primary hover:underline" target="_blank">{t('horeca.privacy_policy')}</a> *
               </label>
             </div>
 
@@ -608,10 +607,10 @@ const Horeca = () => {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                   </svg>
-                  Enviando...
+                  {t('horeca.sending')}
                 </span>
               ) : (
-                'Enviar Solicitud de Pedido'
+                t('horeca.submit')
               )}
             </button>
           </form>
@@ -620,7 +619,7 @@ const Horeca = () => {
         {/* Beneficios HORECA */}
         <div className="mt-20">
           <h2 className="text-3xl font-bold text-center text-primary mb-12">
-            ¿Por qué elegir Mikel's Earth HORECA?
+            {t('horeca.benefits_title')}
           </h2>
           
           <div className="grid md:grid-cols-3 gap-8">
@@ -633,8 +632,8 @@ const Horeca = () => {
               <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
                 <span className="text-3xl">🚚</span>
               </div>
-              <h3 className="text-xl font-bold text-primary mb-2">Entrega Directa</h3>
-              <p className="text-gray-600">Del campo a tu cocina sin intermediarios</p>
+              <h3 className="text-xl font-bold text-primary mb-2">{t('horeca.benefit_delivery')}</h3>
+              <p className="text-gray-600">{t('horeca.benefit_delivery_text')}</p>
             </motion.div>
 
             <motion.div
@@ -646,8 +645,8 @@ const Horeca = () => {
               <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
                 <span className="text-3xl">💰</span>
               </div>
-              <h3 className="text-xl font-bold text-primary mb-2">Precios Especiales</h3>
-              <p className="text-gray-600">Descuentos por volumen para profesionales</p>
+              <h3 className="text-xl font-bold text-primary mb-2">{t('horeca.benefit_prices')}</h3>
+              <p className="text-gray-600">{t('horeca.benefit_prices_text')}</p>
             </motion.div>
 
             <motion.div
@@ -659,8 +658,8 @@ const Horeca = () => {
               <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
                 <span className="text-3xl">⭐</span>
               </div>
-              <h3 className="text-xl font-bold text-primary mb-2">Calidad Premium</h3>
-              <p className="text-gray-600">Aceite de primera prensada en frío</p>
+              <h3 className="text-xl font-bold text-primary mb-2">{t('horeca.benefit_quality')}</h3>
+              <p className="text-gray-600">{t('horeca.benefit_quality_text')}</p>
             </motion.div>
 
             <motion.div
@@ -672,8 +671,8 @@ const Horeca = () => {
               <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
                 <span className="text-3xl">📞</span>
               </div>
-              <h3 className="text-xl font-bold text-primary mb-2">Atención Personal</h3>
-              <p className="text-gray-600">Asesoramiento especializado para tu negocio</p>
+              <h3 className="text-xl font-bold text-primary mb-2">{t('horeca.benefit_attention')}</h3>
+              <p className="text-gray-600">{t('horeca.benefit_attention_text')}</p>
             </motion.div>
 
             <motion.div
@@ -685,8 +684,8 @@ const Horeca = () => {
               <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
                 <span className="text-3xl">🌿</span>
               </div>
-              <h3 className="text-xl font-bold text-primary mb-2">100% Natural</h3>
-              <p className="text-gray-600">Sin aditivos artificiales ni conservantes</p>
+              <h3 className="text-xl font-bold text-primary mb-2">{t('horeca.benefit_natural')}</h3>
+              <p className="text-gray-600">{t('horeca.benefit_natural_text')}</p>
             </motion.div>
 
             <motion.div
@@ -698,8 +697,8 @@ const Horeca = () => {
               <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
                 <span className="text-3xl">📦</span>
               </div>
-              <h3 className="text-xl font-bold text-primary mb-2">Pedidos Recurrentes</h3>
-              <p className="text-gray-600">Facilita tu gestión con entregas programadas</p>
+              <h3 className="text-xl font-bold text-primary mb-2">{t('horeca.benefit_recurring')}</h3>
+              <p className="text-gray-600">{t('horeca.benefit_recurring_text')}</p>
             </motion.div>
           </div>
         </div>
@@ -711,16 +710,16 @@ const Horeca = () => {
           transition={{ delay: 1.1 }}
           className="mt-20 bg-gradient-to-r from-primary to-green-700 text-white rounded-lg p-8 text-center"
         >
-          <h2 className="text-3xl font-bold mb-4">¿Necesitas más información?</h2>
+          <h2 className="text-3xl font-bold mb-4">{t('horeca.info_title')}</h2>
           <p className="text-lg mb-6 text-green-50">
-            Nuestro equipo comercial está a tu disposición
+            {t('horeca.info_subtitle')}
           </p>
           
           <div className="grid md:grid-cols-3 gap-6 mb-8 text-left max-w-3xl mx-auto">
             <div className="flex items-start gap-3">
               <Mail className="w-6 h-6 flex-shrink-0 mt-1" />
               <div>
-                <p className="font-semibold mb-1">Email</p>
+                <p className="font-semibold mb-1">{t('horeca.info_email')}</p>
                 <a href="mailto:info@mikels.es" className="text-green-100 hover:text-white transition-colors">
                   info@mikels.es
                 </a>
@@ -730,7 +729,7 @@ const Horeca = () => {
             <div className="flex items-start gap-3">
               <Phone className="w-6 h-6 flex-shrink-0 mt-1" />
               <div>
-                <p className="font-semibold mb-1">WhatsApp</p>
+                <p className="font-semibold mb-1">{t('horeca.info_whatsapp')}</p>
                 <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="text-green-100 hover:text-white transition-colors">
                   +34 621 14 47 01
                 </a>
@@ -740,7 +739,7 @@ const Horeca = () => {
             <div className="flex items-start gap-3">
               <MapPin className="w-6 h-6 flex-shrink-0 mt-1" />
               <div>
-                <p className="font-semibold mb-1">Dirección</p>
+                <p className="font-semibold mb-1">{t('horeca.info_address')}</p>
                 <p className="text-green-100">
                   C/ Cardenal Cisneros, 10<br />
                   Lérida, España
@@ -756,7 +755,7 @@ const Horeca = () => {
             className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-lg font-semibold transition-all"
           >
             <MessageSquare className="w-5 h-5" />
-            Contactar por WhatsApp
+            {t('horeca.contact_whatsapp')}
           </a>
         </motion.div>
       </div>

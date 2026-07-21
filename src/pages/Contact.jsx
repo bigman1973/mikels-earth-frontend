@@ -78,7 +78,7 @@ const Contact = () => {
                 <div className="flex items-start gap-3">
                   <MapPin className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
                   <div>
-                    <p className="font-semibold text-gray-900">Dirección</p>
+                    <p className="font-semibold text-gray-900">{t('contact.address')}</p>
                     <p className="text-gray-600">
                       Carrer Cardenal Cisneros, 10<br />
                       Lérida, España
@@ -117,11 +117,11 @@ const Contact = () => {
             </div>
 
             <div className="bg-primary text-white rounded-lg shadow-md p-6">
-              <h3 className="text-xl font-semibold mb-3">Horario de Atención</h3>
+              <h3 className="text-xl font-semibold mb-3">{t('contact.schedule_title')}</h3>
               <div className="space-y-2 text-sm">
-                <p><strong>Lunes a Viernes:</strong> 9:00 - 18:00</p>
-                <p><strong>Sábados:</strong> 10:00 - 14:00</p>
-                <p><strong>Domingos:</strong> Cerrado</p>
+                <p><strong>{t('contact.weekdays')}:</strong> 9:00 - 18:00</p>
+                <p><strong>{t('contact.saturdays')}:</strong> 10:00 - 14:00</p>
+                <p><strong>{t('contact.sundays')}:</strong> {t('contact.closed')}</p>
               </div>
             </div>
           </div>
