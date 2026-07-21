@@ -281,6 +281,81 @@
     "verified_info_title": "¿Qué significa 'Compra verificada'?",
     "verified_info_text": "Este distintivo indica que hemos podido confirmar que la persona ha realizado una compra real en nuestra tienda."
   },
+  "family": {
+    "title": "La Familia",
+    "subtitle": "Más de 200 años cultivando la tierra con pasión, respeto y amor",
+    "history_title": "Una Historia que Comenzó en 1819",
+    "history_p1": "Cuando nuestra familia plantó el primer árbol en las tierras de Lleida en 1819, no sabíamos que estábamos sembrando algo mucho más grande que un árbol. Estábamos plantando una tradición, un legado que atravesaría generaciones y que hoy, más de dos siglos después, sigue vivo en cada frasco que sale de nuestro obrador.",
+    "history_p2": "Han pasado siete generaciones desde entonces. Siete generaciones de manos que han tocado la misma tierra, que han recogido la misma fruta, que han guardado los mismos secretos de elaboración. Cada generación ha añadido su propio capítulo a esta historia, pero todas han compartido la misma filosofía: el respeto absoluto por la naturaleza y la búsqueda incansable de la calidad.",
+    "history_p3": "No somos una gran corporación. Somos una familia. Y como toda familia, tenemos nuestras tradiciones, nuestros rituales, nuestras recetas que pasan de padres a hijos en susurros en la cocina, en gestos aprendidos desde la infancia. Cuando pruebas nuestro paraguayo en almíbar o nuestro aceite temprano, no estás comprando un producto. Estás probando un pedazo de nuestra historia.",
+    "timeline_title": "Nuestro Viaje a Través del Tiempo",
+    "values_title": "Los Valores que Nos Definen",
+    "seventh_gen": "Séptima Generación",
+    "cta_title": "Forma Parte de Nuestra Historia",
+    "cta_text": "Cuando eliges Mikel's Earth, no solo compras un producto. Te conviertes en parte de una tradición de más de 200 años. Te unes a una familia que cree en la calidad, la autenticidad y el respeto por la tierra.",
+    "cta_products": "Descubre Nuestros Productos",
+    "cta_workshop": "Visita Nuestro Obrador"
+  },
+  "product_detail": {
+    "back_to_shop": "Volver a la tienda",
+    "add_to_cart": "Añadir al Carrito",
+    "shipping_time": "Envío 24/48h",
+    "returns": "Devolución 30 días",
+    "secure_payment": "Pago 100% seguro",
+    "content": "Contenido",
+    "not_found": "Producto no encontrado",
+    "free_box": "¡QUIERO MI CAJA GRATIS!",
+    "add_duo": "Añadir Pack Duo al carrito",
+    "add_units": "Añadir {{count}} unidades al carrito"
+  },
+  "land": {
+    "title": "Nuestra Tierra",
+    "subtitle": "Del corazón de Lleida a tu mesa"
+  },
+  "workshop": {
+    "title": "El Obrador",
+    "subtitle": "Donde la tradición se encuentra con la artesanía"
+  },
+  "jewels": {
+    "title": "Nuestras Joyas",
+    "subtitle": "Productos excepcionales elaborados con mimo"
+  },
+  "experiences": {
+    "title": "Experiencias",
+    "subtitle": "Vive la experiencia Mikel's Earth"
+  },
+  "horeca": {
+    "title": "HORECA B2B",
+    "subtitle": "Productos premium para profesionales de la hostelería",
+    "contact_us": "Contáctanos"
+  },
+  "blog": {
+    "title": "Blog",
+    "loading": "Cargando artículos...",
+    "no_posts": "Aún no hay artículos disponibles",
+    "read_more": "Leer más"
+  },
+  "recipes": {
+    "title": "Recetario",
+    "subtitle": "Descubre nuestras mejores recetas con nuestros productos"
+  },
+  "recover_cart": {
+    "title": "Recupera Tu Carrito",
+    "loading": "Cargando tu carrito...",
+    "success": "¡Carrito recuperado con éxito!",
+    "error": "No se pudo recuperar tu carrito",
+    "go_to_cart": "Ir al carrito"
+  },
+  "subscription_success": {
+    "title": "¡Suscripción Confirmada!",
+    "text": "Gracias por suscribirte. Recibirás nuestras novedades y ofertas exclusivas."
+  },
+  "privacy": {
+    "title": "Política de Privacidad"
+  },
+  "terms": {
+    "title": "Términos y Condiciones"
+  },
   "language": {
     "es": "Español",
     "en": "English",

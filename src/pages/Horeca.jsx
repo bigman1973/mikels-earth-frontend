@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
 import { Building2, Phone, Mail, MapPin, MessageSquare, Check, AlertCircle } from 'lucide-react';
 
 const Horeca = () => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     establishmentName: '',
     establishmentType: '',
@@ -187,13 +189,13 @@ const Horeca = () => {
               <span className="font-semibold">B2B - Profesionales</span>
             </div>
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              Aceite de oliva para hostelería y profesionales Horeca
+              {t('horeca.hero_title', { defaultValue: 'Aceite de oliva para hostelería y profesionales Horeca' })}
             </h1>
             <p className="text-xl md:text-2xl mb-4 text-green-100">
-              Aceite de Calidad Premium para tu Negocio
+              {t('horeca.hero_subtitle', { defaultValue: 'Aceite de Calidad Premium para tu Negocio' })}
             </p>
             <p className="text-lg max-w-2xl mx-auto text-green-50">
-              Suministro directo del productor para restaurantes, hoteles y establecimientos de hostelería
+              {t('horeca.hero_desc', { defaultValue: 'Suministro directo del productor para restaurantes, hoteles y establecimientos de hostelería' })}
             </p>
           </motion.div>
         </div>

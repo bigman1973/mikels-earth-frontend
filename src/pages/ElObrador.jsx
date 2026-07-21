@@ -1,7 +1,9 @@
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { Clock, Hand, Eye, Award, CheckCircle, Heart } from 'lucide-react';
 
 const ElObrador = () => {
+  const { t } = useTranslation();
   return (
     <div className="bg-white">
       {/* Hero Section */}

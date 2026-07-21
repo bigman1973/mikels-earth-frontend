@@ -1,8 +1,10 @@
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Sparkles, Leaf, Droplet, Gift } from 'lucide-react';
 
 const NuestrasJoyas = () => {
+  const { t } = useTranslation();
   const collections = [
     {
       id: 'paraguayo',

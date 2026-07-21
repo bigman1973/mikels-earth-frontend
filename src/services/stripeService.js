@@ -40,7 +40,8 @@ export const createCheckoutSession = async (cartItems, customerInfo) => {
         discount_code: customerInfo.discountCode,
         discount_amount: customerInfo.discountAmount,
         needs_invoice: customerInfo.needsInvoice,
-        invoice_data: customerInfo.invoiceData
+        invoice_data: customerInfo.invoiceData,
+        locale: customerInfo.locale || 'es'
       }),
     });
 

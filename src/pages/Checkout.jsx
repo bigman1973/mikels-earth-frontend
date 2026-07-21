@@ -9,7 +9,7 @@ import { createCheckoutSession, createSubscriptionCheckout } from '../services/s
 const Checkout = () => {
   const { cart, getCartTotal, clearCart, getItemPrice, appliedDiscount, getDiscountAmount, updateItemPrices } = useCart();
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [priceMismatchWarning, setPriceMismatchWarning] = useState(null);
@@ -132,7 +132,8 @@ const Checkout = () => {
         discountCode: appliedDiscount?.code || null,
         discountAmount: appliedDiscount ? getDiscountAmount() : 0,
         needsInvoice: needsInvoice,
-        invoiceData: needsInvoice ? invoiceData : null
+        invoiceData: needsInvoice ? invoiceData : null,
+        locale: i18n.language?.substring(0, 2) || 'es'
       };
       
       // Process one-time purchases

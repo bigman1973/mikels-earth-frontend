@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { products as localProducts, categories as localCategories } from '../data/products';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://mikels-earth-backend-production.up.railway.app';
@@ -9,8 +10,12 @@ const API_URL = import.meta.env.VITE_API_URL || 'https://mikels-earth-backend-pr
  * 
  * - Si la API responde: usa datos de la DB (actualizables desde el panel admin)
  * - Si la API falla: usa products.js local como fallback (datos estáticos)
+ * - Envía el idioma actual para recibir traducciones si están disponibles
  */
 export function useProducts() {
+  const { i18n } = useTranslation();
+  const currentLang = i18n.language?.substring(0, 2) || 'es';
+  
   const [products, setProducts] = useState(localProducts);
   const [categories, setCategories] = useState(localCategories);
   const [loading, setLoading] = useState(true);
@@ -21,7 +26,7 @@ export function useProducts() {
 
     async function fetchProducts() {
       try {
-        const response = await fetch(`${API_URL}/api/products`, {
+        const response = await fetch(`${API_URL}/api/products?lang=${currentLang}`, {
           signal: AbortSignal.timeout(5000) // Timeout de 5s para no bloquear la web
         });
         
@@ -50,7 +55,7 @@ export function useProducts() {
     fetchProducts();
 
     return () => { cancelled = true; };
-  }, []);
+  }, [currentLang]);
 
   return { products, categories, loading, source };
 }

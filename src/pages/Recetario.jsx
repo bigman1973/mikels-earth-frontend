@@ -1,8 +1,10 @@
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
 import { ChefHat, Clock, Users, Flame } from 'lucide-react';
 
 const Recetario = () => {
+  const { t } = useTranslation();
   const recipes = [
     {
       id: 'tostadas-temprano',

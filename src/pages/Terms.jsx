@@ -1,6 +1,8 @@
+import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
 
 const Terms = () => {
+  const { t } = useTranslation();
   return (
     <>
       <Helmet>

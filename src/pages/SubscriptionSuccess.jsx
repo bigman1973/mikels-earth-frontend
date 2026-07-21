@@ -2,9 +2,11 @@ import { useEffect, useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { CheckCircle, Repeat, Mail, Calendar } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { getSessionStatus } from '../services/stripeService';
 
 const SubscriptionSuccess = () => {
+  const { t } = useTranslation();
   const [searchParams] = useSearchParams();
   const sessionId = searchParams.get('session_id');
   const [sessionData, setSessionData] = useState(null);

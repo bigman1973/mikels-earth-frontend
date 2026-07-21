@@ -281,6 +281,105 @@
     "verified_info_title": "What does 'Verified Purchase' mean?",
     "verified_info_text": "This badge indicates that we have confirmed the person made a real purchase in our shop."
   },
+  "family": {
+    "title": "The Family",
+    "subtitle": "Over 200 years cultivating the land with passion, respect and love",
+    "history_title": "A Story That Began in 1819",
+    "history_p1": "When our family planted the first tree in the lands of Lleida in 1819, we didn't know we were sowing something much bigger than a tree. We were planting a tradition, a legacy that would span generations and that today, more than two centuries later, is still alive in every jar that leaves our workshop.",
+    "history_p2": "Seven generations have passed since then. Seven generations of hands that have touched the same earth, that have picked the same fruit, that have kept the same production secrets. Each generation has added its own chapter to this story, but all have shared the same philosophy: absolute respect for nature and the relentless pursuit of quality.",
+    "history_p3": "We are not a big corporation. We are a family. And like every family, we have our traditions, our rituals, our recipes passed from parents to children in whispers in the kitchen, in gestures learned since childhood. When you taste our peach in syrup or our early harvest oil, you're not buying a product. You're tasting a piece of our history.",
+    "timeline_title": "Our Journey Through Time",
+    "timeline_1819_title": "The First Steps",
+    "timeline_1819_text": "1819 begins cultivating the lands in Alcarr\u00e0s, Lleida. The passion for the land and artisanal work becomes the DNA of our family.",
+    "timeline_1920_title": "The Family Workshop",
+    "timeline_1920_text": "The family workshop rose with the farmhouse, where they spent summers and transformed fruits into preserves for the winter.",
+    "timeline_1975_title": "The Discovery of the Flat Peach",
+    "timeline_1975_text": "The sixth generation discovers the flat peach in Alcarr\u00e0s. Its unique flavour and perfect texture inspire us to create our first artisanal preserve.",
+    "timeline_2010_title": "Sustainable Commitment",
+    "timeline_2010_text": "We adopt sustainable farming practices and organic certifications. The land that has given us so much deserves our utmost respect.",
+    "timeline_2024_title": "Mikel's Earth",
+    "timeline_2024_text": "The seventh generation takes the reins. Jordi Gir\u00f3 continues the family legacy, sharing our story with the world through products that honour more than 200 years of tradition.",
+    "values_title": "The Values That Define Us",
+    "value_tradition": "Tradition",
+    "value_tradition_text": "Over 200 years of knowledge passed down from generation to generation. Every recipe, every technique, is a family treasure we guard with pride.",
+    "value_quality": "Quality",
+    "value_quality_text": "There are no shortcuts to excellence. We select each fruit by hand, cook without haste, bottle with care. Quality is non-negotiable.",
+    "value_authenticity": "Authenticity",
+    "value_authenticity_text": "We are who we are. A family from Lleida that loves its land and its products. No artifice, no additives, no lies. Just authenticity.",
+    "value_sustainability": "Sustainability",
+    "value_sustainability_text": "The land has fed us for seven generations. It is our responsibility to care for it for the next seven. Sustainable farming, always.",
+    "value_transparency": "Transparency",
+    "value_transparency_text": "We open the doors of our workshop. We show our process. We have nothing to hide, because we do things right.",
+    "value_passion": "Passion",
+    "value_passion_text": "This is not just a business. It is our life, our story, our legacy. Every product carries our passion in every drop, in every bite.",
+    "seventh_gen": "Seventh Generation",
+    "jordi_quote": "I am the guardian of a legacy of more than 200 years. Every day I go to the field, I feel the weight of responsibility and the pride of continuing what my ancestors started. My mission is simple: to honour their work by making products they would be proud to taste.",
+    "jordi_text": "From Alcarr\u00e0s and C\u00f3rdoba, I share our story with the world. Because I believe that in a world of industrial, soulless products, people deserve to know that families like ours still exist, doing things right, with time, with love, with tradition.",
+    "cta_title": "Be Part of Our Story",
+    "cta_text": "When you choose Mikel's Earth, you're not just buying a product. You become part of a tradition spanning more than 200 years. You join a family that believes in quality, authenticity and respect for the land.",
+    "cta_products": "Discover Our Products",
+    "cta_workshop": "Visit Our Workshop"
+  },
+  "product_detail": {
+    "back_to_shop": "Back to shop",
+    "add_to_cart": "Add to Cart",
+    "shipping_time": "Shipping 24/48h",
+    "returns": "30-day returns",
+    "secure_payment": "100% secure payment",
+    "content": "Content",
+    "not_found": "Product not found",
+    "free_box": "I WANT MY FREE BOX!",
+    "add_duo": "Add Duo Pack to cart",
+    "add_units": "Add {{count}} units to cart"
+  },
+  "land": {
+    "title": "Our Land",
+    "subtitle": "From the heart of Lleida to your table"
+  },
+  "workshop": {
+    "title": "The Workshop",
+    "subtitle": "Where tradition meets craftsmanship"
+  },
+  "jewels": {
+    "title": "Our Treasures",
+    "subtitle": "Exceptional products crafted with care"
+  },
+  "experiences": {
+    "title": "Experiences",
+    "subtitle": "Live the Mikel's Earth experience"
+  },
+  "horeca": {
+    "title": "HORECA B2B",
+    "subtitle": "Premium products for hospitality professionals",
+    "contact_us": "Contact us"
+  },
+  "blog": {
+    "title": "Blog",
+    "loading": "Loading articles...",
+    "no_posts": "No articles available yet",
+    "read_more": "Read more"
+  },
+  "recipes": {
+    "title": "Recipe Book",
+    "subtitle": "Discover our best recipes with our products"
+  },
+  "recover_cart": {
+    "title": "Recover Your Cart",
+    "loading": "Loading your cart...",
+    "success": "Cart recovered successfully!",
+    "error": "Could not recover your cart",
+    "go_to_cart": "Go to cart"
+  },
+  "subscription_success": {
+    "title": "Subscription Confirmed!",
+    "text": "Thank you for subscribing. You will receive our news and exclusive offers."
+  },
+  "privacy": {
+    "title": "Privacy Policy"
+  },
+  "terms": {
+    "title": "Terms and Conditions"
+  },
   "language": {
     "es": "Español",
     "en": "English",

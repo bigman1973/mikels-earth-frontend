@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 const LaFamilia = () => {
+  const { t } = useTranslation();
   return (
     <div className="bg-white">
       {/* Hero Section */}
@@ -12,10 +14,10 @@ const LaFamilia = () => {
           className="text-center px-4"
         >
           <h1 className="text-5xl md:text-7xl font-script text-primary mb-6">
-            La Familia
+            {t('family.title', { defaultValue: 'La Familia' })}
           </h1>
           <p className="text-xl md:text-2xl text-primary/70 max-w-3xl mx-auto">
-            Más de 200 años cultivando la tierra con pasión, respeto y amor
+            {t('family.subtitle', { defaultValue: 'Más de 200 años cultivando la tierra con pasión, respeto y amor' })}
           </p>
         </motion.div>
       </section>
@@ -52,34 +54,13 @@ const LaFamilia = () => {
             transition={{ duration: 0.8 }}
           >
             <h2 className="text-4xl font-bold text-primary mb-8">
-              Una Historia que Comenzó en 1819
+              {t('family.history_title', { defaultValue: 'Una Historia que Comenzó en 1819' })}
             </h2>
             
             <div className="prose prose-lg max-w-none text-gray-700 space-y-6">
-              <p>
-                Cuando nuestra familia plantó el primer árbol en las tierras de Lleida en 1819, 
-                no sabíamos que estábamos sembrando algo mucho más grande que un árbol. 
-                Estábamos plantando una tradición, un legado que atravesaría generaciones 
-                y que hoy, más de dos siglos después, sigue vivo en cada frasco que sale de nuestro obrador.
-              </p>
-
-              <p>
-                Han pasado siete generaciones desde entonces. Siete generaciones de manos 
-                que han tocado la misma tierra, que han recogido la misma fruta, que han 
-                guardado los mismos secretos de elaboración. Cada generación ha añadido 
-                su propio capítulo a esta historia, pero todas han compartido la misma 
-                filosofía: el respeto absoluto por la naturaleza y la búsqueda incansable 
-                de la calidad.
-              </p>
-
-              <p>
-                No somos una gran corporación. Somos una familia. Y como toda familia, 
-                tenemos nuestras tradiciones, nuestros rituales, nuestras recetas que 
-                pasan de padres a hijos en susurros en la cocina, en gestos aprendidos 
-                desde la infancia. Cuando pruebas nuestro paraguayo en almíbar o nuestro 
-                aceite temprano, no estás comprando un producto. Estás probando un pedazo 
-                de nuestra historia.
-              </p>
+              <p>{t('family.history_p1')}</p>
+              <p>{t('family.history_p2')}</p>
+              <p>{t('family.history_p3')}</p>
             </div>
           </motion.div>
         </div>
@@ -89,7 +70,7 @@ const LaFamilia = () => {
       <section className="bg-accent/20 py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-4xl font-bold text-primary text-center mb-12">
-            Nuestro Viaje a Través del Tiempo
+            {t('family.timeline_title', { defaultValue: 'Nuestro Viaje a Través del Tiempo' })}
           </h2>
           
           <div className="max-w-4xl mx-auto space-y-12">
@@ -145,7 +126,7 @@ const LaFamilia = () => {
       <section className="container mx-auto px-4 py-16">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-4xl font-bold text-primary text-center mb-12">
-            Los Valores que Nos Definen
+            {t('family.values_title', { defaultValue: 'Los Valores que Nos Definen' })}
           </h2>
           
           <div className="grid md:grid-cols-3 gap-8">
@@ -237,19 +218,13 @@ const LaFamilia = () => {
                   Jordi Giró
                 </h2>
                 <p className="text-2xl font-script mb-6 text-white">
-                  Séptima Generación
+                  {t('family.seventh_gen', { defaultValue: 'Séptima Generación' })}
                 </p>
                 <p className="text-xl mb-6 text-white leading-relaxed">
-                  "Soy el guardián de un legado de más de 200 años. Cada día que voy 
-                  al campo, siento el peso de la responsabilidad y el orgullo de continuar 
-                  lo que mis ancestros comenzaron. Mi misión es simple: honrar su trabajo 
-                  haciendo productos que ellos estarían orgullosos de probar."
+                  "{t('family.jordi_quote')}"
                 </p>
                 <p className="text-lg text-white/90 leading-relaxed">
-                  Desde Alcarràs y Córdoba, comparto nuestra historia con el mundo. 
-                  Porque creo que en un mundo de productos industriales y sin alma, 
-                  la gente merece saber que todavía existen familias como la nuestra, 
-                  que hacen las cosas bien, con tiempo, con amor, con tradición.
+                  {t('family.jordi_text')}
                 </p>
               </motion.div>
             </div>
@@ -261,25 +236,23 @@ const LaFamilia = () => {
       <section className="container mx-auto px-4 py-16">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl font-bold text-primary mb-6">
-            Forma Parte de Nuestra Historia
+            {t('family.cta_title', { defaultValue: 'Forma Parte de Nuestra Historia' })}
           </h2>
           <p className="text-xl text-gray-700 mb-8">
-            Cuando eliges Mikel's Earth, no solo compras un producto. 
-            Te conviertes en parte de una tradición de más de 200 años. 
-            Te unes a una familia que cree en la calidad, la autenticidad y el respeto por la tierra.
+            {t('family.cta_text')}
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
             <a
               href="/tienda"
               className="bg-secondary text-primary px-8 py-3 rounded-lg font-bold hover:bg-secondary/90 transition-colors"
             >
-              Descubre Nuestros Productos
+              {t('family.cta_products', { defaultValue: 'Descubre Nuestros Productos' })}
             </a>
             <a
               href="/el-obrador"
               className="bg-primary text-white px-8 py-3 rounded-lg font-bold hover:bg-primary/90 transition-colors"
             >
-              Visita Nuestro Obrador
+              {t('family.cta_workshop', { defaultValue: 'Visita Nuestro Obrador' })}
             </a>
           </div>
         </div>

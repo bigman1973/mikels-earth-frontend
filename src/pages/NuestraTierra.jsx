@@ -1,7 +1,9 @@
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { MapPin, Sun, Droplets, Wind, Leaf, Heart } from 'lucide-react';
 
 const NuestraTierra = () => {
+  const { t } = useTranslation();
   return (
     <div className="bg-white">
       {/* Hero Section */}

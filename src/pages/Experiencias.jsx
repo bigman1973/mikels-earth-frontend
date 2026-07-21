@@ -1,8 +1,10 @@
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { Calendar, Users, Heart, Mail, Bell } from 'lucide-react';
 import { useState } from 'react';
 
 const Experiencias = () => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     nombre: '',
     email: '',
