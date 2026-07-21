@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { Star, CheckCircle, Send, Info } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://mikels-earth-backend-production.up.railway.app';
 
@@ -20,6 +21,7 @@ const PRODUCTS = [
 ];
 
 const Opiniones = () => {
+  const { t } = useTranslation();
   const [reviews, setReviews] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -196,7 +198,7 @@ const Opiniones = () => {
   return (
     <div className="bg-white min-h-screen">
       <Helmet>
-        <title>Opiniones de Clientes | Mikel's Earth</title>
+        <title>{t('reviews.seo_title')}</title>
         <meta name="description" content="Lee las opiniones de nuestros clientes sobre los productos artesanales de Mikel's Earth. Aceite de oliva, conservas y más desde 1819." />
       </Helmet>
 
@@ -209,7 +211,7 @@ const Opiniones = () => {
             transition={{ duration: 0.6 }}
           >
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
-              Opiniones de Nuestros Clientes
+              {t('reviews.page_title')}
             </h1>
             <p className="text-xl text-white/80 max-w-2xl mx-auto">
               La mejor recomendación es la de quienes ya nos han probado

@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Contact = () => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -58,7 +60,7 @@ const Contact = () => {
     <div className="min-h-screen py-16 bg-gray-50">
       <div className="container mx-auto px-4">
         <h1 className="text-4xl font-bold text-primary mb-4 text-center">
-          Contacto
+          {t('contact.page_title')}
         </h1>
         <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
           ¿Tienes alguna pregunta? Completa el formulario y te responderemos por email en menos de 24 horas
@@ -127,13 +129,13 @@ const Contact = () => {
           {/* Formulario */}
           <div className="bg-white rounded-lg shadow-md p-8">
             <h2 className="text-2xl font-semibold text-primary mb-6">
-              Envíanos un Mensaje
+              {t('contact.send', { defaultValue: 'Envíanos un Mensaje' })}
             </h2>
             
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                  Nombre Completo *
+                  {t('contact.name')} *
                 </label>
                 <input
                   type="text"
@@ -149,7 +151,7 @@ const Contact = () => {
 
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                  Email *
+                  {t('contact.email')} *
                 </label>
                 <input
                   type="email"
@@ -165,7 +167,7 @@ const Contact = () => {
 
               <div>
                 <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-                  Teléfono
+                  {t('checkout.phone')}
                 </label>
                 <input
                   type="tel"
@@ -180,7 +182,7 @@ const Contact = () => {
 
               <div>
                 <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-                  Mensaje *
+                  {t('contact.message')} *
                 </label>
                 <textarea
                   id="message"
@@ -197,7 +199,7 @@ const Contact = () => {
               {submitted ? (
                 <div className="bg-green-50 border border-green-500 rounded-lg p-4 text-center">
                   <p className="text-green-700 font-semibold">
-                    ✓ ¡Mensaje enviado! Te responderemos pronto.
+                    ✓ {t('contact.success')}
                   </p>
                 </div>
               ) : (
@@ -208,7 +210,7 @@ const Contact = () => {
                     className="w-full bg-primary text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
                   >
                     <Send className="w-5 h-5" />
-                    {loading ? 'Enviando...' : 'Enviar Mensaje'}
+                    {loading ? t('contact.sending') : t('contact.send')}
                   </button>
 
                   <p className="text-xs text-gray-500 text-center">

@@ -3,11 +3,13 @@ import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
 import { Package, CreditCard, Truck, ShoppingBag } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { createCheckoutSession, createSubscriptionCheckout } from '../services/stripeService';
 
 const Checkout = () => {
   const { cart, getCartTotal, clearCart, getItemPrice, appliedDiscount, getDiscountAmount, updateItemPrices } = useCart();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [priceMismatchWarning, setPriceMismatchWarning] = useState(null);
@@ -204,7 +206,7 @@ const Checkout = () => {
     <div className="min-h-screen py-16 bg-gray-50">
       <div className="container mx-auto px-4">
         <h1 className="text-4xl font-bold text-primary mb-8 text-center">
-          Finalizar Compra
+          {t('checkout.title')}
         </h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -220,14 +222,14 @@ const Checkout = () => {
                 <div className="flex items-center gap-3 mb-6">
                   <Truck className="w-6 h-6 text-primary" />
                   <h2 className="text-2xl font-bold text-primary">
-                    Información de Envío
+                    {t('checkout.shipping_info')}
                   </h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="md:col-span-2">
                     <label className="block text-sm font-semibold text-primary mb-2">
-                      Nombre Completo *
+                      {t('checkout.first_name')} *
                     </label>
                     <input
                       type="text"
@@ -450,7 +452,7 @@ const Checkout = () => {
                   <div className="flex items-start gap-2">
                     <span className="text-lg">⚠️</span>
                     <div>
-                      <p className="font-semibold">Precios actualizados</p>
+                      <p className="font-semibold">{t('checkout.price_mismatch_warning', { defaultValue: 'Precios actualizados' }).split('.')[0]}</p>
                       <p className="text-sm mt-1">{priceMismatchWarning}</p>
                     </div>
                   </div>
@@ -470,7 +472,7 @@ const Checkout = () => {
               <div className="flex items-center gap-3 mb-6">
                 <Package className="w-6 h-6 text-primary" />
                 <h2 className="text-2xl font-bold text-primary">
-                  Resumen del Pedido
+                  {t('checkout.order_summary')}
                 </h2>
               </div>
 
@@ -482,10 +484,10 @@ const Checkout = () => {
                         {item.name}
                       </h3>
                       <p className="text-xs text-gray-600">
-                        {item.purchaseType === 'subscription' ? 'Suscripción' : 'Compra única'}
+                        {item.purchaseType === 'subscription' ? t('product_detail.subscription') : t('product_detail.one_time')}
                       </p>
                       <p className="text-xs text-gray-500">
-                        Cantidad: {item.quantity}
+                        {t('cart.quantity')}: {item.quantity}
                       </p>
                     </div>
                     <div className="text-right">
@@ -499,21 +501,21 @@ const Checkout = () => {
 
               <div className="space-y-2 mb-6 pt-4 border-t-2 border-gray-200">
                 <div className="flex justify-between text-gray-700">
-                  <span>Subtotal</span>
+                  <span>{t('cart.subtotal')}</span>
                   <span>{appliedDiscount ? (getCartTotal() + getDiscountAmount()).toFixed(2) : getCartTotal().toFixed(2)}€</span>
                 </div>
                 {appliedDiscount && (
                   <div className="flex justify-between text-green-600 font-medium">
-                    <span>Descuento {appliedDiscount.code}</span>
+                    <span>{t('checkout.discount_code')} {appliedDiscount.code}</span>
                     <span>-{getDiscountAmount().toFixed(2)}€</span>
                   </div>
                 )}
                 <div className="flex justify-between text-gray-700">
-                  <span>Envío</span>
-                  <span className="text-green-600 font-semibold">GRATIS</span>
+                  <span>{t('cart.shipping')}</span>
+                  <span className="text-green-600 font-semibold">{t('cart.shipping_free').toUpperCase()}</span>
                 </div>
                 <div className="flex justify-between text-xl font-bold text-primary pt-2 border-t border-gray-200">
-                  <span>Total</span>
+                  <span>{t('cart.total')}</span>
                   <span>{getCartTotal().toFixed(2)}€</span>
                 </div>
               </div>
@@ -526,18 +528,18 @@ const Checkout = () => {
                 {loading ? (
                   <>
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                    Procesando...
+                    {t('checkout.processing')}
                   </>
                 ) : (
                   <>
                     <CreditCard className="w-5 h-5" />
-                    Proceder al Pago
+                    {t('checkout.pay_now')}
                   </>
                 )}
               </button>
 
               <p className="text-xs text-gray-500 text-center mt-4">
-                Pago seguro con Stripe. Tus datos están protegidos.
+                {t('checkout.secure_payment')}
               </p>
             </motion.div>
           </div>

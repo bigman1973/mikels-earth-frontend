@@ -3,21 +3,19 @@ import { useCart } from '../../context/CartContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const CartDrawer = () => {
   const { cart, isCartOpen, setIsCartOpen, updateQuantity, removeFromCart, getCartTotal, getCartCount, getItemPrice, appliedDiscount, applyDiscountCode, removeDiscountCode, getDiscountAmount } = useCart();
+  const { t } = useTranslation();
   const [codeInput, setCodeInput] = useState('');
   const [codeMessage, setCodeMessage] = useState({ text: '', type: '' });
 
   const getPurchaseTypeLabel = (item) => {
     if (item.purchaseType === 'subscription') {
-      const freqLabel = item.subscriptionFrequency === 'weekly' ? 'Semanal' :
-                       item.subscriptionFrequency === 'biweekly' ? 'Quincenal' :
-                       item.subscriptionFrequency === 'monthly' ? 'Mensual' :
-                       item.subscriptionFrequency === 'bimonthly' ? 'Bimensual' : '';
-      return `Suscripción ${freqLabel}`;
+      return t('product_detail.subscription');
     }
-    return 'Compra única';
+    return t('product_detail.one_time');
   };
 
   return (
@@ -46,7 +44,7 @@ const CartDrawer = () => {
               <div className="flex items-center gap-2">
                 <ShoppingBag className="w-6 h-6 text-primary" />
                 <h2 className="text-xl font-bold text-primary">
-                  Tu Carrito ({getCartCount()})
+                  {t('cart.title')} ({getCartCount()})
                 </h2>
               </div>
               <button
@@ -230,7 +228,7 @@ const CartDrawer = () => {
                           }}
                           className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-medium"
                         >
-                          Aplicar
+                          {t('checkout.apply')}
                         </button>
                       </div>
                       {codeMessage.text && (
@@ -254,7 +252,7 @@ const CartDrawer = () => {
                           onClick={removeDiscountCode}
                           className="text-red-600 hover:text-red-800 text-sm font-medium"
                         >
-                          Eliminar
+                          {t('cart.remove')}
                         </button>
                       </div>
                     </div>
@@ -265,13 +263,13 @@ const CartDrawer = () => {
                 {appliedDiscount && (
                   <div className="space-y-2 mb-3 pb-3 border-b border-gray-200">
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-600">Subtotal</span>
+                      <span className="text-gray-600">{t('cart.subtotal')}</span>
                       <span className="text-gray-900">
                         {(getCartTotal() + getDiscountAmount()).toFixed(2)}€
                       </span>
                     </div>
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-green-600 font-medium">Descuento {appliedDiscount.code}</span>
+                      <span className="text-green-600 font-medium">{t('checkout.discount_code')} {appliedDiscount.code}</span>
                       <span className="text-green-600 font-medium">
                         -{getDiscountAmount().toFixed(2)}€
                       </span>
@@ -280,7 +278,7 @@ const CartDrawer = () => {
                 )}
 
                 <div className="flex items-center justify-between mb-4">
-                  <span className="text-lg font-semibold text-primary">Total</span>
+                  <span className="text-lg font-semibold text-primary">{t('cart.total')}</span>
                   <span className="text-2xl font-bold text-primary">
                     {getCartTotal().toFixed(2)}€
                   </span>
@@ -290,13 +288,13 @@ const CartDrawer = () => {
                   onClick={() => setIsCartOpen(false)}
                   className="block w-full bg-primary text-white text-center py-4 rounded-lg font-semibold hover:bg-primary/90 transition-colors shadow-md"
                 >
-                  Proceder al Pago
+                  {t('cart.checkout')}
                 </Link>
                 <button
                   onClick={() => setIsCartOpen(false)}
                   className="block w-full mt-2 text-primary text-center py-2 text-sm hover:underline"
                 >
-                  Continuar comprando
+                  {t('cart.continue_shopping')}
                 </button>
               </div>
             )}

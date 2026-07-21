@@ -4,10 +4,13 @@ import { useProducts } from '../hooks/useProducts';
 import { useCart } from '../context/CartContext';
 import { ShoppingCart, ArrowLeft, Check, Repeat, Tag, Package, Leaf } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import SoldOutNotification from '../components/SoldOutNotification';
 import ProductReviews from '../components/ProductReviews';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://mikels-earth-backend-production.up.railway.app';
+
+// i18n hook will be used inside the component
 
 // Componente de estrellas inline
 const StarRating = ({ rating, count }) => {
@@ -37,6 +40,7 @@ const ProductDetail = () => {
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const { products } = useProducts();
+  const { t } = useTranslation();
   
   const product = products.find(p => p.slug === slug);
 
@@ -73,7 +77,7 @@ const ProductDetail = () => {
         <div className="text-center">
           <h1 className="text-2xl font-bold text-primary mb-4">Producto no encontrado</h1>
           <Link to="/tienda" className="text-primary hover:underline">
-            Volver a la tienda
+            {t('product_detail.back_to_shop')}
           </Link>
         </div>
       </div>
@@ -173,7 +177,7 @@ const ProductDetail = () => {
             className="inline-flex items-center gap-2 text-primary hover:underline"
           >
             <ArrowLeft className="w-4 h-4" />
-            Volver a la tienda
+            {t('product_detail.back_to_shop')}
           </Link>
         </div>
 
@@ -847,7 +851,7 @@ const ProductDetail = () => {
                     className="w-full bg-white border-2 border-primary text-primary py-4 rounded-lg font-semibold text-lg hover:bg-primary/5 transition-all flex items-center justify-center gap-2"
                   >
                     <ShoppingCart className="w-5 h-5" />
-                    Añadir al Carrito
+                    {t('product_detail.add_to_cart')}
                   </button>
                 </div>
               )}
@@ -858,19 +862,19 @@ const ProductDetail = () => {
                   <svg className="w-5 h-5 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  <span>Envío 24/48h</span>
+                  <span>{t('product_detail.shipping_time')}</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                   <svg className="w-5 h-5 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                   </svg>
-                  <span>Devolución 30 días</span>
+                  <span>{t('product_detail.returns')}</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                   <svg className="w-5 h-5 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                   </svg>
-                  <span>Pago 100% seguro</span>
+                  <span>{t('product_detail.secure_payment')}</span>
                 </div>
               </div>
 

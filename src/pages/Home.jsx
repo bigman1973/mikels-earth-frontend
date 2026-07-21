@@ -2,15 +2,18 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { ArrowRight, Heart, Leaf, Award, Users } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import Newsletter from '../components/common/Newsletter';
 import ReviewCarousel from '../components/ReviewCarousel';
 
 const Home = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="bg-white">
       <Helmet>
-        <title>Mikel's Earth | Productos Naturales y Aceite de Oliva Gourmet desde 1819</title>
-        <meta name="description" content="Productos naturales y aceite de oliva gourmet elaborados de forma artesanal desde 1819. Tradición familiar, calidad y experiencias gastronómicas únicas." />
+        <title>{t('home.seo_title')}</title>
+        <meta name="description" content={t('home.seo_description')} />
       </Helmet>
       {/* Hero Section - Inmersivo */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -34,15 +37,13 @@ const Home = () => {
               transition={{ duration: 0.8 }}
             >
               <h1 className="text-6xl md:text-8xl font-script text-white mb-6 leading-tight drop-shadow-2xl">
-                Más de 200 Años<br />Cultivando Tradición
+                {t('home.hero_title_1')}<br />{t('home.hero_title_2')}
               </h1>
               <p className="text-2xl md:text-3xl text-white/95 mb-8 max-w-3xl mx-auto leading-relaxed drop-shadow-lg">
-                Desde 1819, siete generaciones han cuidado la misma tierra, 
-                guardado los mismos secretos, compartido la misma pasión.
+                {t('home.hero_subtitle')}
               </p>
               <p className="text-xl text-white/90 mb-12 max-w-2xl mx-auto drop-shadow-lg">
-                No somos una marca. Somos una familia de Lleida que hace las cosas 
-                como se hacían antes: con tiempo, con manos, con alma.
+                {t('home.hero_text')}
               </p>
               
               <div className="flex gap-4 justify-center flex-wrap">
@@ -50,14 +51,14 @@ const Home = () => {
                   to="/la-familia"
                   className="bg-primary text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-primary/90 transition-colors inline-flex items-center gap-2"
                 >
-                  Nuestra Historia
+                  {t('home.hero_cta_history')}
                   <ArrowRight size={20} />
                 </Link>
                 <Link
                   to="/nuestras-joyas"
                   className="bg-secondary text-primary px-8 py-4 rounded-lg font-bold text-lg hover:bg-secondary/90 transition-colors"
                 >
-                  Descubre Nuestras Joyas
+                  {t('home.hero_cta_jewels')}
                 </Link>
               </div>
             </motion.div>
@@ -93,22 +94,17 @@ const Home = () => {
               className="text-center"
             >
               <h2 className="text-5xl font-bold text-primary mb-8">
-                Por Qué Hacemos lo que Hacemos
+                {t('home.manifesto_title')}
               </h2>
               <div className="prose prose-lg max-w-none text-gray-700 space-y-6">
                 <p className="text-xl leading-relaxed">
-                  En un mundo donde todo se produce en masa, donde las máquinas han 
-                  reemplazado a las manos, donde la velocidad importa más que la calidad... 
-                  nosotros elegimos un camino diferente.
+                  {t('home.manifesto_p1')}
                 </p>
                 <p className="text-xl leading-relaxed">
-                  Elegimos la lentitud. Elegimos la artesanía. Elegimos hacer las cosas 
-                  bien, aunque cueste más, aunque tarde más, aunque sea más difícil.
+                  {t('home.manifesto_p2')}
                 </p>
                 <p className="text-xl leading-relaxed font-semibold text-primary">
-                  Porque creemos que hay cosas que no se pueden automatizar. 
-                  Como el amor por la tierra. Como el respeto por la tradición. 
-                  Como el orgullo de poner tu nombre en un producto.
+                  {t('home.manifesto_p3')}
                 </p>
               </div>
             </motion.div>
@@ -120,33 +116,33 @@ const Home = () => {
       <section className="py-20 bg-gradient-to-b from-accent/10 to-white">
         <div className="container mx-auto px-4">
           <h2 className="text-5xl font-bold text-primary text-center mb-16">
-            Los Pilares de Mikel's Earth
+            {t('home.pillars_title')}
           </h2>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
             {[
               {
                 icon: <Heart className="text-secondary" size={48} />,
-                title: "Tradición Familiar",
-                text: "7 generaciones desde 1819. Cada receta es un tesoro que pasa de padres a hijos.",
+                title: t('home.pillar_tradition_title'),
+                text: t('home.pillar_tradition_text'),
                 link: "/la-familia"
               },
               {
                 icon: <Leaf className="text-secondary" size={48} />,
-                title: "Terroir Único",
-                text: "Alcarràs y Córdoba. Tierras que dan sabores imposibles de replicar.",
+                title: t('home.pillar_terroir_title'),
+                text: t('home.pillar_terroir_text'),
                 link: "/nuestra-tierra"
               },
               {
                 icon: <Award className="text-secondary" size={48} />,
-                title: "Artesanía Pura",
-                text: "Hecho a mano, sin prisas, sin atajos. Como se hacía hace 200 años.",
+                title: t('home.pillar_craft_title'),
+                text: t('home.pillar_craft_text'),
                 link: "/el-obrador"
               },
               {
                 icon: <Users className="text-secondary" size={48} />,
-                title: "Transparencia Total",
-                text: "Abrimos nuestras puertas. Ven a ver cómo trabajamos.",
+                title: t('home.pillar_transparency_title'),
+                text: t('home.pillar_transparency_text'),
                 link: "/experiencias"
               }
             ].map((pillar, index) => (
@@ -171,7 +167,7 @@ const Home = () => {
                     {pillar.text}
                   </p>
                   <div className="text-center text-secondary font-semibold">
-                    Descubre más →
+                    {t('home.discover_more')}
                   </div>
                 </Link>
               </motion.div>
@@ -192,32 +188,31 @@ const Home = () => {
               className="text-center mb-16"
             >
               <h2 className="text-5xl font-bold text-primary mb-6">
-                Nuestras Joyas
+                {t('home.jewels_title')}
               </h2>
               <p className="text-xl text-gray-700 max-w-3xl mx-auto">
-                Cada producto es una joya. Elaborado con dedicación, envasado con cuidado, 
-                creado para honrar más de 200 años de tradición.
+                {t('home.jewels_subtitle')}
               </p>
             </motion.div>
 
             <div className="grid md:grid-cols-3 gap-8">
               {[
                 {
-                  name: "Paraguayo en Alm\u00edbar",
-                  tagline: "La Joya de Alcarr\u00e0s",
-                  description: "El melocot\u00f3n plano que nos enamor\u00f3 hace m\u00e1s de un siglo. Dulce, arom\u00e1tico, perfecto.",
+                  name: t('home.product_paraguayo'),
+                  tagline: t('home.product_paraguayo_tagline'),
+                  description: t('home.product_paraguayo_desc'),
                   image: "/images/products/paraguayo-almibar-hero.jpg"
                 },
                 {
-                  name: "Aceite Temprano",
-                  tagline: "Para Paladares Valientes",
-                  description: "Intenso, picante, con carácter. Elaborado con aceitunas verdes de cosecha temprana.",
+                  name: t('home.product_temprano'),
+                  tagline: t('home.product_temprano_tagline'),
+                  description: t('home.product_temprano_desc'),
                   image: "/images/aceite-temprano.jpg"
                 },
                 {
-                  name: "Pack Degustación",
-                  tagline: "El Regalo Perfecto",
-                  description: "Descubre toda nuestra historia en un pack cuidadosamente seleccionado.",
+                  name: t('home.product_pack'),
+                  tagline: t('home.product_pack_tagline'),
+                  description: t('home.product_pack_desc'),
                   image: "/images/pack-degustacion.jpg"
                 }
               ].map((product, index) => (
@@ -250,7 +245,7 @@ const Home = () => {
                     to="/nuestras-joyas"
                     className="block text-center text-primary font-bold hover:text-secondary transition-colors"
                   >
-                    Descubre más →
+                    {t('home.discover_more')}
                   </Link>
                   </div>
                 </motion.div>
@@ -262,7 +257,7 @@ const Home = () => {
                 to="/tienda"
                 className="inline-block bg-secondary text-primary px-8 py-4 rounded-lg font-bold text-lg hover:bg-secondary/90 transition-colors"
               >
-                Ver Toda la Tienda
+                {t('home.view_shop')}
               </Link>
             </div>
           </div>
@@ -280,25 +275,17 @@ const Home = () => {
               transition={{ duration: 0.8 }}
             >
               <h2 className="text-5xl font-bold mb-8">
-                Nuestro Compromiso va Más Allá
+                {t('home.commitment_title')}
               </h2>
-              <p className="text-2xl mb-8 text-white/90 leading-relaxed">
-                Parte de nuestros beneficios van destinados a causas que nos llenan el corazón. 
-                Colaboramos con <strong>Ileris</strong>, un centro de personas especiales que nos ayudan 
-                a empaquetar nuestros productos con dedicación y cariño. También apoyamos a la 
-                <strong> Fundación Agonlinhossouyetokandji</strong> en Benín, que trabaja incansablemente 
-                para mejorar la vida de niños huérfanos y ancianos.
-              </p>
+              <p className="text-2xl mb-8 text-white/90 leading-relaxed" dangerouslySetInnerHTML={{ __html: t('home.commitment_p1') }} />
               <p className="text-xl text-white/80 leading-relaxed mb-8">
-                Porque creemos que el éxito solo tiene sentido si se comparte. Porque la tierra nos ha 
-                dado mucho, y es hora de devolver. Cada producto que compras ayuda a construir un mundo 
-                más justo y solidario.
+                {t('home.commitment_p2')}
               </p>
               <div className="bg-white/10 p-8 rounded-lg inline-block">
                 <p className="text-3xl font-script text-secondary mb-2">
-                  "Hacer el bien es parte de nuestro ADN"
+                  {t('home.commitment_quote')}
                 </p>
-                <p className="text-white/70">Jordi Giró, 7ª Generación</p>
+                <p className="text-white/70">{t('home.commitment_author')}</p>
               </div>
             </motion.div>
           </div>
@@ -326,39 +313,37 @@ const Home = () => {
               transition={{ duration: 0.8 }}
             >
               <h2 className="text-5xl font-bold text-primary mb-6">
-                Forma Parte de Nuestra Historia
+                {t('home.cta_title')}
               </h2>
               <p className="text-2xl text-gray-700 mb-12 leading-relaxed">
-                Cuando eliges Mikel's Earth, no solo compras un producto. 
-                Te unes a una tradición de más de 200 años. Te conviertes en 
-                parte de una familia que cree en hacer las cosas bien.
+                {t('home.cta_subtitle')}
               </p>
               
               <div className="grid md:grid-cols-3 gap-6 mb-12">
                 <div className="bg-white p-6 rounded-lg shadow-md">
-                  <h3 className="font-bold text-primary mb-2">Visítanos</h3>
-                  <p className="text-gray-700 mb-4">Descubre nuestro obrador y vive la experiencia</p>
+                  <h3 className="font-bold text-primary mb-2">{t('home.cta_visit_title')}</h3>
+                  <p className="text-gray-700 mb-4">{t('home.cta_visit_text')}</p>
                   <Link to="/experiencias" className="text-secondary font-semibold">
-                    Reserva tu visita →
+                    {t('home.cta_visit_link')}
                   </Link>
                 </div>
                 <div className="bg-white p-6 rounded-lg shadow-md">
-                  <h3 className="font-bold text-primary mb-2">Compra Online</h3>
-                  <p className="text-gray-700 mb-4">Recibe nuestras joyas en tu casa</p>
+                  <h3 className="font-bold text-primary mb-2">{t('home.cta_shop_title')}</h3>
+                  <p className="text-gray-700 mb-4">{t('home.cta_shop_text')}</p>
                   <Link to="/tienda" className="text-secondary font-semibold">
-                    Ir a la tienda →
+                    {t('home.cta_shop_link')}
                   </Link>
                 </div>
                 <div className="bg-white p-6 rounded-lg shadow-md">
-                  <h3 className="font-bold text-primary mb-2">Síguenos</h3>
-                  <p className="text-gray-700 mb-4">Únete a nuestra comunidad</p>
+                  <h3 className="font-bold text-primary mb-2">{t('home.cta_follow_title')}</h3>
+                  <p className="text-gray-700 mb-4">{t('home.cta_follow_text')}</p>
                   <a 
                     href="https://www.instagram.com/mikelsearth" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="text-secondary font-semibold"
                   >
-                    @mikelsearth →
+                    {t('home.cta_follow_link')}
                   </a>
                 </div>
               </div>
@@ -371,4 +356,3 @@ const Home = () => {
 };
 
 export default Home;
-

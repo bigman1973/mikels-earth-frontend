@@ -1,11 +1,14 @@
 import { ShoppingCart, User, Search, Menu } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useCart } from '../../context/CartContext';
+import LanguageSelector from '../common/LanguageSelector';
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { getCartCount, toggleCart } = useCart();
+  const { t } = useTranslation();
   const cartCount = getCartCount();
 
   return (
@@ -80,6 +83,7 @@ const Header = () => {
               </svg>
               HORECA B2B
             </Link>
+            <LanguageSelector compact className="ml-3" />
           </div>
         </div>
       </div>
@@ -112,49 +116,49 @@ const Header = () => {
                   textShadow: '0 0 1px rgba(205, 84, 91, 0.3)',
                 }}
               >
-                Tienda
+                {t('nav.shop')}
               </Link>
               <Link 
                 to="/la-familia" 
                 className="text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
               >
-                La Familia
+                {t('nav.family')}
               </Link>
               <Link 
                 to="/nuestra-tierra" 
                 className="text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
               >
-                Nuestra Tierra
+                {t('nav.land')}
               </Link>
               <Link 
                 to="/el-obrador" 
                 className="text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
               >
-                El Obrador
+                {t('nav.workshop')}
               </Link>
               <Link 
                 to="/nuestras-joyas" 
                 className="text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
               >
-                Nuestras Joyas
+                {t('nav.jewels')}
               </Link>
               <Link 
                 to="/experiencias" 
                 className="text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
               >
-                Experiencias
+                {t('nav.experiences')}
               </Link>
               <Link 
                 to="/recetario" 
                 className="text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
               >
-                Recetario
+                {t('nav.recipes')}
               </Link>
               <Link 
                 to="/opiniones" 
                 className="text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
               >
-                Opiniones
+                {t('nav.reviews')}
               </Link>
             </div>
 
@@ -210,64 +214,67 @@ const Header = () => {
                   }}
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Tienda
+                  {t('nav.shop')}
                 </Link>
                 <Link 
                   to="/la-familia" 
                   className="text-sm font-medium hover:text-secondary transition-colors uppercase"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  La Familia
+                  {t('nav.family')}
                 </Link>
                 <Link 
                   to="/nuestra-tierra" 
                   className="text-sm font-medium hover:text-secondary transition-colors uppercase"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Nuestra Tierra
+                  {t('nav.land')}
                 </Link>
                 <Link 
                   to="/el-obrador" 
                   className="text-sm font-medium hover:text-secondary transition-colors uppercase"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  El Obrador
+                  {t('nav.workshop')}
                 </Link>
                 <Link 
                   to="/nuestras-joyas" 
                   className="text-sm font-medium hover:text-secondary transition-colors uppercase"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Nuestras Joyas
+                  {t('nav.jewels')}
                 </Link>
                 <Link 
                   to="/experiencias" 
                   className="text-sm font-medium hover:text-secondary transition-colors uppercase"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Experiencias
+                  {t('nav.experiences')}
                 </Link>
                 <Link 
                   to="/recetario" 
                   className="text-sm font-medium hover:text-secondary transition-colors uppercase"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Recetario
+                  {t('nav.recipes')}
                 </Link>
                 <Link 
                   to="/opiniones" 
                   className="text-sm font-medium hover:text-secondary transition-colors uppercase"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Opiniones
+                  {t('nav.reviews')}
                 </Link>
                 <Link 
                   to="/horeca" 
                   className="text-sm font-medium hover:text-secondary transition-colors uppercase"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  HORECA B2B
+                  {t('nav.horecaB2B')}
                 </Link>
+                <div className="pt-2">
+                  <LanguageSelector className="justify-center" />
+                </div>
 
                 <div className="flex items-center gap-4 pt-3 border-t border-white/10">
                   <button aria-label="Buscar">

@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import Newsletter from '../common/Newsletter';
 
 const Footer = () => {
+  const { t } = useTranslation();
+
   return (
     <footer className="bg-white border-t border-gray-200">
       {/* Newsletter Section */}
@@ -15,32 +18,32 @@ const Footer = () => {
           {/* Navigation links */}
           <div>
             <h3 className="font-bold text-primary mb-4 uppercase tracking-wide text-sm">
-              Navegación
+              {t('footer.navigation')}
             </h3>
             <ul className="space-y-2">
               <li>
                 <Link to="/" className="text-gray-600 hover:text-primary transition-colors text-sm">
-                  Inicio
+                  {t('footer.home')}
                 </Link>
               </li>
               <li>
-                <Link to="/familia" className="text-gray-600 hover:text-primary transition-colors text-sm">
-                  La Família
+                <Link to="/la-familia" className="text-gray-600 hover:text-primary transition-colors text-sm">
+                  {t('footer.family')}
                 </Link>
               </li>
               <li>
                 <Link to="/tienda" className="text-gray-600 hover:text-primary transition-colors text-sm">
-                  Productos
+                  {t('footer.products')}
                 </Link>
               </li>
               <li>
                 <Link to="/blog" className="text-gray-600 hover:text-primary transition-colors text-sm">
-                  Blog
+                  {t('footer.blog')}
                 </Link>
               </li>
               <li>
                 <Link to="/contacto" className="text-gray-600 hover:text-primary transition-colors text-sm">
-                  Contacto
+                  {t('footer.contact')}
                 </Link>
               </li>
             </ul>
@@ -52,14 +55,14 @@ const Footer = () => {
               Mikel's Earth
             </h3>
             <p className="text-gray-600 text-sm leading-relaxed">
-              Tradición familiar desde 1819. Productos naturales, artesanales y veganos de Lleida.
+              {t('footer.company_desc')}
             </p>
           </div>
 
           {/* Contact */}
           <div>
             <h3 className="font-bold text-primary mb-4 uppercase tracking-wide text-sm">
-              Contacto
+              {t('footer.contact_title')}
             </h3>
             <address className="text-gray-600 text-sm not-italic space-y-1">
               <p>Mikel's by Farms Planet SL</p>
@@ -71,7 +74,7 @@ const Footer = () => {
           {/* Social media */}
           <div>
             <h3 className="font-bold text-primary mb-4 uppercase tracking-wide text-sm">
-              Síguenos
+              {t('footer.follow_us')}
             </h3>
             <div className="flex gap-4">
               <a 
@@ -128,14 +131,14 @@ const Footer = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-600">
             <p>
-              Copyright © 2025 Mikel's Earth - Todos los derechos reservados
+              {t('footer.copyright')}
             </p>
             <div className="flex gap-4">
               <Link to="/politica-privacidad" className="hover:text-primary transition-colors">
-                Política de privacidad
+                {t('footer.privacy')}
               </Link>
               <Link to="/terminos" className="hover:text-primary transition-colors">
-                Términos y condiciones
+                {t('footer.terms')}
               </Link>
             </div>
           </div>
@@ -146,4 +149,3 @@ const Footer = () => {
 };
 
 export default Footer;
-
