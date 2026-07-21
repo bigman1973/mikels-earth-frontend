@@ -14,6 +14,7 @@ const API_URL = import.meta.env.VITE_API_URL || 'https://mikels-earth-backend-pr
 
 // Componente de estrellas inline
 const StarRating = ({ rating, count }) => {
+  const { t } = useTranslation();
   if (!rating || count === 0) return null;
   return (
     <div className="flex items-center gap-2 mb-4">
