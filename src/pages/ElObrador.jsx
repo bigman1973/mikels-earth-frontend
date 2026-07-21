@@ -8,14 +8,12 @@ const ElObrador = () => {
     <div className="bg-white">
       {/* Hero Section */}
       <section className="relative h-[70vh] flex items-center justify-center overflow-hidden">
-        {/* Imagen histórica del obrador 1975 */}
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
             backgroundImage: 'url(/images/obrador-1975-hero.jpg)'
           }}
         >
-          {/* Overlay para mejorar legibilidad */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/60"></div>
         </div>
         
@@ -26,13 +24,13 @@ const ElObrador = () => {
           className="text-center px-4 relative z-10"
         >
           <h1 className="text-5xl md:text-7xl font-script text-white mb-6 drop-shadow-2xl">
-            El Obrador
+            {t('workshop.hero_title')}
           </h1>
           <p className="text-xl md:text-2xl text-white/95 max-w-3xl mx-auto drop-shadow-lg mb-8">
-            Donde el tiempo se detiene y la artesanía cobra vida
+            {t('workshop.hero_subtitle')}
           </p>
           <p className="text-sm md:text-base text-white/80 italic drop-shadow-md">
-            El obrador en 1975
+            {t('workshop.hero_caption')}
           </p>
         </motion.div>
       </section>
@@ -47,30 +45,16 @@ const ElObrador = () => {
             transition={{ duration: 0.8 }}
           >
             <h2 className="text-4xl font-bold text-primary mb-6">
-              Transparencia Total: De la Masía al Mundo
+              {t('workshop.intro_title')}
             </h2>
             <div className="space-y-6 text-lg text-gray-700 leading-relaxed">
-              <p>
-                Todo comenzó en nuestra masía. Entre muros de piedra centenarios, nuestras manos creaban cada receta, llenaban cada frasco. No era un negocio. Era una pasión.
-              </p>
-              <p>
-                Cuando la demanda creció, nos enfrentamos a una decisión: ¿industrializarnos o mantener nuestra esencia?
-              </p>
-              <p className="font-semibold text-primary">
-                Elegimos el camino difícil.
-              </p>
-              <p>
-                En un mundo donde los alimentos se producen en fábricas gigantes, donde las máquinas han reemplazado a las manos, donde la velocidad importa más que la calidad... nosotros buscamos artesanos que compartieran nuestra filosofía.
-              </p>
-              <p>
-                Hoy trabajamos con un obrador pequeño, como el nuestro. Un proceso lento, como siempre lo fue. Manos expertas que tocan cada frasco, como nosotros lo hacíamos.
-              </p>
-              <p>
-                Nuestras recetas siguen siendo las mismas. Los ingredientes, seleccionados con el mismo criterio. El proceso, supervisado con la misma obsesión por la calidad.
-              </p>
-              <p className="font-semibold text-primary">
-                Hemos crecido sin traicionar nuestros orígenes. Porque la masía no era solo un lugar. Era una promesa. Y esa promesa sigue viva en cada frasco.
-              </p>
+              <p>{t('workshop.intro_p1')}</p>
+              <p>{t('workshop.intro_p2')}</p>
+              <p className="font-semibold text-primary">{t('workshop.intro_p3')}</p>
+              <p>{t('workshop.intro_p4')}</p>
+              <p>{t('workshop.intro_p5')}</p>
+              <p>{t('workshop.intro_p6')}</p>
+              <p className="font-semibold text-primary">{t('workshop.intro_p7')}</p>
             </div>
           </motion.div>
         </div>
@@ -80,52 +64,52 @@ const ElObrador = () => {
       <section className="bg-accent/10 py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-4xl font-bold text-primary text-center mb-12">
-            El Viaje de la Fruta: Del Árbol al Frasco
+            {t('workshop.process_title')}
           </h2>
           
           <div className="max-w-5xl mx-auto space-y-16">
             {[
               {
                 step: "01",
-                title: "La Cosecha Manual",
-                subtitle: "El Ojo Experto que Ninguna Máquina Puede Replicar",
+                title: t('workshop.step1_title'),
+                subtitle: t('workshop.step1_subtitle'),
                 icon: <Hand className="text-secondary" size={48} />,
                 image: "/images/cosechamanual.jpg",
                 content: [
-                  "Cada fruta es seleccionada a mano en su punto óptimo de maduración. No antes, cuando aún le falta sabor. No después, cuando ya ha perdido textura. Justo en el momento perfecto.",
-                  "Nuestros recolectores conocen cada árbol. Saben cuáles maduran primero, cuáles necesitan más tiempo. Es un conocimiento que se adquiere con años, con experiencia, con pasión.",
-                  "Durante la recolección, seleccionamos el fruto. Y esa diferencia se nota en cada bocado."
+                  t('workshop.step1_p1'),
+                  t('workshop.step1_p2'),
+                  t('workshop.step1_p3')
                 ],
-                highlight: "Solo el 60% de la fruta pasa nuestro control de calidad"
+                highlight: t('workshop.step1_highlight')
               },
               {
                 step: "02",
-                title: "La Elaboración Artesanal",
-                subtitle: "El Punto Exacto, No el Camino Fácil",
+                title: t('workshop.step2_title'),
+                subtitle: t('workshop.step2_subtitle'),
                 icon: <Clock className="text-secondary" size={48} />,
                 image: "/images/Elaboracionartesanal.webp",
                 content: [
-                  "En las fábricas industriales, la fruta se cuece durante horas hasta convertirse en una masa homogénea. Luego añaden espesantes para darle textura, conservantes para alargar su vida, y aromas para recuperar lo que el exceso de calor destruyó.",
-                  "Nosotros hacemos lo contrario.",
-                  "En nuestro obrador, cada lote se cocina solo hasta alcanzar su punto óptimo. Ni un minuto más, ni uno menos. La pasteurización se controla con precisión milimétrica: el tiempo exacto para conservar la fruta como si acabara de cosecharse, sin cocinarla hasta la muerte.",
-                  "No usamos espesantes. No añadimos conservantes. No compensamos con química lo que el proceso industrial destruye.",
-                  "Solo fruta, un poco de azúcar, y el conocimiento de cuándo detenerse.",
-                  "El resultado es un producto que conserva el sabor, la textura y el color de la fruta fresca. Porque la tratamos con el respeto que merece."
+                  t('workshop.step2_p1'),
+                  t('workshop.step2_p2'),
+                  t('workshop.step2_p3'),
+                  t('workshop.step2_p4'),
+                  t('workshop.step2_p5'),
+                  t('workshop.step2_p6')
                 ],
-                highlight: "La diferencia está en lo que NO hacemos."
+                highlight: t('workshop.step2_highlight')
               },
               {
                 step: "03",
-                title: "El Envasado Uno a Uno",
-                subtitle: "Nuestra Firma Personal en Cada Producto",
+                title: t('workshop.step3_title'),
+                subtitle: t('workshop.step3_subtitle'),
                 icon: <Eye className="text-secondary" size={48} />,
                 image: "/images/ElEnvasadounoauno.webp",
                 content: [
-                  "Cada frasco es llenado a mano. Cada tapa se cierra manualmente. Cada etiqueta se coloca con cuidado.",
-                  "Es nuestro sello de garantía. Nuestra firma personal. Cuando recibes un producto de Mikel's Earth, sabes que pasó por nuestras manos, que lo revisamos, que está perfecto.",
-                  "Podríamos automatizar este proceso. Sería más rápido, más barato. Pero perderíamos el control, la calidad, el alma."
+                  t('workshop.step3_p1'),
+                  t('workshop.step3_p2'),
+                  t('workshop.step3_p3')
                 ],
-                highlight: "Cada frasco es inspeccionado visualmente antes de salir"
+                highlight: t('workshop.step3_highlight')
               }
             ].map((process, index) => (
               <motion.div
@@ -189,21 +173,15 @@ const ElObrador = () => {
             transition={{ duration: 0.8 }}
           >
             <h2 className="text-4xl font-bold text-primary text-center mb-12">
-              Lo que NO Encontrarás en Nuestros Productos
+              {t('workshop.not_found_title')}
             </h2>
             
             <div className="grid md:grid-cols-2 gap-6">
               {[
-                "Conservantes artificiales",
-                "Colorantes químicos",
-                "Espesantes sintéticos",
-                "Aromas artificiales",
-                "Azúcares refinados en exceso",
-                "Aceites hidrogenados",
-                "Ingredientes transgénicos",
-                "Procesos industriales",
-                "Prisas ni atajos",
-                "Mentiras en la etiqueta"
+                t('workshop.not_1'), t('workshop.not_2'), t('workshop.not_3'),
+                t('workshop.not_4'), t('workshop.not_5'), t('workshop.not_6'),
+                t('workshop.not_7'), t('workshop.not_8'), t('workshop.not_9'),
+                t('workshop.not_10')
               ].map((item, index) => (
                 <motion.div
                   key={index}
@@ -235,41 +213,17 @@ const ElObrador = () => {
               transition={{ duration: 0.8 }}
             >
               <h2 className="text-4xl font-bold text-primary text-center mb-12">
-                Lo que SÍ Garantizamos
+                {t('workshop.guarantee_title')}
               </h2>
               
               <div className="grid md:grid-cols-3 gap-8">
                 {[
-                  {
-                    icon: <Award className="text-secondary" size={40} />,
-                    title: "Calidad Premium",
-                    text: "Solo la mejor fruta, en su punto perfecto, seleccionada a mano."
-                  },
-                  {
-                    icon: <Heart className="text-secondary" size={40} />,
-                    title: "Elaboración Artesanal",
-                    text: "Recetas tradicionales, cocciones lentas, sin prisas ni atajos."
-                  },
-                  {
-                    icon: <Eye className="text-secondary" size={40} />,
-                    title: "Transparencia Total",
-                    text: "Sabes exactamente qué llevas. Cada ingrediente está en la etiqueta."
-                  },
-                  {
-                    icon: <CheckCircle className="text-secondary" size={40} />,
-                    title: "Sin Aditivos",
-                    text: "Solo ingredientes naturales. Nada que no reconocerías en tu cocina."
-                  },
-                  {
-                    icon: <Hand className="text-secondary" size={40} />,
-                    title: "Hecho a Mano",
-                    text: "Cada frasco pasa por nuestras manos. Es nuestro sello personal."
-                  },
-                  {
-                    icon: <Clock className="text-secondary" size={40} />,
-                    title: "Tradición Viva",
-                    text: "Más de 200 años de saber hacer en cada producto."
-                  }
+                  { icon: <Award className="text-secondary" size={40} />, title: t('workshop.g1_title'), text: t('workshop.g1_text') },
+                  { icon: <Heart className="text-secondary" size={40} />, title: t('workshop.g2_title'), text: t('workshop.g2_text') },
+                  { icon: <Eye className="text-secondary" size={40} />, title: t('workshop.g3_title'), text: t('workshop.g3_text') },
+                  { icon: <CheckCircle className="text-secondary" size={40} />, title: t('workshop.g4_title'), text: t('workshop.g4_text') },
+                  { icon: <Hand className="text-secondary" size={40} />, title: t('workshop.g5_title'), text: t('workshop.g5_text') },
+                  { icon: <Clock className="text-secondary" size={40} />, title: t('workshop.g6_title'), text: t('workshop.g6_text') }
                 ].map((item, index) => (
                   <motion.div
                     key={index}
@@ -302,23 +256,20 @@ const ElObrador = () => {
               className="text-center"
             >
               <h2 className="text-4xl font-bold mb-6">
-                ¿Por Qué Nuestros Productos Cuestan Más?
+                {t('workshop.worth_title')}
               </h2>
               <p className="text-xl mb-6 text-white/90 leading-relaxed">
-                Es una pregunta justa. Y la respuesta es simple: porque hacemos las cosas bien.
+                {t('workshop.worth_p1')}
               </p>
               <p className="text-lg text-white/80 leading-relaxed mb-6">
-                Seleccionar cada fruta a mano lleva tiempo. Cocinar sin prisas es más caro. 
-                Envasar uno a uno requiere más personal. Usar solo ingredientes naturales 
-                cuesta más que usar químicos baratos.
+                {t('workshop.worth_p2')}
               </p>
               <p className="text-lg text-white/80 leading-relaxed mb-8">
-                Pero el resultado es un producto que sabe de verdad. Que es saludable de verdad. 
-                Que honra la tradición de verdad. Y eso, creemos, vale cada céntimo.
+                {t('workshop.worth_p3')}
               </p>
               <div className="bg-white/10 p-6 rounded-lg">
                 <p className="text-2xl font-script text-secondary">
-                  "No competimos en precio. Competimos en calidad, en autenticidad, en alma."
+                  "{t('workshop.worth_quote')}"
                 </p>
               </div>
             </motion.div>
@@ -330,24 +281,23 @@ const ElObrador = () => {
       <section className="container mx-auto px-4 py-16">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl font-bold text-primary mb-6">
-            Prueba la Diferencia de lo Artesanal
+            {t('workshop.cta_title')}
           </h2>
           <p className="text-xl text-gray-700 mb-8">
-            Una vez que pruebes un producto hecho con este cuidado, con esta dedicación, 
-            con este amor... no querrás volver a los productos industriales.
+            {t('workshop.cta_text')}
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
             <a
               href="/tienda"
               className="bg-secondary text-primary px-8 py-3 rounded-lg font-bold hover:bg-secondary/90 transition-colors"
             >
-              Ver Nuestros Productos
+              {t('workshop.cta_products')}
             </a>
             <a
               href="/experiencias"
               className="bg-primary text-white px-8 py-3 rounded-lg font-bold hover:bg-primary/90 transition-colors"
             >
-              Visita Nuestro Obrador
+              {t('workshop.cta_visit')}
             </a>
           </div>
         </div>
@@ -357,4 +307,3 @@ const ElObrador = () => {
 };
 
 export default ElObrador;
-

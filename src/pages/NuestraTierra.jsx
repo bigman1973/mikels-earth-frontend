@@ -8,14 +8,12 @@ const NuestraTierra = () => {
     <div className="bg-white">
       {/* Hero Section */}
       <section className="relative h-[70vh] flex items-center justify-center overflow-hidden">
-        {/* Imagen de fondo de la finca La Moncloa */}
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
             backgroundImage: 'url(/images/finca-moncloa-hero.webp)'
           }}
         >
-          {/* Overlay para mejorar legibilidad */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/40"></div>
         </div>
         
@@ -28,11 +26,11 @@ const NuestraTierra = () => {
           <div className="flex items-center justify-center gap-3 mb-4">
             <MapPin className="text-white drop-shadow-lg" size={40} />
             <h1 className="text-5xl md:text-7xl font-script text-white drop-shadow-2xl">
-              Nuestra Tierra
+              {t('land.hero_title')}
             </h1>
           </div>
           <p className="text-xl md:text-2xl text-white/95 max-w-3xl mx-auto drop-shadow-lg">
-            Alcarràs y Córdoba: donde el terroir se convierte en sabor
+            {t('land.hero_subtitle')}
           </p>
         </motion.div>
       </section>
@@ -48,13 +46,10 @@ const NuestraTierra = () => {
             className="text-center mb-12"
           >
             <h2 className="text-4xl font-bold text-primary mb-6">
-              El Terroir: Mucho Más que un Lugar
+              {t('land.terroir_title')}
             </h2>
             <p className="text-xl text-gray-700 leading-relaxed">
-              Los franceses tienen una palabra para ello: <em>terroir</em>. Es esa combinación 
-              mágica de suelo, clima, altitud y tradición que hace que un producto sea único, 
-              irrepetible, imposible de replicar en otro lugar. Nuestro terroir es Alcarràs 
-              y Córdoba. Y es lo que hace que nuestros productos sean especiales.
+              {t('land.terroir_text')}
             </p>
           </motion.div>
         </div>
@@ -71,40 +66,28 @@ const NuestraTierra = () => {
               transition={{ duration: 0.8 }}
             >
               <h2 className="text-4xl font-bold text-primary mb-8 text-center">
-                Alcarràs: La Cuna del Paraguayo
+                {t('land.alcarras_title')}
               </h2>
               
               <div className="grid md:grid-cols-2 gap-12 items-center">
                 <div className="space-y-6">
+                  <p className="text-lg text-gray-700" dangerouslySetInnerHTML={{ __html: t('land.alcarras_p1') }} />
                   <p className="text-lg text-gray-700">
-                    Alcarràs no es solo un pueblo de Lleida. Es <strong>el lugar</strong> donde 
-                    el paraguayo alcanza su máxima expresión. Aquí, en estas tierras del Segrià, 
-                    el melocotón plano encuentra las condiciones perfectas para desarrollar ese 
-                    sabor dulce, intenso y aromático que lo hace único.
+                    {t('land.alcarras_p2')}
                   </p>
-                  
                   <p className="text-lg text-gray-700">
-                    El clima continental de la zona, con veranos calurosos e inviernos fríos, 
-                    estresa la fruta de la manera justa. Las diferencias térmicas entre el día 
-                    y la noche concentran los azúcares. El suelo arcilloso retiene la humedad 
-                    necesaria. Y el sol del Mediterráneo hace el resto.
-                  </p>
-                  
-                  <p className="text-lg text-gray-700">
-                    Pero hay algo más. Hay generaciones de agricultores que conocen cada árbol, 
-                    cada rincón de sus campos. Que saben cuándo recoger la fruta, ni un día antes 
-                    ni un día después. Ese conocimiento no se compra. Se hereda.
+                    {t('land.alcarras_p3')}
                   </p>
                 </div>
                 
                 <div className="bg-white p-8 rounded-lg shadow-lg">
-                  <h3 className="text-2xl font-bold text-primary mb-6">Características del Terroir</h3>
+                  <h3 className="text-2xl font-bold text-primary mb-6">{t('land.terroir_characteristics')}</h3>
                   <div className="space-y-4">
                     {[
-                      { icon: <Sun className="text-secondary" />, label: "Clima", value: "Continental mediterráneo" },
-                      { icon: <Droplets className="text-secondary" />, label: "Precipitación", value: "400-500mm anuales" },
-                      { icon: <Wind className="text-secondary" />, label: "Temperatura", value: "Amplitud térmica ideal" },
-                      { icon: <Leaf className="text-secondary" />, label: "Suelo", value: "Arcilloso-calcáreo" }
+                      { icon: <Sun className="text-secondary" />, label: t('land.climate'), value: t('land.climate_value') },
+                      { icon: <Droplets className="text-secondary" />, label: t('land.precipitation'), value: t('land.precipitation_value') },
+                      { icon: <Wind className="text-secondary" />, label: t('land.temperature'), value: t('land.temperature_value') },
+                      { icon: <Leaf className="text-secondary" />, label: t('land.soil'), value: t('land.soil_value') }
                     ].map((item, index) => (
                       <div key={index} className="flex items-center gap-4">
                         <div className="flex-shrink-0">{item.icon}</div>
@@ -132,50 +115,39 @@ const NuestraTierra = () => {
             transition={{ duration: 0.8 }}
           >
             <h2 className="text-4xl font-bold text-primary mb-8 text-center">
-              Córdoba: El Reino del Olivo
+              {t('land.cordoba_title')}
             </h2>
             
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div className="bg-primary text-white p-8 rounded-lg">
-                <h3 className="text-2xl font-bold mb-6">El Aceite de Oliva Perfecto</h3>
+                <h3 className="text-2xl font-bold mb-6">{t('land.perfect_oil')}</h3>
                 <div className="space-y-4">
                   <div>
                     <div className="font-semibold text-secondary mb-2">Arbequina</div>
-                    <p className="text-white/90">Suave, afrutada, con notas de almendra. Perfecta para ensaladas y pescados.</p>
+                    <p className="text-white/90">{t('land.arbequina')}</p>
                   </div>
                   <div>
                     <div className="font-semibold text-secondary mb-2">Picual</div>
-                    <p className="text-white/90">Intensa, picante, con carácter. Ideal para guisos y carnes.</p>
+                    <p className="text-white/90">{t('land.picual')}</p>
                   </div>
                   <div>
                     <div className="font-semibold text-secondary mb-2">Hojiblanca</div>
-                    <p className="text-white/90">Equilibrada, versátil, elegante. La joya de la corona.</p>
+                    <p className="text-white/90">{t('land.hojiblanca')}</p>
                   </div>
                 </div>
               </div>
               
               <div className="space-y-6">
                 <p className="text-lg text-gray-700">
-                  Córdoba es sinónimo de aceite de oliva. Aquí, en el corazón de Andalucía, 
-                  nuestros olivares se extienden hasta donde alcanza la vista. Árboles centenarios 
-                  que han visto pasar generaciones, que han resistido sequías y heladas, que 
-                  producen aceitunas de una calidad excepcional.
+                  {t('land.cordoba_p1')}
                 </p>
-                
                 <p className="text-lg text-gray-700">
-                  Trabajamos con tres variedades en la finca de la Moncloa: Arbequina, Picual y Hojiblanca. Cada una 
-                  con su personalidad, su carácter, su momento perfecto de cosecha. Y todas 
-                  con algo en común: se recogen a mano, se prensan en frío, se embotellan 
-                  sin filtrar para preservar todos sus aromas y propiedades.
+                  {t('land.cordoba_p2')}
                 </p>
-                
                 <div className="bg-secondary/20 p-6 rounded-lg border-l-4 border-secondary">
-                  <p className="text-primary font-semibold mb-2">El Temprano</p>
+                  <p className="text-primary font-semibold mb-2">{t('land.temprano_title')}</p>
                   <p className="text-gray-700">
-                    Nuestro aceite "Temprano" es especial. Se elabora con aceitunas verdes, 
-                    recogidas antes de su maduración completa. El resultado es un aceite 
-                    intenso, picante, con un frutado verde que explota en boca. No es para 
-                    todos los paladares. Es para los que buscan autenticidad.
+                    {t('land.temprano_text')}
                   </p>
                 </div>
               </div>
@@ -197,39 +169,21 @@ const NuestraTierra = () => {
             >
               <Heart className="mx-auto text-secondary mb-4" size={48} />
               <h2 className="text-4xl font-bold text-primary mb-6">
-                Agricultura Sostenible: Nuestro Compromiso
+                {t('land.sustainability_title')}
               </h2>
               <p className="text-xl text-gray-700">
-                La tierra nos ha dado todo. Es nuestra responsabilidad cuidarla.
+                {t('land.sustainability_subtitle')}
               </p>
             </motion.div>
 
             <div className="grid md:grid-cols-2 gap-8">
               {[
-                {
-                  title: "Agricultura Ecológica",
-                  text: "Sin pesticidas químicos, sin fertilizantes sintéticos. Solo métodos naturales que respetan el equilibrio del ecosistema."
-                },
-                {
-                  title: "Gestión del Agua",
-                  text: "Sistemas de riego por goteo que optimizan cada gota. El agua es un tesoro en el Mediterráneo, y la tratamos como tal."
-                },
-                {
-                  title: "Biodiversidad",
-                  text: "Mantenemos setos naturales, plantas autóctonas y espacios para la fauna local. Un campo sano es un campo vivo."
-                },
-                {
-                  title: "Energía Renovable",
-                  text: "Paneles solares en nuestro obrador. El sol que madura nuestras frutas también alimenta nuestras máquinas."
-                },
-                {
-                  title: "Cero Residuos",
-                  text: "Todo se aprovecha. Los restos de poda se compostan, los subproductos se reutilizan. Nada se desperdicia."
-                },
-                {
-                  title: "Certificaciones",
-                  text: "Agricultura ecológica certificada. Porque no basta con decirlo, hay que demostrarlo."
-                }
+                { title: t('land.organic_title'), text: t('land.organic_text') },
+                { title: t('land.water_title'), text: t('land.water_text') },
+                { title: t('land.biodiversity_title'), text: t('land.biodiversity_text') },
+                { title: t('land.energy_title'), text: t('land.energy_text') },
+                { title: t('land.zero_waste_title'), text: t('land.zero_waste_text') },
+                { title: t('land.certifications_title'), text: t('land.certifications_text') }
               ].map((item, index) => (
                 <motion.div
                   key={index}
@@ -259,13 +213,10 @@ const NuestraTierra = () => {
             className="max-w-3xl mx-auto text-center"
           >
             <blockquote className="text-2xl md:text-3xl font-script mb-6">
-              "La tierra no es nuestra herencia de nuestros padres, 
-              sino un préstamo de nuestros hijos"
+              "{t('land.quote')}"
             </blockquote>
             <p className="text-lg text-white/80">
-              Este proverbio indígena guía cada decisión que tomamos. 
-              Porque queremos que nuestros nietos, y los nietos de nuestros nietos, 
-              puedan seguir cultivando estas tierras con el mismo amor y respeto que nosotros.
+              {t('land.quote_text')}
             </p>
           </motion.div>
         </div>
@@ -275,17 +226,16 @@ const NuestraTierra = () => {
       <section className="container mx-auto px-4 py-16">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl font-bold text-primary mb-6">
-            Prueba el Sabor de Nuestra Tierra
+            {t('land.cta_title')}
           </h2>
           <p className="text-xl text-gray-700 mb-8">
-            Cada producto de Mikel's Earth lleva el sabor único de Alcarràs y Córdoba. 
-            Un sabor que no se puede replicar, porque nace de un terroir único.
+            {t('land.cta_text')}
           </p>
           <a
             href="/nuestras-joyas"
             className="inline-block bg-secondary text-primary px-8 py-3 rounded-lg font-bold hover:bg-secondary/90 transition-colors"
           >
-            Descubre Nuestras Joyas
+            {t('land.cta_button')}
           </a>
         </div>
       </section>
@@ -294,4 +244,3 @@ const NuestraTierra = () => {
 };
 
 export default NuestraTierra;
-

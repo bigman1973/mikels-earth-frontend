@@ -31,11 +31,11 @@ const Experiencias = () => {
         setTimeout(() => setSubmitted(false), 5000);
       } else {
         console.error('Error enviando solicitud');
-        alert('Hubo un error al enviar tu solicitud. Por favor, inténtalo de nuevo.');
+        alert(t('experiences.form_error'));
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('Hubo un error al enviar tu solicitud. Por favor, inténtalo de nuevo.');
+      alert(t('experiences.form_error'));
     }
   };
 
@@ -62,27 +62,25 @@ const Experiencias = () => {
           >
             <div className="inline-block mb-6">
               <span className="bg-secondary text-primary px-6 py-2 rounded-full font-bold text-lg">
-                Muy Pronto
+                {t('experiences.coming_soon')}
               </span>
             </div>
             
             <h1 className="text-6xl md:text-8xl font-bold text-white mb-8 leading-tight">
-              Experiencias<br />
+              {t('experiences.hero_title')}<br />
               <span className="font-script text-secondary">Mikel's Earth</span>
             </h1>
             
             <p className="text-2xl md:text-3xl text-white/90 mb-6 max-w-3xl mx-auto leading-relaxed">
-              Estamos preparando algo muy especial para ti
+              {t('experiences.hero_subtitle')}
             </p>
             
             <p className="text-xl text-white/80 max-w-2xl mx-auto">
-              Visitas al obrador, catas de aceite, experiencias en el campo... 
-              Pronto podrás vivir la tradición de Mikel's Earth en primera persona.
+              {t('experiences.hero_description')}
             </p>
           </motion.div>
         </div>
 
-        {/* Decorative elements */}
         <div className="absolute bottom-0 left-0 right-0">
           <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
             <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="white"/>
@@ -101,12 +99,10 @@ const Experiencias = () => {
             className="max-w-4xl mx-auto text-center mb-16"
           >
             <h2 className="text-5xl font-bold text-primary mb-6">
-              ¿Qué Estamos Preparando?
+              {t('experiences.preparing_title')}
             </h2>
             <p className="text-xl text-gray-700 leading-relaxed">
-              Queremos que vivas la experiencia completa de Mikel's Earth. 
-              Que toques la tierra, que huelas el aceite recién prensado, 
-              que pruebes nuestras joyas directamente del obrador.
+              {t('experiences.preparing_text')}
             </p>
           </motion.div>
 
@@ -114,18 +110,18 @@ const Experiencias = () => {
             {[
               {
                 icon: <Users className="text-secondary" size={48} />,
-                title: "Visitas al Obrador",
-                description: "Descubre c\u00f3mo puedes hacer tu propio producto artesanal."
+                title: t('experiences.visit_title'),
+                description: t('experiences.visit_text')
               },
               {
                 icon: <Heart className="text-secondary" size={48} />,
-                title: "Catas de Aceite",
-                description: "Aprende a distinguir los matices de un aceite de oliva virgen extra premium. De la mano de expertos."
+                title: t('experiences.tasting_title'),
+                description: t('experiences.tasting_text')
               },
               {
                 icon: <Calendar className="text-secondary" size={48} />,
-                title: "Experiencias en el Campo",
-                description: "Vive la cosecha del paraguayo o la recogida de la aceituna. Conecta con la tierra como lo hacemos nosotros."
+                title: t('experiences.field_title'),
+                description: t('experiences.field_text')
               }
             ].map((item, index) => (
               <motion.div
@@ -165,11 +161,10 @@ const Experiencias = () => {
               <div className="text-center mb-8">
                 <Bell className="text-secondary mx-auto mb-4" size={56} />
                 <h2 className="text-4xl font-bold text-primary mb-4">
-                  Sé el Primero en Saberlo
+                  {t('experiences.form_title')}
                 </h2>
                 <p className="text-lg text-gray-700">
-                  Déjanos tu email y te avisaremos cuando las experiencias estén disponibles. 
-                  Además, tendrás acceso prioritario a las primeras plazas.
+                  {t('experiences.form_subtitle')}
                 </p>
               </div>
 
@@ -181,17 +176,17 @@ const Experiencias = () => {
                 >
                   <div className="text-6xl mb-4">✓</div>
                   <h3 className="text-2xl font-bold text-green-700 mb-2">
-                    ¡Gracias por tu interés!
+                    {t('experiences.form_success_title')}
                   </h3>
                   <p className="text-green-600">
-                    Te avisaremos en cuanto las experiencias estén disponibles.
+                    {t('experiences.form_success_text')}
                   </p>
                 </motion.div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div>
                     <label className="block text-sm font-bold text-gray-700 mb-2">
-                      Nombre completo *
+                      {t('experiences.form_name')} *
                     </label>
                     <input
                       type="text"
@@ -200,7 +195,7 @@ const Experiencias = () => {
                       onChange={handleChange}
                       required
                       className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-secondary focus:outline-none transition-colors"
-                      placeholder="Tu nombre"
+                      placeholder={t('experiences.form_name_placeholder')}
                     />
                   </div>
 
@@ -221,7 +216,7 @@ const Experiencias = () => {
 
                   <div>
                     <label className="block text-sm font-bold text-gray-700 mb-2">
-                      Teléfono (opcional)
+                      {t('experiences.form_phone')}
                     </label>
                     <input
                       type="tel"
@@ -235,7 +230,7 @@ const Experiencias = () => {
 
                   <div>
                     <label className="block text-sm font-bold text-gray-700 mb-2">
-                      ¿Qué te interesa más? *
+                      {t('experiences.form_interest')} *
                     </label>
                     <select
                       name="interes"
@@ -244,10 +239,10 @@ const Experiencias = () => {
                       required
                       className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-secondary focus:outline-none transition-colors"
                     >
-                      <option value="visita">Visita al obrador</option>
-                      <option value="cata">Cata de aceite</option>
-                      <option value="campo">Experiencia en el campo</option>
-                      <option value="todo">Todo me interesa</option>
+                      <option value="visita">{t('experiences.option_visit')}</option>
+                      <option value="cata">{t('experiences.option_tasting')}</option>
+                      <option value="campo">{t('experiences.option_field')}</option>
+                      <option value="todo">{t('experiences.option_all')}</option>
                     </select>
                   </div>
 
@@ -256,11 +251,11 @@ const Experiencias = () => {
                     className="w-full bg-secondary text-primary px-8 py-4 rounded-lg font-bold text-lg hover:bg-secondary/90 transition-colors flex items-center justify-center gap-2"
                   >
                     <Mail size={24} />
-                    Avísame Cuando Esté Disponible
+                    {t('experiences.form_submit')}
                   </button>
 
                   <p className="text-sm text-gray-500 text-center">
-                    * Campos obligatorios. Tus datos están seguros con nosotros.
+                    {t('experiences.form_disclaimer')}
                   </p>
                 </form>
               )}
@@ -269,26 +264,26 @@ const Experiencias = () => {
         </div>
       </section>
 
-      {/* Galería de adelanto */}
+      {/* Galería preview */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center mb-12">
             <h2 className="text-4xl font-bold text-primary mb-4">
-              Un Adelanto de lo que Vivirás
+              {t('experiences.preview_title')}
             </h2>
             <p className="text-lg text-gray-700">
-              Estas son algunas de las experiencias que podrás disfrutar muy pronto
+              {t('experiences.preview_text')}
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {[
-              { img: '/images/family/jordi-ninos-campo.jpg', title: 'En el campo de paraguayos' },
-              { img: '/images/family/familia-campo-paraguayos.jpg', title: 'Visitas familiares' },
-              { img: '/images/family/visita-internacional.jpg', title: 'Catas exclusivas' },
-              { img: '/images/products/aceite-temprano-campo.jpg', title: 'Aceite recién prensado' },
-              { img: '/images/family/nina-campo.jpg', title: 'Experiencias para toda la familia' },
-              { img: '/images/products/pack-productos.jpg', title: 'Degustación de productos' }
+              { img: '/images/family/jordi-ninos-campo.jpg', title: t('experiences.gallery_1') },
+              { img: '/images/family/familia-campo-paraguayos.jpg', title: t('experiences.gallery_2') },
+              { img: '/images/family/visita-internacional.jpg', title: t('experiences.gallery_3') },
+              { img: '/images/products/aceite-temprano-campo.jpg', title: t('experiences.gallery_4') },
+              { img: '/images/family/nina-campo.jpg', title: t('experiences.gallery_5') },
+              { img: '/images/products/pack-productos.jpg', title: t('experiences.gallery_6') }
             ].map((item, index) => (
               <motion.div
                 key={index}
@@ -316,4 +311,3 @@ const Experiencias = () => {
 };
 
 export default Experiencias;
-

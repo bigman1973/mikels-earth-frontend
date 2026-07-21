@@ -8,72 +8,72 @@ const NuestrasJoyas = () => {
   const collections = [
     {
       id: 'paraguayo',
-      name: 'Paraguayo en Almíbar',
-      tagline: 'La Joya de Alcarràs',
+      name: t('jewels.paraguayo_name'),
+      tagline: t('jewels.paraguayo_tagline'),
       icon: <Sparkles className="text-secondary" size={48} />,
       image: '/images/paraguayo-principal.webp',
-      description: 'El melocotón plano que conquistó nuestros corazones hace más de un siglo. Cultivado en Alcarràs, seleccionado a mano, cocido con paciencia y envasado con amor.',
+      description: t('jewels.paraguayo_description'),
       features: [
-        'Melocot\u00f3n plano de Alcarr\u00e0s',
-        'Cosecha manual en punto \u00f3ptimo',
-        'Pelado y deshuesado a mano',
-        'Cocci\u00f3n milim\u00e9trica',
-        'Sin conservantes ni colorantes',
-        'Vegano y sin gluten'
+        t('jewels.paraguayo_f1'),
+        t('jewels.paraguayo_f2'),
+        t('jewels.paraguayo_f3'),
+        t('jewels.paraguayo_f4'),
+        t('jewels.paraguayo_f5'),
+        t('jewels.paraguayo_f6')
       ],
-      story: 'En 1920, nuestra familia descubrió el paraguayo en los campos de Alcarràs. Su sabor dulce, su textura perfecta y su forma única nos enamoraron. Desde entonces, cada verano esperamos con ansias la cosecha para crear esta joya que es mucho más que una conserva: es un pedazo de nuestra historia.',
-      uses: 'Perfecto solo, con yogur, en postres o como acompañamiento de quesos. Un bocado de verano en cualquier época del año.'
+      story: t('jewels.paraguayo_story'),
+      uses: t('jewels.paraguayo_uses')
     },
     {
       id: 'aceites',
-      name: 'Aceites de Oliva Virgen Extra',
-      tagline: 'El Oro Líquido de Córdoba',
+      name: t('jewels.oils_name'),
+      tagline: t('jewels.oils_tagline'),
       icon: <Droplet className="text-secondary" size={48} />,
       image: '/images/aceite-5l-portada.jpg',
-      description: 'Tres variedades, tres personalidades, un mismo compromiso con la excelencia. Nuestros aceites son el resultado de generaciones de conocimiento y pasión por el olivo.',
+      description: t('jewels.oils_description'),
       features: [
-        'Cosecha manual de aceitunas',
-        'Prensado en frío',
-        'Sin filtrar para máximo sabor',
-        'Tres variedades: Arbequina, Picual, Hojiblanca',
-        'Certificación ecológica'
+        t('jewels.oils_f1'),
+        t('jewels.oils_f2'),
+        t('jewels.oils_f3'),
+        t('jewels.oils_f4'),
+        t('jewels.oils_f5')
       ],
-      story: 'Los olivares de Córdoba son nuestro segundo hogar. Árboles centenarios que han visto pasar generaciones, que producen aceitunas de una calidad excepcional. Cada variedad tiene su momento, su carácter, su historia. Y todas comparten nuestra obsesión por la calidad.',
-      uses: 'Nuestro Temprano, sin filtrar para ensaladas, verduras. El ecol\u00f3gico para guisos potentes. Nuestro convencional para todo tipo de platos.'
+      story: t('jewels.oils_story'),
+      uses: t('jewels.oils_uses')
     },
     {
       id: 'temprano',
-      name: 'Aceite Temprano',
-      tagline: 'Para Paladares Valientes',
+      name: t('jewels.temprano_name'),
+      tagline: t('jewels.temprano_tagline'),
       icon: <Leaf className="text-secondary" size={48} />,
       image: '/images/aceite-temprano-principal.jpeg',
-      description: 'No es para todos. Y nos encanta. Este aceite de cosecha temprana, elaborado con aceitunas verdes, es intenso, picante, con un frutado verde que explota en boca.',
+      description: t('jewels.temprano_description'),
       features: [
-        'Aceitunas verdes recogidas antes de madurar',
-        'Intensidad máxima',
-        'Picante y amargo equilibrados',
-        'Edición limitada',
-        'Para verdaderos amantes del AOVE'
+        t('jewels.temprano_f1'),
+        t('jewels.temprano_f2'),
+        t('jewels.temprano_f3'),
+        t('jewels.temprano_f4'),
+        t('jewels.temprano_f5')
       ],
-      story: 'El Temprano nació de una obsesión: capturar la esencia más pura del olivo. Recoger las aceitunas cuando aún están verdes, cuando tienen más polifenoles, más aromas, más vida. El resultado es un aceite que no deja indiferente. O lo amas o lo odias. Nosotros lo amamos.',
-      uses: 'Tostadas de pan, pescados crudos, carpaccios, ensaladas. Donde quieras un golpe de sabor auténtico.'
+      story: t('jewels.temprano_story'),
+      uses: t('jewels.temprano_uses')
     },
     {
       id: 'packs',
-      name: 'Packs Degustación',
-      tagline: 'El Regalo Perfecto',
+      name: t('jewels.packs_name'),
+      tagline: t('jewels.packs_tagline'),
       icon: <Gift className="text-secondary" size={48} />,
       image: '/images/pack-degustacion-principal.jpeg',
-      description: 'Combina nuestras joyas en packs cuidadosamente seleccionados. El regalo perfecto para quien aprecia lo auténtico, lo artesanal, lo hecho con amor.',
+      description: t('jewels.packs_description'),
       features: [
-        'Combinaciones exclusivas',
-        'Presentación premium',
-        'Tarjeta con historia de cada producto',
-        'Ideal para regalar',
-        'Envío cuidado'
+        t('jewels.packs_f1'),
+        t('jewels.packs_f2'),
+        t('jewels.packs_f3'),
+        t('jewels.packs_f4'),
+        t('jewels.packs_f5')
       ],
-      story: 'Creamos estos packs pensando en aquellos que quieren descubrir nuestra historia completa. Cada pack cuenta una parte de nuestro viaje, de nuestra tierra, de nuestra familia. Es la manera perfecta de compartir lo que amamos.',
-      uses: 'Regala tradición, regala calidad, regala historia. O date el capricho de descubrir todas nuestras joyas.'
+      story: t('jewels.packs_story'),
+      uses: t('jewels.packs_uses')
     }
   ];
 
@@ -91,10 +91,10 @@ const NuestrasJoyas = () => {
         >
           <Sparkles className="mx-auto text-secondary mb-4" size={60} />
           <h1 className="text-5xl md:text-7xl font-script text-primary mb-6">
-            Nuestras Joyas
+            {t('jewels.hero_title')}
           </h1>
           <p className="text-xl md:text-2xl text-primary/70 max-w-3xl mx-auto">
-            No son solo productos. Son 200 años de tradición en cada frasco
+            {t('jewels.hero_subtitle')}
           </p>
         </motion.div>
       </section>
@@ -109,18 +109,13 @@ const NuestrasJoyas = () => {
             transition={{ duration: 0.8 }}
           >
             <h2 className="text-4xl font-bold text-primary mb-6">
-              Cada Producto es una Joya
+              {t('jewels.intro_title')}
             </h2>
             <p className="text-xl text-gray-700 leading-relaxed mb-6">
-              Las llamamos "joyas" porque así las tratamos. Con el mismo cuidado que 
-              un joyero talla un diamante, nosotros elaboramos cada producto. Seleccionando 
-              la mejor materia prima, aplicando técnicas ancestrales, dedicando el tiempo 
-              necesario para alcanzar la perfección.
+              {t('jewels.intro_p1')}
             </p>
             <p className="text-lg text-gray-700 leading-relaxed">
-              No producimos en masa. No buscamos cantidad. Buscamos calidad, autenticidad, 
-              excelencia. Cada joya que sale de nuestro obrador es única, especial, digna 
-              de llevar nuestro nombre.
+              {t('jewels.intro_p2')}
             </p>
           </motion.div>
         </div>
@@ -139,7 +134,6 @@ const NuestrasJoyas = () => {
               className="relative"
             >
               <div className={`grid md:grid-cols-2 gap-12 items-center ${index % 2 === 1 ? 'md:flex-row-reverse' : ''}`}>
-                {/* Imagen placeholder */}
                 <div className={`${index % 2 === 1 ? 'md:order-2' : ''}`}>
                   <div className="relative">
                     <div className="aspect-square bg-gray-100 rounded-2xl overflow-hidden shadow-lg group">
@@ -155,7 +149,6 @@ const NuestrasJoyas = () => {
                   </div>
                 </div>
 
-                {/* Contenido */}
                 <div className={`${index % 2 === 1 ? 'md:order-1' : ''}`}>
                   <h3 className="text-4xl font-bold text-primary mb-4">
                     {collection.name}
@@ -164,9 +157,8 @@ const NuestrasJoyas = () => {
                     {collection.description}
                   </p>
 
-                  {/* Características */}
                   <div className="mb-6">
-                    <h4 className="font-bold text-primary mb-3">Características:</h4>
+                    <h4 className="font-bold text-primary mb-3">{t('jewels.features_label')}:</h4>
                     <ul className="space-y-2">
                       {collection.features.map((feature, fIndex) => (
                         <li key={fIndex} className="flex items-start gap-2">
@@ -177,34 +169,30 @@ const NuestrasJoyas = () => {
                     </ul>
                   </div>
 
-                  {/* Historia */}
                   <div className="bg-accent/10 p-6 rounded-lg mb-6">
                     <h4 className="font-bold text-primary mb-3 flex items-center gap-2">
                       <Sparkles size={20} className="text-secondary" />
-                      La Historia
+                      {t('jewels.story_label')}
                     </h4>
                     <p className="text-gray-700 italic leading-relaxed">
                       {collection.story}
                     </p>
                   </div>
 
-                  {/* Usos */}
                   <div className="mb-6">
-                    <h4 className="font-bold text-primary mb-2">Cómo Disfrutarlo:</h4>
+                    <h4 className="font-bold text-primary mb-2">{t('jewels.uses_label')}:</h4>
                     <p className="text-gray-700">{collection.uses}</p>
                   </div>
 
-                  {/* CTA */}
                   <Link
                     to="/tienda"
                     className="inline-block bg-primary text-white px-8 py-3 rounded-lg font-bold hover:bg-primary/90 transition-colors"
                   >
-                    Ver en la Tienda →
+                    {t('jewels.view_shop')} →
                   </Link>
                 </div>
               </div>
 
-              {/* Separador */}
               {index < collections.length - 1 && (
                 <div className="mt-24 border-t border-gray-200"></div>
               )}
@@ -225,35 +213,17 @@ const NuestrasJoyas = () => {
               className="text-center"
             >
               <h2 className="text-4xl font-bold mb-8">
-                ¿Qué Hace Especiales a Nuestras Joyas?
+                {t('jewels.special_title')}
               </h2>
               
               <div className="grid md:grid-cols-2 gap-8 text-left">
                 {[
-                  {
-                    title: "Origen Único",
-                    text: "De Alcarràs y Córdoba. Terroirs únicos que no se pueden replicar."
-                  },
-                  {
-                    title: "Elaboración Artesanal",
-                    text: "Hechas a mano, con tiempo, sin prisas. Como se hacía hace 200 años."
-                  },
-                  {
-                    title: "Ingredientes Naturales",
-                    text: "Sin aditivos, sin conservantes, sin mentiras. Solo lo que ves en la etiqueta."
-                  },
-                  {
-                    title: "Tradición Familiar",
-                    text: "Recetas transmitidas de generación en generación. Secretos de familia."
-                  },
-                  {
-                    title: "Calidad Premium",
-                    text: "Solo la mejor fruta, en su punto perfecto. El 60% se descarta."
-                  },
-                  {
-                    title: "Alma y Pasión",
-                    text: "Cada joya lleva nuestra historia, nuestro amor, nuestra vida."
-                  }
+                  { title: t('jewels.special_origin_title'), text: t('jewels.special_origin_text') },
+                  { title: t('jewels.special_artisanal_title'), text: t('jewels.special_artisanal_text') },
+                  { title: t('jewels.special_natural_title'), text: t('jewels.special_natural_text') },
+                  { title: t('jewels.special_tradition_title'), text: t('jewels.special_tradition_text') },
+                  { title: t('jewels.special_quality_title'), text: t('jewels.special_quality_text') },
+                  { title: t('jewels.special_passion_title'), text: t('jewels.special_passion_text') }
                 ].map((item, index) => (
                   <motion.div
                     key={index}
@@ -277,24 +247,23 @@ const NuestrasJoyas = () => {
       <section className="container mx-auto px-4 py-16">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl font-bold text-primary mb-6">
-            Descubre Todas Nuestras Joyas
+            {t('jewels.cta_title')}
           </h2>
           <p className="text-xl text-gray-700 mb-8">
-            Cada una cuenta una historia. Cada una lleva un pedazo de nuestra alma. 
-            ¿Cuál será tu favorita?
+            {t('jewels.cta_text')}
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
             <Link
               to="/tienda"
               className="bg-secondary text-primary px-8 py-3 rounded-lg font-bold hover:bg-secondary/90 transition-colors"
             >
-              Ir a la Tienda
+              {t('jewels.go_to_shop')}
             </Link>
             <Link
               to="/recetario"
               className="bg-primary text-white px-8 py-3 rounded-lg font-bold hover:bg-primary/90 transition-colors"
             >
-              Ver Recetas
+              {t('jewels.view_recipes')}
             </Link>
           </div>
         </div>
@@ -304,4 +273,3 @@ const NuestrasJoyas = () => {
 };
 
 export default NuestrasJoyas;
-
