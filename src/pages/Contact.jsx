@@ -8,8 +8,10 @@ const Contact = () => {
     name: '',
     email: '',
     phone: '',
-    message: ''
+    message: '',
+    company: '' // honeypot field - must remain empty
   });
+  const [formStartTime] = useState(Date.now());
 
   const handleChange = (e) => {
     setFormData({
@@ -26,13 +28,17 @@ const Contact = () => {
     setLoading(true);
     
     try {
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const API_URL = import.meta.env.VITE_API_URL || 'https://mikels-earth-backend-production.up.railway.app';
       const response = await fetch(`${API_URL}/api/contact/send-message`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          _hp: formData.company,
+          _ts: formStartTime
+        }),
       });
       
       if (response.ok) {
@@ -133,6 +139,20 @@ const Contact = () => {
             </h2>
             
             <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Honeypot - invisible to humans, bots fill it */}
+              <div style={{ position: 'absolute', left: '-9999px', opacity: 0, height: 0, overflow: 'hidden' }} aria-hidden="true" tabIndex={-1}>
+                <label htmlFor="company">Company</label>
+                <input
+                  type="text"
+                  id="company"
+                  name="company"
+                  value={formData.company}
+                  onChange={handleChange}
+                  autoComplete="off"
+                  tabIndex={-1}
+                />
+              </div>
+
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
                   {t('contact.name')} *
