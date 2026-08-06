@@ -20,8 +20,10 @@ const Horeca = () => {
     province: '',
     comments: '',
     subscribeNewsletter: false,
-    acceptPrivacy: false
+    acceptPrivacy: false,
+    website: '' // honeypot field - must remain empty
   });
+  const [formStartTime] = useState(Date.now()); // track time to fill form
 
   const [status, setStatus] = useState('idle'); // idle, loading, success, error
   const [message, setMessage] = useState('');
@@ -112,7 +114,9 @@ const Horeca = () => {
       const payload = {
         ...formData,
         quantity5L: formData.aceite5L,
-        quantityTemprano: formData.aceiteTemprano
+        quantityTemprano: formData.aceiteTemprano,
+        _hp: formData.website, // honeypot
+        _ts: formStartTime // timestamp when form was loaded
       };
       
       const response = await fetch('https://api.mikels.es/api/horeca/order', {
@@ -336,6 +340,20 @@ const Horeca = () => {
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Honeypot - invisible to humans, bots fill it */}
+            <div style={{ position: 'absolute', left: '-9999px', opacity: 0, height: 0, overflow: 'hidden' }} aria-hidden="true" tabIndex={-1}>
+              <label htmlFor="website">Website</label>
+              <input
+                type="text"
+                id="website"
+                name="website"
+                value={formData.website}
+                onChange={handleChange}
+                autoComplete="off"
+                tabIndex={-1}
+              />
+            </div>
+
             {/* Establishment Details */}
             <div>
               <h3 className="text-lg font-semibold text-primary mb-4 flex items-center gap-2">
