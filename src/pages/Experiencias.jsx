@@ -9,21 +9,27 @@ const Experiencias = () => {
     nombre: '',
     email: '',
     telefono: '',
-    interes: 'visita'
+    interes: 'visita',
+    organization: '' // honeypot
   });
   const [submitted, setSubmitted] = useState(false);
+  const [formStartTime] = useState(Date.now());
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     try {
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const API_URL = import.meta.env.VITE_API_URL || 'https://mikels-earth-backend-production.up.railway.app';
       const response = await fetch(`${API_URL}/api/experience/workshop-visit`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          _hp: formData.organization,
+          _ts: formStartTime
+        }),
       });
       
       if (response.ok) {
@@ -184,6 +190,12 @@ const Experiencias = () => {
                 </motion.div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* Honeypot */}
+                  <div style={{ position: 'absolute', left: '-9999px', opacity: 0, height: 0, overflow: 'hidden' }} aria-hidden="true" tabIndex={-1}>
+                    <label htmlFor="organization">Organization</label>
+                    <input type="text" id="organization" name="organization" value={formData.organization} onChange={handleChange} autoComplete="off" tabIndex={-1} />
+                  </div>
+
                   <div>
                     <label className="block text-sm font-bold text-gray-700 mb-2">
                       {t('experiences.form_name')} *
