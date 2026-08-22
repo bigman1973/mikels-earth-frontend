@@ -104,6 +104,7 @@ function App() {
               <Route path="/admin/clientes/:clientId" element={<AdminClientDetail />} />
               <Route path="/admin/usuarios" element={<AdminUsers />} />
               <Route path="/admin/cupones" element={<AdminCoupons />} />
+              <Route path="/admin/blog" element={<BlogAdmin />} />
 
               {/* ====== TIENDA PÚBLICA (con Header/Footer) ====== */}
               <Route path="/*" element={
@@ -126,7 +127,6 @@ function App() {
                       <Route path="/subscription-success" element={<SubscriptionSuccess />} />
                       <Route path="/blog" element={<Blog />} />
                       <Route path="/blog/:slug" element={<BlogPost />} />
-                      <Route path="/admin/blog" element={<BlogAdmin />} />
                       <Route path="/contacto" element={<Contact />} />
                       <Route path="/horeca" element={<Horeca />} />
                       <Route path="/opiniones" element={<Opiniones />} />

@@ -347,3 +347,65 @@ html {
   box-shadow: 0 4px 6px -1px var(--mikels-green-30), 0 2px 4px -1px var(--mikels-green-20);
 }
 
+
+/* Mobile interaction baseline: preserve desktop styling while preventing iOS form zoom. */
+@media (max-width: 767px) {
+  button,
+  a,
+  [role='button'] {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  input:not([type='checkbox']):not([type='radio']),
+  select {
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  textarea {
+    min-height: 120px;
+    font-size: 16px;
+  }
+
+  input[type='checkbox'],
+  input[type='radio'] {
+    min-width: 24px;
+    min-height: 24px;
+  }
+}
+
+/* Admin mobile/tablet ergonomics: scoped so public desktop styles remain untouched. */
+@media (max-width: 1023px) {
+  [data-admin-shell] button,
+  [data-admin-shell] [role='button'] {
+    min-height: 44px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  [data-admin-shell] input:not([type='checkbox']):not([type='radio']),
+  [data-admin-shell] select,
+  [data-admin-shell] textarea {
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  [data-admin-shell] table {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Tablet form ergonomics: iPad browsers also zoom fields rendered below 16 px. */
+@media (min-width: 768px) and (max-width: 1023px) {
+  input:not([type='hidden']):not([type='checkbox']):not([type='radio']),
+  select {
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  textarea {
+    min-height: 120px;
+    font-size: 16px;
+  }
+}

@@ -78,7 +78,7 @@ export default function AdminStock() {
           <button
             onClick={loadStock}
             disabled={loading}
-            className="flex items-center gap-2 px-4 py-2.5 bg-white/5 hover:bg-white/10 text-gray-300 text-sm rounded-xl border border-white/10 transition-all disabled:opacity-50"
+            className="flex min-h-11 w-full items-center justify-center gap-2 px-4 py-2.5 bg-white/5 hover:bg-white/10 text-gray-300 text-sm rounded-xl border border-white/10 transition-all disabled:opacity-50 sm:w-auto"
           >
             <svg className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -104,20 +104,20 @@ export default function AdminStock() {
 
         {/* Stats Cards */}
         {!loading && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+          <div className="grid grid-cols-1 gap-3 min-[360px]:grid-cols-2 md:grid-cols-4 mb-6">
             <div className="bg-white/[0.02] rounded-xl border border-white/5 p-4">
               <p className="text-2xl font-bold text-white">{stats.total}</p>
               <p className="text-xs text-gray-500 mt-1">Total productos</p>
             </div>
-            <div className="bg-red-500/5 rounded-xl border border-red-500/10 p-4 cursor-pointer hover:border-red-500/30 transition-colors" onClick={() => setFilter('critical')}>
+            <div className="min-h-[96px] bg-red-500/5 rounded-xl border border-red-500/10 p-4 cursor-pointer hover:border-red-500/30 transition-colors" role="button" tabIndex={0} onClick={() => setFilter('critical')}>
               <p className="text-2xl font-bold text-red-400">{stats.critical}</p>
               <p className="text-xs text-red-400/70 mt-1">Crítico (≤10)</p>
             </div>
-            <div className="bg-amber-500/5 rounded-xl border border-amber-500/10 p-4 cursor-pointer hover:border-amber-500/30 transition-colors" onClick={() => setFilter('low')}>
+            <div className="min-h-[96px] bg-amber-500/5 rounded-xl border border-amber-500/10 p-4 cursor-pointer hover:border-amber-500/30 transition-colors" role="button" tabIndex={0} onClick={() => setFilter('low')}>
               <p className="text-2xl font-bold text-amber-400">{stats.low}</p>
               <p className="text-xs text-amber-400/70 mt-1">Bajo (11-49)</p>
             </div>
-            <div className="bg-emerald-500/5 rounded-xl border border-emerald-500/10 p-4 cursor-pointer hover:border-emerald-500/30 transition-colors" onClick={() => setFilter('ok')}>
+            <div className="min-h-[96px] bg-emerald-500/5 rounded-xl border border-emerald-500/10 p-4 cursor-pointer hover:border-emerald-500/30 transition-colors" role="button" tabIndex={0} onClick={() => setFilter('ok')}>
               <p className="text-2xl font-bold text-emerald-400">{stats.ok}</p>
               <p className="text-xs text-emerald-400/70 mt-1">Correcto (≥50)</p>
             </div>
@@ -135,10 +135,10 @@ export default function AdminStock() {
               placeholder="Buscar producto..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition-all"
+              className="min-h-11 w-full pl-10 pr-4 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-base sm:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition-all"
             />
           </div>
-          <div className="flex gap-1 bg-white/[0.03] p-1 rounded-xl border border-white/5">
+          <div className="flex gap-1 overflow-x-auto rounded-xl border border-white/5 bg-white/[0.03] p-1">
             {[
               { key: 'all', label: 'Todos' },
               { key: 'critical', label: 'Crítico' },
@@ -148,7 +148,7 @@ export default function AdminStock() {
               <button
                 key={f.key}
                 onClick={() => setFilter(f.key)}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                className={`min-h-11 flex-shrink-0 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
                   filter === f.key ? 'bg-white/10 text-white' : 'text-gray-500 hover:text-gray-300'
                 }`}
               >
@@ -209,12 +209,12 @@ export default function AdminStock() {
 
         {/* Footer count */}
         {!loading && (
-          <div className="mt-5 flex items-center justify-between">
+          <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-xs text-gray-600">
               Mostrando {filteredProducts.length} de {stockData.length} productos
             </p>
             {filter !== 'all' && (
-              <button onClick={() => setFilter('all')} className="text-xs text-emerald-400 hover:text-emerald-300 font-medium">
+              <button onClick={() => setFilter('all')} className="inline-flex min-h-11 items-center text-sm font-medium text-emerald-400 hover:text-emerald-300">
                 Limpiar filtros
               </button>
             )}

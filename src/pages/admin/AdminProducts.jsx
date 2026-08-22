@@ -376,10 +376,10 @@ export default function AdminProducts() {
               Margen neto: <span className="text-emerald-400">{webStats.avgNeto.toFixed(1)}%</span>
             </p>
           </div>
-          <div className="flex gap-2">
+          <div className="grid w-full grid-cols-1 gap-2 sm:flex sm:w-auto">
             <button
               onClick={() => { setEditingProduct(null); setEditorOpen(true); }}
-              className="flex items-center gap-2 px-4 py-2.5 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 text-sm rounded-xl border border-blue-500/20 transition-all font-medium"
+              className="flex min-h-11 items-center justify-center gap-2 px-4 py-2.5 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 text-sm rounded-xl border border-blue-500/20 transition-all font-medium"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -389,7 +389,7 @@ export default function AdminProducts() {
             <button
               onClick={syncFromHolded}
               disabled={syncing}
-              className="flex items-center gap-2 px-4 py-2.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-sm rounded-xl border border-emerald-500/20 transition-all disabled:opacity-50 font-medium"
+              className="flex min-h-11 items-center justify-center gap-2 px-4 py-2.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-sm rounded-xl border border-emerald-500/20 transition-all disabled:opacity-50 font-medium"
             >
               <svg className={`w-4 h-4 ${syncing ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -425,12 +425,12 @@ export default function AdminProducts() {
                 placeholder="Buscar por nombre o SKU..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="flex-1 px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500/30"
+                className="min-h-11 flex-1 px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-base sm:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500/30"
               />
               <select
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
-                className="px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-gray-300 focus:outline-none focus:border-emerald-500/30 appearance-none cursor-pointer"
+                className="min-h-11 px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-base sm:text-sm text-gray-300 focus:outline-none focus:border-emerald-500/30 appearance-none cursor-pointer"
               >
                 <option value="all">Todos los productos</option>
                 <option value="web_only">En Web</option>
@@ -441,7 +441,7 @@ export default function AdminProducts() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-gray-300 focus:outline-none focus:border-emerald-500/30 appearance-none cursor-pointer"
+                className="min-h-11 px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-base sm:text-sm text-gray-300 focus:outline-none focus:border-emerald-500/30 appearance-none cursor-pointer"
               >
                 <option value="margin_desc">Mayor margen neto</option>
                 <option value="margin_asc">Menor margen neto</option>
@@ -454,8 +454,104 @@ export default function AdminProducts() {
               </select>
             </div>
 
-            {/* Table */}
-            <div className="bg-white/[0.02] rounded-2xl border border-white/5 overflow-hidden">
+            {/* Mobile / tablet product cards */}
+            <div className="space-y-3 lg:hidden">
+              {filteredProducts.map((product, i) => {
+                const isExpanded = expandedProduct === i;
+                const sim = getSimulatedMargins(product);
+                return (
+                  <article key={`mobile-${product.sku || i}`} className="overflow-hidden rounded-2xl border border-white/5 bg-white/[0.02]">
+                    <div className="p-4">
+                      <div className="flex items-start gap-3">
+                        <span className={`mt-1.5 h-2.5 w-2.5 flex-shrink-0 rounded-full ${product.active !== false ? 'bg-emerald-400' : 'bg-red-400'}`} aria-label={product.active !== false ? 'Activo' : 'Inactivo'}></span>
+                        <div className="min-w-0 flex-1">
+                          <p className={`break-words text-sm font-semibold ${product.active !== false ? 'text-white' : 'text-gray-500 line-through'}`}>{product.name}</p>
+                          <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                            <span className="font-mono text-[11px] text-gray-500">{product.sku || 'Sin SKU'}</span>
+                            {isPack(product.sku) && <span className="rounded border border-indigo-500/20 bg-indigo-500/10 px-1.5 py-0.5 text-[10px] text-indigo-400">PACK</span>}
+                            {product.active === false && <span className="rounded border border-red-500/20 bg-red-500/10 px-1.5 py-0.5 text-[10px] text-red-400">INACTIVO</span>}
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => { setEditingProduct(product); setEditorOpen(true); }}
+                          className="inline-flex min-h-11 flex-shrink-0 items-center justify-center rounded-xl border border-blue-500/20 bg-blue-500/10 px-3 text-xs font-medium text-blue-400"
+                        >
+                          Editar
+                        </button>
+                      </div>
+
+                      <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
+                        <div className="rounded-xl bg-white/[0.03] p-3">
+                          <p className="text-[10px] uppercase tracking-wide text-gray-500">PVP web</p>
+                          <p className="mt-1 font-mono text-sm font-bold text-emerald-400">{product.web_price ? `${product.web_price.toFixed(2)}€` : '—'}</p>
+                        </div>
+                        <div className="rounded-xl bg-white/[0.03] p-3">
+                          <p className="text-[10px] uppercase tracking-wide text-gray-500">Coste</p>
+                          <p className="mt-1 font-mono text-sm text-red-400">{product.cost > 0 ? `${product.cost.toFixed(2)}€` : '—'}</p>
+                        </div>
+                        <div className="rounded-xl bg-white/[0.03] p-3">
+                          <p className="text-[10px] uppercase tracking-wide text-gray-500">Margen neto</p>
+                          <div className="mt-1"><MarginBadge percent={product.marginNetoPercent} /></div>
+                        </div>
+                        <div className="rounded-xl bg-white/[0.03] p-3">
+                          <p className="text-[10px] uppercase tracking-wide text-gray-500">Stock</p>
+                          <p className={`mt-1 text-sm font-bold ${product.stock <= 0 ? 'text-red-400' : product.stock < 20 ? 'text-amber-400' : 'text-emerald-400'}`}>{product.stock}</p>
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => toggleExpand(product, i)}
+                        className="mt-3 flex min-h-11 w-full items-center justify-between rounded-xl border border-white/10 bg-white/[0.03] px-4 text-sm font-medium text-gray-300"
+                        aria-expanded={isExpanded}
+                      >
+                        <span>Costes y simulador</span>
+                        <span aria-hidden="true">{isExpanded ? '▲' : '▼'}</span>
+                      </button>
+                    </div>
+
+                    {isExpanded && (
+                      <div className="space-y-4 border-t border-white/5 bg-black/10 p-4">
+                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                          <label className="text-xs text-orange-400">
+                            Portes (€/ud)
+                            <input type="number" step="0.01" value={editShipping} onChange={(e) => setEditShipping(e.target.value)} className="mt-1 w-full rounded-lg border border-orange-500/20 bg-white/5 px-3 py-2 font-mono text-white" />
+                          </label>
+                          <label className="text-xs text-purple-400">
+                            Preparación (€/ud)
+                            <input type="number" step="0.01" value={editPreparation} onChange={(e) => setEditPreparation(e.target.value)} className="mt-1 w-full rounded-lg border border-purple-500/20 bg-white/5 px-3 py-2 font-mono text-white" />
+                          </label>
+                          <label className="text-xs text-emerald-400">
+                            Nuevo PVP con IVA
+                            <input type="number" step="0.01" value={simPrice} onChange={(e) => setSimPrice(e.target.value)} className="mt-1 w-full rounded-lg border border-emerald-500/20 bg-white/5 px-3 py-2 font-mono text-white" />
+                          </label>
+                        </div>
+                        {sim && (
+                          <div className="grid grid-cols-3 gap-2 rounded-xl border border-white/5 bg-white/[0.03] p-3 text-center">
+                            <div><p className="text-[10px] text-gray-500">Base s/IVA</p><p className="font-mono text-xs text-yellow-400">{sim.baseNoIva.toFixed(2)}€</p></div>
+                            <div><p className="text-[10px] text-gray-500">M. bruto</p><p className="font-mono text-xs text-blue-400">{sim.brutoPercent.toFixed(1)}%</p></div>
+                            <div><p className="text-[10px] text-gray-500">M. neto</p><p className="font-mono text-xs text-emerald-400">{sim.netoPercent.toFixed(1)}%</p></div>
+                          </div>
+                        )}
+                        <div className="grid grid-cols-2 gap-2">
+                          <button type="button" onClick={() => saveCosts(product.sku)} disabled={savingCosts} className="min-h-11 rounded-xl border border-white/10 bg-white/5 px-3 text-xs font-medium text-white disabled:opacity-50">
+                            {savingCosts ? 'Guardando...' : 'Guardar costes'}
+                          </button>
+                          <button type="button" onClick={() => saveWebPrice(product.sku)} disabled={savingPrice} className="min-h-11 rounded-xl border border-emerald-500/30 bg-emerald-500/20 px-3 text-xs font-medium text-emerald-400 disabled:opacity-50">
+                            {savingPrice ? 'Guardando...' : 'Guardar PVP'}
+                          </button>
+                        </div>
+                        {isPack(product.sku) && <PackBreakdown sku={product.sku} />}
+                      </div>
+                    )}
+                  </article>
+                );
+              })}
+            </div>
+
+            {/* Desktop product table */}
+            <div className="hidden overflow-hidden rounded-2xl border border-white/5 bg-white/[0.02] lg:block">
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
@@ -699,12 +795,12 @@ export default function AdminProducts() {
             </div>
 
             {/* Results count */}
-            <div className="mt-5 flex items-center justify-between">
+            <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-xs text-gray-600">
                 Mostrando {filteredProducts.length} de {products.length} productos · Clic en un producto para abrir el simulador
               </p>
               {filter !== 'all' && (
-                <button onClick={() => setFilter('all')} className="text-xs text-emerald-400 hover:text-emerald-300 font-medium">
+                <button onClick={() => setFilter('all')} className="inline-flex min-h-11 items-center text-sm font-medium text-emerald-400 hover:text-emerald-300">
                   Limpiar filtros
                 </button>
               )}

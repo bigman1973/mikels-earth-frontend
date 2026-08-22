@@ -57,6 +57,15 @@ const NAV_ITEMS = [
       </svg>
     )
   },
+  {
+    path: '/admin/blog',
+    label: 'Blog',
+    icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v12a2 2 0 01-2 2zM7 8h10M7 12h10M7 16h6" />
+      </svg>
+    )
+  },
   { 
     path: '/admin/usuarios', 
     label: 'Usuarios', 
@@ -96,6 +105,7 @@ export default function AdminLayout({ children }) {
   const navigate = useNavigate();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const activeNavItem = NAV_ITEMS.find((item) => location.pathname === item.path);
 
   if (loading) return <LoadingScreen />;
   if (!user) {
@@ -109,9 +119,9 @@ export default function AdminLayout({ children }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] flex">
+    <div data-admin-shell className="min-h-screen bg-[#0a0a0f] flex">
       {/* Sidebar Desktop */}
-      <aside className={`hidden md:flex flex-col ${sidebarCollapsed ? 'w-[72px]' : 'w-64'} bg-[#0f0f17] border-r border-white/5 transition-all duration-300 fixed h-full z-30`}>
+      <aside className={`hidden lg:flex flex-col ${sidebarCollapsed ? 'w-[72px]' : 'w-64'} bg-[#0f0f17] border-r border-white/5 transition-all duration-300 fixed h-full z-30`}>
         {/* Logo Header */}
         <div className={`h-16 flex items-center ${sidebarCollapsed ? 'justify-center px-2' : 'px-5'} border-b border-white/5`}>
           {!sidebarCollapsed ? (
@@ -136,7 +146,7 @@ export default function AdminLayout({ children }) {
                 key={item.path}
                 to={item.path}
                 title={sidebarCollapsed ? item.label : undefined}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 group relative
+                className={`flex min-h-11 items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 group relative
                   ${isActive 
                     ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' 
                     : 'text-gray-400 hover:text-white hover:bg-white/5 border border-transparent'
@@ -158,7 +168,7 @@ export default function AdminLayout({ children }) {
         <div className="px-3 py-2 border-t border-white/5">
           <button
             onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-            className="w-full flex items-center justify-center p-2 rounded-lg text-gray-500 hover:text-gray-300 hover:bg-white/5 transition-colors"
+            className="w-full min-h-11 flex items-center justify-center p-2 rounded-lg text-gray-500 hover:text-gray-300 hover:bg-white/5 transition-colors"
           >
             <svg className={`w-4 h-4 transition-transform ${sidebarCollapsed ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
@@ -180,7 +190,7 @@ export default function AdminLayout({ children }) {
               <button
                 onClick={logout}
                 title="Cerrar sesión"
-                className="p-1.5 rounded-md text-gray-500 hover:text-red-400 hover:bg-red-400/10 transition-colors"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-lg text-gray-500 hover:text-red-400 hover:bg-red-400/10 transition-colors"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -191,7 +201,7 @@ export default function AdminLayout({ children }) {
             <button
               onClick={logout}
               title="Cerrar sesión"
-              className="p-2 rounded-lg text-gray-500 hover:text-red-400 hover:bg-red-400/10 transition-colors"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-lg text-gray-500 hover:text-red-400 hover:bg-red-400/10 transition-colors"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -202,18 +212,23 @@ export default function AdminLayout({ children }) {
       </aside>
 
       {/* Mobile Header */}
-      <header className="md:hidden fixed top-0 left-0 right-0 h-14 bg-[#0f0f17]/95 backdrop-blur-xl border-b border-white/5 flex items-center justify-between px-4 z-40">
+      <header className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-[#0f0f17]/95 backdrop-blur-xl border-b border-white/5 flex items-center justify-between px-3 sm:px-4 z-40">
         <div className="flex items-center gap-3">
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/5"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-xl text-gray-400 hover:text-white hover:bg-white/5"
+            aria-label={mobileMenuOpen ? 'Cerrar navegación' : 'Abrir navegación'}
+            aria-expanded={mobileMenuOpen}
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={mobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
             </svg>
           </button>
           <img src="/logo-mikels-earth.svg" alt="" className="w-6 h-6 object-contain" style={{ filter: 'brightness(0) invert(1)' }} />
-          <span className="text-sm font-semibold text-white">Admin</span>
+          <div className="min-w-0">
+            <span className="block text-sm font-semibold text-white">Admin</span>
+            <span className="block max-w-[120px] truncate text-[10px] text-gray-500">{activeNavItem?.label || 'Panel'}</span>
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white text-[10px] font-bold">
@@ -224,15 +239,25 @@ export default function AdminLayout({ children }) {
 
       {/* Mobile Menu Overlay */}
       {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 z-50">
+        <div className="lg:hidden fixed inset-0 z-50">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)}></div>
-          <div className="absolute left-0 top-0 bottom-0 w-72 bg-[#0f0f17] border-r border-white/5 p-4 flex flex-col">
-            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-white/5">
+          <div className="absolute left-0 top-0 bottom-0 w-[min(86vw,20rem)] bg-[#0f0f17] border-r border-white/5 p-4 flex flex-col shadow-2xl shadow-black/60">
+            <div className="flex min-h-12 items-center gap-3 mb-4 pb-4 border-b border-white/5">
               <img src="/logo-mikels-earth.svg" alt="" className="w-7 h-7 object-contain" style={{ filter: 'brightness(0) invert(1)' }} />
-              <div>
+              <div className="min-w-0 flex-1">
                 <h1 className="text-sm font-semibold text-white">Mikel's Earth</h1>
                 <p className="text-[10px] text-gray-500 uppercase tracking-wider">Admin Panel</p>
               </div>
+              <button
+                type="button"
+                onClick={() => setMobileMenuOpen(false)}
+                className="inline-flex h-11 w-11 items-center justify-center rounded-xl text-gray-400 hover:bg-white/5 hover:text-white"
+                aria-label="Cerrar navegación"
+              >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
             </div>
             <nav className="flex-1 space-y-1">
               {NAV_ITEMS.map((item) => {
@@ -242,7 +267,7 @@ export default function AdminLayout({ children }) {
                     key={item.path}
                     to={item.path}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center gap-3 px-3 py-3 rounded-lg text-sm font-medium transition-all
+                    className={`flex min-h-12 items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-all
                       ${isActive 
                         ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' 
                         : 'text-gray-400 hover:text-white hover:bg-white/5 border border-transparent'
@@ -266,7 +291,7 @@ export default function AdminLayout({ children }) {
               </div>
               <button
                 onClick={logout}
-                className="w-full mt-2 flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm text-red-400 hover:bg-red-400/10 transition-colors"
+                className="w-full min-h-12 mt-2 flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm text-red-400 hover:bg-red-400/10 transition-colors"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -279,8 +304,8 @@ export default function AdminLayout({ children }) {
       )}
 
       {/* Main Content */}
-      <main className={`flex-1 ${sidebarCollapsed ? 'md:ml-[72px]' : 'md:ml-64'} transition-all duration-300 mt-14 md:mt-0`}>
-        <div className="p-4 md:p-8 min-h-screen">
+      <main className={`min-w-0 flex-1 ${sidebarCollapsed ? 'lg:ml-[72px]' : 'lg:ml-64'} transition-all duration-300 mt-16 lg:mt-0`}>
+        <div className="min-h-screen overflow-x-hidden p-3 sm:p-5 lg:p-8">
           {children}
         </div>
       </main>

@@ -36,15 +36,15 @@ const Products = () => {
   });
 
   return (
-    <div className="min-h-screen py-16 bg-gray-50">
+    <div className="min-h-screen py-10 sm:py-16 bg-gray-50">
       <Helmet>
         <title>{t('products.seo_title')}</title>
         <meta name="description" content={t('products.seo_description')} />
       </Helmet>
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-primary mb-4">
+        <div className="text-center mb-8 sm:mb-12">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary mb-4">
             {t('products.page_title')}
           </h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
@@ -53,10 +53,10 @@ const Products = () => {
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+        <div className="bg-white rounded-xl shadow-md p-4 sm:p-6 mb-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             {/* Category filter */}
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3">
               <Filter className="w-5 h-5 text-primary" />
               <span className="font-semibold text-primary">{t('products.filter_by')}:</span>
               <div className="flex flex-wrap gap-2">
@@ -64,7 +64,7 @@ const Products = () => {
                   <button
                     key={category.id}
                     onClick={() => setSelectedCategory(category.slug)}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                    className={`min-h-11 px-4 py-2 rounded-full text-sm font-medium transition-all ${
                       selectedCategory === category.slug
                         ? 'bg-primary text-white shadow-md'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -77,12 +77,12 @@ const Products = () => {
             </div>
 
             {/* Sort */}
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
               <span className="font-semibold text-primary">{t('products.sort_by')}:</span>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full sm:w-auto min-h-11 px-4 py-2 border border-gray-300 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="default">{t('products.sort_featured')}</option>
                 <option value="name">{t('products.sort_name')}</option>
@@ -116,7 +116,7 @@ const Products = () => {
         )}
 
         {/* Info section */}
-        <div className="mt-16 bg-accent/30 rounded-lg p-8 text-center">
+        <div className="mt-12 sm:mt-16 bg-accent/30 rounded-xl p-5 sm:p-8 text-center">
           <h2 className="text-2xl font-bold text-primary mb-4">
             {t('products.looking_for_something', { defaultValue: '¿Buscas algo específico?' })}
           </h2>

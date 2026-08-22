@@ -22,27 +22,27 @@ const Footer = () => {
             </h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/" className="text-gray-600 hover:text-primary transition-colors text-sm">
+                <Link to="/" className="inline-flex min-h-11 items-center text-gray-600 hover:text-primary transition-colors text-sm">
                   {t('footer.home')}
                 </Link>
               </li>
               <li>
-                <Link to="/la-familia" className="text-gray-600 hover:text-primary transition-colors text-sm">
+                <Link to="/la-familia" className="inline-flex min-h-11 items-center text-gray-600 hover:text-primary transition-colors text-sm">
                   {t('footer.family')}
                 </Link>
               </li>
               <li>
-                <Link to="/tienda" className="text-gray-600 hover:text-primary transition-colors text-sm">
+                <Link to="/tienda" className="inline-flex min-h-11 items-center text-gray-600 hover:text-primary transition-colors text-sm">
                   {t('footer.products')}
                 </Link>
               </li>
               <li>
-                <Link to="/blog" className="text-gray-600 hover:text-primary transition-colors text-sm">
+                <Link to="/blog" className="inline-flex min-h-11 items-center text-gray-600 hover:text-primary transition-colors text-sm">
                   {t('footer.blog')}
                 </Link>
               </li>
               <li>
-                <Link to="/contacto" className="text-gray-600 hover:text-primary transition-colors text-sm">
+                <Link to="/contacto" className="inline-flex min-h-11 items-center text-gray-600 hover:text-primary transition-colors text-sm">
                   {t('footer.contact')}
                 </Link>
               </li>
@@ -76,12 +76,12 @@ const Footer = () => {
             <h3 className="font-bold text-primary mb-4 uppercase tracking-wide text-sm">
               {t('footer.follow_us')}
             </h3>
-            <div className="flex gap-4">
+            <div className="flex flex-wrap gap-2">
               <a 
                 href="https://www.facebook.com/mikelsearth/" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-gray-600 hover:text-primary transition-colors"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full text-gray-600 hover:bg-primary/5 hover:text-primary transition-colors"
                 aria-label="Facebook"
               >
                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -92,7 +92,7 @@ const Footer = () => {
                 href="https://www.instagram.com/mikelsearth" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-gray-600 hover:text-primary transition-colors"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full text-gray-600 hover:bg-primary/5 hover:text-primary transition-colors"
                 aria-label="Instagram"
               >
                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -103,7 +103,7 @@ const Footer = () => {
                 href="https://www.tiktok.com/@mikelsearth" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-gray-600 hover:text-primary transition-colors"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full text-gray-600 hover:bg-primary/5 hover:text-primary transition-colors"
                 aria-label="TikTok"
               >
                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -114,7 +114,7 @@ const Footer = () => {
                 href="https://www.youtube.com/channel/UCZmLAbkaLOTdwGGMYxaDy-Q" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-gray-600 hover:text-primary transition-colors"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full text-gray-600 hover:bg-primary/5 hover:text-primary transition-colors"
                 aria-label="YouTube"
               >
                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -129,15 +129,15 @@ const Footer = () => {
       {/* Bottom bar */}
       <div className="bg-gray-50 border-t border-gray-200">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-600">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-2 md:gap-4 text-sm text-gray-600 text-center md:text-left">
             <p>
               {t('footer.copyright')}
             </p>
-            <div className="flex gap-4">
-              <Link to="/politica-privacidad" className="hover:text-primary transition-colors">
+            <div className="flex flex-wrap justify-center gap-x-4 gap-y-1">
+              <Link to="/politica-privacidad" className="inline-flex min-h-11 items-center hover:text-primary transition-colors">
                 {t('footer.privacy')}
               </Link>
-              <Link to="/terminos" className="hover:text-primary transition-colors">
+              <Link to="/terminos" className="inline-flex min-h-11 items-center hover:text-primary transition-colors">
                 {t('footer.terms')}
               </Link>
             </div>

@@ -76,7 +76,7 @@ const Home = () => {
       </section>
 
       {/* Manifiesto */}
-      <section className="py-20 bg-white">
+      <section className="py-14 sm:py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <div className="text-center">
@@ -158,11 +158,11 @@ const Home = () => {
       </section>
 
       {/* Productos Destacados */}
-      <section className="py-20 bg-white">
+      <section className="py-14 sm:py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
-              <h2 className="text-5xl font-bold text-primary mb-6">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary mb-6">
                 {t('home.jewels_title')}
               </h2>
               <p className="text-xl text-gray-700 max-w-3xl mx-auto">
@@ -206,7 +206,7 @@ const Home = () => {
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                   </div>
-                  <div className="p-8">
+                  <div className="p-5 sm:p-8">
                   <h3 className="text-2xl font-bold text-primary mb-2 text-center">
                     {product.name}
                   </h3>
@@ -218,7 +218,7 @@ const Home = () => {
                   </p>
                   <Link
                     to="/nuestras-joyas"
-                    className="block text-center text-primary font-bold hover:text-secondary transition-colors"
+                    className="inline-flex min-h-11 w-full items-center justify-center rounded-lg px-3 text-center text-primary font-bold hover:bg-primary/5 hover:text-secondary transition-colors"
                   >
                     {t('home.discover_more')}
                   </Link>
@@ -240,18 +240,18 @@ const Home = () => {
       </section>
 
       {/* Compromiso Social */}
-      <section className="py-20 bg-primary text-white">
+      <section className="py-14 sm:py-20 bg-primary text-white">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <div>
-              <h2 className="text-5xl font-bold mb-8">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 sm:mb-8">
                 {t('home.commitment_title')}
               </h2>
-              <p className="text-2xl mb-8 text-white/90 leading-relaxed" dangerouslySetInnerHTML={{ __html: t('home.commitment_p1') }} />
-              <p className="text-xl text-white/80 leading-relaxed mb-8">
+              <p className="text-lg sm:text-xl md:text-2xl mb-6 sm:mb-8 text-white/90 leading-relaxed" dangerouslySetInnerHTML={{ __html: t('home.commitment_p1') }} />
+              <p className="text-base sm:text-lg md:text-xl text-white/80 leading-relaxed mb-8">
                 {t('home.commitment_p2')}
               </p>
-              <div className="bg-white/10 p-8 rounded-lg inline-block">
+              <div className="bg-white/10 p-5 sm:p-8 rounded-xl inline-block">
                 <p className="text-3xl font-script text-secondary mb-2">
                   {t('home.commitment_quote')}
                 </p>
@@ -266,21 +266,21 @@ const Home = () => {
       <ReviewCarousel />
 
       {/* Newsletter */}
-      <section className="py-20 bg-white">
+      <section className="py-14 sm:py-20 bg-white">
         <div className="container mx-auto px-4">
           <Newsletter variant="inline" />
         </div>
       </section>
 
       {/* CTA Final */}
-      <section className="py-20 bg-gradient-to-b from-white to-accent/10">
+      <section className="py-14 sm:py-20 bg-gradient-to-b from-white to-accent/10">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <div>
-              <h2 className="text-5xl font-bold text-primary mb-6">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary mb-6">
                 {t('home.cta_title')}
               </h2>
-              <p className="text-2xl text-gray-700 mb-12 leading-relaxed">
+              <p className="text-lg sm:text-xl md:text-2xl text-gray-700 mb-8 sm:mb-12 leading-relaxed">
                 {t('home.cta_subtitle')}
               </p>
               
@@ -288,14 +288,14 @@ const Home = () => {
                 <div className="bg-white p-6 rounded-lg shadow-md">
                   <h3 className="font-bold text-primary mb-2">{t('home.cta_visit_title')}</h3>
                   <p className="text-gray-700 mb-4">{t('home.cta_visit_text')}</p>
-                  <Link to="/experiencias" className="text-secondary font-semibold">
+                  <Link to="/experiencias" className="inline-flex min-h-11 items-center justify-center rounded-lg px-3 text-secondary font-semibold hover:bg-secondary/10">
                     {t('home.cta_visit_link')}
                   </Link>
                 </div>
                 <div className="bg-white p-6 rounded-lg shadow-md">
                   <h3 className="font-bold text-primary mb-2">{t('home.cta_shop_title')}</h3>
                   <p className="text-gray-700 mb-4">{t('home.cta_shop_text')}</p>
-                  <Link to="/tienda" className="text-secondary font-semibold">
+                  <Link to="/tienda" className="inline-flex min-h-11 items-center justify-center rounded-lg px-3 text-secondary font-semibold hover:bg-secondary/10">
                     {t('home.cta_shop_link')}
                   </Link>
                 </div>
@@ -306,7 +306,7 @@ const Home = () => {
                     href="https://www.instagram.com/mikelsearth" 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="text-secondary font-semibold"
+                    className="inline-flex min-h-11 items-center justify-center rounded-lg px-3 text-secondary font-semibold hover:bg-secondary/10"
                   >
                     {t('home.cta_follow_link')}
                   </a>

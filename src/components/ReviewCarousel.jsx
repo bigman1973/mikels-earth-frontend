@@ -57,9 +57,9 @@ const ReviewCarousel = () => {
   if (loading || reviews.length === 0) return null;
 
   return (
-    <section className="py-20 bg-accent/5">
+    <section className="bg-accent/5 py-14 sm:py-20">
       <div className="container mx-auto px-4">
-        <div className="max-w-4xl mx-auto text-center mb-12">
+        <div className="mx-auto mb-8 max-w-4xl text-center sm:mb-12">
           <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">
             Lo Que Dicen Nuestros Clientes
           </h2>
@@ -74,14 +74,14 @@ const ReviewCarousel = () => {
             <>
               <button
                 onClick={prevReview}
-                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-12 z-10 bg-white shadow-lg rounded-full p-2 hover:bg-gray-50 transition-colors"
+                className="absolute left-2 lg:left-0 top-1/2 -translate-y-1/2 lg:-translate-x-12 z-10 inline-flex h-11 w-11 items-center justify-center bg-white shadow-lg rounded-full hover:bg-gray-50 transition-colors"
                 aria-label="Reseña anterior"
               >
                 <ChevronLeft size={24} className="text-primary" />
               </button>
               <button
                 onClick={nextReview}
-                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-12 z-10 bg-white shadow-lg rounded-full p-2 hover:bg-gray-50 transition-colors"
+                className="absolute right-2 lg:right-0 top-1/2 -translate-y-1/2 lg:translate-x-12 z-10 inline-flex h-11 w-11 items-center justify-center bg-white shadow-lg rounded-full hover:bg-gray-50 transition-colors"
                 aria-label="Reseña siguiente"
               >
                 <ChevronRight size={24} className="text-primary" />
@@ -92,7 +92,7 @@ const ReviewCarousel = () => {
           {/* Review card */}
           <div
               key={currentIndex}
-              className="bg-white rounded-2xl shadow-lg p-8 md:p-12"
+              className="rounded-2xl bg-white p-5 shadow-lg sm:p-8 md:p-12"
             >
               <div className="flex justify-center mb-6">
                 <Quote size={40} className="text-secondary/30" />
@@ -123,15 +123,15 @@ const ReviewCarousel = () => {
 
           {/* Dots indicator */}
           {reviews.length > 1 && (
-            <div className="flex justify-center gap-2 mt-6">
+            <div className="mt-6 flex flex-wrap justify-center gap-0 sm:gap-1">
               {reviews.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentIndex(index)}
-                  className={`w-2.5 h-2.5 rounded-full transition-all ${
+                  className={`min-h-11 min-w-11 inline-flex items-center justify-center rounded-full transition-all relative after:content-[''] after:block after:h-2.5 after:w-2.5 after:rounded-full ${
                     index === currentIndex
-                      ? 'bg-primary w-6'
-                      : 'bg-gray-300 hover:bg-gray-400'
+                      ? "after:bg-primary"
+                      : "after:bg-gray-300 hover:after:bg-gray-400"
                   }`}
                   aria-label={`Ir a reseña ${index + 1}`}
                 />
@@ -144,7 +144,7 @@ const ReviewCarousel = () => {
         <div className="text-center mt-10">
           <Link
             to="/opiniones"
-            className="inline-flex items-center gap-2 text-primary font-semibold hover:text-primary/80 transition-colors text-lg"
+            className="inline-flex min-h-11 items-center gap-2 rounded-lg px-3 text-lg font-semibold text-primary transition-colors hover:bg-primary/5 hover:text-primary/80"
           >
             Ver todas las opiniones →
           </Link>

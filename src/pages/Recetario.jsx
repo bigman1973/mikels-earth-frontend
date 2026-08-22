@@ -77,7 +77,7 @@ const Recetario = () => {
       </Helmet>
 
       {/* Hero Section */}
-      <section className="relative h-[70vh] bg-gradient-to-b from-secondary/20 to-white flex items-center justify-center">
+      <section className="relative min-h-[480px] h-[65svh] md:h-[70vh] bg-gradient-to-b from-secondary/20 to-white flex items-center justify-center">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -85,7 +85,7 @@ const Recetario = () => {
           className="text-center px-4"
         >
           <ChefHat className="mx-auto text-secondary mb-4" size={60} />
-          <h1 className="text-5xl md:text-7xl font-script text-primary mb-6">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-script text-primary mb-6">
             {t('recipes_data.hero_title')}
           </h1>
           <p className="text-xl md:text-2xl text-primary/70 max-w-3xl mx-auto">
@@ -95,7 +95,7 @@ const Recetario = () => {
       </section>
 
       {/* Introduction */}
-      <section className="container mx-auto px-4 py-16">
+      <section className="container mx-auto px-4 py-12 sm:py-16">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0 }}
@@ -123,7 +123,7 @@ const Recetario = () => {
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-5 py-2 rounded-full text-sm font-semibold transition-colors ${
+              className={`min-h-11 px-5 py-2 rounded-full text-sm font-semibold transition-colors ${
                 selectedCategory === cat
                   ? 'bg-secondary text-primary'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -136,7 +136,7 @@ const Recetario = () => {
       </section>
 
       {/* Recipes Grid */}
-      <section className="container mx-auto px-4 py-16">
+      <section className="container mx-auto px-4 py-12 sm:py-16">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredRecipes.map((id, index) => (
@@ -146,7 +146,7 @@ const Recetario = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow cursor-pointer group"
+                    className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow group"
               >
                 {/* Image */}
                 <div className="h-48 bg-gray-200 overflow-hidden">
@@ -187,7 +187,7 @@ const Recetario = () => {
 
                   {/* Expandable - Ingredients and Steps */}
                   <details className="group/details">
-                    <summary className="cursor-pointer text-secondary font-semibold hover:text-secondary/80 transition-colors">
+                    <summary className="flex min-h-11 cursor-pointer items-center rounded-lg px-2 text-secondary font-semibold hover:bg-secondary/10 hover:text-secondary/80 transition-colors">
                       {t('recipes_data.view_full_recipe')}
                     </summary>
 
@@ -238,7 +238,7 @@ const Recetario = () => {
       </section>
 
       {/* Pairings */}
-      <section className="bg-primary text-white py-16">
+      <section className="bg-primary text-white py-12 sm:py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <motion.div
@@ -281,9 +281,9 @@ const Recetario = () => {
       </section>
 
       {/* CTA */}
-      <section className="container mx-auto px-4 py-16">
+      <section className="container mx-auto px-4 py-12 sm:py-16">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl font-bold text-primary mb-6">
+          <h2 className="text-2xl sm:text-3xl font-bold text-primary mb-6">
             {t('recipes_data.cta_title')}
           </h2>
           <p className="text-xl text-gray-700 mb-8">
@@ -292,7 +292,7 @@ const Recetario = () => {
           <div className="flex gap-4 justify-center flex-wrap">
             <a
               href="/tienda"
-              className="bg-secondary text-primary px-8 py-3 rounded-lg font-bold hover:bg-secondary/90 transition-colors"
+              className="inline-flex min-h-12 items-center justify-center bg-secondary text-primary px-8 py-3 rounded-lg font-bold hover:bg-secondary/90 transition-colors"
             >
               {t('recipes_data.cta_shop')}
             </a>
@@ -300,7 +300,7 @@ const Recetario = () => {
               href="https://www.instagram.com/mikelsearth"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-primary text-white px-8 py-3 rounded-lg font-bold hover:bg-primary/90 transition-colors"
+              className="inline-flex min-h-12 items-center justify-center bg-primary text-white px-8 py-3 rounded-lg font-bold hover:bg-primary/90 transition-colors"
             >
               {t('recipes_data.cta_instagram')}
             </a>

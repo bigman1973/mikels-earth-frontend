@@ -119,7 +119,6 @@ const ProductDetail = () => {
     : product.price;
   
   // Mantener compatibilidad con código existente
-  const hasVolumeDiscount = hasDiscount;
   const volumeDiscountedPrice = discountedPrice;
   
   const selectedFrequency = product.subscriptionFrequencies?.find(f => f.value === subscriptionFrequency);
@@ -180,20 +179,20 @@ const ProductDetail = () => {
   };
 
   return (
-    <div className="min-h-screen py-16 bg-gray-50">
+    <div className="min-h-screen py-10 sm:py-16 bg-gray-50">
       <div className="container mx-auto px-4">
         {/* Breadcrumb */}
-        <div className="mb-8">
+        <div className="mb-5 sm:mb-8">
           <Link 
             to="/tienda" 
-            className="inline-flex items-center gap-2 text-primary hover:underline"
+            className="inline-flex min-h-11 items-center gap-2 rounded-lg px-1 text-primary hover:bg-primary/5 hover:underline"
           >
             <ArrowLeft className="w-4 h-4" />
             {t('product_detail.back_to_shop')}
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
           {/* Image section */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -270,7 +269,7 @@ const ProductDetail = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <div className="bg-white rounded-lg shadow-lg p-8">
+            <div className="bg-white rounded-xl shadow-lg p-5 sm:p-8">
               {/* Category */}
               <p className="text-sm text-primary/60 uppercase tracking-wide mb-2 font-semibold">
                 {t(`categories.${product.category.toLowerCase()}`, product.category)}
@@ -406,7 +405,7 @@ const ProductDetail = () => {
                               const quantityToAdd = tier.actualQuantity || tier.minQuantity;
                               addToCart(product, quantityToAdd, 'one-time', null);
                             }}
-                            className={`w-full py-2 px-4 rounded-lg font-semibold text-white transition-all ${
+                            className={`w-full min-h-11 py-2 px-4 rounded-lg font-semibold text-white transition-all ${
                               isBestValue
                                 ? 'bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600'
                                 : 'bg-primary hover:bg-primary-dark'
@@ -545,7 +544,7 @@ const ProductDetail = () => {
                       <select
                         value={preferredDeliveryDay}
                         onChange={(e) => setPreferredDeliveryDay(e.target.value)}
-                        className="w-full p-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary transition-all"
+                        className="w-full min-h-12 p-3 border-2 border-gray-200 rounded-lg text-base focus:outline-none focus:border-primary transition-all"
                       >
                         <option value="">{t('product_detail.select_day')}</option>
                         <option value="monday">{t('product_detail.monday')}</option>
@@ -563,7 +562,7 @@ const ProductDetail = () => {
                       <select
                         value={preferredTimeSlot}
                         onChange={(e) => setPreferredTimeSlot(e.target.value)}
-                        className="w-full p-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary transition-all"
+                        className="w-full min-h-12 p-3 border-2 border-gray-200 rounded-lg text-base focus:outline-none focus:border-primary transition-all"
                       >
                         <option value="">{t('product_detail.select_time')}</option>
                         <option value="morning">{t('product_detail.morning')}</option>
@@ -579,7 +578,7 @@ const ProductDetail = () => {
                       <select
                         value={preferredDayOfMonth}
                         onChange={(e) => setPreferredDayOfMonth(e.target.value)}
-                        className="w-full p-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary transition-all"
+                        className="w-full min-h-12 p-3 border-2 border-gray-200 rounded-lg text-base focus:outline-none focus:border-primary transition-all"
                       >
                         <option value="">{t('product_detail.select_day')}</option>
                         {Array.from({ length: 31 }, (_, i) => i + 1).map(day => (
@@ -631,7 +630,7 @@ const ProductDetail = () => {
                                   }));
                                 }}
                                 disabled={variantQty === 0}
-                                className="w-10 h-10 bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg font-bold text-xl transition-colors"
+                                className="w-11 h-11 bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg font-bold text-xl transition-colors"
                               >
                                 −
                               </button>
@@ -644,7 +643,7 @@ const ProductDetail = () => {
                                   }));
                                 }}
                                 disabled={!canIncrease}
-                                className="w-10 h-10 bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg font-bold text-xl transition-colors"
+                                className="w-11 h-11 bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg font-bold text-xl transition-colors"
                               >
                                 +
                               </button>
@@ -734,12 +733,6 @@ const ProductDetail = () => {
                   >
                     +
                   </button>
-                  {/* Stock oculto temporalmente */}
-                  {false && product.stock < 10 && (
-                    <span className="text-sm text-orange-600 font-semibold ml-2">
-                      {t('product_detail.only_left', { count: product.stock })}
-                    </span>
-                  )}
                 </div>
                 {purchaseType === 'subscription' && product.volumeDiscount?.minQuantity && (
                   <p className="text-sm text-primary/70 mt-2">
@@ -778,9 +771,9 @@ const ProductDetail = () => {
                                   }
                                 }));
                               }}
-                              className="w-5 h-5 text-primary focus:ring-primary"
+                              className="w-6 h-6 shrink-0 text-primary focus:ring-primary"
                             />
-                            <label htmlFor={`addon-${idx}`} className="flex-1 cursor-pointer">
+                            <label htmlFor={`addon-${idx}`} className="flex min-h-11 flex-1 cursor-pointer items-center">
                               <div className="flex items-center justify-between">
                                 <div>
                                   <span className="text-sm font-medium text-gray-700">{addon.label}</span>
@@ -812,7 +805,7 @@ const ProductDetail = () => {
                                       }
                                     }));
                                   }}
-                                  className="w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded font-bold transition-colors"
+                                  className="w-11 h-11 bg-gray-100 hover:bg-gray-200 rounded-lg font-bold transition-colors"
                                 >
                                   −
                                 </button>
@@ -829,7 +822,7 @@ const ProductDetail = () => {
                                       }
                                     }));
                                   }}
-                                  className="w-16 text-center border-2 border-gray-200 rounded py-1 font-semibold"
+                                  className="w-16 h-11 text-center border-2 border-gray-200 rounded-lg text-base font-semibold"
                                 />
                                 <button
                                   onClick={() => {
@@ -842,7 +835,7 @@ const ProductDetail = () => {
                                       }
                                     }));
                                   }}
-                                  className="w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded font-bold transition-colors"
+                                  className="w-11 h-11 bg-gray-100 hover:bg-gray-200 rounded-lg font-bold transition-colors"
                                 >
                                   +
                                 </button>

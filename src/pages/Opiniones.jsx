@@ -296,11 +296,11 @@ const Opiniones = () => {
       <section className="py-8 border-b">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex flex-wrap gap-3">
+            <div className="flex w-full md:w-auto flex-col sm:flex-row gap-3">
               <select
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
-                className="border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                className="w-full sm:w-auto min-h-11 border border-gray-300 rounded-lg px-4 py-2 text-base focus:ring-2 focus:ring-primary/20 focus:border-primary"
               >
                 <option value="all">{t('reviews.all_products')}</option>
                 {PRODUCTS.map(p => (
@@ -310,7 +310,7 @@ const Opiniones = () => {
               <select
                 value={sort}
                 onChange={(e) => setSort(e.target.value)}
-                className="border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                className="w-full sm:w-auto min-h-11 border border-gray-300 rounded-lg px-4 py-2 text-base focus:ring-2 focus:ring-primary/20 focus:border-primary"
               >
                 <option value="newest">{t('reviews.most_recent')}</option>
                 <option value="highest">{t('reviews.highest_rated')}</option>
@@ -319,7 +319,7 @@ const Opiniones = () => {
             </div>
             <button
               onClick={() => setShowForm(!showForm)}
-              className="bg-secondary text-white px-6 py-3 rounded-lg font-semibold hover:bg-secondary/90 transition-colors inline-flex items-center gap-2"
+              className="w-full md:w-auto min-h-12 bg-secondary text-white px-6 py-3 rounded-lg font-semibold hover:bg-secondary/90 transition-colors inline-flex items-center justify-center gap-2"
             >
               <Send size={18} />
               {t('reviews.write_review')}
@@ -339,7 +339,7 @@ const Opiniones = () => {
             className="overflow-hidden"
           >
             <div className="container mx-auto px-4 py-10">
-              <div className="max-w-2xl mx-auto bg-accent/5 rounded-2xl p-8">
+              <div className="max-w-2xl mx-auto bg-accent/5 rounded-2xl p-5 sm:p-8">
                 <h3 className="text-2xl font-bold text-primary mb-2">{t('reviews.share_experience')}</h3>
                 <p className="text-gray-600 mb-6">
                   {t('reviews_page.share_experience', 'Tu opinión nos ayuda a mejorar y ayuda a otros a descubrir nuestros productos.')}
@@ -354,7 +354,7 @@ const Opiniones = () => {
                         required
                         value={formData.customer_name}
                         onChange={(e) => setFormData(prev => ({ ...prev, customer_name: e.target.value }))}
-                        className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                        className="w-full min-h-12 border border-gray-300 rounded-lg px-4 py-2.5 text-base focus:ring-2 focus:ring-primary/20 focus:border-primary"
                         placeholder={t('reviews.name')}
                       />
                     </div>
@@ -365,7 +365,7 @@ const Opiniones = () => {
                         required
                         value={formData.customer_email}
                         onChange={(e) => setFormData(prev => ({ ...prev, customer_email: e.target.value }))}
-                        className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                        className="w-full min-h-12 border border-gray-300 rounded-lg px-4 py-2.5 text-base focus:ring-2 focus:ring-primary/20 focus:border-primary"
                         placeholder="tu@email.com"
                       />
                     </div>
@@ -377,7 +377,7 @@ const Opiniones = () => {
                       required
                       value={formData.product_slug}
                       onChange={(e) => handleProductChange(e.target.value)}
-                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                      className="w-full min-h-12 border border-gray-300 rounded-lg px-4 py-2.5 text-base focus:ring-2 focus:ring-primary/20 focus:border-primary"
                     >
                       <option value="">{t('reviews.select_product')}</option>
                       {PRODUCTS.map(p => (
@@ -399,7 +399,7 @@ const Opiniones = () => {
                       type="text"
                       value={formData.title}
                       onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                      className="w-full min-h-12 border border-gray-300 rounded-lg px-4 py-2.5 text-base focus:ring-2 focus:ring-primary/20 focus:border-primary"
                       placeholder={t('reviews.title_optional')}
                     />
                   </div>
@@ -411,7 +411,7 @@ const Opiniones = () => {
                       rows={4}
                       value={formData.comment}
                       onChange={(e) => setFormData(prev => ({ ...prev, comment: e.target.value }))}
-                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none"
+                      className="w-full min-h-32 border border-gray-300 rounded-lg px-4 py-3 text-base focus:ring-2 focus:ring-primary/20 focus:border-primary resize-y"
                       placeholder={t('reviews.your_review')}
                     />
                   </div>
@@ -424,7 +424,7 @@ const Opiniones = () => {
                       type="text"
                       value={formData.order_number}
                       onChange={(e) => setFormData(prev => ({ ...prev, order_number: e.target.value }))}
-                      className="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                      className="w-full min-h-12 border border-gray-300 rounded-lg px-4 py-2.5 text-base focus:ring-2 focus:ring-primary/20 focus:border-primary"
                       placeholder="MKE-XXXX"
                     />
                   </div>
@@ -443,7 +443,7 @@ const Opiniones = () => {
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full min-h-12 bg-primary text-white py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {submitting ? t('reviews.submitting') : t('reviews.submit')}
                   </button>
@@ -468,7 +468,7 @@ const Opiniones = () => {
                 <p className="text-gray-500 text-lg">{t('reviews.no_reviews_filter')}</p>
                 <button
                   onClick={() => setShowForm(true)}
-                  className="mt-4 text-secondary font-semibold hover:text-secondary/80"
+                  className="mt-4 inline-flex min-h-11 items-center justify-center rounded-lg px-4 text-secondary font-semibold hover:bg-secondary/10 hover:text-secondary/80"
                 >
                   {t('reviews.be_first')}
                 </button>
@@ -486,7 +486,7 @@ const Opiniones = () => {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.05 }}
-                      className="bg-white border border-gray-100 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow"
+                      className="bg-white border border-gray-100 rounded-xl p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow"
                     >
                       <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3">
                         <div>
@@ -521,7 +521,7 @@ const Opiniones = () => {
                         <button
                           onClick={() => handleTranslate(review.id, review.comment, review.title)}
                           disabled={translatingId === review.id}
-                          className="inline-flex items-center gap-1.5 text-xs text-gray-500 hover:text-primary transition-colors disabled:opacity-50"
+                          className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-gray-50 px-3 text-sm text-gray-600 hover:bg-gray-100 hover:text-primary transition-colors disabled:opacity-50"
                         >
                           <Globe size={14} />
                           {translatingId === review.id

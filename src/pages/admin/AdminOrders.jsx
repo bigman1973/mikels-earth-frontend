@@ -216,11 +216,11 @@ export default function AdminOrders() {
               Gestión de pedidos · Facturación inteligente (F/T)
             </p>
           </div>
-          <div className="flex gap-2">
+          <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto">
             <button
               onClick={syncStripe}
               disabled={syncing}
-              className="flex items-center gap-2 px-4 py-2.5 bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 text-sm rounded-xl border border-purple-500/20 transition-all disabled:opacity-50"
+              className="flex min-h-11 items-center justify-center gap-2 px-3 py-2.5 bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 text-sm rounded-xl border border-purple-500/20 transition-all disabled:opacity-50 sm:px-4"
             >
               <svg className={`w-4 h-4 ${syncing ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -230,7 +230,7 @@ export default function AdminOrders() {
             <button
               onClick={loadOrders}
               disabled={loading}
-              className="flex items-center gap-2 px-4 py-2.5 bg-white/5 hover:bg-white/10 text-gray-300 text-sm rounded-xl border border-white/10 transition-all disabled:opacity-50"
+              className="flex min-h-11 items-center justify-center gap-2 px-3 py-2.5 bg-white/5 hover:bg-white/10 text-gray-300 text-sm rounded-xl border border-white/10 transition-all disabled:opacity-50 sm:px-4"
             >
               <svg className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -241,30 +241,30 @@ export default function AdminOrders() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
+        <div className="grid grid-cols-1 min-[360px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-6">
           <div className="bg-white/[0.02] rounded-xl border border-white/5 p-4">
-            <p className="text-2xl font-bold text-white">{stats.total}</p>
+            <p className="text-xl sm:text-2xl font-bold text-white">{stats.total}</p>
             <p className="text-xs text-gray-500 mt-1">Total pedidos</p>
           </div>
           <div className="bg-amber-500/5 rounded-xl border border-amber-500/10 p-4">
-            <p className="text-2xl font-bold text-amber-400">{stats.pending}</p>
+            <p className="text-xl sm:text-2xl font-bold text-amber-400">{stats.pending}</p>
             <p className="text-xs text-amber-400/70 mt-1">Por gestionar</p>
           </div>
           <div className="bg-purple-500/5 rounded-xl border border-purple-500/10 p-4">
-            <p className="text-2xl font-bold text-purple-400">{stats.shipped}</p>
+            <p className="text-xl sm:text-2xl font-bold text-purple-400">{stats.shipped}</p>
             <p className="text-xs text-purple-400/70 mt-1">En tránsito</p>
           </div>
           <div className="bg-emerald-500/5 rounded-xl border border-emerald-500/10 p-4">
-            <p className="text-2xl font-bold text-emerald-400">{stats.revenue.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}€</p>
+            <p className="text-xl sm:text-2xl font-bold text-emerald-400">{stats.revenue.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}€</p>
             <p className="text-xs text-emerald-400/70 mt-1">Facturación</p>
           </div>
           <div className="bg-cyan-500/5 rounded-xl border border-cyan-500/10 p-4">
-            <p className="text-2xl font-bold text-cyan-400">{stats.invoiced}</p>
+            <p className="text-xl sm:text-2xl font-bold text-cyan-400">{stats.invoiced}</p>
             <p className="text-xs text-cyan-400/70 mt-1">Facturados/Ticket</p>
           </div>
           {stats.refunded > 0 && (
             <div className="bg-red-500/5 rounded-xl border border-red-500/10 p-4">
-              <p className="text-2xl font-bold text-red-400">{stats.refunded}</p>
+              <p className="text-xl sm:text-2xl font-bold text-red-400">{stats.refunded}</p>
               <p className="text-xs text-red-400/70 mt-1">Anulados</p>
             </div>
           )}
@@ -291,13 +291,13 @@ export default function AdminOrders() {
               placeholder="Buscar por email, nombre, nº pedido..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition-all"
+              className="min-h-11 w-full pl-10 pr-4 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-base sm:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition-all"
             />
           </div>
           <select
             value={monthFilter}
             onChange={(e) => setMonthFilter(e.target.value)}
-            className="px-3 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition-all appearance-none cursor-pointer min-w-[140px]"
+            className="min-h-11 w-full px-3 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-base sm:w-auto sm:text-sm text-white focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition-all appearance-none cursor-pointer sm:min-w-[140px]"
           >
             <option value="all" className="bg-gray-900">Todos los meses</option>
             {monthOptions.map(m => {
@@ -318,7 +318,7 @@ export default function AdminOrders() {
               <button
                 key={f.key}
                 onClick={() => setFilter(f.key)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap ${
+                className={`min-h-11 px-3 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap ${
                   filter === f.key ? 'bg-white/10 text-white' : 'text-gray-500 hover:text-gray-300'
                 }`}
               >
@@ -354,10 +354,10 @@ export default function AdminOrders() {
               
               return (
                 <div key={order.id} className="bg-white/[0.02] rounded-xl border border-white/5 hover:border-white/10 transition-colors overflow-hidden">
-                  <div className="p-5">
+                  <div className="p-4 sm:p-5">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                       {/* Order info */}
-                      <div className="flex-1 cursor-pointer" onClick={() => setExpandedOrder(isExpanded ? null : order.id)}>
+                      <div className="min-h-11 flex-1 cursor-pointer" onClick={() => setExpandedOrder(isExpanded ? null : order.id)} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setExpandedOrder(isExpanded ? null : order.id); }}>
                         <div className="flex items-center gap-2 flex-wrap mb-1.5">
                           <span className="text-sm text-white font-bold font-mono">#{orderNum}</span>
                           <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-semibold rounded-lg border ${colorMap[status.color]}`}>
@@ -390,13 +390,13 @@ export default function AdminOrders() {
                       </div>
 
                       {/* Amount + Actions */}
-                      <div className="flex items-center gap-4">
+                      <div className="flex w-full flex-col items-stretch gap-3 sm:w-auto sm:flex-row sm:items-center sm:gap-4">
                         <span className={`text-lg font-bold font-mono ${
                           ['refunded', 'partially_refunded', 'cancelled'].includes(order.payment_status) ? 'text-red-400 line-through' : 'text-white'
                         }`}>
                           {order.total ? order.total.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '€' : '—'}
                         </span>
-                        <div className="flex gap-2">
+                        <div className="flex flex-wrap gap-2">
                           {['refunded', 'partially_refunded', 'cancelled'].includes(order.payment_status) ? (
                             <span className="flex items-center gap-1.5 px-3 py-2 bg-red-500/10 text-red-400 text-xs rounded-lg border border-red-500/20 font-medium">
                               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -410,7 +410,7 @@ export default function AdminOrders() {
                                 <button
                                   onClick={() => createInHolded(order.id)}
                                   disabled={actionLoading === `holded-${order.id}`}
-                                  className="flex items-center gap-1.5 px-3 py-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 text-xs rounded-lg border border-blue-500/20 transition-all disabled:opacity-50 font-medium"
+                                  className="flex min-h-11 flex-1 items-center justify-center gap-1.5 px-3 py-2 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 text-xs rounded-lg border border-blue-500/20 transition-all disabled:opacity-50 font-medium sm:flex-none"
                                 >
                                   <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
@@ -422,7 +422,7 @@ export default function AdminOrders() {
                                 <button
                                   onClick={() => createInvoice(order.id)}
                                   disabled={actionLoading === `invoice-${order.id}`}
-                                  className={`flex items-center gap-1.5 px-3 py-2 text-xs rounded-lg border transition-all disabled:opacity-50 font-medium ${
+                                  className={`flex min-h-11 flex-1 items-center justify-center gap-1.5 px-3 py-2 text-xs rounded-lg border transition-all disabled:opacity-50 font-medium sm:flex-none ${
                                     willBeInvoice 
                                       ? 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border-emerald-500/20'
                                       : 'bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border-cyan-500/20'
@@ -455,7 +455,7 @@ export default function AdminOrders() {
                                     <button
                                       onClick={() => sendEmail(order.id)}
                                       disabled={actionLoading === `email-${order.id}`}
-                                      className="flex items-center gap-1.5 px-3 py-2 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 text-xs rounded-lg border border-indigo-500/20 transition-all disabled:opacity-50 font-medium"
+                                      className="flex min-h-11 flex-1 items-center justify-center gap-1.5 px-3 py-2 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 text-xs rounded-lg border border-indigo-500/20 transition-all disabled:opacity-50 font-medium sm:flex-none"
                                       title={`Enviar a ${order.customer_email}`}
                                     >
                                       <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -475,7 +475,7 @@ export default function AdminOrders() {
 
                   {/* Expanded details */}
                   {isExpanded && (
-                    <div className="border-t border-white/5 bg-white/[0.01] p-5">
+                    <div className="border-t border-white/5 bg-white/[0.01] p-4 sm:p-5">
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {/* Envío */}
                         <div>
@@ -551,12 +551,12 @@ export default function AdminOrders() {
 
         {/* Footer */}
         {!loading && filteredOrders.length > 0 && (
-          <div className="mt-5 flex items-center justify-between">
+          <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-xs text-gray-600">
               Mostrando {filteredOrders.length} de {orders.length} pedidos
             </p>
             {filter !== 'all' && (
-              <button onClick={() => setFilter('all')} className="text-xs text-emerald-400 hover:text-emerald-300 font-medium">
+              <button onClick={() => setFilter('all')} className="inline-flex min-h-11 items-center text-sm font-medium text-emerald-400 hover:text-emerald-300">
                 Limpiar filtros
               </button>
             )}

@@ -85,7 +85,7 @@ export default function AdminUsers() {
           <button
             onClick={loadUsers}
             disabled={loading}
-            className="flex items-center gap-2 px-4 py-2.5 bg-white/5 hover:bg-white/10 text-gray-300 text-sm rounded-xl border border-white/10 transition-all disabled:opacity-50"
+            className="flex min-h-11 w-full items-center justify-center gap-2 px-4 py-2.5 bg-white/5 hover:bg-white/10 text-gray-300 text-sm rounded-xl border border-white/10 transition-all disabled:opacity-50 sm:w-auto"
           >
             <svg className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -127,13 +127,13 @@ export default function AdminUsers() {
               return (
                 <div 
                   key={u.id} 
-                  className={`bg-white/[0.02] rounded-xl border p-5 transition-all ${
+                  className={`bg-white/[0.02] rounded-xl border p-4 sm:p-5 transition-all ${
                     u.is_active ? 'border-white/5 hover:border-white/10' : 'border-red-500/10 opacity-50'
                   }`}
                 >
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     {/* User info */}
-                    <div className="flex items-center gap-4">
+                    <div className="flex min-w-0 items-center gap-3 sm:gap-4">
                       <div className={`w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 border ${
                         u.is_active 
                           ? 'bg-gradient-to-br from-emerald-500/20 to-blue-500/20 border-white/10' 
@@ -143,9 +143,9 @@ export default function AdminUsers() {
                           {u.name?.charAt(0)?.toUpperCase() || '?'}
                         </span>
                       </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <p className="text-sm text-white font-medium">{u.name}</p>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <p className="break-words text-sm font-medium text-white">{u.name}</p>
                           {u.id === currentUser?.id && (
                             <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                               Tú
@@ -157,7 +157,7 @@ export default function AdminUsers() {
                             </span>
                           )}
                         </div>
-                        <p className="text-xs text-gray-500 mt-0.5">{u.email}</p>
+                        <p className="break-all text-xs text-gray-500 mt-0.5">{u.email}</p>
                         <p className="text-[11px] text-gray-600 mt-0.5">
                           Último acceso: {u.last_login ? new Date(u.last_login).toLocaleString('es-ES', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : 'Nunca'}
                         </p>
@@ -165,19 +165,19 @@ export default function AdminUsers() {
                     </div>
 
                     {/* Actions */}
-                    <div className="flex items-center gap-3 ml-15 md:ml-0">
+                    <div className="flex w-full flex-wrap items-center gap-2 sm:gap-3 md:w-auto md:flex-nowrap">
                       {/* Role badge (visible on mobile) */}
                       <span className={`md:hidden text-[10px] font-semibold px-2.5 py-1 rounded-lg border ${role.color}`}>
                         {role.label}
                       </span>
 
                       {/* Role selector */}
-                      <div className="relative">
+                      <div className="relative min-w-0 flex-1 md:flex-none">
                         <select
                           value={u.role}
                           onChange={(e) => updateRole(u.id, e.target.value)}
                           disabled={u.id === currentUser?.id || actionLoading === `role-${u.id}`}
-                          className="appearance-none px-4 py-2 pr-8 bg-white/[0.03] border border-white/10 rounded-xl text-sm text-white focus:outline-none focus:border-emerald-500/50 disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer"
+                          className="min-h-11 w-full appearance-none px-4 py-2 pr-8 bg-white/[0.03] border border-white/10 rounded-xl text-base md:w-auto md:text-sm text-white focus:outline-none focus:border-emerald-500/50 disabled:opacity-40 disabled:cursor-not-allowed transition-all cursor-pointer"
                         >
                           {roles.map(r => (
                             <option key={r} value={r} className="bg-[#1a1a1b] text-white">
@@ -195,7 +195,7 @@ export default function AdminUsers() {
                         <button
                           onClick={() => toggleActive(u.id)}
                           disabled={actionLoading === `toggle-${u.id}`}
-                          className={`flex items-center gap-1.5 px-3 py-2 text-xs rounded-xl border transition-all disabled:opacity-50 font-medium ${
+                          className={`flex min-h-11 flex-1 items-center justify-center gap-1.5 px-3 py-2 text-xs rounded-xl border transition-all disabled:opacity-50 font-medium md:flex-none ${
                             u.is_active
                               ? 'bg-red-500/10 hover:bg-red-500/20 text-red-400 border-red-500/20'
                               : 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border-emerald-500/20'

@@ -14,14 +14,14 @@ const Header = () => {
   return (
     <header className="w-full">
       {/* Top bar con redes sociales + HORECA */}
-      <div className="bg-mikels-dark text-white py-2" style={{backgroundColor: 'var(--mikels-gray-dark)'}}>
-        <div className="container mx-auto px-4 flex justify-between items-center">
-          <div className="flex gap-3">
+      <div className="bg-mikels-dark text-white py-1 sm:py-2" style={{backgroundColor: 'var(--mikels-gray-dark)'}}>
+        <div className="container mx-auto px-2 sm:px-4 flex justify-between items-center gap-2">
+          <div className="flex items-center gap-0.5 sm:gap-1">
             <a 
               href="https://www.facebook.com/mikelsearth/" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="hover:text-accent transition-colors"
+              className="hidden sm:inline-flex h-11 w-11 items-center justify-center rounded-full hover:bg-white/10 hover:text-accent transition-colors"
               aria-label="Facebook"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -32,7 +32,7 @@ const Header = () => {
               href="https://www.instagram.com/mikelsearth" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="hover:text-accent transition-colors"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full hover:bg-white/10 hover:text-accent transition-colors"
               aria-label="Instagram"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -43,7 +43,7 @@ const Header = () => {
               href="https://www.tiktok.com/@mikelsearth" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="hover:text-accent transition-colors"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full hover:bg-white/10 hover:text-accent transition-colors"
               aria-label="TikTok"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -54,7 +54,7 @@ const Header = () => {
               href="https://www.youtube.com/channel/UCZmLAbkaLOTdwGGMYxaDy-Q" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="hover:text-accent transition-colors"
+              className="hidden sm:inline-flex h-11 w-11 items-center justify-center rounded-full hover:bg-white/10 hover:text-accent transition-colors"
               aria-label="YouTube"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -63,39 +63,39 @@ const Header = () => {
             </a>
             <Link 
               to="/blog" 
-              className="hover:text-accent transition-colors flex items-center gap-1"
+              className="inline-flex min-h-11 min-w-11 items-center justify-center gap-1 px-1.5 rounded-full hover:bg-white/10 hover:text-accent transition-colors"
               aria-label="Blog"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
               </svg>
-              <span className="text-xs font-medium">Blog</span>
+              <span className="hidden sm:inline text-xs font-medium">Blog</span>
             </Link>
           </div>
           {/* HORECA a la derecha en la barra superior, sin destacar */}
-          <div className="flex items-center">
+          <div className="flex items-center shrink-0 gap-0.5">
             <Link 
               to="/horeca" 
-              className="text-xs font-medium hover:text-accent transition-colors uppercase tracking-wide flex items-center gap-1"
+              className="inline-flex min-h-11 items-center gap-1 px-1.5 text-[11px] sm:text-xs font-medium hover:bg-white/10 hover:text-accent transition-colors uppercase tracking-wide rounded-lg"
             >
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/>
               </svg>
               HORECA B2B
             </Link>
-            <LanguageSelector compact className="ml-3" />
+            <LanguageSelector compact />
           </div>
         </div>
       </div>
 
       {/* Logo section */}
-      <div className="py-4" style={{backgroundColor: 'var(--mikels-sun-light)'}}>
+      <div className="py-2 sm:py-3 md:py-4" style={{backgroundColor: 'var(--mikels-sun-light)'}}>
         <div className="container mx-auto px-4 flex justify-center">
           <Link to="/" className="flex items-center">
             <img 
               src="/logo-mikels-earth.svg" 
               alt="Mikel's Earth - Since 1819" 
-              className="h-28 md:h-32 w-auto"
+              className="h-20 sm:h-24 md:h-32 w-auto"
             />
           </Link>
         </div>
@@ -103,14 +103,14 @@ const Header = () => {
 
       {/* Navigation */}
       <nav className="text-white" style={{backgroundColor: 'var(--mikels-gray-dark)'}}>
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-14">
+        <div className="container mx-auto px-3 sm:px-4">
+          <div className="flex items-center justify-between min-h-14">
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-6 mx-auto">
+            <div className="hidden lg:flex items-center space-x-4 xl:space-x-6 mx-auto">
               {/* TIENDA como primer campo, destacado con color rojo corporativo */}
               <Link 
                 to="/tienda" 
-                className="text-base font-bold uppercase tracking-wider transition-all hover:opacity-80"
+                className="inline-flex min-h-11 items-center px-1 text-base font-bold uppercase tracking-wider transition-all hover:opacity-80"
                 style={{
                   color: 'var(--mikels-red)',
                   textShadow: '0 0 1px rgba(205, 84, 91, 0.3)',
@@ -120,59 +120,59 @@ const Header = () => {
               </Link>
               <Link 
                 to="/la-familia" 
-                className="text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
+                className="inline-flex min-h-11 items-center px-1 text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
               >
                 {t('nav.family')}
               </Link>
               <Link 
                 to="/nuestra-tierra" 
-                className="text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
+                className="inline-flex min-h-11 items-center px-1 text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
               >
                 {t('nav.land')}
               </Link>
               <Link 
                 to="/el-obrador" 
-                className="text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
+                className="inline-flex min-h-11 items-center px-1 text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
               >
                 {t('nav.workshop')}
               </Link>
               <Link 
                 to="/nuestras-joyas" 
-                className="text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
+                className="inline-flex min-h-11 items-center px-1 text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
               >
                 {t('nav.jewels')}
               </Link>
               <Link 
                 to="/experiencias" 
-                className="text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
+                className="inline-flex min-h-11 items-center px-1 text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
               >
                 {t('nav.experiences')}
               </Link>
               <Link 
                 to="/recetario" 
-                className="text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
+                className="inline-flex min-h-11 items-center px-1 text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
               >
                 {t('nav.recipes')}
               </Link>
               <Link 
                 to="/opiniones" 
-                className="text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
+                className="inline-flex min-h-11 items-center px-1 text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
               >
                 {t('nav.reviews')}
               </Link>
             </div>
 
             {/* Right icons */}
-            <div className="hidden md:flex items-center gap-4 ml-auto">
+            <div className="hidden lg:flex items-center gap-1 ml-auto">
               <button 
-                className="hover:text-secondary transition-colors"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full hover:bg-white/10 hover:text-secondary transition-colors"
                 aria-label="Buscar"
               >
                 <Search className="w-5 h-5" />
               </button>
               <button 
                 onClick={toggleCart}
-                className="relative hover:text-secondary transition-colors"
+                className="relative inline-flex h-11 w-11 items-center justify-center rounded-full hover:bg-white/10 hover:text-secondary transition-colors"
                 aria-label="Carrito"
               >
                 <ShoppingCart className="w-5 h-5" />
@@ -184,31 +184,52 @@ const Header = () => {
               </button>
               <Link 
                 to="/login" 
-                className="hover:text-secondary transition-colors"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full hover:bg-white/10 hover:text-secondary transition-colors"
                 aria-label="Usuario"
               >
                 <User className="w-5 h-5" />
               </Link>
             </div>
 
-            {/* Mobile menu button */}
-            <button
-              className="md:hidden"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label="Menú"
-            >
-              <Menu className="w-6 h-6" />
-            </button>
+            {/* Mobile navigation controls: always reachable without opening the menu */}
+            <div className="lg:hidden flex w-full items-center justify-between">
+              <button
+                className="inline-flex min-h-11 items-center gap-2 rounded-lg px-2 text-sm font-semibold uppercase tracking-wide hover:bg-white/10"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-label="Menú"
+                aria-expanded={mobileMenuOpen}
+                aria-controls="mobile-navigation"
+              >
+                <Menu className="w-6 h-6" />
+                <span>{t('nav.menu', 'Menú')}</span>
+              </button>
+              <div className="flex items-center gap-1">
+                <button className="inline-flex h-11 w-11 items-center justify-center rounded-full hover:bg-white/10" aria-label="Buscar">
+                  <Search className="w-5 h-5" />
+                </button>
+                <button onClick={toggleCart} className="relative inline-flex h-11 w-11 items-center justify-center rounded-full hover:bg-white/10" aria-label="Carrito">
+                  <ShoppingCart className="w-5 h-5" />
+                  {cartCount > 0 && (
+                    <span className="absolute top-0.5 right-0.5 bg-secondary text-primary text-[11px] min-w-5 h-5 px-1 rounded-full flex items-center justify-center font-bold">
+                      {cartCount}
+                    </span>
+                  )}
+                </button>
+                <Link to="/login" className="inline-flex h-11 w-11 items-center justify-center rounded-full hover:bg-white/10" aria-label="Usuario">
+                  <User className="w-5 h-5" />
+                </Link>
+              </div>
+            </div>
           </div>
 
           {/* Mobile Navigation */}
           {mobileMenuOpen && (
-            <div className="md:hidden py-4 border-t border-white/10">
-              <div className="flex flex-col space-y-3">
+            <div id="mobile-navigation" className="lg:hidden pb-4 border-t border-white/10">
+              <div className="grid grid-cols-1 min-[390px]:grid-cols-2 gap-1 pt-3">
                 {/* TIENDA como primer campo, destacado en móvil */}
                 <Link 
                   to="/tienda" 
-                  className="text-base font-bold uppercase text-center py-2"
+                  className="inline-flex min-h-11 items-center justify-center rounded-lg px-3 text-base font-bold uppercase hover:bg-white/10"
                   style={{
                     color: 'var(--mikels-red)',
                   }}
@@ -218,79 +239,62 @@ const Header = () => {
                 </Link>
                 <Link 
                   to="/la-familia" 
-                  className="text-sm font-medium hover:text-secondary transition-colors uppercase"
+                  className="inline-flex min-h-11 items-center rounded-lg px-3 text-sm font-medium hover:bg-white/10 hover:text-secondary transition-colors uppercase"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {t('nav.family')}
                 </Link>
                 <Link 
                   to="/nuestra-tierra" 
-                  className="text-sm font-medium hover:text-secondary transition-colors uppercase"
+                  className="inline-flex min-h-11 items-center rounded-lg px-3 text-sm font-medium hover:bg-white/10 hover:text-secondary transition-colors uppercase"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {t('nav.land')}
                 </Link>
                 <Link 
                   to="/el-obrador" 
-                  className="text-sm font-medium hover:text-secondary transition-colors uppercase"
+                  className="inline-flex min-h-11 items-center rounded-lg px-3 text-sm font-medium hover:bg-white/10 hover:text-secondary transition-colors uppercase"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {t('nav.workshop')}
                 </Link>
                 <Link 
                   to="/nuestras-joyas" 
-                  className="text-sm font-medium hover:text-secondary transition-colors uppercase"
+                  className="inline-flex min-h-11 items-center rounded-lg px-3 text-sm font-medium hover:bg-white/10 hover:text-secondary transition-colors uppercase"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {t('nav.jewels')}
                 </Link>
                 <Link 
                   to="/experiencias" 
-                  className="text-sm font-medium hover:text-secondary transition-colors uppercase"
+                  className="inline-flex min-h-11 items-center rounded-lg px-3 text-sm font-medium hover:bg-white/10 hover:text-secondary transition-colors uppercase"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {t('nav.experiences')}
                 </Link>
                 <Link 
                   to="/recetario" 
-                  className="text-sm font-medium hover:text-secondary transition-colors uppercase"
+                  className="inline-flex min-h-11 items-center rounded-lg px-3 text-sm font-medium hover:bg-white/10 hover:text-secondary transition-colors uppercase"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {t('nav.recipes')}
                 </Link>
                 <Link 
                   to="/opiniones" 
-                  className="text-sm font-medium hover:text-secondary transition-colors uppercase"
+                  className="inline-flex min-h-11 items-center rounded-lg px-3 text-sm font-medium hover:bg-white/10 hover:text-secondary transition-colors uppercase"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {t('nav.reviews')}
                 </Link>
                 <Link 
                   to="/horeca" 
-                  className="text-sm font-medium hover:text-secondary transition-colors uppercase"
+                  className="inline-flex min-h-11 items-center rounded-lg px-3 text-sm font-medium hover:bg-white/10 hover:text-secondary transition-colors uppercase"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {t('nav.horecaB2B')}
                 </Link>
-                <div className="pt-2">
-                  <LanguageSelector className="justify-center" />
-                </div>
-
-                <div className="flex items-center gap-4 pt-3 border-t border-white/10">
-                  <button aria-label="Buscar">
-                    <Search className="w-5 h-5" />
-                  </button>
-                  <button onClick={toggleCart} className="relative" aria-label="Carrito">
-                    <ShoppingCart className="w-5 h-5" />
-                    {cartCount > 0 && (
-                      <span className="absolute -top-2 -right-2 bg-secondary text-primary text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
-                        {cartCount}
-                      </span>
-                    )}
-                  </button>
-                  <Link to="/login" aria-label="Usuario">
-                    <User className="w-5 h-5" />
-                  </Link>
+                <div className="min-h-11 flex items-center justify-center min-[390px]:col-span-2 pt-1">
+                  <LanguageSelector />
                 </div>
               </div>
             </div>

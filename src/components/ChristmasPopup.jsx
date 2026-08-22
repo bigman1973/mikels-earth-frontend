@@ -83,14 +83,14 @@ const ChristmasPopup = () => {
               {/* Close button */}
               <button
                 onClick={handleClose}
-                className="absolute top-4 right-4 z-10 p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors backdrop-blur-sm"
+                className="absolute right-3 top-3 z-10 inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/10 transition-colors hover:bg-white/20 backdrop-blur-sm"
                 aria-label="Cerrar"
               >
                 <X className="w-5 h-5 text-white" />
               </button>
 
               {/* Content */}
-              <div className="relative z-10 p-8 text-center">
+              <div className="relative z-10 p-5 text-center sm:p-8">
                 {/* Icon */}
                 <motion.div
                   animate={{ 

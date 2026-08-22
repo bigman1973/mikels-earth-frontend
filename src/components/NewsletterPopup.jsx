@@ -151,19 +151,19 @@ const NewsletterPopup = () => {
             {/* Popup */}
             <div
               onClick={(e) => e.stopPropagation()}
-              className="relative bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden"
+              className="relative max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto rounded-xl bg-white shadow-2xl"
             >
               {/* Close button */}
               <button
                 onClick={handleClose}
-                className="absolute top-3 right-3 z-10 p-1.5 hover:bg-gray-100 rounded-full transition-colors"
+                className="absolute right-2 top-2 z-10 inline-flex h-11 w-11 items-center justify-center rounded-full transition-colors hover:bg-gray-100 sm:right-3 sm:top-3"
                 aria-label="Cerrar"
               >
                 <X className="w-5 h-5 text-gray-500" />
               </button>
 
               {/* Content */}
-              <div className="p-6">
+              <div className="p-5 sm:p-6">
                 {/* Icon */}
                 <div className="flex justify-center mb-4">
                   <div className="relative">
@@ -187,7 +187,7 @@ const NewsletterPopup = () => {
                 {!showSuccess ? (
                   /* Form */
                   <form onSubmit={handleSubmit} className="space-y-3">
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 gap-3 min-[380px]:grid-cols-2">
                       <input
                         type="text"
                         name="firstName"

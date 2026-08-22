@@ -15,7 +15,7 @@ const getOptimizedProductImage = (url) => {
 };
 
 const ProductCard = ({ product }) => {
-  const { addToCart, toggleCart, setIsCartOpen } = useCart();
+  const { addToCart, setIsCartOpen } = useCart();
 
   const handleBadgeClick = (e, badge) => {
     if (badge.action === 'addPackDuo') {
@@ -32,7 +32,6 @@ const ProductCard = ({ product }) => {
   const maxDiscount = hasSubscription && product.subscriptionFrequencies && product.subscriptionFrequencies.length > 0
     ? Math.max(...product.subscriptionFrequencies.map(f => f.discount))
     : 0;
-  const savingsPercent = maxDiscount;
   const productImage = getOptimizedProductImage(product.image || product.images?.[0]);
 
   return (
@@ -50,7 +49,7 @@ const ProductCard = ({ product }) => {
               <button 
                 key={index}
                 onClick={(e) => handleBadgeClick(e, badge)}
-                className={`${badge.color} text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg uppercase tracking-wide cursor-pointer hover:scale-105 transition-transform`}
+                className={`${badge.color} min-h-11 text-white px-3 py-2 rounded-full text-xs font-bold shadow-lg uppercase tracking-wide cursor-pointer hover:scale-105 transition-transform`}
               >
                 {badge.text}
               </button>
@@ -173,12 +172,6 @@ const ProductCard = ({ product }) => {
             )}
           </div>
 
-          {/* Stock indicator - oculto temporalmente */}
-          {false && product.stock < 10 && (
-            <div className="mt-3 text-xs text-orange-600 font-semibold">
-              ¡Solo quedan {product.stock} unidades!
-            </div>
-          )}
         </div>
       </Link>
     </motion.div>
