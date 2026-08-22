@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Mail, Send } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 
 const Newsletter = ({ variant = 'default' }) => {
   const { t } = useTranslation();
@@ -102,28 +101,14 @@ const Newsletter = ({ variant = 'default' }) => {
           {t('newsletter.subtitle')}
         </p>
         
-        <AnimatePresence mode="wait">
           {submitted ? (
-            <motion.div
-              key="success"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="bg-green-50 border border-green-500 rounded-lg p-3 text-center"
-            >
+            <div className="bg-green-50 border border-green-500 rounded-lg p-3 text-center">
               <p className="text-green-700 font-semibold text-sm">
                 ✓ {t('newsletter.success')}
               </p>
-            </motion.div>
+            </div>
           ) : (
-            <motion.form
-              key="form"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onSubmit={handleSubmit}
-              className="space-y-2"
-            >
+            <form onSubmit={handleSubmit} className="space-y-2">
               <div className="grid grid-cols-2 gap-2">
                 <input
                   type="text"
@@ -174,9 +159,8 @@ const Newsletter = ({ variant = 'default' }) => {
                 <Send size={16} />
                 {loading ? t('newsletter.sending') : t('newsletter.subscribe_btn')}
               </button>
-            </motion.form>
+            </form>
           )}
-        </AnimatePresence>
       </div>
     );
   }
@@ -193,15 +177,8 @@ const Newsletter = ({ variant = 'default' }) => {
           {t('newsletter.join_description')}
         </p>
         
-        <AnimatePresence mode="wait">
           {submitted ? (
-            <motion.div
-              key="success"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              className="bg-white rounded-lg p-6"
-            >
+            <div className="bg-white rounded-lg p-6">
               <div className="text-5xl mb-3">✓</div>
               <p className="text-2xl font-bold text-green-700 mb-2">
                 {t('newsletter.welcome')}
@@ -209,16 +186,9 @@ const Newsletter = ({ variant = 'default' }) => {
               <p className="text-gray-600">
                 {t('newsletter.check_email')}
               </p>
-            </motion.div>
+            </div>
           ) : (
-            <motion.form
-              key="form"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onSubmit={handleSubmit}
-              className="space-y-3 max-w-md mx-auto"
-            >
+            <form onSubmit={handleSubmit} className="space-y-3 max-w-md mx-auto">
               <div className="grid grid-cols-2 gap-3">
                 <input
                   type="text"
@@ -269,9 +239,8 @@ const Newsletter = ({ variant = 'default' }) => {
                 <Send size={20} />
                 {loading ? t('newsletter.sending') : t('newsletter.subscribe_btn')}
               </button>
-            </motion.form>
+            </form>
           )}
-        </AnimatePresence>
         
         {!submitted && (
           <p className="text-white/70 text-sm mt-4">

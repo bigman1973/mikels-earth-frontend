@@ -10,6 +10,17 @@ import ProductReviews from '../components/ProductReviews';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://mikels-earth-backend-production.up.railway.app';
 
+const getOptimizedProductImage = (url, width = 1200) => {
+  if (!url || !url.includes('res.cloudinary.com') || !url.includes('/image/upload/')) {
+    return url;
+  }
+
+  return url.replace(
+    '/image/upload/',
+    `/image/upload/f_auto,q_auto:eco,c_limit,w_${width}/`
+  );
+};
+
 // i18n hook will be used inside the component
 
 // Componente de estrellas inline
@@ -195,8 +206,12 @@ const ProductDetail = () => {
                   {/* Imagen principal */}
                   <div className="aspect-square overflow-hidden">
                     <img 
-                      src={product.images[selectedImage]} 
+                      src={getOptimizedProductImage(product.images[selectedImage], 1200)}
                       alt={product.name}
+                      width="1200"
+                      height="1200"
+                      fetchPriority="high"
+                      decoding="async"
                       className="w-full h-full object-cover transition-all duration-300"
                     />
                   </div>
@@ -213,8 +228,12 @@ const ProductDetail = () => {
                           }`}
                         >
                           <img 
-                            src={img} 
+                            src={getOptimizedProductImage(img, 240)}
                             alt={`${product.name} ${idx + 1}`}
+                            width="240"
+                            height="240"
+                            loading="lazy"
+                            decoding="async"
                             className="w-full h-full object-cover rounded-lg"
                           />
                         </button>
@@ -225,8 +244,12 @@ const ProductDetail = () => {
               ) : product.image ? (
                 <div className="aspect-square overflow-hidden">
                   <img 
-                    src={product.image} 
+                    src={getOptimizedProductImage(product.image, 1200)}
                     alt={product.name}
+                    width="1200"
+                    height="1200"
+                    fetchPriority="high"
+                    decoding="async"
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -974,8 +997,12 @@ const ProductDetail = () => {
                   <div className="relative h-48 bg-gray-200 overflow-hidden">
                     {(relatedProduct.image || relatedProduct.images?.[0]) ? (
                       <img 
-                        src={relatedProduct.image || relatedProduct.images?.[0]} 
+                        src={getOptimizedProductImage(relatedProduct.image || relatedProduct.images?.[0], 480)}
                         alt={relatedProduct.name}
+                        width="480"
+                        height="480"
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         onError={(e) => {
                           e.target.style.display = 'none';

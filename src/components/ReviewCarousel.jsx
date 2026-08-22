@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Star, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -91,13 +90,8 @@ const ReviewCarousel = () => {
           )}
 
           {/* Review card */}
-          <AnimatePresence mode="wait">
-            <motion.div
+          <div
               key={currentIndex}
-              initial={{ opacity: 0, x: 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -50 }}
-              transition={{ duration: 0.3 }}
               className="bg-white rounded-2xl shadow-lg p-8 md:p-12"
             >
               <div className="flex justify-center mb-6">
@@ -125,8 +119,7 @@ const ReviewCarousel = () => {
                   )}
                 </p>
               </div>
-            </motion.div>
-          </AnimatePresence>
+            </div>
 
           {/* Dots indicator */}
           {reviews.length > 1 && (

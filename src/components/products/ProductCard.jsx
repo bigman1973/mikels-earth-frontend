@@ -3,6 +3,17 @@ import { ShoppingCart, Tag } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useCart } from '../../context/CartContext';
 
+const getOptimizedProductImage = (url) => {
+  if (!url || !url.includes('res.cloudinary.com') || !url.includes('/image/upload/')) {
+    return url;
+  }
+
+  return url.replace(
+    '/image/upload/',
+    '/image/upload/f_auto,q_auto:eco,c_fill,w_640,h_640/'
+  );
+};
+
 const ProductCard = ({ product }) => {
   const { addToCart, toggleCart, setIsCartOpen } = useCart();
 
@@ -22,6 +33,7 @@ const ProductCard = ({ product }) => {
     ? Math.max(...product.subscriptionFrequencies.map(f => f.discount))
     : 0;
   const savingsPercent = maxDiscount;
+  const productImage = getOptimizedProductImage(product.image || product.images?.[0]);
 
   return (
     <motion.div
@@ -58,10 +70,14 @@ const ProductCard = ({ product }) => {
         {/* Image container */}
         <div className="relative h-64 bg-gray-200 overflow-hidden">
           {/* Imagen del producto */}
-          {(product.image || product.images?.[0]) ? (
+          {productImage ? (
             <img 
-              src={product.image || product.images?.[0]} 
+              src={productImage}
               alt={product.name}
+              width="640"
+              height="640"
+              loading="lazy"
+              decoding="async"
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               onError={(e) => {
                 e.target.style.display = 'none';

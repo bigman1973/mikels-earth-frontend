@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Mail, X } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 
 const FloatingNewsletterButton = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -95,7 +94,7 @@ const FloatingNewsletterButton = () => {
         setStatus('error');
         setMessage(data.error || 'Ha ocurrido un error. Por favor, inténtalo de nuevo.');
       }
-    } catch (error) {
+    } catch {
       setStatus('error');
       setMessage('Error de conexión. Por favor, inténtalo de nuevo.');
     }
@@ -104,13 +103,8 @@ const FloatingNewsletterButton = () => {
   return (
     <>
       {/* Botón flotante */}
-      <AnimatePresence>
         {isVisible && !isModalOpen && (
-          <motion.button
-            initial={{ opacity: 0, scale: 0.8, y: 100 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.8, y: 100 }}
-            transition={{ duration: 0.3 }}
+          <button
             onClick={() => setIsModalOpen(true)}
             className="fixed bottom-6 right-6 z-40 bg-gradient-to-r from-primary to-green-700 text-white p-4 rounded-full shadow-2xl hover:shadow-3xl hover:scale-110 transition-all duration-300 group"
             aria-label="Suscribirse al newsletter"
@@ -130,24 +124,16 @@ const FloatingNewsletterButton = () => {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
             </span>
-          </motion.button>
+          </button>
         )}
-      </AnimatePresence>
 
       {/* Modal de suscripción */}
-      <AnimatePresence>
         {isModalOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+          <div
             className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50"
             onClick={() => setIsModalOpen(false)}
           >
-            <motion.div
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
+            <div
               className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 relative"
               onClick={(e) => e.stopPropagation()}
             >
@@ -232,9 +218,7 @@ const FloatingNewsletterButton = () => {
 
                 {/* Mensaje de estado */}
                 {message && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
+                  <div
                     className={`p-3 rounded-lg text-sm ${
                       status === 'success'
                         ? 'bg-green-50 text-green-700 border border-green-200'
@@ -242,7 +226,7 @@ const FloatingNewsletterButton = () => {
                     }`}
                   >
                     {message}
-                  </motion.div>
+                  </div>
                 )}
 
                 <button
@@ -269,10 +253,9 @@ const FloatingNewsletterButton = () => {
                   No spam. Solo contenido de calidad. Cancela cuando quieras.
                 </p>
               </form>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         )}
-      </AnimatePresence>
     </>
   );
 };

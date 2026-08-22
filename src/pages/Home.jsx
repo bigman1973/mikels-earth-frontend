@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { ArrowRight, Heart, Leaf, Award, Users } from 'lucide-react';
@@ -17,25 +16,28 @@ const Home = () => {
       </Helmet>
       {/* Hero Section - Inmersivo */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Imagen de fondo con olivos */}
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: 'url(/images/hero-olivos-background.webp)',
-            filter: 'grayscale(100%)'
-          }}
-        >
+        {/* Imagen de fondo con olivos: recurso LCP prioritario y responsive */}
+        <picture className="absolute inset-0">
+          <source media="(max-width: 640px)" srcSet="/images/hero-olivos-640.webp" />
+          <img
+            src="/images/hero-olivos-1000.webp"
+            srcSet="/images/hero-olivos-640.webp 640w, /images/hero-olivos-1000.webp 1000w"
+            sizes="100vw"
+            width="1000"
+            height="1000"
+            alt=""
+            aria-hidden="true"
+            fetchPriority="high"
+            decoding="async"
+            className="h-full w-full object-cover object-center"
+          />
           {/* Overlay oscuro para mejorar legibilidad */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/50"></div>
-        </div>
+          <span className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/50" />
+        </picture>
         
         <div className="container mx-auto px-4 py-20 relative z-10">
           <div className="max-w-5xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-            >
+            <div>
               <h1 className="text-6xl md:text-8xl font-script text-white mb-6 leading-tight drop-shadow-2xl">
                 {t('home.hero_title_1')}<br />{t('home.hero_title_2')}
               </h1>
@@ -61,38 +63,23 @@ const Home = () => {
                   {t('home.hero_cta_jewels')}
                 </Link>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
 
         {/* Scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1, duration: 1 }}
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-        >
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2" aria-hidden="true">
           <div className="w-6 h-10 border-2 border-primary/30 rounded-full flex justify-center">
-            <motion.div
-              animate={{ y: [0, 12, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-              className="w-1.5 h-1.5 bg-primary/50 rounded-full mt-2"
-            />
+            <div className="w-1.5 h-1.5 bg-primary/50 rounded-full mt-2" />
           </div>
-        </motion.div>
+        </div>
       </section>
 
       {/* Manifiesto */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="text-center"
-            >
+            <div className="text-center">
               <h2 className="text-5xl font-bold text-primary mb-8">
                 {t('home.manifesto_title')}
               </h2>
@@ -107,7 +94,7 @@ const Home = () => {
                   {t('home.manifesto_p3')}
                 </p>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -146,13 +133,7 @@ const Home = () => {
                 link: "/experiencias"
               }
             ].map((pillar, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-              >
+              <div key={index}>
                 <Link
                   to={pillar.link}
                   className="block bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2 h-full"
@@ -170,7 +151,7 @@ const Home = () => {
                     {t('home.discover_more')}
                   </div>
                 </Link>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -180,20 +161,14 @@ const Home = () => {
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="text-center mb-16"
-            >
+            <div className="text-center mb-16">
               <h2 className="text-5xl font-bold text-primary mb-6">
                 {t('home.jewels_title')}
               </h2>
               <p className="text-xl text-gray-700 max-w-3xl mx-auto">
                 {t('home.jewels_subtitle')}
               </p>
-            </motion.div>
+            </div>
 
             <div className="grid md:grid-cols-3 gap-8">
               {[
@@ -216,18 +191,18 @@ const Home = () => {
                   image: "/images/pack-degustacion.jpg"
                 }
               ].map((product, index) => (
-                <motion.div
+                <div
                   key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
                   className="bg-gradient-to-b from-accent/20 to-white rounded-xl shadow-lg hover:shadow-2xl transition-shadow overflow-hidden group"
                 >
                   <div className="h-64 overflow-hidden flex items-center justify-center">
                     <img 
                       src={product.image} 
                       alt={product.name}
+                      width="640"
+                      height="640"
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
                   </div>
@@ -248,7 +223,7 @@ const Home = () => {
                     {t('home.discover_more')}
                   </Link>
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
 
@@ -268,12 +243,7 @@ const Home = () => {
       <section className="py-20 bg-primary text-white">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-            >
+            <div>
               <h2 className="text-5xl font-bold mb-8">
                 {t('home.commitment_title')}
               </h2>
@@ -287,7 +257,7 @@ const Home = () => {
                 </p>
                 <p className="text-white/70">{t('home.commitment_author')}</p>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -306,12 +276,7 @@ const Home = () => {
       <section className="py-20 bg-gradient-to-b from-white to-accent/10">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-            >
+            <div>
               <h2 className="text-5xl font-bold text-primary mb-6">
                 {t('home.cta_title')}
               </h2>
@@ -347,7 +312,7 @@ const Home = () => {
                   </a>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>

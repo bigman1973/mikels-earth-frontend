@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X, Mail, Gift, Copy, Check } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 const NewsletterPopup = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -62,7 +63,7 @@ const NewsletterPopup = () => {
       await navigator.clipboard.writeText(couponCode);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
+    } catch {
       // Fallback para navegadores que no soportan clipboard API
       const textArea = document.createElement('textarea');
       textArea.value = couponCode;
@@ -142,23 +143,13 @@ const NewsletterPopup = () => {
   };
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <>
-          {/* Overlay */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+    isOpen ? (
+          <div
             onClick={handleClose}
             className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
           >
             {/* Popup */}
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            <div
               onClick={(e) => e.stopPropagation()}
               className="relative bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden"
             >
@@ -312,11 +303,9 @@ const NewsletterPopup = () => {
                   </div>
                 )}
               </div>
-            </motion.div>
-          </motion.div>
-        </>
-      )}
-    </AnimatePresence>
+            </div>
+          </div>
+    ) : null
   );
 };
 
