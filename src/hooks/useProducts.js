@@ -1,69 +1,95 @@
-import { useState, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { products as localProducts, categories as localCategories } from '../data/products';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://mikels-earth-backend-production.up.railway.app';
+const MAX_ATTEMPTS = 2;
+const REQUEST_TIMEOUT_MS = 10000;
+
+const wait = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
 
 /**
- * Hook para cargar productos desde la API con fallback a products.js local.
- * Garantiza que la web SIEMPRE funciona, incluso si la API está caída.
- * 
- * - Si la API responde: usa datos de la DB (actualizables desde el panel admin)
- * - Si la API falla: usa products.js local como fallback (datos estáticos)
- * - Envía el idioma actual para recibir traducciones si están disponibles
+ * Carga el catálogo vigente desde la API.
+ *
+ * Los precios locales nunca se usan como fallback comercial. Si la API no puede
+ * confirmar el catálogo, la tienda muestra un error y mantiene la compra bloqueada.
  */
 export function useProducts() {
   const { i18n } = useTranslation();
   const currentLang = i18n.language?.substring(0, 2) || 'es';
-  
-  const [products, setProducts] = useState(localProducts);
-  const [categories, setCategories] = useState(localCategories);
+
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [catalogVersion, setCatalogVersion] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [source, setSource] = useState('local'); // 'api' o 'local'
+  const [error, setError] = useState(null);
+  const [requestVersion, setRequestVersion] = useState(0);
+
+  const retry = useCallback(() => {
+    setRequestVersion((version) => version + 1);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
 
     async function fetchProducts() {
-      try {
-        const response = await fetch(`${API_URL}/api/products?lang=${currentLang}`, {
-          signal: AbortSignal.timeout(5000) // Timeout de 5s para no bloquear la web
-        });
-        
-        if (!response.ok) throw new Error('API error');
-        
-        const data = await response.json();
-        
-        if (!cancelled && data.products && data.products.length > 0) {
-          setProducts(data.products);
-          setCategories(data.categories || localCategories);
-          setSource('api');
-        }
-      } catch (err) {
-        // Silencioso: usar datos locales como fallback
-        console.log('Products: usando datos locales (fallback)');
-        if (!cancelled) {
-          setSource('local');
-        }
-      } finally {
-        if (!cancelled) {
-          setLoading(false);
+      setLoading(true);
+      setError(null);
+
+      for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
+        try {
+          const response = await fetch(`${API_URL}/api/products?lang=${currentLang}`, {
+            cache: 'no-store',
+            headers: { Accept: 'application/json' },
+            signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+          });
+
+          if (!response.ok) {
+            throw new Error(`Catalog API returned ${response.status}`);
+          }
+
+          const data = await response.json();
+          if (!Array.isArray(data.products)) {
+            throw new Error('Catalog API returned an invalid response');
+          }
+
+          if (!cancelled) {
+            setProducts(data.products);
+            setCategories(Array.isArray(data.categories) ? data.categories : []);
+            setCatalogVersion(data.catalog_version || null);
+            setLoading(false);
+          }
+          return;
+        } catch (requestError) {
+          if (attempt < MAX_ATTEMPTS) {
+            await wait(500);
+            continue;
+          }
+
+          if (!cancelled) {
+            console.error('Unable to load current product catalog:', requestError);
+            setProducts([]);
+            setCategories([]);
+            setCatalogVersion(null);
+            setError('No hemos podido confirmar los productos y precios actuales. Inténtalo de nuevo.');
+            setLoading(false);
+          }
         }
       }
     }
 
     fetchProducts();
+    return () => {
+      cancelled = true;
+    };
+  }, [currentLang, requestVersion]);
 
-    return () => { cancelled = true; };
-  }, [currentLang]);
-
-  return { products, categories, loading, source };
-}
-
-/**
- * Función síncrona para obtener un producto por slug.
- * Usa los datos locales como base inmediata (para SSR/primera renderización).
- */
-export function getProductBySlug(slug) {
-  return localProducts.find(p => p.slug === slug) || null;
+  return {
+    products,
+    categories,
+    catalogVersion,
+    loading,
+    error,
+    retry,
+    source: 'api',
+  };
 }

@@ -7,7 +7,7 @@ import { Filter } from 'lucide-react';
 
 const Products = () => {
   const { t } = useTranslation();
-  const { products, categories } = useProducts();
+  const { products, categories, loading, error, retry } = useProducts();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('default');
 
@@ -52,6 +52,29 @@ const Products = () => {
           </p>
         </div>
 
+        {loading && (
+          <div className="text-center py-16" role="status">
+            <p className="text-gray-600 text-lg">
+              {t('products.loading', { defaultValue: 'Confirmando productos y precios actuales…' })}
+            </p>
+          </div>
+        )}
+
+        {!loading && error && (
+          <div className="max-w-2xl mx-auto text-center py-12 bg-white rounded-lg shadow-md mb-8" role="alert">
+            <p className="text-gray-700 text-lg mb-5">{error}</p>
+            <button
+              type="button"
+              onClick={retry}
+              className="bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary/90"
+            >
+              {t('products.retry', { defaultValue: 'Reintentar' })}
+            </button>
+          </div>
+        )}
+
+        {!loading && !error && (
+          <>
         {/* Filters */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -113,6 +136,9 @@ const Products = () => {
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
+        )}
+
+          </>
         )}
 
         {/* Info section */}
