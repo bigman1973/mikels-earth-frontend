@@ -1,6 +1,25 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 
 const CartContext = createContext();
+const CART_STORAGE_KEY = 'mikels_cart';
+const CART_SCHEMA_VERSION = 2;
+
+const loadStoredCart = () => {
+  if (typeof window === 'undefined') return [];
+  const savedCart = localStorage.getItem(CART_STORAGE_KEY);
+  if (!savedCart) return [];
+
+  try {
+    const parsed = JSON.parse(savedCart);
+    if (Array.isArray(parsed)) return parsed; // Compatibilidad con carritos antiguos.
+    if (parsed?.schemaVersion === CART_SCHEMA_VERSION && Array.isArray(parsed.items)) {
+      return parsed.items;
+    }
+  } catch (error) {
+    console.error('Error loading cart from localStorage:', error);
+  }
+  return [];
+};
 
 export const useCart = () => {
   const context = useContext(CartContext);
@@ -11,26 +30,20 @@ export const useCart = () => {
 };
 
 export const CartProvider = ({ children }) => {
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState(loadStoredCart);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [discountCode, setDiscountCode] = useState('');
   const [appliedDiscount, setAppliedDiscount] = useState(null);
+  const [serverQuote, setServerQuote] = useState(null);
 
-  // Cargar carrito desde localStorage al iniciar
+  // Persistir un esquema versionado. Los precios guardados son solo una vista local;
+  // el backend los ignora y vuelve a calcular antes de crear Stripe.
   useEffect(() => {
-    const savedCart = localStorage.getItem('mikels_cart');
-    if (savedCart) {
-      try {
-        setCart(JSON.parse(savedCart));
-      } catch (error) {
-        console.error('Error loading cart from localStorage:', error);
-      }
-    }
-  }, []);
-
-  // Guardar carrito en localStorage cuando cambie
-  useEffect(() => {
-    localStorage.setItem('mikels_cart', JSON.stringify(cart));
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify({
+      schemaVersion: CART_SCHEMA_VERSION,
+      savedAt: new Date().toISOString(),
+      items: cart,
+    }));
   }, [cart]);
 
   const addToCart = (product, quantity = 1, purchaseType = 'one-time', subscriptionFrequency = null) => {
@@ -45,7 +58,13 @@ export const CartProvider = ({ children }) => {
       if (existingItemIndex > -1) {
         // Si el producto ya existe con las mismas opciones, incrementar cantidad
         const newCart = [...prevCart];
-        newCart[existingItemIndex].quantity += quantity;
+        newCart[existingItemIndex] = {
+          ...newCart[existingItemIndex],
+          quantity: newCart[existingItemIndex].quantity + quantity,
+          serverUnitPrice: undefined,
+          serverQuoteQuantity: undefined,
+          catalogVersion: undefined,
+        };
         return newCart;
       } else {
         // Si es nuevo, añadirlo al carrito
@@ -64,6 +83,7 @@ export const CartProvider = ({ children }) => {
         
         return [...prevCart, {
           id: product.id,
+          sku: product.sku || null,
           name: product.name,
           slug: product.slug,
           image: product.image,
@@ -78,14 +98,17 @@ export const CartProvider = ({ children }) => {
         }];
       }
     });
+    setServerQuote(null);
     setIsCartOpen(true);
   };
 
   const removeFromCart = (itemIndex) => {
+    setServerQuote(null);
     setCart(prevCart => prevCart.filter((_, index) => index !== itemIndex));
   };
 
   const updateQuantity = (itemIndex, newQuantity) => {
+    setServerQuote(null);
     if (newQuantity <= 0) {
       removeFromCart(itemIndex);
       return;
@@ -93,12 +116,19 @@ export const CartProvider = ({ children }) => {
     
     setCart(prevCart => {
       const newCart = [...prevCart];
-      newCart[itemIndex].quantity = newQuantity;
+      newCart[itemIndex] = {
+        ...newCart[itemIndex],
+        quantity: newQuantity,
+        serverUnitPrice: undefined,
+        serverQuoteQuantity: undefined,
+        catalogVersion: undefined,
+      };
       return newCart;
     });
   };
 
   const clearCart = () => {
+    setServerQuote(null);
     setCart([]);
   };
   const applyDiscountCode = async (code) => {
@@ -123,6 +153,7 @@ export const CartProvider = ({ children }) => {
       const data = await response.json();
       
       if (data.valid) {
+        setServerQuote(null);
         setDiscountCode(data.coupon.code);
         setAppliedDiscount({
           code: data.coupon.code,
@@ -141,12 +172,17 @@ export const CartProvider = ({ children }) => {
   };
 
   const removeDiscountCode = () => {
+    setServerQuote(null);
     setDiscountCode('');
     setAppliedDiscount(null);
   };
 
   // Calcular precio de un item con descuento por volumen si aplica
   const getItemPrice = (item) => {
+    if (item.serverQuoteQuantity === item.quantity && Number.isFinite(item.serverUnitPrice)) {
+      return item.serverUnitPrice;
+    }
+
     let price = item.price;
     
     // Aplicar descuento escalonado (tieredDiscount) si existe
@@ -173,6 +209,8 @@ export const CartProvider = ({ children }) => {
   };
   
   const getCartTotal = () => {
+    if (serverQuote) return serverQuote.total / 100;
+
     let total = cart.reduce((sum, item) => sum + (getItemPrice(item) * item.quantity), 0);
     
     // Aplicar descuento adicional si hay código
@@ -190,6 +228,7 @@ export const CartProvider = ({ children }) => {
   };
   
   const getDiscountAmount = () => {
+    if (serverQuote) return serverQuote.discount_amount / 100;
     if (!appliedDiscount) return 0;
     
     let discountAmount = 0;
@@ -204,7 +243,37 @@ export const CartProvider = ({ children }) => {
     return discountAmount;
   };
 
-  // Actualizar precios de items en el carrito (usado por validación PRICE_MISMATCH en checkout)
+  // Aplicar una cotización vigente devuelta por el backend antes de crear Stripe.
+  const applyServerQuote = (quote) => {
+    const quotedItems = quote?.items || [];
+    setServerQuote(quote);
+    setCart((previousCart) => previousCart.map((item) => {
+      const current = quotedItems.find((quoted) =>
+        String(quoted.product_id) === String(item.id) ||
+        (item.slug && quoted.slug === item.slug)
+      );
+      if (!current) return item;
+
+      return {
+        ...item,
+        id: current.product_id,
+        sku: current.sku || item.sku || null,
+        slug: current.slug,
+        name: current.name,
+        image: current.image || item.image,
+        weight: current.weight || item.weight,
+        price: current.base_unit_amount / 100,
+        originalPrice: current.base_unit_amount / 100,
+        volumeDiscountConfig: current.volume_discount || null,
+        tieredDiscountConfig: current.tiered_discount || null,
+        serverUnitPrice: current.unit_amount / 100,
+        serverQuoteQuantity: current.quantity,
+        catalogVersion: quote.catalog_version || null,
+      };
+    }));
+  };
+
+  // Compatibilidad temporal con respuestas PRICE_MISMATCH de backends antiguos.
   const updateItemPrices = (priceUpdates) => {
     setCart(prevCart => {
       const newCart = [...prevCart];
@@ -239,6 +308,8 @@ export const CartProvider = ({ children }) => {
     getCartCount,
     getItemPrice,
     updateItemPrices,
+    applyServerQuote,
+    serverQuote,
     isCartOpen,
     toggleCart,
     setIsCartOpen,

@@ -2,12 +2,13 @@ import { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
 import { Package, CreditCard, Truck, ShoppingBag } from 'lucide-react';
+// eslint-disable-next-line no-unused-vars -- usado como namespace JSX: <motion.div>
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { createCheckoutSession, createSubscriptionCheckout } from '../services/stripeService';
+import { createCheckoutSession, createSubscriptionCheckout, getCheckoutQuote } from '../services/stripeService';
 
 const Checkout = () => {
-  const { cart, getCartTotal, clearCart, getItemPrice, appliedDiscount, getDiscountAmount, updateItemPrices } = useCart();
+  const { cart, getCartTotal, getItemPrice, appliedDiscount, getDiscountAmount, updateItemPrices, applyServerQuote, serverQuote } = useCart();
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const [loading, setLoading] = useState(false);
@@ -83,43 +84,20 @@ const Checkout = () => {
 
   const handleCheckout = async () => {
     if (!validateForm()) return;
-    
+
     setLoading(true);
     setError(null);
     setPriceMismatchWarning(null);
-    
+
     try {
-      // Enviar evento de Started Checkout para carrito abandonado
-      try {
-        const cartItems = cart.map(item => ({
-          id: item.id,
-          name: item.name,
-          image: item.image,
-          price: getItemPrice(item),
-          quantity: item.quantity,
-          slug: item.slug || ''
-        }));
-        
-        await fetch(`${import.meta.env.VITE_API_URL}/api/abandoned-cart/`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email: formData.email,
-            customer_name: formData.name,
-            items: cartItems,
-            total: getCartTotal(),
-            discount_code: appliedDiscount?.code || null
-          })
-        });
-      } catch (abandonedCartErr) {
-        console.log('Abandoned cart tracking error (non-blocking):', abandonedCartErr);
-      }
-      
-      // Separate one-time purchases from subscriptions
       const oneTimePurchases = cart.filter(item => item.purchaseType === 'one-time');
       const subscriptions = cart.filter(item => item.purchaseType === 'subscription');
-      
-      // Prepare customer info with correct field names
+
+      if (oneTimePurchases.length > 0 && subscriptions.length > 0) {
+        setError('Tramita las compras únicas y las suscripciones por separado.');
+        return;
+      }
+
       const customerInfo = {
         name: formData.name,
         email: formData.email,
@@ -131,48 +109,87 @@ const Checkout = () => {
         notes: formData.notes,
         discountCode: appliedDiscount?.code || null,
         discountAmount: appliedDiscount ? getDiscountAmount() : 0,
-        needsInvoice: needsInvoice,
+        needsInvoice,
         invoiceData: needsInvoice ? invoiceData : null,
         locale: i18n.language?.substring(0, 2) || 'es'
       };
-      
-      // Process one-time purchases
+
       if (oneTimePurchases.length > 0) {
-        // Calcular precio final con descuento por volumen
-        const itemsWithFinalPrice = oneTimePurchases.map(item => ({
-          ...item,
-          finalPrice: getItemPrice(item)
-        }));
-        await createCheckoutSession(itemsWithFinalPrice, customerInfo);
-        // The function will redirect to Stripe Checkout
+        const quote = await getCheckoutQuote(oneTimePurchases, customerInfo);
+        const lineChanged = quote.items.some((quotedItem) => {
+          const cartItem = oneTimePurchases.find((item) =>
+            String(item.id) === String(quotedItem.product_id) ||
+            (item.slug && item.slug === quotedItem.slug)
+          );
+          if (!cartItem) return true;
+          return Math.round(getItemPrice(cartItem) * 100) !== quotedItem.unit_amount;
+        });
+
+        const provisionalSubtotalCents = oneTimePurchases.reduce(
+          (sum, item) => sum + Math.round(getItemPrice(item) * 100) * item.quantity,
+          0
+        );
+        const provisionalDiscountCents = appliedDiscount
+          ? Math.round(provisionalSubtotalCents * (appliedDiscount.oneTimeDiscount / 100))
+          : 0;
+        const provisionalTotalCents = serverQuote
+          ? serverQuote.total
+          : provisionalSubtotalCents - provisionalDiscountCents;
+        const quoteChanged = lineChanged || provisionalTotalCents !== quote.total;
+
+        applyServerQuote(quote);
+
+        if (quoteChanged) {
+          setPriceMismatchWarning(
+            'Hemos actualizado tu carrito con los precios vigentes. Revisa el nuevo total y pulsa de nuevo para continuar.'
+          );
+          return;
+        }
+
+        // Registrar el intento con la cotización canónica; nunca con precios cacheados.
+        try {
+          const apiUrl = import.meta.env.VITE_API_URL || 'https://mikels-earth-backend-production.up.railway.app';
+          await fetch(`${apiUrl}/api/abandoned-cart/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email: formData.email,
+              customer_name: formData.name,
+              items: quote.items.map((item) => ({
+                id: item.product_id,
+                name: item.name,
+                image: item.image,
+                price: item.unit_amount / 100,
+                quantity: item.quantity,
+                slug: item.slug
+              })),
+              total: quote.total / 100,
+              discount_code: appliedDiscount?.code || null
+            })
+          });
+        } catch (abandonedCartError) {
+          console.log('Abandoned cart tracking error (non-blocking):', abandonedCartError);
+        }
+
+        await createCheckoutSession(oneTimePurchases, customerInfo);
+        return;
       }
-      
-      // Process subscriptions (one at a time for now)
+
       if (subscriptions.length > 0) {
-        const subscription = subscriptions[0]; // Process first subscription
-        const subscriptionWithFinalPrice = {
-          ...subscription,
-          finalPrice: getItemPrice(subscription)
-        };
-        await createSubscriptionCheckout(subscriptionWithFinalPrice, customerInfo);
-        // The function will redirect to Stripe Checkout
+        await createSubscriptionCheckout(subscriptions[0], customerInfo);
       }
-      
-    } catch (err) {
-      console.error('Checkout error:', err);
-      
-      if (err.code === 'PRICE_MISMATCH' && err.priceUpdates) {
-        // Actualizar los precios del carrito con los valores correctos de la DB
-        updateItemPrices(err.priceUpdates);
-        
-        // Mostrar aviso amigable al usuario
-        const productNames = err.priceUpdates.map(u => u.product).join(', ');
+    } catch (checkoutError) {
+      console.error('Checkout error:', checkoutError);
+
+      if (checkoutError.code === 'PRICE_MISMATCH' && checkoutError.priceUpdates) {
+        // Compatibilidad con una versión backend anterior durante el despliegue gradual.
+        updateItemPrices(checkoutError.priceUpdates);
         setPriceMismatchWarning(
-          `Los precios de algunos productos han cambiado (${productNames}). Tu carrito ha sido actualizado con los precios actuales. Por favor, revisa el total y continúa con tu compra.`
+          'Los precios han cambiado. Tu carrito se ha actualizado; revisa el total y continúa.'
         );
         setError(null);
       } else {
-        setError(err.message || 'Hubo un error al procesar tu pedido. Por favor, inténtalo de nuevo.');
+        setError(checkoutError.message || 'Hubo un error al procesar tu pedido. Por favor, inténtalo de nuevo.');
       }
     } finally {
       setLoading(false);
@@ -484,9 +501,6 @@ const Checkout = () => {
                       <h3 className="font-semibold text-primary text-sm">
                         {item.name}
                       </h3>
-                      <p className="text-xs text-gray-600">
-                        {item.purchaseType === 'subscription' ? t('product_detail.subscription') : t('product_detail.one_time')}
-                      </p>
                       <p className="text-xs text-gray-500">
                         {t('cart.quantity')}: {item.quantity}
                       </p>

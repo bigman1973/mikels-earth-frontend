@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useProducts } from '../hooks/useProducts';
 import { useCart } from '../context/CartContext';
 import { ShoppingCart, ArrowLeft, Check, Repeat, Tag, Package, Leaf } from 'lucide-react';
+// eslint-disable-next-line no-unused-vars -- usado como namespace JSX: <motion.div>
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import SoldOutNotification from '../components/SoldOutNotification';
@@ -51,7 +52,7 @@ const ProductDetail = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useCart();
-  const { products } = useProducts();
+  const { products, loading, error, retry } = useProducts();
   const { t } = useTranslation();
   
   const product = products.find(p => p.slug === slug);
@@ -82,6 +83,33 @@ const ProductDetail = () => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [variantQuantities, setVariantQuantities] = useState({});
+
+  if (loading) {
+    return (
+      <div className="min-h-screen py-16 flex items-center justify-center" role="status">
+        <p className="text-gray-600 text-lg">
+          {t('products.loading', { defaultValue: 'Confirmando producto y precio actual…' })}
+        </p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen py-16 flex items-center justify-center" role="alert">
+        <div className="text-center max-w-xl px-4">
+          <p className="text-gray-700 text-lg mb-5">{error}</p>
+          <button
+            type="button"
+            onClick={retry}
+            className="bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary/90"
+          >
+            {t('products.retry', { defaultValue: 'Reintentar' })}
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (!product) {
     return (
@@ -118,8 +146,7 @@ const ProductDetail = () => {
     ? product.price * (1 - discountPercent / 100)
     : product.price;
   
-  // Mantener compatibilidad con código existente
-  const hasVolumeDiscount = hasDiscount;
+  // Mantener compatibilidad con el cálculo visual existente.
   const volumeDiscountedPrice = discountedPrice;
   
   const selectedFrequency = product.subscriptionFrequencies?.find(f => f.value === subscriptionFrequency);
@@ -734,12 +761,6 @@ const ProductDetail = () => {
                   >
                     +
                   </button>
-                  {/* Stock oculto temporalmente */}
-                  {false && product.stock < 10 && (
-                    <span className="text-sm text-orange-600 font-semibold ml-2">
-                      {t('product_detail.only_left', { count: product.stock })}
-                    </span>
-                  )}
                 </div>
                 {purchaseType === 'subscription' && product.volumeDiscount?.minQuantity && (
                   <p className="text-sm text-primary/70 mt-2">

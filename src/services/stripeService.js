@@ -1,12 +1,43 @@
-import { loadStripe } from '@stripe/stripe-js';
-
-// Cargar Stripe con la clave pública desde variables de entorno
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || 'pk_test_placeholder');
-
 // API URL desde variables de entorno de Vercel
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API_URL = import.meta.env.VITE_API_URL || 'https://mikels-earth-backend-production.up.railway.app';
 
-console.log('API_URL configured:', API_URL); // Debug log
+const serializeCartItem = (item) => ({
+  product_id: item.id,
+  sku: item.sku || null,
+  slug: item.slug,
+  quantity: item.quantity,
+  purchase_type: item.purchaseType || 'one-time',
+});
+
+/**
+ * Obtener una cotización vigente sin crear objetos de Stripe.
+ */
+export const getCheckoutQuote = async (cartItems, customerInfo) => {
+  const response = await fetch(`${API_URL}/api/stripe/quote`, {
+    method: 'POST',
+    cache: 'no-store',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify({
+      items: cartItems.map(serializeCartItem),
+      customer_info: {
+        email: customerInfo.email,
+      },
+      discount_code: customerInfo.discountCode,
+      locale: customerInfo.locale || 'es',
+    }),
+  });
+
+  const data = await response.json();
+  if (!response.ok) {
+    const error = new Error(data.message || data.error || 'No se pudo confirmar el precio actual.');
+    error.code = data.error;
+    throw error;
+  }
+  return data;
+};
 
 /**
  * Crear sesión de checkout para compra única
@@ -17,16 +48,11 @@ export const createCheckoutSession = async (cartItems, customerInfo) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Accept: 'application/json',
+        'X-Checkout-Pricing-Version': '2',
       },
       body: JSON.stringify({
-        items: cartItems.map(item => ({
-          id: item.id,
-          name: item.name,
-          slug: item.slug,
-          price: item.finalPrice || item.price,
-          quantity: item.quantity,
-          weight: item.weight
-        })),
+        items: cartItems.map(serializeCartItem),
         customer_info: {
           email: customerInfo.email,
           name: customerInfo.name,
@@ -57,7 +83,7 @@ export const createCheckoutSession = async (cartItems, customerInfo) => {
       throw new Error(errorData.error || 'Error al crear la sesión de pago');
     }
 
-    const { sessionId, url, order_number } = await response.json();
+    const { url, order_number } = await response.json();
     
     // Redirigir a Stripe Checkout usando la URL directa
     if (url) {
@@ -85,10 +111,9 @@ export const createSubscriptionCheckout = async (item, customerInfo) => {
       },
       body: JSON.stringify({
         item: {
-          id: item.id,
-          name: item.name,
+          product_id: item.id,
+          sku: item.sku || null,
           slug: item.slug,
-          price: item.finalPrice || item.price,
           quantity: item.quantity,
           subscription_frequency: item.subscriptionFrequency
         },
@@ -100,7 +125,8 @@ export const createSubscriptionCheckout = async (item, customerInfo) => {
           city: customerInfo.city,
           postal_code: customerInfo.postalCode,
           country: customerInfo.country || 'España'
-        }
+        },
+        locale: customerInfo.locale || 'es'
       }),
     });
 
@@ -109,7 +135,7 @@ export const createSubscriptionCheckout = async (item, customerInfo) => {
       throw new Error(error.error || 'Error al crear la suscripción');
     }
 
-    const { sessionId, url, subscription_number } = await response.json();
+    const { url, subscription_number } = await response.json();
     
     // Redirigir a Stripe Checkout usando la URL directa
     if (url) {

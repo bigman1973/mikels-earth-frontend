@@ -1,5 +1,6 @@
-import { X, Plus, Minus, ShoppingBag, Repeat } from 'lucide-react';
+import { X, Plus, Minus, ShoppingBag } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
+// eslint-disable-next-line no-unused-vars -- usado como namespace JSX: <motion.div>
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
@@ -10,13 +11,6 @@ const CartDrawer = () => {
   const { t } = useTranslation();
   const [codeInput, setCodeInput] = useState('');
   const [codeMessage, setCodeMessage] = useState({ text: '', type: '' });
-
-  const getPurchaseTypeLabel = (item) => {
-    if (item.purchaseType === 'subscription') {
-      return t('product_detail.subscription');
-    }
-    return t('product_detail.one_time');
-  };
 
   return (
     <AnimatePresence>
@@ -102,12 +96,6 @@ const CartDrawer = () => {
                           <h3 className="font-semibold text-sm text-primary mb-1 line-clamp-2">
                             {item.name}
                           </h3>
-                          <div className="flex items-center gap-1 text-xs text-gray-600 mb-1">
-                            {item.purchaseType === 'subscription' && (
-                              <Repeat className="w-3 h-3" />
-                            )}
-                            <span>{getPurchaseTypeLabel(item)}</span>
-                          </div>
                           {/* Mostrar descuento escalonado o por volumen si aplica */}
                           {(() => {
                             let discountPercent = 0;
