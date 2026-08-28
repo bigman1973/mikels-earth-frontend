@@ -40,13 +40,22 @@ export default function AdminProducts() {
   const loadProducts = async () => {
     setLoading(true);
     try {
-      const res = await authFetch(`${API_URL}/api/admin/products`);
-      if (res && res.ok) {
-        const data = await res.json();
-        setProducts(data.products || []);
+      const res = await authFetch(`${API_URL}/api/admin/products`, {
+        cache: 'no-store'
+      });
+      if (!res) throw new Error('No se recibió respuesta del servidor');
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'No se pudieron cargar los productos');
+      if (data.pricing_source !== 'database') {
+        throw new Error('El catálogo administrativo no confirma la base de datos como fuente de precios');
       }
+      const loadedProducts = data.products || [];
+      setProducts(loadedProducts);
+      return loadedProducts;
     } catch (err) {
       console.error('Error loading products:', err);
+      setMessage({ type: 'error', text: err.message || 'Error al cargar productos' });
+      return null;
     } finally {
       setLoading(false);
     }
@@ -79,7 +88,7 @@ export default function AdminProducts() {
         });
         loadProducts();
       }
-    } catch (err) {
+    } catch {
       setMessage({ type: 'error', text: 'Error al sincronizar con Holded' });
     } finally {
       setSyncing(false);
@@ -103,7 +112,7 @@ export default function AdminProducts() {
       } else {
         setMessage({ type: 'error', text: 'Error al guardar costes' });
       }
-    } catch (err) {
+    } catch {
       setMessage({ type: 'error', text: 'Error de conexión al guardar costes' });
     } finally {
       setSavingCosts(false);
@@ -111,28 +120,58 @@ export default function AdminProducts() {
   };
 
   const saveWebPrice = async (sku) => {
-    const price = parseFloat(simPrice);
-    if (!price || price <= 0) {
+    const price = Number.parseFloat(simPrice);
+    if (!Number.isFinite(price) || price <= 0) {
       alert('Introduce un precio válido');
       return;
     }
-    if (!confirm(`¿Cambiar el precio web de este producto a ${price.toFixed(2)}€? Este cambio se aplicará en la web.`)) return;
-    
+    const expectedCents = Math.round(price * 100);
+    if (!confirm(`¿Cambiar el precio web de este producto a ${(expectedCents / 100).toFixed(2)}€? Este cambio se aplicará en la web y en los próximos pagos.`)) return;
+
     setSavingPrice(true);
+    setMessage(null);
     try {
-      const res = await authFetch(`${API_URL}/api/admin/products/${sku}/web-price`, {
+      const res = await authFetch(`${API_URL}/api/admin/products/${encodeURIComponent(sku)}/web-price`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ price })
+        body: JSON.stringify({ price: expectedCents / 100 })
       });
-      if (res && res.ok) {
-        setMessage({ type: 'success', text: `Precio web actualizado a ${price.toFixed(2)}€` });
-        loadProducts();
-      } else {
-        setMessage({ type: 'error', text: 'Error al actualizar precio web' });
+      if (!res) throw new Error('No se recibió respuesta del servidor');
+      const saved = await res.json();
+      if (!res.ok) throw new Error(saved.message || saved.error || 'Error al actualizar precio web');
+      if (!saved.success || !saved.verified || saved.pricing_source !== 'database' || saved.price_cents !== expectedCents) {
+        throw new Error('El servidor respondió, pero no confirmó el precio persistido');
       }
+
+      const verifyRes = await authFetch(
+        `${API_URL}/api/admin/products/${encodeURIComponent(sku)}/web-price?verify=${Date.now()}`,
+        { cache: 'no-store' }
+      );
+      if (!verifyRes) throw new Error('No se pudo releer el precio guardado');
+      const verified = await verifyRes.json();
+      if (!verifyRes.ok || verified.pricing_source !== 'database' || verified.price_cents !== expectedCents) {
+        throw new Error('La lectura de verificación no coincide con el precio solicitado');
+      }
+
+      const refreshedProducts = await loadProducts();
+      const refreshedProduct = refreshedProducts?.find(product => product.sku === sku);
+      if (!refreshedProduct || Math.round(Number(refreshedProduct.web_price) * 100) !== expectedCents) {
+        throw new Error('El catálogo del panel no refleja todavía el precio guardado');
+      }
+
+      setSimPrice((expectedCents / 100).toFixed(2));
+      const holdedNote = saved.holded_updated
+        ? ' Holded también quedó sincronizado.'
+        : ' El precio web está confirmado; revisa Holded por separado.';
+      setMessage({
+        type: 'success',
+        text: `Precio web ${(expectedCents / 100).toFixed(2)}€ guardado y verificado en base de datos.${holdedNote}`
+      });
     } catch (err) {
-      setMessage({ type: 'error', text: 'Error de conexión' });
+      setMessage({
+        type: 'error',
+        text: err.message || 'No se pudo verificar el precio guardado'
+      });
     } finally {
       setSavingPrice(false);
     }
@@ -157,7 +196,7 @@ export default function AdminProducts() {
       } else {
         setMessage({ type: 'error', text: 'Error al guardar coste de componente' });
       }
-    } catch (err) {
+    } catch {
       setMessage({ type: 'error', text: 'Error de conexión' });
     } finally {
       setSavingComponent(false);
@@ -717,7 +756,19 @@ export default function AdminProducts() {
         <ProductEditor
           product={editingProduct}
           onClose={() => { setEditorOpen(false); setEditingProduct(null); }}
-          onSaved={() => { loadProducts(); }}
+          onSaved={async (savedProduct) => {
+            const refreshedProducts = await loadProducts();
+            const refreshedProduct = refreshedProducts?.find(product => product.id === savedProduct.id);
+            const expectedCents = Math.round(Number(savedProduct.price) * 100);
+            if (!refreshedProduct || Math.round(Number(refreshedProduct.web_price) * 100) !== expectedCents) {
+              throw new Error('La lista administrativa no confirma el precio guardado');
+            }
+            setSimPrice((expectedCents / 100).toFixed(2));
+            setMessage({
+              type: 'success',
+              text: `Producto guardado y precio ${(expectedCents / 100).toFixed(2)}€ verificado en base de datos.`
+            });
+          }}
         />
       )}
     </AdminLayout>

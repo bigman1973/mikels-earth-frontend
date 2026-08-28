@@ -168,7 +168,7 @@ export default function ProductEditor({ product, onClose, onSaved }) {
       } else {
         setError(data.error || 'Error al subir imagen');
       }
-    } catch (err) {
+    } catch {
       setError('Error de conexión al subir imagen');
     } finally {
       setUploading(false);
@@ -256,21 +256,37 @@ export default function ProductEditor({ product, onClose, onSaved }) {
         method = 'PUT';
       }
 
+      const expectedCents = Math.round(payload.price * 100);
       const res = await authFetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
 
-      if (res && res.ok) {
-        onSaved();
-        onClose();
-      } else {
-        const data = await res.json();
-        setError(data.error || 'Error al guardar');
+      if (!res) throw new Error('No se recibió respuesta del servidor');
+      const saved = await res.json();
+      if (!res.ok) throw new Error(saved.message || saved.error || 'Error al guardar');
+      if (!saved.success || !saved.verified || saved.pricing_source !== 'database' || saved.price_cents !== expectedCents) {
+        throw new Error('El servidor respondió, pero no confirmó el precio persistido');
       }
+
+      const persistedId = saved.product?.id;
+      if (!persistedId) throw new Error('No se recibió la identidad del producto guardado');
+      const verifyRes = await authFetch(
+        `${API_URL}/api/admin/web-products/${persistedId}?verify=${Date.now()}`,
+        { cache: 'no-store' }
+      );
+      if (!verifyRes) throw new Error('No se pudo releer el producto guardado');
+      const verifiedProduct = await verifyRes.json();
+      if (!verifyRes.ok) throw new Error(verifiedProduct.error || 'No se pudo verificar el producto guardado');
+      if (Math.round(Number(verifiedProduct.price) * 100) !== expectedCents) {
+        throw new Error('La segunda lectura no coincide con el precio solicitado');
+      }
+
+      await onSaved(saved.product);
+      onClose();
     } catch (err) {
-      setError('Error de conexión');
+      setError(err.message || 'Error de conexión');
     } finally {
       setSaving(false);
     }
@@ -286,7 +302,7 @@ export default function ProductEditor({ product, onClose, onSaved }) {
         onSaved();
         onClose();
       }
-    } catch (err) {
+    } catch {
       setError('Error al cambiar estado');
     }
   };
@@ -310,7 +326,7 @@ export default function ProductEditor({ product, onClose, onSaved }) {
       } else {
         setError(data.error || 'Error al traducir');
       }
-    } catch (err) {
+    } catch {
       setError('Error de conexión al traducir');
     } finally {
       setTranslating(false);
