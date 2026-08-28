@@ -501,9 +501,6 @@ const Checkout = () => {
                       <h3 className="font-semibold text-primary text-sm">
                         {item.name}
                       </h3>
-                      <p className="text-xs text-gray-600">
-                        {item.purchaseType === 'subscription' ? t('product_detail.subscription') : t('product_detail.one_time')}
-                      </p>
                       <p className="text-xs text-gray-500">
                         {t('cart.quantity')}: {item.quantity}
                       </p>
