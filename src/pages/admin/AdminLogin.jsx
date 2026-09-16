@@ -16,7 +16,7 @@ export default function AdminLogin() {
 
   if (loading) {
     return (
-      <div className="min-h-[100svh] bg-gray-900 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
         <div className="flex flex-col items-center gap-6">
           <div className="relative">
             <img 
@@ -47,9 +47,9 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="min-h-[100svh] bg-gray-900 flex items-center justify-center p-3 sm:p-4">
+    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
-        <div className="rounded-2xl border border-gray-700 bg-gray-800 p-5 shadow-2xl sm:p-8">
+        <div className="bg-gray-800 rounded-2xl p-8 shadow-2xl border border-gray-700">
           {/* Logo */}
           <div className="text-center mb-8">
             <img 
@@ -74,7 +74,7 @@ export default function AdminLogin() {
           {/* Botón Microsoft - Estilo profesional */}
           <button
             onClick={login}
-            className="group flex min-h-12 w-full cursor-pointer select-none items-center justify-center gap-3 rounded-xl border border-[#4A4A4A] bg-[#2F2F2F] px-4 py-3.5 text-center font-medium text-white shadow-md transition-all duration-200 hover:border-[#6A6A6A] hover:bg-[#3C3C3C] hover:shadow-lg active:bg-[#1A1A1A] sm:px-5"
+            className="w-full flex items-center justify-center gap-3 bg-[#2F2F2F] hover:bg-[#3C3C3C] active:bg-[#1A1A1A] text-white font-medium py-3.5 px-5 rounded-lg border border-[#4A4A4A] hover:border-[#6A6A6A] transition-all duration-200 shadow-md hover:shadow-lg cursor-pointer select-none group"
           >
             <svg className="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
               <rect x="1" y="1" width="9" height="9" fill="#f25022"/>

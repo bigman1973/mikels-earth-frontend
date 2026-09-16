@@ -19,7 +19,7 @@ const StarRating = ({ rating }) => {
   );
 };
 
-const ProductReviews = ({ productSlug }) => {
+const ProductReviews = ({ productSlug, productName }) => {
   const [reviews, setReviews] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -61,7 +61,7 @@ const ProductReviews = ({ productSlug }) => {
 
   if (!stats || stats.total_reviews === 0) {
     return (
-      <div className="mt-10 rounded-xl bg-white p-5 shadow-lg sm:mt-12 sm:p-8">
+      <div className="mt-12 bg-white rounded-lg shadow-lg p-8">
         <h3 className="text-2xl font-bold text-primary mb-4 flex items-center gap-2">
           <MessageSquare className="w-6 h-6" />
           Opiniones de clientes
@@ -71,7 +71,7 @@ const ProductReviews = ({ productSlug }) => {
         </p>
         <Link
           to="/opiniones"
-          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-white transition-colors"
+          className="inline-flex items-center gap-2 text-sm font-medium text-white px-4 py-2 rounded-lg transition-colors"
           style={{ backgroundColor: 'var(--mikels-red)' }}
         >
           Dejar mi opinión
@@ -90,10 +90,10 @@ const ProductReviews = ({ productSlug }) => {
   };
 
   return (
-    <div className="mt-10 rounded-xl bg-white p-5 shadow-lg sm:mt-12 sm:p-8">
+    <div className="mt-12 bg-white rounded-lg shadow-lg p-8">
       {/* Header con stats */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
-        <h3 className="flex items-center gap-2 text-xl font-bold text-primary sm:text-2xl">
+        <h3 className="text-2xl font-bold text-primary flex items-center gap-2">
           <MessageSquare className="w-6 h-6" />
           Opiniones de clientes
         </h3>
@@ -117,7 +117,7 @@ const ProductReviews = ({ productSlug }) => {
             key={review.id}
             className="border-b border-gray-100 pb-4 last:border-0 last:pb-0"
           >
-            <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+            <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
                 <span className="font-semibold text-primary text-sm">
                   {review.customer_name}
@@ -144,14 +144,14 @@ const ProductReviews = ({ productSlug }) => {
       <div className="mt-6 pt-4 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <Link
           to="/opiniones"
-          className="inline-flex min-h-11 items-center rounded-lg px-2 text-sm font-medium hover:bg-primary/5 hover:underline"
+          className="text-sm font-medium hover:underline"
           style={{ color: 'var(--mikels-red)' }}
         >
           Ver todas las opiniones →
         </Link>
         <Link
           to="/opiniones"
-          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-white transition-colors"
+          className="inline-flex items-center gap-2 text-sm font-medium text-white px-4 py-2 rounded-lg transition-colors"
           style={{ backgroundColor: 'var(--mikels-red)' }}
         >
           Dejar mi opinión

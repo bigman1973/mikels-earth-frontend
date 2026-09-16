@@ -116,7 +116,7 @@ export default function AdminClientDetail() {
         {/* Back button */}
         <button
           onClick={() => navigate('/admin/clientes')}
-          className="inline-flex min-h-11 items-center gap-2 rounded-lg pr-3 text-sm text-gray-400 transition-colors hover:bg-white/5 hover:text-white mb-5"
+          className="flex items-center gap-2 text-gray-400 hover:text-white text-sm mb-6 transition-colors"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -125,7 +125,7 @@ export default function AdminClientDetail() {
         </button>
 
         {/* Client Header */}
-        <div className="mb-6 rounded-2xl border border-white/5 bg-white/[0.02] p-4 sm:p-6 md:p-8">
+        <div className="bg-white/[0.02] rounded-2xl border border-white/5 p-6 md:p-8 mb-6">
           <div className="flex flex-col md:flex-row md:items-start gap-6">
             {/* Avatar */}
             <div className={`w-16 h-16 rounded-2xl border flex items-center justify-center flex-shrink-0 ${
@@ -140,8 +140,8 @@ export default function AdminClientDetail() {
 
             {/* Info */}
             <div className="flex-1 min-w-0">
-              <div className="flex flex-wrap items-center gap-3 mb-1">
-                <h1 className="min-w-0 break-words text-xl font-bold text-white sm:text-2xl">{client.name}</h1>
+              <div className="flex items-center gap-3 mb-1">
+                <h1 className="text-2xl font-bold text-white truncate">{client.name}</h1>
                 <span className={`text-[10px] font-semibold px-2.5 py-1 rounded-lg border ${
                   isWebClient
                     ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
@@ -156,7 +156,7 @@ export default function AdminClientDetail() {
                     <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
-                    <span className="break-all">{client.email}</span>
+                    {client.email}
                   </div>
                 )}
                 {(client.phone || client.mobile) && (
@@ -184,7 +184,7 @@ export default function AdminClientDetail() {
             </div>
 
             {/* Total */}
-            <div className="flex-shrink-0 text-left md:text-right">
+            <div className="flex-shrink-0 text-right">
               <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">
                 {isWebClient ? 'Total gastado' : 'Total facturado'}
               </p>
@@ -199,7 +199,7 @@ export default function AdminClientDetail() {
         {isWebClient && (
           <>
             {/* Stats Cards */}
-            <div className="grid grid-cols-1 gap-3 min-[360px]:grid-cols-2 md:grid-cols-4 mb-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
               <div className="bg-white/[0.02] rounded-xl border border-white/5 p-4">
                 <p className="text-xs text-gray-500 mb-1">Total pedidos</p>
                 <p className="text-xl font-bold text-white">{data.stats?.total_orders || 0}</p>
@@ -234,7 +234,7 @@ export default function AdminClientDetail() {
                     className="bg-white/[0.02] rounded-xl border border-white/5 overflow-hidden hover:border-white/10 transition-colors"
                   >
                     <div
-                      className="min-h-14 cursor-pointer p-4 md:p-5"
+                      className="p-4 md:p-5 cursor-pointer"
                       onClick={() => setExpandedDoc(expandedDoc === order.id ? null : order.id)}
                     >
                       <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
@@ -295,8 +295,8 @@ export default function AdminClientDetail() {
 
                     {/* Expanded items */}
                     {expandedDoc === order.id && order.items && order.items.length > 0 && (
-                      <div className="overflow-x-auto border-t border-white/5 bg-white/[0.01] px-4 py-3 md:px-5">
-                        <table className="min-w-[480px] w-full text-xs">
+                      <div className="border-t border-white/5 px-4 md:px-5 py-3 bg-white/[0.01]">
+                        <table className="w-full text-xs">
                           <thead>
                             <tr className="text-gray-500">
                               <th className="text-left pb-2 font-medium">Producto</th>
@@ -327,7 +327,7 @@ export default function AdminClientDetail() {
         {!isWebClient && (
           <>
             {/* Stats Cards */}
-            <div className="grid grid-cols-1 gap-3 min-[360px]:grid-cols-2 md:grid-cols-4 mb-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
               <div className="bg-white/[0.02] rounded-xl border border-white/5 p-4">
                 <p className="text-xs text-gray-500 mb-1">Total documentos</p>
                 <p className="text-xl font-bold text-white">{data.stats?.total_documents || 0}</p>
@@ -363,7 +363,7 @@ export default function AdminClientDetail() {
                     className="bg-white/[0.02] rounded-xl border border-white/5 overflow-hidden hover:border-white/10 transition-colors"
                   >
                     <div
-                      className="min-h-14 cursor-pointer p-4 md:p-5"
+                      className="p-4 md:p-5 cursor-pointer"
                       onClick={() => handleExpandDoc(doc)}
                     >
                       <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
@@ -416,14 +416,14 @@ export default function AdminClientDetail() {
 
                     {/* Expanded items - loaded on demand */}
                     {expandedDoc === doc.id && (
-                      <div className="overflow-x-auto border-t border-white/5 bg-white/[0.01] px-4 py-3 md:px-5">
+                      <div className="border-t border-white/5 px-4 md:px-5 py-3 bg-white/[0.01]">
                         {loadingItems === doc.id ? (
                           <div className="flex items-center gap-2 py-2">
                             <div className="w-4 h-4 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
                             <span className="text-xs text-gray-500">Cargando desglose...</span>
                           </div>
                         ) : (docItems[doc.id] && docItems[doc.id].length > 0) ? (
-                          <table className="min-w-[480px] w-full text-xs">
+                          <table className="w-full text-xs">
                             <thead>
                               <tr className="text-gray-500">
                                 <th className="text-left pb-2 font-medium">Producto</th>

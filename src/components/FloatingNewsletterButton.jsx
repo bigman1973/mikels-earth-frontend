@@ -134,13 +134,13 @@ const FloatingNewsletterButton = () => {
             onClick={() => setIsModalOpen(false)}
           >
             <div
-              className="relative max-h-[calc(100dvh-2rem)] w-full max-w-md overflow-y-auto rounded-2xl bg-white p-5 shadow-2xl sm:p-8"
+              className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 relative"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Botón cerrar */}
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="absolute right-2 top-2 inline-flex h-11 w-11 items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 sm:right-3 sm:top-3"
+                className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
                 aria-label="Cerrar"
               >
                 <X className="w-6 h-6" />

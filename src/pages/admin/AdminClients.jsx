@@ -136,7 +136,7 @@ export default function AdminClients() {
           <button
             onClick={loadClients}
             disabled={loading}
-            className="flex min-h-11 w-full items-center justify-center gap-2 px-4 py-2.5 bg-white/5 hover:bg-white/10 text-gray-300 text-sm rounded-xl border border-white/10 transition-all disabled:opacity-50 sm:w-auto"
+            className="flex items-center gap-2 px-4 py-2.5 bg-white/5 hover:bg-white/10 text-gray-300 text-sm rounded-xl border border-white/10 transition-all disabled:opacity-50"
           >
             <svg className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -146,10 +146,10 @@ export default function AdminClients() {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-2 mb-6 overflow-x-auto pb-1">
+        <div className="flex gap-2 mb-6">
           <button
             onClick={() => setActiveTab('web')}
-            className={`flex min-h-11 flex-shrink-0 items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-xl border transition-all ${
+            className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-xl border transition-all ${
               activeTab === 'web'
                 ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
                 : 'bg-white/[0.02] text-gray-400 border-white/5 hover:border-white/10'
@@ -162,7 +162,7 @@ export default function AdminClients() {
           </button>
           <button
             onClick={() => setActiveTab('b2b')}
-            className={`flex min-h-11 flex-shrink-0 items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-xl border transition-all ${
+            className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-xl border transition-all ${
               activeTab === 'b2b'
                 ? 'bg-amber-500/10 text-amber-400 border-amber-500/30'
                 : 'bg-white/[0.02] text-gray-400 border-white/5 hover:border-white/10'
@@ -178,7 +178,7 @@ export default function AdminClients() {
         {/* Search + Sort Row */}
         <div className="flex flex-col sm:flex-row gap-3 mb-6">
           {/* Search */}
-          <div className="relative w-full flex-1 sm:max-w-md">
+          <div className="relative flex-1 max-w-md">
             <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
@@ -187,15 +187,15 @@ export default function AdminClients() {
               placeholder="Buscar por nombre, email o teléfono..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="min-h-11 w-full pl-10 pr-4 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-base sm:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition-all"
+              className="w-full pl-10 pr-4 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition-all"
             />
           </div>
 
           {/* Sort Dropdown */}
-          <div className="relative w-full sort-dropdown sm:w-auto">
+          <div className="relative sort-dropdown">
             <button
               onClick={(e) => { e.stopPropagation(); setShowSortMenu(!showSortMenu); }}
-              className="flex min-h-11 w-full items-center justify-between gap-2 px-4 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-sm text-gray-300 hover:border-white/20 hover:bg-white/[0.05] transition-all whitespace-nowrap sm:w-auto"
+              className="flex items-center gap-2 px-4 py-2.5 bg-white/[0.03] border border-white/10 rounded-xl text-sm text-gray-300 hover:border-white/20 hover:bg-white/[0.05] transition-all whitespace-nowrap"
             >
               <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
@@ -212,7 +212,7 @@ export default function AdminClients() {
                   <button
                     key={option.value}
                     onClick={() => { setSortBy(option.value); setShowSortMenu(false); }}
-                    className={`flex min-h-11 w-full items-center gap-2 px-4 py-2.5 text-left text-sm transition-colors ${
+                    className={`w-full text-left px-4 py-2.5 text-sm transition-colors flex items-center gap-2 ${
                       sortBy === option.value
                         ? 'bg-emerald-500/10 text-emerald-400'
                         : 'text-gray-300 hover:bg-white/5'
@@ -300,7 +300,7 @@ export default function AdminClients() {
             {/* Mobile Cards - Web */}
             <div className="md:hidden space-y-3">
               {sortedClients.map((client, i) => (
-                <div key={i} onClick={() => navigate(`/admin/clientes/${client.id}`)} className="min-h-[84px] bg-white/[0.02] rounded-xl border border-white/5 p-4 hover:border-emerald-500/20 transition-colors cursor-pointer">
+                <div key={i} onClick={() => navigate(`/admin/clientes/${client.id}`)} className="bg-white/[0.02] rounded-xl border border-white/5 p-4 hover:border-emerald-500/20 transition-colors cursor-pointer">
                   <div className="flex items-center gap-3 mb-2">
                     <div className="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 border border-emerald-500/20 flex items-center justify-center flex-shrink-0">
                       <span className="text-sm font-bold text-emerald-400">
@@ -372,7 +372,7 @@ export default function AdminClients() {
             {/* Mobile Cards - B2B */}
             <div className="md:hidden space-y-3">
               {sortedClients.map((client, i) => (
-                <div key={i} onClick={() => client.id && navigate(`/admin/clientes/${client.id}`)} className="min-h-[84px] bg-white/[0.02] rounded-xl border border-white/5 p-4 hover:border-amber-500/20 transition-colors cursor-pointer">
+                <div key={i} onClick={() => client.id && navigate(`/admin/clientes/${client.id}`)} className="bg-white/[0.02] rounded-xl border border-white/5 p-4 hover:border-amber-500/20 transition-colors cursor-pointer">
                   <div className="flex items-center gap-3 mb-2">
                     <div className="w-9 h-9 rounded-full bg-gradient-to-br from-amber-500/20 to-orange-500/20 border border-amber-500/20 flex items-center justify-center flex-shrink-0">
                       <span className="text-sm font-bold text-amber-400">

@@ -96,11 +96,11 @@ export default function AdminDashboard() {
               Aquí tienes el resumen de tu tienda
             </p>
           </div>
-          <div className="flex w-full items-center gap-3 sm:w-auto">
+          <div className="flex items-center gap-3">
             <button
               onClick={loadDashboard}
               disabled={loading}
-              className="flex min-h-11 w-full items-center justify-center gap-2 px-4 py-2.5 bg-white/5 hover:bg-white/10 text-gray-300 text-sm rounded-xl border border-white/10 transition-all disabled:opacity-50 sm:w-auto"
+              className="flex items-center gap-2 px-4 py-2.5 bg-white/5 hover:bg-white/10 text-gray-300 text-sm rounded-xl border border-white/10 transition-all disabled:opacity-50"
             >
               <svg className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -142,7 +142,7 @@ export default function AdminDashboard() {
         {data && (
           <>
             {/* KPIs */}
-            <div className="grid grid-cols-1 gap-3 min-[360px]:grid-cols-2 md:gap-4 lg:grid-cols-5 mb-8">
+            <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 md:gap-4 mb-8">
               <KPICard
                 title="Pedidos"
                 value={data.total_orders}
@@ -190,7 +190,7 @@ export default function AdminDashboard() {
             </div>
 
             {/* Quick Actions */}
-            <div className="grid grid-cols-1 gap-3 min-[360px]:grid-cols-2 md:grid-cols-4 mb-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
               <QuickAction label="Sincronizar Holded" icon="🔄" link="/admin/productos" />
               <QuickAction label="Ver Stock Bajo" icon="⚠️" link="/admin/stock" />
               <QuickAction label="Gestionar Pedidos" icon="📦" link="/admin/pedidos" />
@@ -206,7 +206,7 @@ export default function AdminDashboard() {
                     <span className="w-2 h-2 rounded-full bg-amber-400"></span>
                     Alertas de Stock
                   </h2>
-                  <Link to="/admin/stock" className="inline-flex min-h-11 items-center rounded-lg px-2 text-xs font-medium text-emerald-400 transition-colors hover:bg-emerald-500/10 hover:text-emerald-300">
+                  <Link to="/admin/stock" className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors font-medium">
                     Ver todo →
                   </Link>
                 </div>
@@ -242,7 +242,7 @@ export default function AdminDashboard() {
                     <span className="w-2 h-2 rounded-full bg-blue-400"></span>
                     Últimos Pedidos
                   </h2>
-                  <Link to="/admin/pedidos" className="inline-flex min-h-11 items-center rounded-lg px-2 text-xs font-medium text-emerald-400 transition-colors hover:bg-emerald-500/10 hover:text-emerald-300">
+                  <Link to="/admin/pedidos" className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors font-medium">
                     Ver todo →
                   </Link>
                 </div>
@@ -272,18 +272,18 @@ export default function AdminDashboard() {
             {/* Evolución Mensual de Ventas */}
             {monthlyData.length > 0 && (
               <div className="bg-white/[0.02] rounded-2xl border border-white/5 overflow-hidden mb-6">
-                <div className="flex flex-col items-start gap-2 border-b border-white/5 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+                <div className="px-5 py-4 border-b border-white/5 flex items-center justify-between">
                   <h2 className="text-sm font-semibold text-white flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
                     Evolución Mensual de Ventas
                   </h2>
-                  <div className="flex flex-wrap items-center gap-3 text-[10px] text-gray-500 sm:gap-4">
+                  <div className="flex items-center gap-4 text-[10px] text-gray-500">
                     <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-sm bg-emerald-500"></span>Facturación</span>
                     <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-sm bg-blue-400"></span>Pedidos</span>
                   </div>
                 </div>
-                <div className="p-3 sm:p-5">
-                  <div className="h-56 sm:h-64">
+                <div className="p-5">
+                  <div className="h-64">
                     <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={monthlyData} margin={{ top: 5, right: 10, left: 10, bottom: 5 }}>
                         <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
@@ -326,7 +326,7 @@ export default function AdminDashboard() {
 
                   {/* Tabla resumen mensual */}
                   <div className="mt-5 overflow-x-auto">
-                    <table className="min-w-[520px] w-full text-xs">
+                    <table className="w-full text-xs">
                       <thead>
                         <tr className="border-b border-white/5">
                           <th className="text-left py-2 px-3 text-gray-500 font-medium">Mes</th>
@@ -388,7 +388,7 @@ export default function AdminDashboard() {
                     icon="📧"
                   />
                 </div>
-                <div className="mt-4 flex flex-col gap-3 border-t border-white/5 pt-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="mt-4 pt-4 border-t border-white/5 flex items-center justify-between">
                   <p className="text-xs text-gray-600">
                     Última actualización: {formatDate(data.last_updated)}
                   </p>
@@ -410,7 +410,7 @@ function KPICard({ title, value, icon, gradient, iconBg, iconColor, link, subtit
   const props = link ? { to: link } : {};
   
   return (
-    <Wrapper {...props} className={`block min-h-[132px] bg-gradient-to-br ${gradient} rounded-2xl p-4 md:p-5 border border-white/5 hover:border-white/10 transition-all group`}>
+    <Wrapper {...props} className={`block bg-gradient-to-br ${gradient} rounded-2xl p-4 md:p-5 border border-white/5 hover:border-white/10 transition-all group`}>
       <div className={`w-9 h-9 rounded-xl ${iconBg} flex items-center justify-center mb-3 ${iconColor}`}>
         {icon}
       </div>
@@ -423,7 +423,7 @@ function KPICard({ title, value, icon, gradient, iconBg, iconColor, link, subtit
 
 function QuickAction({ label, icon, link }) {
   return (
-    <Link to={link} className="flex min-h-12 items-center gap-2.5 px-4 py-3 bg-white/[0.02] hover:bg-white/[0.05] rounded-xl border border-white/5 hover:border-white/10 transition-all group">
+    <Link to={link} className="flex items-center gap-2.5 px-4 py-3 bg-white/[0.02] hover:bg-white/[0.05] rounded-xl border border-white/5 hover:border-white/10 transition-all group">
       <span className="text-base">{icon}</span>
       <span className="text-xs text-gray-400 group-hover:text-gray-200 font-medium transition-colors">{label}</span>
     </Link>

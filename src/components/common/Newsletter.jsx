@@ -92,7 +92,7 @@ const Newsletter = ({ variant = 'default' }) => {
 
   if (variant === 'footer') {
     return (
-      <div className="bg-primary/5 rounded-xl p-4 sm:p-6">
+      <div className="bg-primary/5 rounded-lg p-6">
         <div className="flex items-center gap-2 mb-3">
           <Mail className="text-secondary" size={24} />
           <h3 className="text-lg font-bold text-primary">Newsletter</h3>
@@ -109,7 +109,7 @@ const Newsletter = ({ variant = 'default' }) => {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-2">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-2">
                 <input
                   type="text"
                   name="firstName"
@@ -117,7 +117,7 @@ const Newsletter = ({ variant = 'default' }) => {
                   onChange={handleChange}
                   required
                   placeholder={t('newsletter.placeholder_name')}
-                  className="min-h-11 px-3 py-2 border border-gray-300 rounded-lg focus:border-secondary focus:outline-none text-base"
+                  className="px-3 py-2 border border-gray-300 rounded-lg focus:border-secondary focus:outline-none text-sm"
                   disabled={loading}
                 />
                 <input
@@ -127,7 +127,7 @@ const Newsletter = ({ variant = 'default' }) => {
                   onChange={handleChange}
                   required
                   placeholder={t('newsletter.placeholder_lastname')}
-                  className="min-h-11 px-3 py-2 border border-gray-300 rounded-lg focus:border-secondary focus:outline-none text-base"
+                  className="px-3 py-2 border border-gray-300 rounded-lg focus:border-secondary focus:outline-none text-sm"
                   disabled={loading}
                 />
               </div>
@@ -138,7 +138,7 @@ const Newsletter = ({ variant = 'default' }) => {
                 onChange={handleChange}
                 required
                 placeholder={t('newsletter.placeholder_email')}
-                className="w-full min-h-11 px-3 py-2 border border-gray-300 rounded-lg focus:border-secondary focus:outline-none text-base"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-secondary focus:outline-none text-sm"
                 disabled={loading}
               />
               <input
@@ -147,14 +147,14 @@ const Newsletter = ({ variant = 'default' }) => {
                 value={formData.phone}
                 onChange={handleChange}
                 placeholder={t('newsletter.placeholder_phone')}
-                className="w-full min-h-11 px-3 py-2 border border-gray-300 rounded-lg focus:border-secondary focus:outline-none text-base"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-secondary focus:outline-none text-sm"
                 disabled={loading}
               />
               {error && <p className="text-red-600 text-xs">{error}</p>}
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full min-h-11 bg-secondary text-primary px-4 py-2 rounded-lg font-bold hover:bg-secondary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                className="w-full bg-secondary text-primary px-4 py-2 rounded-lg font-bold hover:bg-secondary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-1"
               >
                 <Send size={16} />
                 {loading ? t('newsletter.sending') : t('newsletter.subscribe_btn')}
@@ -167,7 +167,7 @@ const Newsletter = ({ variant = 'default' }) => {
 
   // Variant 'inline' para usar en páginas
   return (
-    <div className="bg-gradient-to-r from-primary to-accent p-5 sm:p-8 md:p-12 rounded-2xl shadow-2xl">
+    <div className="bg-gradient-to-r from-primary to-accent p-8 md:p-12 rounded-2xl shadow-2xl">
       <div className="max-w-2xl mx-auto text-center">
         <Mail className="text-secondary mx-auto mb-4" size={48} />
         <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
@@ -189,7 +189,7 @@ const Newsletter = ({ variant = 'default' }) => {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-3 max-w-md mx-auto">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-3">
                 <input
                   type="text"
                   name="firstName"
@@ -197,7 +197,7 @@ const Newsletter = ({ variant = 'default' }) => {
                   onChange={handleChange}
                   required
                   placeholder={t('newsletter.placeholder_name')}
-                  className="min-h-12 px-4 py-3 border-2 border-white/30 bg-white/10 text-white text-base placeholder-white/60 rounded-lg focus:border-secondary focus:outline-none backdrop-blur-sm"
+                  className="px-4 py-3 border-2 border-white/30 bg-white/10 text-white placeholder-white/60 rounded-lg focus:border-secondary focus:outline-none backdrop-blur-sm"
                   disabled={loading}
                 />
                 <input
@@ -207,7 +207,7 @@ const Newsletter = ({ variant = 'default' }) => {
                   onChange={handleChange}
                   required
                   placeholder={t('newsletter.placeholder_lastname')}
-                  className="min-h-12 px-4 py-3 border-2 border-white/30 bg-white/10 text-white text-base placeholder-white/60 rounded-lg focus:border-secondary focus:outline-none backdrop-blur-sm"
+                  className="px-4 py-3 border-2 border-white/30 bg-white/10 text-white placeholder-white/60 rounded-lg focus:border-secondary focus:outline-none backdrop-blur-sm"
                   disabled={loading}
                 />
               </div>
@@ -218,7 +218,7 @@ const Newsletter = ({ variant = 'default' }) => {
                 onChange={handleChange}
                 required
                 placeholder={t('newsletter.placeholder_email')}
-                className="w-full min-h-12 px-4 py-3 border-2 border-white/30 bg-white/10 text-white text-base placeholder-white/60 rounded-lg focus:border-secondary focus:outline-none backdrop-blur-sm"
+                className="w-full px-4 py-3 border-2 border-white/30 bg-white/10 text-white placeholder-white/60 rounded-lg focus:border-secondary focus:outline-none backdrop-blur-sm"
                 disabled={loading}
               />
               <input
@@ -227,14 +227,14 @@ const Newsletter = ({ variant = 'default' }) => {
                 value={formData.phone}
                 onChange={handleChange}
                 placeholder={t('newsletter.placeholder_phone')}
-                className="w-full min-h-12 px-4 py-3 border-2 border-white/30 bg-white/10 text-white text-base placeholder-white/60 rounded-lg focus:border-secondary focus:outline-none backdrop-blur-sm"
+                className="w-full px-4 py-3 border-2 border-white/30 bg-white/10 text-white placeholder-white/60 rounded-lg focus:border-secondary focus:outline-none backdrop-blur-sm"
                 disabled={loading}
               />
               {error && <p className="text-red-300 text-sm">{error}</p>}
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full min-h-12 bg-secondary text-primary px-6 py-3 rounded-lg font-bold hover:bg-secondary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2 whitespace-nowrap"
+                className="w-full bg-secondary text-primary px-6 py-3 rounded-lg font-bold hover:bg-secondary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2 whitespace-nowrap"
               >
                 <Send size={20} />
                 {loading ? t('newsletter.sending') : t('newsletter.subscribe_btn')}

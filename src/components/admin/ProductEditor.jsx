@@ -327,7 +327,7 @@ export default function ProductEditor({ product, onClose, onSaved }) {
 
   if (loading) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
+      <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center">
         <div className="bg-[#1a1a2e] rounded-2xl p-8 text-center">
           <div className="animate-spin w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full mx-auto mb-3"></div>
           <p className="text-gray-400 text-sm">Cargando producto...</p>
@@ -337,11 +337,11 @@ export default function ProductEditor({ product, onClose, onSaved }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-stretch justify-center bg-black/70 backdrop-blur-sm sm:items-center sm:p-4" onClick={onClose}>
-      <div className="flex h-[100dvh] w-full max-w-4xl flex-col overflow-hidden bg-[#1a1a2e] sm:h-auto sm:max-h-[92dvh] sm:rounded-2xl sm:border sm:border-white/10" onClick={(e) => e.stopPropagation()}>
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
+      <div className="bg-[#1a1a2e] rounded-2xl border border-white/10 w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col" onClick={(e) => e.stopPropagation()}>
         
         {/* Header con preview */}
-        <div className="flex min-h-16 items-center gap-3 border-b border-white/10 px-4 py-3 sm:gap-4 sm:px-6 sm:py-4">
+        <div className="flex items-center gap-4 px-6 py-4 border-b border-white/10">
           {form.image && (
             <img 
               src={getImageUrl(form.image)} 
@@ -350,22 +350,22 @@ export default function ProductEditor({ product, onClose, onSaved }) {
               onError={(e) => e.target.style.display='none'}
             />
           )}
-          <div className="min-w-0 flex-1">
-            <h2 className="truncate text-base font-bold text-white sm:text-lg">
+          <div className="flex-1">
+            <h2 className="text-lg font-bold text-white">
               {isNew ? 'Nuevo producto' : form.name || 'Sin nombre'}
             </h2>
-            {!isNew && <p className="truncate text-xs text-gray-500">{form.sku} · {form.category}</p>}
+            {!isNew && <p className="text-xs text-gray-500">{form.sku} · {form.category}</p>}
           </div>
-          <button onClick={onClose} className="inline-flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl text-xl text-gray-400 hover:bg-white/5 hover:text-white" aria-label="Cerrar editor">✕</button>
+          <button onClick={onClose} className="text-gray-400 hover:text-white text-xl">✕</button>
         </div>
 
         {/* Tabs */}
-        <div className="flex flex-shrink-0 gap-1 overflow-x-auto border-b border-white/5 px-2 pt-2 sm:px-6 sm:pt-3">
+        <div className="flex gap-1 px-6 pt-3 border-b border-white/5">
           {tabs.map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex min-h-11 flex-shrink-0 items-center gap-1.5 rounded-t-lg px-3 py-2 text-xs font-medium transition-all sm:px-4 ${
+              className={`px-4 py-2 text-xs font-medium rounded-t-lg transition-all flex items-center gap-1.5 ${
                 activeTab === tab.id
                   ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 border-b-0'
                   : 'text-gray-500 hover:text-gray-300'
@@ -378,7 +378,7 @@ export default function ProductEditor({ product, onClose, onSaved }) {
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto overscroll-contain p-4 pb-8 space-y-4 sm:p-6">
+        <div className="flex-1 overflow-y-auto p-6 space-y-4">
           
           {/* Mensajes */}
           {error && (
@@ -494,10 +494,10 @@ export default function ProductEditor({ product, onClose, onSaved }) {
               {/* Imagen principal */}
               <div>
                 <label className="text-xs text-gray-400 uppercase tracking-wider font-medium mb-2 block">Imagen principal</label>
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+                <div className="flex gap-4 items-start">
                   {/* Preview grande */}
                   <div 
-                    className={`h-48 w-full max-w-[220px] self-center rounded-xl border-2 border-dashed flex items-center justify-center overflow-hidden bg-white/5 transition-all sm:h-40 sm:w-40 sm:self-auto ${
+                    className={`w-40 h-40 rounded-xl border-2 border-dashed flex items-center justify-center overflow-hidden bg-white/5 transition-all ${
                       dragOver ? 'border-emerald-500 bg-emerald-500/5' : 'border-white/10'
                     } ${!form.image ? 'cursor-pointer hover:border-white/30' : ''}`}
                     onDrop={(e) => handleDrop(e, 'main')}
@@ -522,7 +522,7 @@ export default function ProductEditor({ product, onClose, onSaved }) {
                   </div>
                   
                   {/* Controles */}
-                  <div className="w-full min-w-0 flex-1 space-y-3">
+                  <div className="flex-1 space-y-2">
                     <div className="flex gap-2">
                       <input
                         type="text"
@@ -536,14 +536,14 @@ export default function ProductEditor({ product, onClose, onSaved }) {
                       <button 
                         onClick={() => fileInputMain.current?.click()}
                         disabled={uploading || isNew}
-                        className="flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-lg border border-blue-500/20 bg-blue-500/10 px-3 py-2 text-xs text-blue-400 hover:bg-blue-500/20 disabled:opacity-50 sm:flex-none"
+                        className="px-3 py-2 bg-blue-500/10 text-blue-400 text-xs rounded-lg border border-blue-500/20 hover:bg-blue-500/20 disabled:opacity-50 flex items-center gap-1.5"
                       >
                         📤 Subir imagen
                       </button>
                       {form.image && (
                         <button 
                           onClick={() => handleChange('image', '')}
-                          className="min-h-11 flex-1 rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-xs text-red-400 hover:bg-red-500/20 sm:flex-none"
+                          className="px-3 py-2 bg-red-500/10 text-red-400 text-xs rounded-lg border border-red-500/20 hover:bg-red-500/20"
                         >
                           🗑️ Quitar
                         </button>
@@ -565,7 +565,7 @@ export default function ProductEditor({ product, onClose, onSaved }) {
                 
                 {/* Grid de previews */}
                 {form.images.length > 0 && (
-                  <div className="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                  <div className="grid grid-cols-4 gap-3 mb-4">
                     {form.images.map((img, idx) => (
                       <div key={idx} className="relative group rounded-xl overflow-hidden border border-white/10 bg-white/5 aspect-square">
                         <img 
@@ -574,16 +574,16 @@ export default function ProductEditor({ product, onClose, onSaved }) {
                           className="w-full h-full object-contain p-2"
                           onError={(e) => { e.target.src = ''; e.target.alt = '⚠️ Error'; }}
                         />
-                        <div className="absolute inset-0 flex items-center justify-center gap-2 bg-black/45 opacity-100 transition-opacity md:bg-black/60 md:opacity-0 md:group-hover:opacity-100">
+                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                           <button
                             onClick={() => removeImage(idx)}
-                            className="flex h-11 w-11 items-center justify-center rounded-full bg-red-500 text-xs text-white hover:bg-red-600"
+                            className="w-7 h-7 bg-red-500 text-white text-xs rounded-full flex items-center justify-center hover:bg-red-600"
                           >
                             🗑️
                           </button>
                           <button
                             onClick={() => handleChange('image', img)}
-                            className="flex h-11 w-11 items-center justify-center rounded-full bg-blue-500 text-xs text-white hover:bg-blue-600"
+                            className="w-7 h-7 bg-blue-500 text-white text-xs rounded-full flex items-center justify-center hover:bg-blue-600"
                             title="Usar como principal"
                           >
                             ⭐
@@ -757,7 +757,7 @@ export default function ProductEditor({ product, onClose, onSaved }) {
                         type="checkbox"
                         checked={form[field]}
                         onChange={(e) => handleChange(field, e.target.checked)}
-                        className={`h-6 w-6 flex-shrink-0 rounded border-white/20 bg-white/5 text-${color}-500 focus:ring-${color}-500/20`}
+                        className={`w-4 h-4 rounded border-white/20 bg-white/5 text-${color}-500 focus:ring-${color}-500/20`}
                       />
                       <span className="text-sm text-gray-300">{label}</span>
                     </label>
@@ -783,7 +783,7 @@ export default function ProductEditor({ product, onClose, onSaved }) {
 
         {/* Translation result preview */}
         {translateResult && (
-          <div className="border-t border-white/5 bg-blue-500/5 px-4 py-3 sm:px-6">
+          <div className="px-6 py-3 border-t border-white/5 bg-blue-500/5">
             <p className="text-xs text-blue-400 font-medium mb-2">🌐 Traducción generada (EN):</p>
             <div className="space-y-1 text-xs text-gray-300">
               {translateResult.name_en && <p><span className="text-gray-500">Nombre:</span> {translateResult.name_en}</p>}
@@ -794,12 +794,12 @@ export default function ProductEditor({ product, onClose, onSaved }) {
         )}
 
         {/* Footer */}
-        <div className="flex flex-shrink-0 flex-col gap-3 border-t border-white/10 bg-white/[0.02] px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-4">
-          <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto">
+        <div className="flex items-center justify-between px-6 py-4 border-t border-white/10 bg-white/[0.02]">
+          <div className="flex gap-2">
             {!isNew && (
               <button
                 onClick={handleToggleActive}
-                className={`min-h-11 px-3 py-2 text-xs rounded-lg border transition-all font-medium ${
+                className={`px-4 py-2 text-xs rounded-lg border transition-all font-medium ${
                   form.active
                     ? 'bg-red-500/10 text-red-400 border-red-500/20 hover:bg-red-500/20'
                     : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20'
@@ -812,23 +812,23 @@ export default function ProductEditor({ product, onClose, onSaved }) {
               <button
                 onClick={handleAutoTranslate}
                 disabled={translating}
-                className="min-h-11 px-3 py-2 text-xs rounded-lg border transition-all font-medium bg-blue-500/10 text-blue-400 border-blue-500/20 hover:bg-blue-500/20 disabled:opacity-50"
+                className="px-4 py-2 text-xs rounded-lg border transition-all font-medium bg-blue-500/10 text-blue-400 border-blue-500/20 hover:bg-blue-500/20 disabled:opacity-50"
               >
                 {translating ? '⏳ Traduciendo...' : '🌐 Auto-traducir EN'}
               </button>
             )}
           </div>
-          <div className="flex w-full gap-2 sm:w-auto sm:gap-3">
+          <div className="flex gap-3">
             <button
               onClick={onClose}
-              className="min-h-11 flex-1 px-4 py-2.5 text-sm text-gray-400 hover:text-white transition-all sm:flex-none"
+              className="px-4 py-2.5 text-sm text-gray-400 hover:text-white transition-all"
             >
               Cancelar
             </button>
             <button
               onClick={handleSave}
               disabled={saving}
-              className="min-h-11 flex-[1.4] px-5 py-2.5 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 text-sm rounded-xl border border-emerald-500/30 transition-all disabled:opacity-50 font-medium sm:flex-none sm:px-6"
+              className="px-6 py-2.5 bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 text-sm rounded-xl border border-emerald-500/30 transition-all disabled:opacity-50 font-medium"
             >
               {saving ? 'Guardando...' : isNew ? 'Crear producto' : '💾 Guardar cambios'}
             </button>

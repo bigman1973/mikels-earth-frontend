@@ -18,7 +18,7 @@ const LanguageSelector = ({ className = '', compact = false }) => {
     return (
       <button
         onClick={toggleLanguage}
-        className={`inline-flex min-h-11 min-w-11 items-center justify-center gap-1 rounded-lg px-2 text-xs font-medium hover:bg-white/10 hover:text-accent transition-colors uppercase tracking-wide ${className}`}
+        className={`flex items-center gap-1 text-xs font-medium hover:text-accent transition-colors uppercase tracking-wide ${className}`}
         aria-label={currentLang === 'es' ? 'Switch to English' : 'Cambiar a Español'}
         title={currentLang === 'es' ? 'Switch to English' : 'Cambiar a Español'}
       >
@@ -31,7 +31,7 @@ const LanguageSelector = ({ className = '', compact = false }) => {
   return (
     <button
       onClick={toggleLanguage}
-      className={`inline-flex min-h-11 items-center justify-center gap-1.5 rounded-lg px-3 text-sm font-medium hover:bg-white/10 hover:text-secondary transition-colors ${className}`}
+      className={`flex items-center gap-1.5 text-sm font-medium hover:text-secondary transition-colors ${className}`}
       aria-label={currentLang === 'es' ? 'Switch to English' : 'Cambiar a Español'}
       title={currentLang === 'es' ? 'Switch to English' : 'Cambiar a Español'}
     >

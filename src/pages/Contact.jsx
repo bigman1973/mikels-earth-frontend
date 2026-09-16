@@ -98,7 +98,7 @@ const Contact = () => {
                     <p className="font-semibold text-gray-900">Email</p>
                     <a 
                       href="mailto:info@mikels.es" 
-                      className="inline-flex min-h-11 items-center rounded-lg pr-3 text-primary hover:underline"
+                      className="text-primary hover:underline"
                     >
                       info@mikels.es
                     </a>
@@ -113,7 +113,7 @@ const Contact = () => {
                       href="https://wa.me/34621144701" 
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex min-h-11 items-center rounded-lg pr-3 text-primary hover:underline"
+                      className="text-primary hover:underline"
                     >
                       +34 621 14 47 01
                     </a>

@@ -1,47 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
 
 
 const API_URL = 'https://mikels-earth-backend-production.up.railway.app/api/blog';
-
-const BLOG_ADMIN_NAV = [
-  ['/admin/dashboard', 'Dashboard'],
-  ['/admin/productos', 'Productos'],
-  ['/admin/stock', 'Stock'],
-  ['/admin/pedidos', 'Pedidos'],
-  ['/admin/clientes', 'Clientes'],
-  ['/admin/cupones', 'Cupones'],
-  ['/admin/blog', 'Blog'],
-  ['/admin/usuarios', 'Usuarios'],
-];
-
-const BLOG_ADMIN_RESPONSIVE_CSS = `
-  @media (max-width: 1023px) {
-    .blog-admin-shell button, .blog-admin-shell a, .blog-admin-login button { min-height: 44px; touch-action: manipulation; }
-    .blog-admin-nav { scrollbar-width: none; }
-    .blog-admin-nav::-webkit-scrollbar { display: none; }
-    .blog-admin-shell input, .blog-admin-shell select, .blog-admin-login input { min-height: 44px; font-size: 16px !important; }
-  }
-  @media (max-width: 639px) {
-    .blog-admin-login { min-height: 100svh !important; padding: 12px !important; }
-    .blog-admin-login-card { padding: 20px !important; }
-    .blog-admin-header-inner { height: auto !important; min-height: 64px; padding: 8px 12px !important; gap: 12px; }
-    .blog-admin-title { font-size: 16px !important; line-height: 1.2; }
-    .blog-admin-main { padding: 20px 12px !important; }
-    .blog-admin-heading-row { align-items: stretch !important; flex-direction: column; gap: 12px; }
-    .blog-admin-modal-overlay { align-items: stretch !important; padding: 0 !important; }
-    .blog-admin-modal { height: 100dvh; max-height: 100dvh !important; border-radius: 0 !important; }
-    .blog-admin-modal-header { padding: 12px 16px !important; }
-    .blog-admin-modal-body { padding: 16px 12px !important; }
-    .blog-admin-editor-grid { grid-template-columns: minmax(0, 1fr) !important; gap: 16px !important; }
-    .blog-admin-toolbar { overflow-x: auto; }
-    .blog-admin-toolbar button { min-width: 44px; flex-shrink: 0; }
-    .blog-admin-modal-footer { display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px !important; padding: 12px !important; }
-    .blog-admin-modal-footer button { padding: 10px 8px !important; }
-    .blog-admin-table-wrap { overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
-    .blog-admin-table { min-width: 620px; }
-  }
-`;
 
 const BlogAdmin = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -240,9 +200,8 @@ const BlogAdmin = () => {
 
   if (!isLoggedIn) {
     return (
-      <div className="blog-admin-login" style={{ minHeight: '100vh', backgroundColor: '#f9fafb', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
-        <style>{BLOG_ADMIN_RESPONSIVE_CSS}</style>
-        <div className="blog-admin-login-card" style={{ backgroundColor: 'white', width: '100%', maxWidth: '400px', borderRadius: '1rem', boxShadow: '0 10px 25px rgba(0,0,0,0.1)', padding: '2rem', border: '1px solid #f3f4f6' }}>
+      <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+        <div style={{ backgroundColor: 'white', width: '100%', maxWidth: '400px', borderRadius: '1rem', boxShadow: '0 10px 25px rgba(0,0,0,0.1)', padding: '2rem', border: '1px solid #f3f4f6' }}>
           <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
             <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#111827', marginBottom: '0.5rem' }}>Mikel's Earth</h1>
             <p style={{ color: '#6b7280' }}>Panel de Administración</p>
@@ -263,28 +222,16 @@ const BlogAdmin = () => {
   }
 
   return (
-    <div className="blog-admin-shell" style={{ minHeight: '100vh', backgroundColor: '#f9fafb', paddingBottom: '5rem' }}>
-      <style>{BLOG_ADMIN_RESPONSIVE_CSS}</style>
+    <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb', paddingBottom: '5rem' }}>
       <header style={{ backgroundColor: 'white', borderBottom: '1px solid #e5e7eb', position: 'sticky', top: 0, zIndex: 30 }}>
-        <div className="blog-admin-header-inner" style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 1rem', height: '4rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 1rem', height: '4rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span className="blog-admin-title" style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>Mikel's Blog Admin</span>
+            <span style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>Mikel's Blog Admin</span>
           </div>
           <button onClick={handleLogout} style={{ background: 'none', border: 'none', color: '#6b7280', cursor: 'pointer' }}>Cerrar Sesión</button>
         </div>
-        <nav className="blog-admin-nav mx-auto flex max-w-[1200px] gap-1 overflow-x-auto px-3 pb-2" aria-label="Navegación del panel">
-          {BLOG_ADMIN_NAV.map(([path, label]) => (
-            <Link
-              key={path}
-              to={path}
-              className={`inline-flex flex-shrink-0 items-center rounded-lg px-3 text-xs font-medium ${path === '/admin/blog' ? 'bg-emerald-50 text-emerald-700' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900'}`}
-            >
-              {label}
-            </Link>
-          ))}
-        </nav>
       </header>
-      <main className="blog-admin-main" style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem 1rem' }}>
+      <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem 1rem' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
           <div style={{ backgroundColor: 'white', padding: '1.5rem', borderRadius: '1rem', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', border: '1px solid #f3f4f6' }}>
             <p style={{ fontSize: '0.875rem', color: '#6b7280' }}>Total</p>
@@ -299,19 +246,19 @@ const BlogAdmin = () => {
             <p style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>{stats.drafts}</p>
           </div>
         </div>
-        <div className="blog-admin-heading-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
           <h2 style={{ fontSize: '1.5rem' }}>Gestión de Noticias</h2>
           <button onClick={() => { setEditingPost(null); setFormData({ title: '', content: '', category: 'General', image_url: '', status: 'draft' }); setShowForm(true); }} style={{ backgroundColor: '#B7BF10', color: 'white', padding: '0.75rem 1.5rem', borderRadius: '0.75rem', fontWeight: 'bold', border: 'none', cursor: 'pointer' }}>+ Nueva Noticia</button>
         </div>
         {showForm && (
-          <div className="blog-admin-modal-overlay" style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
-            <div className="blog-admin-modal" style={{ backgroundColor: 'white', width: '100%', maxWidth: '1000px', borderRadius: '1rem', boxShadow: '0 25px 50px rgba(0,0,0,0.25)', maxHeight: '90vh', overflowY: 'auto' }}>
-              <div className="blog-admin-modal-header" style={{ padding: '1.5rem', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'sticky', top: 0, backgroundColor: 'white', zIndex: 2 }}>
+          <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+            <div style={{ backgroundColor: 'white', width: '100%', maxWidth: '1000px', borderRadius: '1rem', boxShadow: '0 25px 50px rgba(0,0,0,0.25)', maxHeight: '90vh', overflowY: 'auto' }}>
+              <div style={{ padding: '1.5rem', borderBottom: '1px solid #e5e7eb', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'sticky', top: 0, backgroundColor: 'white' }}>
                 <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>{editingPost ? 'Editar Noticia' : 'Crear Nueva Noticia'}</h3>
                 <button onClick={() => setShowForm(false)} style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer' }}>×</button>
               </div>
-              <div className="blog-admin-modal-body" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                <div className="blog-admin-editor-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+              <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                     <input type="text" style={{ width: '100%', padding: '0.75rem', borderRadius: '0.75rem', border: '1px solid #d1d5db' }} placeholder="Título de la noticia..." value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} />
                     <select style={{ width: '100%', padding: '0.75rem', borderRadius: '0.75rem', border: '1px solid #d1d5db' }} value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})}>
@@ -336,7 +283,7 @@ const BlogAdmin = () => {
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                     <label style={{ fontSize: '0.875rem', fontWeight: '500' }}>Contenido</label>
                     <div style={{ border: '1px solid #d1d5db', borderRadius: '0.75rem', overflow: 'hidden' }}>
-                      <div className="blog-admin-toolbar" style={{ backgroundColor: '#f9fafb', borderBottom: '1px solid #d1d5db', padding: '0.5rem', display: 'flex', gap: '0.5rem' }}>
+                      <div style={{ backgroundColor: '#f9fafb', borderBottom: '1px solid #d1d5db', padding: '0.5rem', display: 'flex', gap: '0.5rem' }}>
                         <button onClick={() => applyFormat('bold')} style={{ padding: '0.25rem 0.5rem', fontWeight: 'bold', cursor: 'pointer' }}>B</button>
                         <button onClick={() => applyFormat('italic')} style={{ padding: '0.25rem 0.5rem', fontStyle: 'italic', cursor: 'pointer' }}>I</button>
                         <button onClick={() => applyFormat('insertUnorderedList')} style={{ padding: '0.25rem 0.5rem', cursor: 'pointer' }}>• Lista</button>
@@ -353,7 +300,7 @@ const BlogAdmin = () => {
                   </div>
                 </div>
               </div>
-              <div className="blog-admin-modal-footer" style={{ padding: '1.5rem', borderTop: '1px solid #e5e7eb', display: 'flex', justifyContent: 'flex-end', gap: '1rem', backgroundColor: '#f9fafb', position: 'sticky', bottom: 0 }}>
+              <div style={{ padding: '1.5rem', borderTop: '1px solid #e5e7eb', display: 'flex', justifyContent: 'flex-end', gap: '1rem', backgroundColor: '#f9fafb' }}>
                 <button onClick={() => setShowForm(false)} style={{ padding: '0.75rem 1.5rem', background: 'none', border: 'none', cursor: 'pointer' }}>Cancelar</button>
                 <button onClick={() => handleSubmit('draft')} style={{ padding: '0.75rem 1.5rem', backgroundColor: '#e5e7eb', borderRadius: '0.75rem', border: 'none', cursor: 'pointer' }}>Borrador</button>
                 <button onClick={() => handleSubmit('published')} style={{ padding: '0.75rem 1.5rem', backgroundColor: '#CD545B', color: 'white', borderRadius: '0.75rem', border: 'none', cursor: 'pointer' }}>Publicar</button>
@@ -361,8 +308,8 @@ const BlogAdmin = () => {
             </div>
           </div>
         )}
-        <div className="blog-admin-table-wrap" style={{ backgroundColor: 'white', borderRadius: '1rem', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', border: '1px solid #f3f4f6', overflow: 'hidden' }}>
-          <table className="blog-admin-table" style={{ width: '100%', textAlign: 'left', borderCollapse: 'collapse' }}>
+        <div style={{ backgroundColor: 'white', borderRadius: '1rem', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', border: '1px solid #f3f4f6', overflow: 'hidden' }}>
+          <table style={{ width: '100%', textAlign: 'left', borderCollapse: 'collapse' }}>
             <thead style={{ backgroundColor: '#f9fafb', borderBottom: '1px solid #e5e7eb' }}>
               <tr>
                 <th style={{ padding: '1rem' }}>Noticia</th>
