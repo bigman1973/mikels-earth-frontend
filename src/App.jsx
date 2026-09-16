@@ -1,9 +1,11 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { CartProvider, useCart } from './context/CartContext';
 import { AdminAuthProvider } from './context/AdminAuthContext';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
+import SeoManager from './components/SeoManager';
 import './App.css';
 
 const CartDrawer = lazy(() => import('./components/cart/CartDrawer'));
@@ -88,6 +90,14 @@ const DeferredMarketingWidgets = () => {
 };
 
 function App() {
+  const { i18n } = useTranslation();
+  const activeLanguage = (i18n.resolvedLanguage || i18n.language || 'es').split('-')[0];
+  const documentLanguage = activeLanguage === 'en' ? 'en' : 'es';
+
+  useEffect(() => {
+    document.documentElement.lang = documentLanguage;
+  }, [documentLanguage]);
+
   return (
     <Router>
       <CartProvider>
@@ -135,6 +145,7 @@ function App() {
                       <Route path="/terminos" element={<Terms />} />
                     </Routes>
                   </main>
+                  <SeoManager />
                   <Footer />
                   <Suspense fallback={null}>
                     <NewsletterPopup />

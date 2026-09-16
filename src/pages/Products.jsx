@@ -39,7 +39,6 @@ const Products = () => {
     <div className="min-h-screen py-16 bg-gray-50">
       <Helmet>
         <title>{t('products.seo_title')}</title>
-        <meta name="description" content={t('products.seo_description')} />
       </Helmet>
       <div className="container mx-auto px-4">
         {/* Header */}

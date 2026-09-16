@@ -214,7 +214,6 @@ const Opiniones = () => {
     <div className="bg-white min-h-screen">
       <Helmet>
         <title>{t('reviews.seo_title')}</title>
-        <meta name="description" content={t('reviews.subtitle')} />
       </Helmet>
 
       {/* Hero */}
