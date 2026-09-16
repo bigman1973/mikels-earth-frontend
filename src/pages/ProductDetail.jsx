@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useProducts } from '../hooks/useProducts';
 import { useCart } from '../context/CartContext';
 import { ShoppingCart, ArrowLeft, Check, Repeat, Tag, Package, Leaf } from 'lucide-react';
+// eslint-disable-next-line no-unused-vars -- JSX usa el namespace `<motion.*>`
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import SoldOutNotification from '../components/SoldOutNotification';
@@ -120,8 +121,7 @@ const ProductDetail = () => {
     ? product.price * (1 - discountPercent / 100)
     : product.price;
   
-  // Mantener compatibilidad con código existente
-  const hasVolumeDiscount = hasDiscount;
+  // Mantener compatibilidad con el cálculo existente
   const volumeDiscountedPrice = discountedPrice;
   
   const selectedFrequency = product.subscriptionFrequencies?.find(f => f.value === subscriptionFrequency);
@@ -139,6 +139,14 @@ const ProductDetail = () => {
   const currentPrice = purchaseType === 'subscription' 
     ? subscriptionPrice
     : volumeDiscountedPrice;
+
+  // El backend solo adjunta complementos activos y vendibles. Esta segunda
+  // comprobación defensiva evita mostrar una fila incompleta ante cualquier
+  // respuesta parcial o precio inválido.
+  const resolvedAddons = (product.addons || []).filter((addon) => {
+    const addonPrice = Number(addon?.product?.price);
+    return addon?.product && Number.isFinite(addonPrice) && addonPrice > 0 && !addon.product.soldOut;
+  });
 
   const handleAddToCart = () => {
     // Si el producto tiene variantes con cantidades individuales
@@ -165,10 +173,16 @@ const ProductDetail = () => {
     // Add selected addons to cart
     Object.entries(selectedAddons).forEach(([addonSlug, addonData]) => {
       if (addonData.selected && addonData.quantity > 0) {
-        const addonProduct = products.find(p => p.slug === addonSlug);
-        if (addonProduct) {
+        const resolvedAddon = resolvedAddons.find(addon => addon.productSlug === addonSlug);
+        const addonProduct = resolvedAddon?.product;
+        if (addonProduct && Number(addonProduct.price) > 0) {
+          const variant = addonProduct.variants?.find(item => item.id === addonData.variantId);
           const addonWithVariant = addonData.variantId
-            ? { ...addonProduct, selectedVariant: addonData.variantId }
+            ? {
+                ...addonProduct,
+                selectedVariant: addonData.variantId,
+                variantName: variant?.name
+              }
             : addonProduct;
           addToCart(addonWithVariant, addonData.quantity, 'one-time', null);
         }
@@ -737,12 +751,6 @@ const ProductDetail = () => {
                   >
                     +
                   </button>
-                  {/* Stock oculto temporalmente */}
-                  {false && product.stock < 10 && (
-                    <span className="text-sm text-orange-600 font-semibold ml-2">
-                      {t('product_detail.only_left', { count: product.stock })}
-                    </span>
-                  )}
                 </div>
                 {purchaseType === 'subscription' && product.volumeDiscount?.minQuantity && (
                   <p className="text-sm text-primary/70 mt-2">
@@ -753,12 +761,12 @@ const ProductDetail = () => {
               )}
 
               {/* Addons section */}
-              {product.addons && product.addons.length > 0 && (
+              {resolvedAddons.length > 0 && (
                 <div className="mb-6">
                   <h3 className="text-sm font-semibold text-primary mb-3">{t('product_detail.optional_addons')}</h3>
                   <div className="space-y-3">
-                    {product.addons.map((addon, idx) => {
-                      const addonProduct = products.find(p => p.slug === addon.productSlug);
+                    {resolvedAddons.map((addon, idx) => {
+                      const addonProduct = addon.product;
                       const isSelected = selectedAddons[addon.productSlug]?.selected || false;
                       const addonQty = selectedAddons[addon.productSlug]?.quantity || 1;
                       
@@ -791,9 +799,9 @@ const ProductDetail = () => {
                                     <span className="text-xs text-gray-500 block">{t('product_detail.model')}: {addon.variantId.replace('-', ' ')}</span>
                                   )}
                                 </div>
-                                {addonProduct && (
-                                  <span className="text-sm font-bold text-primary">5.00€</span>
-                                )}
+                                <span className="text-sm font-bold text-primary">
+                                  +{Number(addonProduct.price).toFixed(2)}€
+                                </span>
                               </div>
                             </label>
                           </div>
@@ -850,7 +858,7 @@ const ProductDetail = () => {
                                   +
                                 </button>
                                 <span className="text-xs text-gray-600 ml-2">
-                                  Total: {(5 * addonQty).toFixed(2)}€
+                                  Total: {(Number(addonProduct.price) * addonQty).toFixed(2)}€
                                 </span>
                               </div>
                             </div>
