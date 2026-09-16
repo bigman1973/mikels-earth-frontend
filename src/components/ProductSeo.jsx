@@ -42,8 +42,8 @@ const PRODUCT_SEO = {
     description: 'Nuestro aceite ecológico premiado con Medalla de Oro, presentado en estuche de regalo. Listo para regalar sin envolver nada.',
   },
   'mermelada-paraguayo': {
-    title: 'Mermelada de Paraguayo Artesanal 250g | 60% fruta',
-    description: 'Cuatro ingredientes: paraguayo, agua, azúcar y zumo de limón. 60% de fruta, el triple que la industria. Sin conservantes, colorantes ni espesantes.',
+    title: "Mermelada de Paraguayo Artesanal · 3 tarros de 250 g",
+    description: 'Cuatro ingredientes: paraguayo, agua, azúcar y zumo de limón. 60% de fruta, el triple que la industria. Pack de tres tarros de 250 g.',
   },
 };
 
