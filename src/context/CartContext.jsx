@@ -39,7 +39,8 @@ export const CartProvider = ({ children }) => {
         item => 
           item.id === product.id && 
           item.purchaseType === purchaseType &&
-          item.subscriptionFrequency === subscriptionFrequency
+          item.subscriptionFrequency === subscriptionFrequency &&
+          (item.selectedVariant || null) === (product.selectedVariant || null)
       );
 
       if (existingItemIndex > -1) {
@@ -72,6 +73,8 @@ export const CartProvider = ({ children }) => {
           quantity: quantity,
           purchaseType: purchaseType,
           subscriptionFrequency: subscriptionFrequency,
+          selectedVariant: product.selectedVariant || null,
+          variantName: product.variantName || null,
           weight: product.weight,
           volumeDiscountConfig: product.volumeDiscount || null,
           tieredDiscountConfig: product.tieredDiscount || null

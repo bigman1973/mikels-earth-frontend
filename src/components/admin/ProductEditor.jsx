@@ -30,6 +30,7 @@ export default function ProductEditor({ product, onClose, onSaved }) {
     limitedEdition: false,
     award: '',
     active: true,
+    visibleInStore: true,
     displayOrder: 0,
     shippingCost: 0,
     preparationCost: 0
@@ -73,6 +74,7 @@ export default function ProductEditor({ product, onClose, onSaved }) {
             limitedEdition: data.limitedEdition || false,
             award: data.award || '',
             active: data.active !== undefined ? data.active : true,
+            visibleInStore: data.visibleInStore !== undefined ? data.visibleInStore : true,
             displayOrder: data.displayOrder || 0,
             shippingCost: data.shippingCost || 0,
             preparationCost: data.preparationCost || 0
@@ -103,6 +105,7 @@ export default function ProductEditor({ product, onClose, onSaved }) {
             limitedEdition: product.limitedEdition || false,
             award: product.award || '',
             active: product.active !== undefined ? product.active : true,
+            visibleInStore: product.visibleInStore !== undefined ? product.visibleInStore : true,
             displayOrder: product.displayOrder || 0,
             shippingCost: product.shippingCost || product.shipping_cost || 0,
             preparationCost: product.preparationCost || product.preparation_cost || 0
@@ -168,7 +171,7 @@ export default function ProductEditor({ product, onClose, onSaved }) {
       } else {
         setError(data.error || 'Error al subir imagen');
       }
-    } catch (err) {
+    } catch {
       setError('Error de conexión al subir imagen');
     } finally {
       setUploading(false);
@@ -269,7 +272,7 @@ export default function ProductEditor({ product, onClose, onSaved }) {
         const data = await res.json();
         setError(data.error || 'Error al guardar');
       }
-    } catch (err) {
+    } catch {
       setError('Error de conexión');
     } finally {
       setSaving(false);
@@ -286,7 +289,7 @@ export default function ProductEditor({ product, onClose, onSaved }) {
         onSaved();
         onClose();
       }
-    } catch (err) {
+    } catch {
       setError('Error al cambiar estado');
     }
   };
@@ -310,7 +313,7 @@ export default function ProductEditor({ product, onClose, onSaved }) {
       } else {
         setError(data.error || 'Error al traducir');
       }
-    } catch (err) {
+    } catch {
       setError('Error de conexión al traducir');
     } finally {
       setTranslating(false);
@@ -745,7 +748,8 @@ export default function ProductEditor({ product, onClose, onSaved }) {
             <div className="space-y-4">
               <div className="space-y-3">
                 {[
-                  { field: 'active', label: 'Producto activo (visible en la web)', color: 'emerald', desc: 'Si se desactiva, el producto desaparece de la tienda online. Los clientes no podrán verlo ni comprarlo. Útil para productos de temporada o descatalogados.' },
+                  { field: 'active', label: 'Producto activo (se puede vender)', color: 'emerald', desc: 'Controla si el producto puede resolverse y venderse. Un complemento oculto debe permanecer activo para poder añadirse desde otra ficha.' },
+                  { field: 'visibleInStore', label: 'Visible en tienda (aparece en el catálogo)', color: 'blue', desc: 'Controla únicamente si aparece en /tienda y tiene ficha pública. Desmárcalo para complementos como el estuche: seguirá vendible desde los aceites, pero no se listará por separado.' },
                   { field: 'soldOut', label: 'Agotado (muestra mensaje de agotado)', color: 'red', desc: 'El producto sigue visible en la web pero no se puede comprar. Se muestra un mensaje personalizable (ej: "En cosecha - Disponible pronto") en lugar del botón de compra.' },
                   { field: 'featured', label: 'Destacado', color: 'amber', desc: 'El producto aparece en la sección de destacados de la página principal. Ideal para promocionar productos nuevos o de temporada.' },
                   { field: 'freeShipping', label: 'Envío gratuito', color: 'blue', desc: 'Se muestra un badge de "Envío gratis" en la ficha del producto. El cliente no paga gastos de envío al comprar este producto.' },
