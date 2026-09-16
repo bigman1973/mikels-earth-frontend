@@ -12,7 +12,6 @@ const Home = () => {
     <div className="bg-white">
       <Helmet>
         <title>{t('home.seo_title')}</title>
-        <meta name="description" content={t('home.seo_description')} />
       </Helmet>
       {/* Hero Section - Inmersivo */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">

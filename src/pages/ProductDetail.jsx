@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import SoldOutNotification from '../components/SoldOutNotification';
 import ProductReviews from '../components/ProductReviews';
+import ProductSeo from '../components/ProductSeo';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://mikels-earth-backend-production.up.railway.app';
 
@@ -181,6 +182,7 @@ const ProductDetail = () => {
 
   return (
     <div className="min-h-screen py-16 bg-gray-50">
+      <ProductSeo product={product} slug={slug} />
       <div className="container mx-auto px-4">
         {/* Breadcrumb */}
         <div className="mb-8">

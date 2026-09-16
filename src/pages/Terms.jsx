@@ -2,14 +2,13 @@ import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
 
 const Terms = () => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const isEn = i18n.language === 'en';
 
   return (
     <>
       <Helmet>
         <title>{isEn ? "Terms & Conditions - Mikel's Earth" : "Términos y Condiciones - Mikel's Earth"}</title>
-        <meta name="description" content={isEn ? "Terms and conditions of sale at Mikel's Earth. Information about purchases, shipping and returns." : "Términos y condiciones de venta de Mikel's Earth. Información sobre compras, envíos y devoluciones."} />
       </Helmet>
 
       <div className="container mx-auto px-4 py-12 max-w-4xl">

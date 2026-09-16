@@ -73,7 +73,6 @@ const Recetario = () => {
     <div className="bg-white">
       <Helmet>
         <title>{t('recipes.seo_title')}</title>
-        <meta name="description" content={t('recipes_data.hero_subtitle')} />
       </Helmet>
 
       {/* Hero Section */}

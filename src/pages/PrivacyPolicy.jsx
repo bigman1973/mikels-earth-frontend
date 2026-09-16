@@ -2,14 +2,13 @@ import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
 
 const PrivacyPolicy = () => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const isEn = i18n.language === 'en';
 
   return (
     <>
       <Helmet>
         <title>{isEn ? "Privacy Policy - Mikel's Earth" : "Política de Privacidad - Mikel's Earth"}</title>
-        <meta name="description" content={isEn ? "Privacy policy of Mikel's Earth. Information about the processing of personal data." : "Política de privacidad de Mikel's Earth. Información sobre el tratamiento de datos personales."} />
       </Helmet>
 
       <div className="container mx-auto px-4 py-12 max-w-4xl">
