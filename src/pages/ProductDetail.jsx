@@ -52,7 +52,7 @@ const ProductDetail = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useCart();
-  const { products } = useProducts();
+  const { products, loading } = useProducts();
   const { t } = useTranslation();
   
   const product = products.find(p => p.slug === slug);
@@ -87,6 +87,7 @@ const ProductDetail = () => {
   if (!product) {
     return (
       <div className="min-h-screen py-16 flex items-center justify-center">
+        {!loading && <ProductSeo key={`missing-${slug}`} product={null} slug={slug} />}
         <div className="text-center">
           <h1 className="text-2xl font-bold text-primary mb-4">{t('product_detail.not_found')}</h1>
           <Link to="/tienda" className="text-primary hover:underline">
@@ -182,7 +183,7 @@ const ProductDetail = () => {
 
   return (
     <div className="min-h-screen py-16 bg-gray-50">
-      <ProductSeo product={product} slug={slug} />
+      {!loading && <ProductSeo key={`valid-${slug}`} product={product} slug={slug} />}
       <div className="container mx-auto px-4">
         {/* Breadcrumb */}
         <div className="mb-8">
