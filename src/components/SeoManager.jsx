@@ -31,7 +31,7 @@ const CANONICAL_DYNAMIC_ROUTES = [
 
 const ROUTE_SEO = {
   '/': {
-    title: "Mikel's Earth | Productos Naturales y Aceite de Oliva Gourmet desde 1819",
+    title: "Mikel's Fruit | Productos Naturales y Aceite de Oliva Gourmet desde 1819",
     description: "Conservas de fruta y aceite de oliva virgen extra cultivados por la familia Giró en Alcarràs desde 1819. Del campo al tarro, sin aditivos.",
   },
   '/la-familia': {

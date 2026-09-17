@@ -52,7 +52,7 @@ const Footer = () => {
           {/* Company info */}
           <div>
             <h3 className="font-bold text-primary mb-4 uppercase tracking-wide text-sm">
-              Mikel's Earth
+              Mikel's Fruit
             </h3>
             <p className="text-gray-600 text-sm leading-relaxed">
               {t('footer.company_desc')}
@@ -78,7 +78,7 @@ const Footer = () => {
             </h3>
             <div className="flex gap-4">
               <a 
-                href="https://www.facebook.com/mikelsearth/" 
+                href="https://www.facebook.com/mikelsfruit/"
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-gray-600 hover:text-primary transition-colors"
@@ -89,7 +89,7 @@ const Footer = () => {
                 </svg>
               </a>
               <a 
-                href="https://www.instagram.com/mikelsearth" 
+                href="https://www.instagram.com/mikelsfruit/"
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-gray-600 hover:text-primary transition-colors"
@@ -100,7 +100,7 @@ const Footer = () => {
                 </svg>
               </a>
               <a 
-                href="https://www.tiktok.com/@mikelsearth" 
+                href="https://www.tiktok.com/@mikelsfruit"
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-gray-600 hover:text-primary transition-colors"

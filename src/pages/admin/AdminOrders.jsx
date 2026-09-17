@@ -517,8 +517,13 @@ export default function AdminOrders() {
                           <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Productos</h4>
                           <div className="space-y-1">
                             {(Array.isArray(order.items) ? order.items : []).map((item, i) => (
-                              <div key={i} className="flex justify-between text-sm">
-                                <span className="text-gray-300 truncate mr-2">{item.name} x{item.quantity}</span>
+                              <div key={i} className="flex justify-between gap-3 text-sm">
+                                <span className="text-gray-300 min-w-0">
+                                  <span className="block truncate">{item.name} x{item.quantity}</span>
+                                  <span className="block text-[11px] text-gray-500 font-mono">
+                                    SKU: {item.sku || 'pendiente de mapear'}
+                                  </span>
+                                </span>
                                 <span className="text-white font-mono whitespace-nowrap">{(item.price * item.quantity).toFixed(2)}€</span>
                               </div>
                             ))}
