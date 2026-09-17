@@ -6,6 +6,7 @@ import { ShoppingCart, ArrowLeft, Check, Repeat, Tag, Package, Leaf } from 'luci
 // eslint-disable-next-line no-unused-vars -- JSX usa el namespace `<motion.*>`
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import ReactMarkdown from 'react-markdown';
 import SoldOutNotification from '../components/SoldOutNotification';
 import ProductReviews from '../components/ProductReviews';
 import ProductSeo from '../components/ProductSeo';
@@ -334,9 +335,19 @@ const ProductDetail = () => {
               )}
 
               {/* Description */}
-              <p className="text-gray-700 leading-relaxed mb-6">
-                {product.longDescription}
-              </p>
+              <div className="text-gray-700 leading-relaxed mb-6 space-y-4">
+                <ReactMarkdown
+                  components={{
+                    p: ({ children }) => <p className="leading-relaxed">{children}</p>,
+                    strong: ({ children }) => <strong className="font-semibold text-primary">{children}</strong>,
+                    ul: ({ children }) => <ul className="list-disc pl-6 space-y-2">{children}</ul>,
+                    ol: ({ children }) => <ol className="list-decimal pl-6 space-y-2">{children}</ol>,
+                    li: ({ children }) => <li className="pl-1">{children}</li>,
+                  }}
+                >
+                  {product.longDescription || product.description || ''}
+                </ReactMarkdown>
+              </div>
 
               {/* Weight */}
               <div className="flex items-center gap-2 text-sm text-gray-600 mb-6">
@@ -439,7 +450,7 @@ const ProductDetail = () => {
                     </div>
                   </div>
                 )}
-                {product.volumeDiscount && !hasDiscount && purchaseType === 'one-time' && (
+                {product.slug !== 'aceite-5l-caja-3' && product.volumeDiscount && !hasDiscount && purchaseType === 'one-time' && (
                   <div className="text-sm text-gray-600">
                     {t('product_detail.volume_discount_text', { min: product.volumeDiscount.minQuantity, percent: product.volumeDiscount.discount })}
                   </div>
@@ -1044,4 +1055,3 @@ const ProductDetail = () => {
 };
 
 export default ProductDetail;
-

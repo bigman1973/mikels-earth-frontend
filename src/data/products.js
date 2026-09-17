@@ -1,11 +1,11 @@
-// Catálogo oficial de productos de Mikel's Earth
+// Catálogo oficial de productos de Mikel's Fruit
 export const products = [
   {
     id: 8,
     name: "Aceite de Oliva Virgen Extra 5L",
     slug: "aceite-5l-caja-3",
-    description: "Garrafa de 5 litros de aceite virgen extra de baja acidez. Variedades Picual, Hojiblanca y Arbequina. Compra 3 o más y ahorra 9% (30€/unidad). Envío gratis.",
-    longDescription: "Aceite de Oliva Virgen Extra de baja acidez en formato de 5 litros, procedente de nuestros olivares de Córdoba y Lleida. Variedades Picual, Hojiblanca y Arbequina cuidadosamente seleccionadas y prensadas en frío. Este es el aceite que usamos a diario en nuestra cocina familiar para todo tipo de recetas: desde un sofrito hasta aliñar una ensalada. Su equilibrio perfecto entre sabor y suavidad lo hace ideal para el uso cotidiano.\n\nCompra 3 o más garrafas y obtén un 9% de descuento automático (30€ por garrafa en lugar de 33€). Envío gratuito. Formato ahorro perfecto para familias, restaurantes y uso intensivo en cocina.",
+    description: "Garrafa de 5 litros de aceite de oliva virgen extra de baja acidez. Variedades Picual, Hojiblanca y Arbequina, de nuestros olivares de Córdoba y Lleida. Prensado en frío.",
+    longDescription: "Garrafa de 5 litros de aceite de oliva virgen extra de baja acidez. Variedades Picual, Hojiblanca y Arbequina, de nuestros olivares de Córdoba y Lleida. Prensado en frío. **8,60 €/litro.** El aceite del día a día: para el sofrito, para la plancha y para aliñar.",
     price: 33.00,
     currency: "EUR",
     image: "/images/aceite-5l-portada.jpg",
@@ -49,7 +49,7 @@ export const products = [
       discount: 9.09
     },
     freeShipping: true,
-    claims: ["Solo 6.60€/litro", "Envío gratis", "Compra 3+ y ahorra 9%", "Formato ahorro", "De nuestros olivares de Córdoba y Lleida"],
+    claims: ["Envío gratis", "Formato ahorro", "De nuestros olivares de Córdoba y Lleida"],
     badges: [
       { text: "Más Vendido", textKey: "best_seller", color: "bg-red-600" },
       { text: "Directo del Campo", textKey: "from_field", color: "bg-green-600" }
@@ -60,7 +60,7 @@ export const products = [
     name: "Paraguayo en Almíbar",
     slug: "paraguayo-almibar",
     description: "Melocotón plano cultivado en Alcarràs y preparado a mano. Sin aditivos artificiales, 100% natural y vegano.",
-    longDescription: "Nuestro paraguayo en almíbar es el producto estrella de Mikel's Earth. Cultivado en los campos de Alcarràs, cada fruta es seleccionada cuidadosamente y preparada siguiendo métodos artesanales transmitidos de generación en generación. El proceso de elaboración respeta los tiempos naturales de la fruta, conservando su sabor auténtico y propiedades nutritivas. Sin conservantes, sin colorantes, solo fruta de calidad y almíbar natural.",
+    longDescription: "Nuestro paraguayo en almíbar es el producto estrella de Mikel's Fruit. Cultivado en los campos de Alcarràs, cada fruta es seleccionada cuidadosamente y preparada siguiendo métodos artesanales transmitidos de generación en generación. El proceso de elaboración respeta los tiempos naturales de la fruta, conservando su sabor auténtico y propiedades nutritivas. Sin conservantes, sin colorantes, solo fruta de calidad y almíbar natural.",
     price: 14.90,
     currency: "EUR",
     image: "/images/paraguayo-principal.webp",
@@ -325,7 +325,7 @@ export const products = [
     name: "Pack Degustación Premium",
     slug: "pack-mermelada-aceites",
     description: "Pack premium con mermelada de paraguayo artesanal y 4 botellas de aceite de oliva virgen extra para degustación.",
-    longDescription: "¿Quieres probar lo mejor de Mikel's Earth? Este pack premium incluye mermelada de paraguayo artesanal (250g) y 4 botellas de aceite de oliva virgen extra (14ml cada una) para que descubras nuestros diferentes perfiles de sabor. Una combinación perfecta que te permitirá descubrir los sabores únicos de nuestros productos artesanales. También es un regalo perfecto para los amantes de la gastronomía de calidad.",
+    longDescription: "¿Quieres probar lo mejor de Mikel's Fruit? Este pack premium incluye mermelada de paraguayo artesanal (250g) y 4 botellas de aceite de oliva virgen extra (14ml cada una) para que descubras nuestros diferentes perfiles de sabor. Una combinación perfecta que te permitirá descubrir los sabores únicos de nuestros productos artesanales. También es un regalo perfecto para los amantes de la gastronomía de calidad.",
     price: 9.00,
     currency: "EUR",
     image: "/images/pack-degustacion-abierto.jpeg",
@@ -454,7 +454,7 @@ export const products = [
     name: "Pack Fruta Premium",
     slug: "pack-fruta-premium",
     description: "El regalo perfecto para los amantes de la fruta artesanal. Pack completo con paraguayo, nectarina y mermelada en estuche de madera premium.",
-    longDescription: "**El sabor del verano en un estuche de madera premium**\n\n¿Buscas un regalo especial que transmita calidad y tradición? El Pack Fruta de Mikel's Earth es la elección perfecta.\n\n**CONTENIDO DEL PACK:**\n\n- **1x Paraguayo en Almíbar 720g** - Nuestro producto estrella. Melocotón plano cultivado en Alcarràs, seleccionado a mano y preparado siguiendo métodos artesanales de generación en generación.\n\n- **1x Nectarina en Almíbar 720g** - El melocotón sin complejos: piel lisa, sabor intenso, carácter definido. Cultivada en nuestros campos y seleccionada en su momento de máxima expresión.\n\n- **1x Mermelada de Paraguayo Artesanal 250g** - 60% de fruta (3 veces más que la industria). Solo 4 ingredientes: paraguayo, agua, azúcar y zumo de limón natural. Sin conservantes, sin colorantes, sin espesantes.\n\n- **Estuche de madera premium** - Presentación elegante y reutilizable, perfecta para regalo. Un detalle que marca la diferencia.\n\n**¿Por qué elegir este pack?**\n\n✨ **Fruta 100% artesanal** de nuestros campos de Alcarràs\n🎁 **Presentación premium** en estuche de madera\n❤️ **Sin aditivos artificiales** - Solo ingredientes naturales\n🌿 **Vegano y sin gluten** - Apto para todos\n🎄 **Regalo perfecto** para cualquier ocasión\n\n**Ahorro real**\n\nCuando compras los productos por separado pagas 36,30€. Con este pack, por solo 35€ recibes todo en un elegante estuche de madera que podrás reutilizar para siempre. ¡Ahorras 1,30€ y consigues el estuche gratis!\n\nUn regalo que transmite calidad, tradición y el amor por lo artesanal.",
+    longDescription: "**El sabor del verano en un estuche de madera premium**\n\n¿Buscas un regalo especial que transmita calidad y tradición? El Pack Fruta de Mikel's Fruit es la elección perfecta.\n\n**CONTENIDO DEL PACK:**\n\n- **1x Paraguayo en Almíbar 720g** - Nuestro producto estrella. Melocotón plano cultivado en Alcarràs, seleccionado a mano y preparado siguiendo métodos artesanales de generación en generación.\n\n- **1x Nectarina en Almíbar 720g** - El melocotón sin complejos: piel lisa, sabor intenso, carácter definido. Cultivada en nuestros campos y seleccionada en su momento de máxima expresión.\n\n- **1x Mermelada de Paraguayo Artesanal 250g** - 60% de fruta (3 veces más que la industria). Solo 4 ingredientes: paraguayo, agua, azúcar y zumo de limón natural. Sin conservantes, sin colorantes, sin espesantes.\n\n- **Estuche de madera premium** - Presentación elegante y reutilizable, perfecta para regalo. Un detalle que marca la diferencia.\n\n**¿Por qué elegir este pack?**\n\n✨ **Fruta 100% artesanal** de nuestros campos de Alcarràs\n🎁 **Presentación premium** en estuche de madera\n❤️ **Sin aditivos artificiales** - Solo ingredientes naturales\n🌿 **Vegano y sin gluten** - Apto para todos\n🎄 **Regalo perfecto** para cualquier ocasión\n\n**Ahorro real**\n\nCuando compras los productos por separado pagas 36,30€. Con este pack, por solo 35€ recibes todo en un elegante estuche de madera que podrás reutilizar para siempre. ¡Ahorras 1,30€ y consigues el estuche gratis!\n\nUn regalo que transmite calidad, tradición y el amor por lo artesanal.",
     price: 35.00,
     originalPrice: 36.30,
     currency: "EUR",
@@ -544,10 +544,10 @@ export const products = [
   {
 
     id: 10,
-    name: "Pack Completo Mikel's Earth",
+    name: "Pack Completo Mikel's Fruit",
     slug: "pack-navidad-completo",
     description: "El regalo perfecto. Pack completo con aceites premium, conservas artesanales y estuche degustación.",
-    longDescription: "Sorprende con el pack más completo de Mikel's Earth. Una selección cuidadosamente elegida que reúne lo mejor de nuestra tradición familiar.\n\n**CONTENIDO DETALLADO DEL PACK:**\n\n**Fuera del estuche:**\n- 1 × Aceite de Oliva Virgen Extra 5L (garrafa)\n- 1 × Aceite Temprano 500ml sin filtrar (con estuche verde oscuro)\n- 1 × Paraguayo en Almíbar 720g\n- 1 × Nectarina en Almíbar 720g\n\n**Dentro del estuche kraft de degustación:**\n- 1 × Mermelada de Paraguayo Artesanal 250g\n- 4 × Botellas de aceite 14ml (formato degustación para probar diferentes perfiles)\n\nUn regalo que transmite calidad, tradición y amor por lo artesanal. Perfecto para compartir en familia o regalar a los amantes de la gastronomía de calidad.",
+    longDescription: "Sorprende con el pack más completo de Mikel's Fruit. Una selección cuidadosamente elegida que reúne lo mejor de nuestra tradición familiar.\n\n**CONTENIDO DETALLADO DEL PACK:**\n\n**Fuera del estuche:**\n- 1 × Aceite de Oliva Virgen Extra 5L (garrafa)\n- 1 × Aceite Temprano 500ml sin filtrar (con estuche verde oscuro)\n- 1 × Paraguayo en Almíbar 720g\n- 1 × Nectarina en Almíbar 720g\n\n**Dentro del estuche kraft de degustación:**\n- 1 × Mermelada de Paraguayo Artesanal 250g\n- 4 × Botellas de aceite 14ml (formato degustación para probar diferentes perfiles)\n\nUn regalo que transmite calidad, tradición y amor por lo artesanal. Perfecto para compartir en familia o regalar a los amantes de la gastronomía de calidad.",
     price: 81.90,
     originalPrice: null,
     currency: "EUR",
@@ -630,4 +630,3 @@ export const tags = [
   "Navidad",
   "Pack Completo"
 ];
-
