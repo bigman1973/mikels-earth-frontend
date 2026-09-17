@@ -25,7 +25,6 @@ const CANONICAL_STATIC_ROUTES = new Set([
 ]);
 
 const CANONICAL_DYNAMIC_ROUTES = [
-  /^\/blog\/[^/]+$/,
   /^\/recuperar-carrito\/[^/]+$/,
 ];
 

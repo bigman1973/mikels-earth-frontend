@@ -17,6 +17,7 @@ import {
 import NotFoundSeo from '../components/NotFoundSeo';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://mikels-earth-backend-production.up.railway.app';
+const SITE_ORIGIN = 'https://www.mikels.es';
 
 const BlogPost = () => {
   const { t } = useTranslation();
@@ -143,6 +144,7 @@ const BlogPost = () => {
     <div className="min-h-screen" style={{ backgroundColor: 'var(--mikels-red-10)' }}>
       <Helmet>
         <title>{`${post.title} | Blog Mikel's Fruit`}</title>
+        <link rel="canonical" href={`${SITE_ORIGIN}/blog/${slug}`} />
       </Helmet>
       {/* Breadcrumb */}
       <div className="py-4" style={{ backgroundColor: 'white' }}>
