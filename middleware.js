@@ -71,8 +71,28 @@ const resourceExists = async (url) => {
   }
 };
 
+const renderSpaNotFound = async (request) => {
+  const indexUrl = new URL('/index.html', request.url);
+  const indexResponse = await fetch(indexUrl, {
+    headers: request.headers,
+  });
+
+  if (!indexResponse.ok) {
+    return next({ status: 404 });
+  }
+
+  const headers = new Headers(indexResponse.headers);
+  headers.set('Content-Type', 'text/html; charset=utf-8');
+  headers.set('Cache-Control', 'no-store');
+
+  return new Response(
+    request.method === 'HEAD' ? null : await indexResponse.text(),
+    { status: 404, headers },
+  );
+};
+
 export const config = {
-  matcher: '/((?!assets/|fonts/|images/|favicon\\.ico|robots\\.txt|sitemap\\.xml).*)',
+  matcher: '/((?!assets/|fonts/|images/|index\\.html|favicon\\.ico|robots\\.txt|sitemap\\.xml).*)',
 };
 
 export default async function middleware(request) {
@@ -104,7 +124,7 @@ export default async function middleware(request) {
     const exists = await resourceExists(
       `${API_URL}/api/products/${encodeURIComponent(productMatch[1])}`,
     );
-    return exists === false ? next({ status: 404 }) : next();
+    return exists === false ? renderSpaNotFound(request) : next();
   }
 
   const blogMatch = pathname.match(/^\/blog\/([^/]+)$/);
@@ -112,8 +132,8 @@ export default async function middleware(request) {
     const exists = await resourceExists(
       `${API_URL}/api/blog/posts/${encodeURIComponent(blogMatch[1])}`,
     );
-    return exists === false ? next({ status: 404 }) : next();
+    return exists === false ? renderSpaNotFound(request) : next();
   }
 
-  return next({ status: 404 });
+  return renderSpaNotFound(request);
 }
