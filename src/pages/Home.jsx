@@ -302,7 +302,7 @@ const Home = () => {
                   <h3 className="font-bold text-primary mb-2">{t('home.cta_follow_title')}</h3>
                   <p className="text-gray-700 mb-4">{t('home.cta_follow_text')}</p>
                   <a 
-                    href="https://www.instagram.com/mikelsearth" 
+                    href="https://www.instagram.com/mikelsfruit/" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="text-secondary font-semibold"

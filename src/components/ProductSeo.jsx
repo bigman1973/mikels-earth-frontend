@@ -19,7 +19,7 @@ const PRODUCT_SEO = {
   },
   'aceite-5l-caja-3': {
     title: 'Aceite de Oliva Virgen Extra 5L | Garrafa hostelería',
-    description: 'Garrafa de 5 litros de AOVE de baja acidez, Picual y Hojiblanca. El formato de los que cocinan cada día: restaurantes, obradores y casas con consumo alto.',
+    description: 'Garrafa de 5 litros de AOVE de baja acidez, Picual, Hojiblanca y Arbequina. El formato de los que cocinan cada día: restaurantes, obradores y casas con consumo alto.',
   },
   'pack-mermelada-aceites': {
     title: 'Pack Degustación Premium | Mermelada y 4 aceites',

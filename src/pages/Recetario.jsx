@@ -296,7 +296,7 @@ const Recetario = () => {
               {t('recipes_data.cta_shop')}
             </a>
             <a
-              href="https://www.instagram.com/mikelsearth"
+              href="https://www.instagram.com/mikelsfruit/"
               target="_blank"
               rel="noopener noreferrer"
               className="bg-primary text-white px-8 py-3 rounded-lg font-bold hover:bg-primary/90 transition-colors"

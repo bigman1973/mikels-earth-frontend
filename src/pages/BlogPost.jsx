@@ -67,6 +67,13 @@ const BlogPost = () => {
     });
   };
 
+  const truncate = (value, maxLength) => {
+    if (!value) return '';
+    const text = value.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+    if (text.length <= maxLength) return text;
+    return `${text.slice(0, maxLength - 1).trimEnd()}…`;
+  };
+
   const shareUrl = window.location.href;
   const shareTitle = post?.title || '';
 
@@ -144,6 +151,7 @@ const BlogPost = () => {
     <div className="min-h-screen" style={{ backgroundColor: 'var(--mikels-red-10)' }}>
       <Helmet>
         <title>{`${post.title} | Blog Mikel's Fruit`}</title>
+        <meta name="description" content={truncate(post.content, 155)} />
         <link rel="canonical" href={`${SITE_ORIGIN}/blog/${slug}`} />
       </Helmet>
       {/* Breadcrumb */}

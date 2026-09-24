@@ -1006,10 +1006,11 @@ const ProductDetail = () => {
           <h2 className="text-3xl font-bold text-primary mb-8 text-center">
             {t('product_detail.related_products')}
           </h2>
+          const excludedSlugs = ['pack-temprano-premium', 'pack-aceite-ecologico-premium-estuche-regalo', 'familia', 'productos'];
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {(product.relatedProducts
-              ? products.filter(p => product.relatedProducts.includes(p.slug))
-              : products.filter(p => p.id !== product.id && p.category === product.category).slice(0, 3)
+              ? products.filter(p => product.relatedProducts.includes(p.slug) && !excludedSlugs.includes(p.slug))
+              : products.filter(p => p.id !== product.id && p.category === product.category && !excludedSlugs.includes(p.slug)).slice(0, 3)
             ).map(relatedProduct => (
                 <Link
                   key={relatedProduct.id}
