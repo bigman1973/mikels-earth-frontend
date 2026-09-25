@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion as Motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
 import { ChefHat, Clock, Users, Flame } from 'lucide-react';
 
 const Recetario = () => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   const recipeIds = [
     'tostadas_temprano',
@@ -77,7 +77,7 @@ const Recetario = () => {
 
       {/* Hero Section */}
       <section className="relative h-[70vh] bg-gradient-to-b from-secondary/20 to-white flex items-center justify-center">
-        <motion.div
+        <Motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
@@ -90,13 +90,13 @@ const Recetario = () => {
           <p className="text-xl md:text-2xl text-primary/70 max-w-3xl mx-auto">
             {t('recipes_data.hero_subtitle')}
           </p>
-        </motion.div>
+        </Motion.div>
       </section>
 
       {/* Introduction */}
       <section className="container mx-auto px-4 py-16">
         <div className="max-w-4xl mx-auto text-center">
-          <motion.div
+          <Motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -111,7 +111,7 @@ const Recetario = () => {
             <p className="text-lg text-gray-700 leading-relaxed">
               {t('recipes_data.intro_p2')}
             </p>
-          </motion.div>
+          </Motion.div>
         </div>
       </section>
 
@@ -139,7 +139,7 @@ const Recetario = () => {
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredRecipes.map((id, index) => (
-              <motion.div
+              <Motion.div
                 key={id}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -230,7 +230,7 @@ const Recetario = () => {
                     </div>
                   </details>
                 </div>
-              </motion.div>
+              </Motion.div>
             ))}
           </div>
         </div>
@@ -240,7 +240,7 @@ const Recetario = () => {
       <section className="bg-primary text-white py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <motion.div
+            <Motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
@@ -252,7 +252,7 @@ const Recetario = () => {
 
               <div className="grid md:grid-cols-3 gap-8">
                 {pairingKeys.map((key, index) => (
-                  <motion.div
+                  <Motion.div
                     key={key}
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -271,10 +271,10 @@ const Recetario = () => {
                         </li>
                       ))}
                     </ul>
-                  </motion.div>
+                  </Motion.div>
                 ))}
               </div>
-            </motion.div>
+            </Motion.div>
           </div>
         </div>
       </section>

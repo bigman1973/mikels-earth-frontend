@@ -247,7 +247,7 @@ const NewsletterPopup = () => {
                     </button>
 
                     <p className="text-xs text-gray-500 text-center">
-                      Al suscribirte, aceptas recibir emails de Mikel's Earth
+                      Al suscribirte, aceptas recibir emails de Mikel's Fruit
                     </p>
                   </form>
                 ) : (
@@ -258,7 +258,7 @@ const NewsletterPopup = () => {
                         <Gift className="w-7 h-7 text-white" />
                       </div>
                       <h3 className="text-xl font-bold text-green-800 mb-2">
-                        ¡Bienvenido/a a Mikel's Earth!
+                        ¡Bienvenido/a a Mikel's Fruit!
                       </h3>
                       <p className="text-green-700 mb-4">
                         Aquí tienes tu cupón de <strong>10% de descuento</strong>:

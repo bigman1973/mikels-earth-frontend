@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion as Motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -27,11 +27,7 @@ const BlogPost = () => {
   const [error, setError] = useState(null);
   const [copied, setCopied] = useState(false);
 
-  useEffect(() => {
-    fetchPost();
-  }, [slug]);
-
-  const fetchPost = async () => {
+  const fetchPost = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch(`${API_URL}/api/blog/posts/${slug}`);
@@ -55,7 +51,11 @@ const BlogPost = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [slug]);
+
+  useEffect(() => {
+    fetchPost();
+  }, [fetchPost]);
 
   const formatDate = (dateString) => {
     if (!dateString) return '';
@@ -232,7 +232,7 @@ const BlogPost = () => {
                 style={{ color: 'var(--mikels-gray-medium)' }}
               >
                 <User className="w-5 h-5" />
-                {post?.author || "Mikel's Earth"}
+                {post?.author || "Mikel's Fruit"}
               </span>
               <span 
                 className="flex items-center gap-2"

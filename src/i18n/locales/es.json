@@ -28,7 +28,7 @@
     "manifesto_p1": "En un mundo donde todo se produce en masa, donde las máquinas han reemplazado a las manos, donde la velocidad importa más que la calidad... nosotros elegimos un camino diferente.",
     "manifesto_p2": "Elegimos la lentitud. Elegimos la artesanía. Elegimos hacer las cosas bien, aunque cueste más, aunque tarde más, aunque sea más difícil.",
     "manifesto_p3": "Porque creemos que hay cosas que no se pueden automatizar. Como el amor por la tierra. Como el respeto por la tradición. Como el orgullo de poner tu nombre en un producto.",
-    "pillars_title": "Los Pilares de Mikel's Earth",
+    "pillars_title": "Los Pilares de Mikel's Fruit",
     "pillar_tradition_title": "Tradición Familiar",
     "pillar_tradition_text": "7 generaciones desde 1819. Cada receta es un tesoro que pasa de padres a hijos.",
     "pillar_terroir_title": "Terroir Único",
@@ -56,7 +56,7 @@
     "commitment_quote": "\"Hacer el bien es parte de nuestro ADN\"",
     "commitment_author": "Jordi Giró, 7ª Generación",
     "cta_title": "Forma Parte de Nuestra Historia",
-    "cta_subtitle": "Cuando eliges Mikel's Earth, no solo compras un producto. Te unes a una tradición de más de 200 años. Te conviertes en parte de una familia que cree en hacer las cosas bien.",
+    "cta_subtitle": "Cuando eliges Mikel's Fruit, no solo compras un producto. Te unes a una tradición de más de 200 años. Te conviertes en parte de una familia que cree en hacer las cosas bien.",
     "cta_visit_title": "Visítanos",
     "cta_visit_text": "Descubre nuestro obrador y vive la experiencia",
     "cta_visit_link": "Reserva tu visita →",
@@ -65,7 +65,7 @@
     "cta_shop_link": "Ir a la tienda →",
     "cta_follow_title": "Síguenos",
     "cta_follow_text": "Únete a nuestra comunidad",
-    "cta_follow_link": "@mikelsearth →"
+    "cta_follow_link": "@mikelsfruit →"
   },
   "footer": {
     "navigation": "Navegación",
@@ -77,7 +77,7 @@
     "company_desc": "Tradición familiar desde 1819. Productos naturales, artesanales y veganos de Lleida.",
     "contact_title": "Contacto",
     "follow_us": "Síguenos",
-    "copyright": "Copyright © 2025 Mikel's Earth - Todos los derechos reservados",
+    "copyright": "Copyright © 2025 Mikel's Fruit - Todos los derechos reservados",
     "privacy": "Política de privacidad",
     "terms": "Términos y condiciones"
   },
@@ -297,7 +297,7 @@
     "form_success": "¡Gracias por tu opinión! Te hemos enviado un cupón de descuento del 10% a tu email."
   },
   "contact": {
-    "seo_title": "Contacto | Mikel's Earth",
+    "seo_title": "Contacto | Mikel's Fruit",
     "page_title": "Contacto",
     "page_subtitle": "¿Tienes alguna pregunta? Escríbenos y te responderemos lo antes posible.",
     "name": "Nombre",
@@ -398,7 +398,7 @@
     "values_title": "Los Valores que Nos Definen",
     "seventh_gen": "Séptima Generación",
     "cta_title": "Forma Parte de Nuestra Historia",
-    "cta_text": "Cuando eliges Mikel's Earth, no solo compras un producto. Te conviertes en parte de una tradición de más de 200 años. Te unes a una familia que cree en la calidad, la autenticidad y el respeto por la tierra.",
+    "cta_text": "Cuando eliges Mikel's Fruit, no solo compras un producto. Te conviertes en parte de una tradición de más de 200 años. Te unes a una familia que cree en la calidad, la autenticidad y el respeto por la tierra.",
     "cta_products": "Descubre Nuestros Productos",
     "cta_workshop": "Visita Nuestro Obrador"
   },
@@ -601,13 +601,13 @@
   },
   "experiences": {
     "title": "Experiencias",
-    "subtitle": "Vive la experiencia Mikel's Earth",
+    "subtitle": "Vive la experiencia Mikel's Fruit",
     "coming_soon": "Muy Pronto",
     "hero_title": "Experiencias",
     "hero_subtitle": "Estamos preparando algo muy especial para ti",
-    "hero_description": "Visitas al obrador, catas de aceite, experiencias en el campo... Pronto podras vivir la tradicion de Mikel's Earth en primera persona.",
+    "hero_description": "Visitas al obrador, catas de aceite, experiencias en el campo... Pronto podras vivir la tradicion de Mikel's Fruit en primera persona.",
     "preparing_title": "Que Estamos Preparando?",
-    "preparing_text": "Queremos que vivas la experiencia completa de Mikel's Earth. Que toques la tierra, que huelas el aceite recien prensado, que pruebes nuestras joyas directamente del obrador.",
+    "preparing_text": "Queremos que vivas la experiencia completa de Mikel's Fruit. Que toques la tierra, que huelas el aceite recien prensado, que pruebes nuestras joyas directamente del obrador.",
     "visit_title": "Visitas al Obrador",
     "visit_text": "Descubre como puedes hacer tu propio producto artesanal.",
     "tasting_title": "Catas de Aceite",
@@ -687,7 +687,7 @@
     "privacy_policy": "política de privacidad",
     "sending": "Enviando...",
     "submit": "Enviar Solicitud de Pedido",
-    "benefits_title": "¿Por qué elegir Mikel's Earth HORECA?",
+    "benefits_title": "¿Por qué elegir Mikel's Fruit HORECA?",
     "benefit_delivery": "Entrega Directa",
     "benefit_delivery_text": "Del campo a tu cocina sin intermediarios",
     "benefit_prices": "Precios Especiales",
@@ -854,7 +854,7 @@
     "intro_p2": "Aquí compartimos algunas de nuestras recetas favoritas. Algunas son tradicionales de nuestra familia, otras son creaciones modernas. Todas tienen algo en común: resaltan la calidad de nuestros productos.",
     "pairings_title": "Guía de Maridajes",
     "cta_title": "¿Tienes una Receta con Nuestros Productos?",
-    "cta_text": "Nos encantaría conocerla. Comparte tus creaciones con nosotros en redes sociales usando #MikelsEarthRecetas",
+    "cta_text": "Nos encantaría conocerla. Comparte tus creaciones con nosotros en redes sociales usando #MikelsFruitRecetas",
     "cta_shop": "Comprar Productos",
     "cta_instagram": "Síguenos en Instagram"
   },
