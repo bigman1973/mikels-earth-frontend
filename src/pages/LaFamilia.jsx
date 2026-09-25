@@ -35,7 +35,7 @@ const LaFamilia = () => {
             <iframe
               className="absolute top-0 left-0 w-full h-full"
               src="https://www.youtube.com/embed/1fDK7bQ9tKk?si=7u0jvwj11ziuOT-D"
-              title="Mikel's Earth - Nuestra Historia"
+              title="Mikel's Fruit - Nuestra Historia"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
@@ -97,7 +97,7 @@ const LaFamilia = () => {
               },
               {
                 year: "2024",
-                title: "Mikel's Earth",
+                title: "Mikel's Fruit",
                 text: "La séptima generación toma las riendas. Jordi Giró continúa el legado familiar, compartiendo nuestra historia con el mundo a través de productos que honran más de 200 años de tradición."
               }
             ].map((milestone, index) => (

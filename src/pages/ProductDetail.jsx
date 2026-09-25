@@ -6,8 +6,14 @@ import { ShoppingCart, ArrowLeft, Check, Repeat, Tag, Package, Leaf } from 'luci
 // eslint-disable-next-line no-unused-vars -- JSX usa el namespace `<motion.*>`
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import ReactMarkdown from 'react-markdown';
 import SoldOutNotification from '../components/SoldOutNotification';
 import ProductReviews from '../components/ProductReviews';
+
+const REDIRECTED_PRODUCT_SLUGS = new Set([
+  'pack-temprano-premium',
+  'pack-aceite-ecologico-premium-estuche-regalo',
+]);
 import ProductSeo from '../components/ProductSeo';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://mikels-earth-backend-production.up.railway.app';
@@ -56,7 +62,7 @@ const ProductDetail = () => {
   const { products, loading } = useProducts();
   const { t } = useTranslation();
   
-  const product = products.find(p => p.slug === slug);
+  const product = products.find(p => p.slug === slug && p.visibleInStore !== false);
 
   // Fetch rating stats para mostrar estrellas debajo del título
   const [reviewStats, setReviewStats] = useState({ average: 0, count: 0 });
@@ -334,9 +340,19 @@ const ProductDetail = () => {
               )}
 
               {/* Description */}
-              <p className="text-gray-700 leading-relaxed mb-6">
-                {product.longDescription}
-              </p>
+              <div className="text-gray-700 leading-relaxed mb-6 space-y-4">
+                <ReactMarkdown
+                  components={{
+                    p: ({ children }) => <p className="leading-relaxed">{children}</p>,
+                    strong: ({ children }) => <strong className="font-semibold text-primary">{children}</strong>,
+                    ul: ({ children }) => <ul className="list-disc pl-6 space-y-2">{children}</ul>,
+                    ol: ({ children }) => <ol className="list-decimal pl-6 space-y-2">{children}</ol>,
+                    li: ({ children }) => <li className="pl-1">{children}</li>,
+                  }}
+                >
+                  {product.longDescription || product.description || ''}
+                </ReactMarkdown>
+              </div>
 
               {/* Weight */}
               <div className="flex items-center gap-2 text-sm text-gray-600 mb-6">
@@ -439,7 +455,7 @@ const ProductDetail = () => {
                     </div>
                   </div>
                 )}
-                {product.volumeDiscount && !hasDiscount && purchaseType === 'one-time' && (
+                {product.slug !== 'aceite-5l-caja-3' && product.volumeDiscount && !hasDiscount && purchaseType === 'one-time' && (
                   <div className="text-sm text-gray-600">
                     {t('product_detail.volume_discount_text', { min: product.volumeDiscount.minQuantity, percent: product.volumeDiscount.discount })}
                   </div>
@@ -997,8 +1013,8 @@ const ProductDetail = () => {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {(product.relatedProducts
-              ? products.filter(p => product.relatedProducts.includes(p.slug))
-              : products.filter(p => p.id !== product.id && p.category === product.category).slice(0, 3)
+              ? products.filter(p => product.relatedProducts.includes(p.slug) && p.visibleInStore !== false && !REDIRECTED_PRODUCT_SLUGS.has(p.slug))
+              : products.filter(p => p.id !== product.id && p.category === product.category && p.visibleInStore !== false && !REDIRECTED_PRODUCT_SLUGS.has(p.slug)).slice(0, 3)
             ).map(relatedProduct => (
                 <Link
                   key={relatedProduct.id}
@@ -1044,4 +1060,3 @@ const ProductDetail = () => {
 };
 
 export default ProductDetail;
-

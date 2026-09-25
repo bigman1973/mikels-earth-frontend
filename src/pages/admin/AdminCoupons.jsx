@@ -138,7 +138,7 @@ export default function AdminCoupons() {
 
   const shareCouponWhatsApp = (coupon) => {
     const discount = coupon.discount_type === 'percentage' ? `${coupon.discount_value}%` : `${coupon.discount_value}€`;
-    const message = `🎁 ¡Tienes un cupón de descuento para Mikel's Earth!\n\n` +
+    const message = `🎁 ¡Tienes un cupón de descuento para Mikel's Fruit!\n\n` +
       `Código: *${coupon.code}*\n` +
       `Descuento: ${discount}\n\n` +
       `Úsalo en www.mikels.es al finalizar tu compra. ` +

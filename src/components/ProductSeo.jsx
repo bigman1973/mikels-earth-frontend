@@ -6,8 +6,8 @@ const PRODUCT_SEO = {
     description: 'Melocotón plano de nuestros campos de Alcarràs, pelado y preparado a mano. Sin aditivos artificiales, vegano y sin gluten. Tarro de 720 g.',
   },
   'nectarina-almibar': {
-    title: "Nectarina en Almíbar 720g, fruta de Alcarràs | Mikel's",
-    description: 'Nectarina cultivada en Alcarràs y preparada a mano en nuestro obrador el mismo día que se recoge. Sin aditivos, vegana y sin gluten. Tarro de 720 g.',
+    title: "Nectarina en Almíbar Artesanal 720 g | Mikel's Fruit",
+    description: 'Nectarina cultivada en Alcarràs y envasada en almíbar suave. Seleccionada a mano, sin conservantes ni colorantes. El verano en un tarro, todo el año.',
   },
   'aceite-oliva-ecologico': {
     title: "AOVE Ecológico 500ml | Medalla de Oro Japón y NY | Mikel's",
@@ -19,7 +19,7 @@ const PRODUCT_SEO = {
   },
   'aceite-5l-caja-3': {
     title: 'Aceite de Oliva Virgen Extra 5L | Garrafa hostelería',
-    description: 'Garrafa de 5 litros de AOVE de baja acidez, Picual y Hojiblanca. El formato de los que cocinan cada día: restaurantes, obradores y casas con consumo alto.',
+    description: 'Garrafa de 5 litros de AOVE de baja acidez, Picual, Hojiblanca y Arbequina. El formato de los que cocinan cada día: restaurantes, obradores y casas con consumo alto.',
   },
   'pack-mermelada-aceites': {
     title: 'Pack Degustación Premium | Mermelada y 4 aceites',
@@ -42,8 +42,8 @@ const PRODUCT_SEO = {
     description: 'Nuestro aceite ecológico premiado con Medalla de Oro, presentado en estuche de regalo. Listo para regalar sin envolver nada.',
   },
   'mermelada-paraguayo': {
-    title: "Mermelada de Paraguayo Artesanal · 3 tarros de 250 g",
-    description: 'Cuatro ingredientes: paraguayo, agua, azúcar y zumo de limón. 60% de fruta, el triple que la industria. Pack de tres tarros de 250 g.',
+    title: "Mermelada de Paraguayo Artesanal · 60 % fruta | Mikel's Fruit",
+    description: 'Mermelada de paraguayo con 60 % de fruta, tres veces más que la industria. Solo paraguayo, agua, azúcar y limón. Elaborada a mano en Alcarràs.',
   },
 };
 

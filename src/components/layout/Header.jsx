@@ -18,7 +18,7 @@ const Header = () => {
         <div className="container mx-auto px-4 flex justify-between items-center">
           <div className="flex gap-3">
             <a 
-              href="https://www.facebook.com/mikelsearth/" 
+              href="https://www.facebook.com/mikelsfruit/" 
               target="_blank" 
               rel="noopener noreferrer"
               className="hover:text-accent transition-colors"
@@ -29,7 +29,7 @@ const Header = () => {
               </svg>
             </a>
             <a 
-              href="https://www.instagram.com/mikelsearth" 
+              href="https://www.instagram.com/mikelsfruit/" 
               target="_blank" 
               rel="noopener noreferrer"
               className="hover:text-accent transition-colors"
@@ -40,7 +40,7 @@ const Header = () => {
               </svg>
             </a>
             <a 
-              href="https://www.tiktok.com/@mikelsearth" 
+              href="https://www.tiktok.com/@mikelsfruit" 
               target="_blank" 
               rel="noopener noreferrer"
               className="hover:text-accent transition-colors"
@@ -94,7 +94,7 @@ const Header = () => {
           <Link to="/" className="flex items-center">
             <img 
               src="/logo-mikels-earth.svg" 
-              alt="Mikel's Earth - Since 1819" 
+              alt="Mikel's Fruit - Since 1819" 
               className="h-28 md:h-32 w-auto"
             />
           </Link>

@@ -76,7 +76,7 @@ function LoadingScreen() {
         <div className="relative flex items-center justify-center">
           <img 
             src="/logo-mikels-earth.svg" 
-            alt="Mikel's Earth" 
+            alt="Mikel's Fruit" 
             className="w-44 h-44 object-contain animate-pulse"
             style={{ filter: 'brightness(0) invert(1)' }}
           />
@@ -118,7 +118,7 @@ export default function AdminLayout({ children }) {
             <div className="flex items-center gap-3">
               <img src="/logo-mikels-earth.svg" alt="" className="w-7 h-7 object-contain" style={{ filter: 'brightness(0) invert(1)' }} />
               <div>
-                <h1 className="text-sm font-semibold text-white tracking-tight">Mikel's Earth</h1>
+                <h1 className="text-sm font-semibold text-white tracking-tight">Mikel's Fruit</h1>
                 <p className="text-[10px] text-gray-500 font-medium uppercase tracking-wider">Admin Panel</p>
               </div>
             </div>
@@ -230,7 +230,7 @@ export default function AdminLayout({ children }) {
             <div className="flex items-center gap-3 mb-6 pb-4 border-b border-white/5">
               <img src="/logo-mikels-earth.svg" alt="" className="w-7 h-7 object-contain" style={{ filter: 'brightness(0) invert(1)' }} />
               <div>
-                <h1 className="text-sm font-semibold text-white">Mikel's Earth</h1>
+                <h1 className="text-sm font-semibold text-white">Mikel's Fruit</h1>
                 <p className="text-[10px] text-gray-500 uppercase tracking-wider">Admin Panel</p>
               </div>
             </div>

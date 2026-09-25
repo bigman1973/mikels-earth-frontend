@@ -21,7 +21,7 @@ export default function AdminLogin() {
           <div className="relative">
             <img 
               src="/logo-mikels-earth.svg" 
-              alt="Mikel's Earth" 
+              alt="Mikel's Fruit" 
               className="w-36 h-36 object-contain animate-pulse"
               style={{ filter: 'brightness(0) invert(1)' }}
             />
@@ -30,7 +30,7 @@ export default function AdminLogin() {
             </div>
           </div>
           <div className="text-center">
-            <p className="text-white text-sm font-medium">Mikel's Earth</p>
+            <p className="text-white text-sm font-medium">Mikel's Fruit</p>
             <p className="text-gray-500 text-xs mt-1 animate-pulse">Verificando sesión...</p>
           </div>
         </div>
@@ -54,11 +54,11 @@ export default function AdminLogin() {
           <div className="text-center mb-8">
             <img 
               src="/logo-mikels-earth.svg" 
-              alt="Mikel's Earth" 
+              alt="Mikel's Fruit" 
               className="w-28 h-28 mx-auto mb-4 object-contain"
               style={{ filter: 'brightness(0) invert(1)' }}
             />
-            <h1 className="text-xl font-bold text-white">Mikel's Earth</h1>
+            <h1 className="text-xl font-bold text-white">Mikel's Fruit</h1>
             <p className="text-gray-400 text-sm mt-1">Panel de Administración</p>
           </div>
 
