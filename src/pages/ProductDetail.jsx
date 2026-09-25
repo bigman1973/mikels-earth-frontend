@@ -62,7 +62,7 @@ const ProductDetail = () => {
   const { products, loading } = useProducts();
   const { t } = useTranslation();
   
-  const product = products.find(p => p.slug === slug);
+  const product = products.find(p => p.slug === slug && p.visibleInStore !== false);
 
   // Fetch rating stats para mostrar estrellas debajo del título
   const [reviewStats, setReviewStats] = useState({ average: 0, count: 0 });
@@ -1013,8 +1013,8 @@ const ProductDetail = () => {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {(product.relatedProducts
-              ? products.filter(p => product.relatedProducts.includes(p.slug) && !REDIRECTED_PRODUCT_SLUGS.has(p.slug))
-              : products.filter(p => p.id !== product.id && p.category === product.category && !REDIRECTED_PRODUCT_SLUGS.has(p.slug)).slice(0, 3)
+              ? products.filter(p => product.relatedProducts.includes(p.slug) && p.visibleInStore !== false && !REDIRECTED_PRODUCT_SLUGS.has(p.slug))
+              : products.filter(p => p.id !== product.id && p.category === product.category && p.visibleInStore !== false && !REDIRECTED_PRODUCT_SLUGS.has(p.slug)).slice(0, 3)
             ).map(relatedProduct => (
                 <Link
                   key={relatedProduct.id}

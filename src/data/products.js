@@ -147,8 +147,7 @@ export const products = [
     ],
     addons: [
       {
-        productSlug: "estuche-regalo",
-        variantId: "temprano",
+        productSlug: "estuche-regalo-temprano",
         label: "Añadir Estuche Regalo Premium Temprano"
       }
     ],
@@ -249,8 +248,7 @@ export const products = [
     },
     addons: [
       {
-        productSlug: "estuche-regalo",
-        variantId: "extra-virgin",
+        productSlug: "estuche-regalo-virgen-extra",
         label: "Añadir Estuche Regalo Premium"
       }
     ]
@@ -307,8 +305,7 @@ export const products = [
     },
     addons: [
       {
-        productSlug: "estuche-regalo",
-        variantId: "eco",
+        productSlug: "estuche-regalo-ecologico",
         label: "Añadir Estuche Regalo Premium Eco"
       }
     ],
@@ -402,22 +399,16 @@ export const products = [
     claims: ["4 ingredientes naturales", "60% de fruta", "3 veces más fruta que la industria", "Sin conservantes", "Sin colorantes", "Sin espesantes"]
   },
   {
-
-    id: 9,
-    name: "Estuche de Regalo Premium",
-    slug: "estuche-regalo",
-    description: "Estuche cilíndrico premium para presentar tu aceite como un auténtico regalo. Disponible en 3 diseños: Extra, Ecológico y Temprano.",
-    longDescription: "Transforma tu aceite en un regalo inolvidable con nuestro estuche premium. Diseñado con ilustraciones exclusivas que cuentan nuestra historia: el mas familiar, los olivos centenarios y la Seu Vella de Lleida. Cada estuche es una obra de arte que protege y realza la presentación de nuestros aceites. Perfecto para ocasiones especiales, regalos corporativos o simplemente para dar ese toque de distinción que merece un producto artesanal. Disponible en tres diseños: Extra Virgin (crema con olivos), Ecológico (crema con Seu Vella) y Temprano (verde oscuro minimalista). **Importante: El estuche se vende vacío, sin aceite.**",
+    id: 14,
+    name: "Estuche de Regalo Premium Temprano",
+    slug: "estuche-regalo-temprano",
+    sku: "MIKESTTEM",
+    description: "Estuche cilíndrico premium verde oscuro para el aceite temprano.",
+    longDescription: "Complemento de presentación para el Aceite Temprano 500 ml. El estuche se vende únicamente junto al aceite.",
     price: 5.00,
     currency: "EUR",
-    image: "/images/estuche-eco-jardin.jpg",
-    images: [
-      "/images/estuche-eco-jardin.jpg",
-      "/images/estuche-eco-fondo-blanco.jpg",
-      "/images/estuche-extra-fondo-blanco.jpg",
-      "/images/estuche-temprano-fondo-blanco.jpg",
-      "/images/estuche-extra-cocina.jpg"
-    ],
+    image: "/images/estuche-temprano-fondo-blanco.jpg",
+    images: ["/images/estuche-temprano-fondo-blanco.jpg"],
     category: "Packs",
     tags: ["Regalo", "Premium", "Presentación"],
     stock: 50,
@@ -426,27 +417,55 @@ export const products = [
     nutritionalInfo: null,
     subscriptionAvailable: false,
     subscriptionFrequencies: [],
-    variants: [
-      { 
-        id: "extra", 
-        name: "Extra Virgin", 
-        description: "Diseño crema con ilustración del mas y olivos",
-        image: "/images/estuche-extra-fondo-blanco.jpg"
-      },
-      { 
-        id: "eco", 
-        name: "Ecológico", 
-        description: "Diseño crema con ilustración de la Seu Vella de Lleida",
-        image: "/images/estuche-eco-fondo-blanco.jpg"
-      },
-      { 
-        id: "temprano", 
-        name: "Temprano", 
-        description: "Diseño verde oscuro minimalista",
-        image: "/images/estuche-temprano-fondo-blanco.jpg"
-      }
-    ],
-    claims: ["3 diseños disponibles", "Presentación premium", "Perfecto para regalo", "No incluye aceite"]
+    active: true,
+    visibleInStore: false,
+    claims: ["Presentación premium", "No incluye aceite"]
+  },
+  {
+    id: 15,
+    name: "Estuche de Regalo Premium Ecológico",
+    slug: "estuche-regalo-ecologico",
+    sku: "MIKESTBIO",
+    description: "Estuche cilíndrico premium para el aceite ecológico.",
+    longDescription: "Complemento de presentación para el AOVE Ecológico 500 ml. El estuche se vende únicamente junto al aceite.",
+    price: 5.00,
+    currency: "EUR",
+    image: "/images/estuche-eco-fondo-blanco.jpg",
+    images: ["/images/estuche-eco-fondo-blanco.jpg"],
+    category: "Packs",
+    tags: ["Regalo", "Premium", "Presentación"],
+    stock: 50,
+    weight: "50g",
+    ingredients: "Cartón reciclable de alta calidad",
+    nutritionalInfo: null,
+    subscriptionAvailable: false,
+    subscriptionFrequencies: [],
+    active: true,
+    visibleInStore: false,
+    claims: ["Presentación premium", "No incluye aceite"]
+  },
+  {
+    id: 16,
+    name: "Estuche de Regalo Premium Virgen Extra",
+    slug: "estuche-regalo-virgen-extra",
+    sku: "MIKESTEV",
+    description: "Estuche cilíndrico premium para el aceite virgen extra.",
+    longDescription: "Complemento de presentación para el AOVE Virgen Extra 500 ml. El estuche se vende únicamente junto al aceite.",
+    price: 5.00,
+    currency: "EUR",
+    image: "/images/estuche-extra-fondo-blanco.jpg",
+    images: ["/images/estuche-extra-fondo-blanco.jpg", "/images/estuche-extra-cocina.jpg"],
+    category: "Packs",
+    tags: ["Regalo", "Premium", "Presentación"],
+    stock: 50,
+    weight: "50g",
+    ingredients: "Cartón reciclable de alta calidad",
+    nutritionalInfo: null,
+    subscriptionAvailable: false,
+    subscriptionFrequencies: [],
+    active: true,
+    visibleInStore: false,
+    claims: ["Presentación premium", "No incluye aceite"]
   },
   {
 

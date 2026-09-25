@@ -17,6 +17,7 @@ const Products = () => {
   const [sortBy, setSortBy] = useState('default');
 
   const filteredProducts = products.filter(product => {
+    if (product.visibleInStore === false) return false;
     if (REDIRECTED_PRODUCT_SLUGS.has(product.slug)) return false;
     if (selectedCategory === 'all') return true;
     return product.category.toLowerCase() === selectedCategory.toLowerCase();
