@@ -42,8 +42,8 @@ const PRODUCT_SEO = {
     description: 'Nuestro aceite ecológico premiado con Medalla de Oro, presentado en estuche de regalo. Listo para regalar sin envolver nada.',
   },
   'mermelada-paraguayo': {
-    title: "Mermelada de Paraguayo Artesanal · 60 % fruta | Mikel's Fruit",
-    description: 'Mermelada de paraguayo con 60 % de fruta, tres veces más que la industria. Solo paraguayo, agua, azúcar y limón. Elaborada a mano en Alcarràs.',
+    title: "Mermelada de Paraguayo Artesanal · Pack de 3 · 60 % fruta | Mikel's Fruit",
+    description: 'Tres tarros de mermelada de paraguayo con 60 % de fruta, tres veces más que la industria. Solo paraguayo, agua, azúcar y limón. Elaborada a mano en Alcarràs.',
   },
 };
 
