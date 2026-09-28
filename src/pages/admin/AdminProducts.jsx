@@ -3,6 +3,7 @@ import { useAdminAuth } from '../../context/AdminAuthContext';
 import { API_URL } from '../../config/api';
 import AdminLayout from '../../components/admin/AdminLayout';
 import ProductEditor from '../../components/admin/ProductEditor';
+import { calculateMargins } from '../../utils/margins';
 
 export default function AdminProducts() {
   const { authFetch } = useAdminAuth();
@@ -169,26 +170,28 @@ export default function AdminProducts() {
     return products.map(p => {
       const cost = p.cost || 0;
       const webPrice = p.web_price || 0;
-      const ivaRate = p.iva_rate || 0.04;
-      const webPriceNoIva = webPrice > 0 ? webPrice / (1 + ivaRate) : 0;
+      const ivaRate = Number.isFinite(p.iva_rate) ? p.iva_rate : null;
       const shippingCost = p.shipping_cost || 0;
       const preparationCost = p.preparation_cost || 0;
-      
-      let marginBrutoPercent = null;
-      let marginBrutoAbs = null;
-      let marginNetoPercent = null;
-      let marginNetoAbs = null;
-      
-      if (webPriceNoIva > 0 && cost > 0) {
-        marginBrutoAbs = webPriceNoIva - cost;
-        marginBrutoPercent = ((webPriceNoIva - cost) / webPriceNoIva) * 100;
-        marginNetoAbs = webPriceNoIva - cost - shippingCost - preparationCost;
-        marginNetoPercent = ((webPriceNoIva - cost - shippingCost - preparationCost) / webPriceNoIva) * 100;
-      }
+      const margin = calculateMargins({
+        priceWithVat: webPrice,
+        cost,
+        vatRate: ivaRate,
+        shippingCost,
+        preparationCost,
+      });
       
       return { 
-        ...p, cost, webPriceNoIva, ivaRate, shippingCost, preparationCost,
-        marginBrutoPercent, marginBrutoAbs, marginNetoPercent, marginNetoAbs
+        ...p,
+        cost,
+        webPriceNoIva: margin?.baseWithoutVat || 0,
+        ivaRate,
+        shippingCost,
+        preparationCost,
+        marginBrutoPercent: margin?.grossPercent ?? null,
+        marginBrutoAbs: margin?.grossAmount ?? null,
+        marginNetoPercent: margin?.netPercent ?? null,
+        marginNetoAbs: margin?.netAmount ?? null,
       };
     });
   }, [products]);
@@ -239,19 +242,21 @@ export default function AdminProducts() {
   const getSimulatedMargins = (product) => {
     const price = parseFloat(simPrice);
     if (!price || price <= 0) return null;
-    const baseNoIva = price / (1 + (product.ivaRate || 0.04));
-    const cost = product.cost || 0;
-    const shipping = parseFloat(editShipping) || product.shippingCost || 0;
-    const preparation = parseFloat(editPreparation) || product.preparationCost || 0;
-    
-    if (cost <= 0) return null;
-    
-    const brutoAbs = baseNoIva - cost;
-    const brutoPercent = (brutoAbs / baseNoIva) * 100;
-    const netoAbs = baseNoIva - cost - shipping - preparation;
-    const netoPercent = (netoAbs / baseNoIva) * 100;
-    
-    return { baseNoIva, brutoAbs, brutoPercent, netoAbs, netoPercent };
+    const margin = calculateMargins({
+      priceWithVat: price,
+      cost: product.cost,
+      vatRate: product.ivaRate,
+      shippingCost: parseFloat(editShipping) || product.shippingCost || 0,
+      preparationCost: parseFloat(editPreparation) || product.preparationCost || 0,
+    });
+    if (!margin) return null;
+    return {
+      baseNoIva: margin.baseWithoutVat,
+      brutoAbs: margin.grossAmount,
+      brutoPercent: margin.grossPercent,
+      netoAbs: margin.netAmount,
+      netoPercent: margin.netPercent,
+    };
   };
 
   const toggleExpand = (product, i) => {
@@ -483,6 +488,15 @@ export default function AdminProducts() {
                                 <p className={`text-sm font-medium truncate max-w-[200px] ${product.active !== false ? 'text-white' : 'text-gray-500 line-through'}`}>{product.name}</p>
                                 <div className="flex items-center gap-2 mt-0.5">
                                   <p className="text-[10px] text-gray-500 font-mono">{product.sku || '—'}</p>
+                                  {product.tax_status === 'mixed' && (
+                                    <span className="text-[9px] px-1.5 py-0.5 bg-amber-500/10 text-amber-400 rounded border border-amber-500/20">IVA MIXTO</span>
+                                  )}
+                                  {product.tax_status === 'invalid' && (
+                                    <span className="text-[9px] px-1.5 py-0.5 bg-red-500/10 text-red-400 rounded border border-red-500/20">IVA PENDIENTE</span>
+                                  )}
+                                  {product.tax_status === 'unmatched' && (
+                                    <span className="text-[9px] px-1.5 py-0.5 bg-red-500/10 text-red-400 rounded border border-red-500/20">SIN HOLDED</span>
+                                  )}
                                   {product.active === false && (
                                     <span className="text-[9px] px-1.5 py-0.5 bg-red-500/10 text-red-400 rounded border border-red-500/20">INACTIVO</span>
                                   )}
@@ -607,7 +621,11 @@ export default function AdminProducts() {
                                   </div>
                                   {(() => {
                                     const sim = getSimulatedMargins(product);
-                                    if (!sim) return <p className="text-xs text-gray-500 mt-2">Introduce un precio para simular</p>;
+                                    if (!sim) return (
+                                      <p className="text-xs text-amber-400 mt-2">
+                                        {product.tax_error || 'El IVA maestro debe estar configurado antes de simular el margen.'}
+                                      </p>
+                                    );
                                     return (
                                       <div className="mt-3 space-y-2 p-3 bg-white/[0.03] rounded-lg border border-white/5">
                                         <div className="flex justify-between text-xs">
@@ -647,8 +665,16 @@ export default function AdminProducts() {
                                       <span className="text-emerald-400 font-mono">{product.web_price?.toFixed(2) || '—'}€</span>
                                     </div>
                                     <div className="flex justify-between text-xs">
-                                      <span className="text-gray-400">Base sin IVA ({(product.ivaRate * 100).toFixed(0)}%):</span>
-                                      <span className="text-yellow-400 font-mono">{product.webPriceNoIva > 0 ? product.webPriceNoIva.toFixed(2) : '—'}€</span>
+                                      <span className="text-gray-400">
+                                        {product.ivaRate !== null
+                                          ? `Base sin IVA (${(product.ivaRate * 100).toFixed(0)}%):`
+                                          : 'Base sin IVA:'}
+                                      </span>
+                                      <span className="text-yellow-400 font-mono">
+                                        {product.ivaRate !== null && product.webPriceNoIva > 0
+                                          ? `${product.webPriceNoIva.toFixed(2)}€`
+                                          : 'Pendiente de IVA maestro'}
+                                      </span>
                                     </div>
                                     <div className="flex justify-between text-xs border-t border-white/5 pt-2">
                                       <span className="text-gray-400">(-) Coste producto:</span>
@@ -675,6 +701,9 @@ export default function AdminProducts() {
                                       </span>
                                     </div>
                                   </div>
+                                  {product.tax_error && (
+                                    <p className="text-[10px] text-amber-400 leading-relaxed">{product.tax_error}</p>
+                                  )}
                                   <div className="text-[10px] text-gray-600 mt-2">
                                     PVP Holded (sin IVA): {product.holded_price ? `${product.holded_price.toFixed(2)}€` : '—'}
                                   </div>
