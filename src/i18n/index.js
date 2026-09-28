@@ -14,11 +14,12 @@ const detectInitialLanguage = () => {
     const savedLanguage = window.localStorage.getItem('mikels_language');
     if (supportedLanguages.includes(savedLanguage)) return savedLanguage;
   } catch {
-    // localStorage puede estar bloqueado; continuar con el idioma del navegador.
+    // La preferencia puede estar bloqueada; el español sigue siendo el inicio canónico.
   }
 
-  const browserLanguage = window.navigator.language?.split('-')[0];
-  return supportedLanguages.includes(browserLanguage) ? browserLanguage : 'es';
+  // La tienda opera con español como idioma inicial y canónico. El inglés se
+  // conserva únicamente como una elección manual persistida del visitante.
+  return 'es';
 };
 
 i18n

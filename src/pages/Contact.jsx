@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Mail, Phone, MapPin, Send } from 'lucide-react';
+import { Send } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import CompanyLegalBlock from '../components/CompanyLegalBlock';
 
 const Contact = () => {
   const { t } = useTranslation();
@@ -77,49 +78,9 @@ const Contact = () => {
           <div className="space-y-6">
             <div className="bg-white rounded-lg shadow-md p-8">
               <h2 className="text-2xl font-semibold text-primary mb-6">
-                Mikel's by Farms Planet SL
+                Datos de contacto
               </h2>
-              
-              <div className="space-y-4">
-                <div className="flex items-start gap-3">
-                  <MapPin className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
-                  <div>
-                    <p className="font-semibold text-gray-900">{t('contact.address')}</p>
-                    <p className="text-gray-600">
-                      Carrer Cardenal Cisneros, 10<br />
-                      Lérida, España
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <Mail className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
-                  <div>
-                    <p className="font-semibold text-gray-900">Email</p>
-                    <a 
-                      href="mailto:info@mikels.es" 
-                      className="text-primary hover:underline"
-                    >
-                      info@mikels.es
-                    </a>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <Phone className="w-5 h-5 text-primary mt-1 flex-shrink-0" />
-                  <div>
-                    <p className="font-semibold text-gray-900">WhatsApp</p>
-                    <a 
-                      href="https://wa.me/34621144701" 
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-primary hover:underline"
-                    >
-                      +34 621 14 47 01
-                    </a>
-                  </div>
-                </div>
-              </div>
+              <CompanyLegalBlock className="space-y-1 text-gray-600" />
             </div>
 
             <div className="bg-primary text-white rounded-lg shadow-md p-6">
@@ -247,4 +208,3 @@ const Contact = () => {
 };
 
 export default Contact;
-

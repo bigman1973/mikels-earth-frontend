@@ -15,9 +15,9 @@ import {
   Check
 } from 'lucide-react';
 import NotFoundSeo from '../components/NotFoundSeo';
+import { SITE_ORIGIN, buildBlogMetadata } from '../seo/metadata';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://mikels-earth-backend-production.up.railway.app';
-const SITE_ORIGIN = 'https://www.mikels.es';
 
 const BlogPost = () => {
   const { t } = useTranslation();
@@ -43,8 +43,7 @@ const BlogPost = () => {
       setPost(data);
       setError(null);
       
-      // Actualizar título de la página
-      document.title = `${data.title} | Blog Mikel's Fruit`;
+      document.title = buildBlogMetadata(data).title;
     } catch (err) {
       console.error('Error fetching post:', err);
       setError(err.message);
@@ -65,13 +64,6 @@ const BlogPost = () => {
       month: 'long',
       year: 'numeric'
     });
-  };
-
-  const truncate = (value, maxLength) => {
-    if (!value) return '';
-    const text = value.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
-    if (text.length <= maxLength) return text;
-    return `${text.slice(0, maxLength - 1).trimEnd()}…`;
   };
 
   const shareUrl = window.location.href;
@@ -102,6 +94,8 @@ const BlogPost = () => {
     if (post?.featured_image) return post.featured_image;
     return `https://placehold.co/1200x600/CD545B/ffffff?text=${encodeURIComponent(post?.title?.substring(0, 30) || 'Blog')}`;
   };
+
+  const seo = post ? buildBlogMetadata(post) : null;
 
   if (loading) {
     return (
@@ -150,8 +144,8 @@ const BlogPost = () => {
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--mikels-red-10)' }}>
       <Helmet>
-        <title>{`${post.title} | Blog Mikel's Fruit`}</title>
-        <meta name="description" content={truncate(post.content, 155)} />
+        <title>{seo.title}</title>
+        <meta name="description" content={seo.description} />
         <link rel="canonical" href={`${SITE_ORIGIN}/blog/${slug}`} />
       </Helmet>
       {/* Breadcrumb */}

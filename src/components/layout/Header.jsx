@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useCart } from '../../context/CartContext';
 import LanguageSelector from '../common/LanguageSelector';
+import logoMikelsFruit from '../../assets/mikels-fruit-logo-bn-1600.png';
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -93,7 +94,7 @@ const Header = () => {
         <div className="container mx-auto px-4 flex justify-center">
           <Link to="/" className="flex items-center">
             <img
-              src="/logo-mikels-earth.svg"
+              src={logoMikelsFruit}
               alt="Mikel's Fruit - Since 1819"
               className="h-28 md:h-32 w-auto"
             />
@@ -131,7 +132,7 @@ const Header = () => {
                 {t('nav.land')}
               </Link>
               <Link
-                to="/el-obrador"
+                to="/como-se-hace"
                 className="text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
               >
                 {t('nav.workshop')}
@@ -231,7 +232,7 @@ const Header = () => {
                   {t('nav.land')}
                 </Link>
                 <Link
-                  to="/el-obrador"
+                  to="/como-se-hace"
                   className="text-sm font-medium hover:text-secondary transition-colors uppercase"
                   onClick={() => setMobileMenuOpen(false)}
                 >

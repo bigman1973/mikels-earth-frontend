@@ -1,256 +1,129 @@
 import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
+import CompanyLegalBlock from '../components/CompanyLegalBlock';
 
 const Terms = () => {
   const { i18n } = useTranslation();
-  const isEn = i18n.language === 'en';
+  const isEn = i18n.language?.startsWith('en');
 
   return (
     <>
       <Helmet>
-        <title>{isEn ? "Terms & Conditions - Mikel's Fruit" : "Términos y Condiciones - Mikel's Fruit"}</title>
+        <title>Términos y condiciones de compra | Mikel&apos;s Fruit</title>
       </Helmet>
 
-      <div className="container mx-auto px-4 py-12 max-w-4xl">
-        <h1 className="text-4xl font-bold text-primary mb-8">
-          {isEn ? 'Terms & Conditions' : 'Términos y Condiciones'}
-        </h1>
-        
+      <div className="container mx-auto max-w-4xl px-4 py-12">
+        <h1 className="mb-8 text-4xl font-bold text-primary">Términos y Condiciones</h1>
+
         <div className="prose prose-lg max-w-none">
-          <p className="text-gray-600 mb-6">
-            {isEn ? 'Last updated: ' : 'Última actualización: '}
-            {new Date().toLocaleDateString(isEn ? 'en-GB' : 'es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
-          </p>
+          {isEn && (
+            <p className="mb-6 rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-gray-700">
+              These terms are published in Spanish, which is the binding version. If you need assistance in English, please write to{' '}
+              <a href="mailto:info@mikels.es">info@mikels.es</a>.
+            </p>
+          )}
+
+          <p className="mb-6 text-gray-600">Última actualización: 28 de septiembre de 2026</p>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-bold text-primary mb-4">
-              {isEn ? '1. General Information' : '1. Información general'}
-            </h2>
-            <p className="text-gray-700 leading-relaxed">
-              <strong>Mikel's by Farms Planet SL</strong><br />
-              CIF: B25943876<br />
-              {isEn ? 'Address' : 'Dirección'}: Carrer Cardenal Cisneros, 10, Lérida, {isEn ? 'Spain' : 'España'}<br />
-              Email: info@mikels.es<br />
-              {isEn ? 'Phone' : 'Teléfono'}: +34 973 23 45 67<br />
-              Web: www.mikels.es
-            </p>
+            <h2 className="mb-4 text-2xl font-bold text-primary">1. Información general</h2>
+            <p className="text-gray-700">FARMS PLANET SL, titular de la marca comercial Mikel&apos;s Fruit.</p>
+            <CompanyLegalBlock className="mt-4 text-gray-700" />
+            <p className="mt-4 text-gray-700">Web: www.mikels.es</p>
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-bold text-primary mb-4">
-              {isEn ? '2. Purpose' : '2. Objeto'}
-            </h2>
-            <p className="text-gray-700 leading-relaxed">
-              {isEn
-                ? 'These general conditions govern the sale of artisanal food products (flat peach in syrup, olive oils, etc.) through our online shop www.mikels.es'
-                : 'Las presentes condiciones generales regulan la venta de productos alimentarios artesanales (paraguayo en almíbar, aceites de oliva, etc.) a través de nuestra tienda online www.mikels.es'}
-            </p>
+            <h2 className="mb-4 text-2xl font-bold text-primary">2. Objeto</h2>
+            <p className="text-gray-700">Estas condiciones generales regulan la venta de productos alimentarios a través de la tienda online www.mikels.es.</p>
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-bold text-primary mb-4">
-              {isEn ? '3. Products' : '3. Productos'}
-            </h2>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              {isEn ? 'All our products are:' : 'Todos nuestros productos son:'}
-            </p>
-            <ul className="list-disc pl-6 text-gray-700 space-y-2">
-              <li>{isEn ? '100% natural and artisanal' : '100% naturales y artesanales'}</li>
-              <li>{isEn ? 'Made in our workshop in Lleida' : 'Elaborados en nuestro obrador de Lleida'}</li>
-              <li>{isEn ? 'Vegan and free from artificial additives' : 'Veganos y sin aditivos artificiales'}</li>
-              <li>{isEn ? 'From sustainable agriculture' : 'Procedentes de agricultura sostenible'}</li>
-            </ul>
-            <p className="text-gray-700 leading-relaxed mt-4">
-              {isEn
-                ? 'Product images and descriptions are indicative. We reserve the right to modify product characteristics without prior notice.'
-                : 'Las imágenes y descripciones de los productos son orientativas. Nos reservamos el derecho de modificar las características de los productos sin previo aviso.'}
-            </p>
+            <h2 className="mb-4 text-2xl font-bold text-primary">3. Productos</h2>
+            <p className="text-gray-700">Nuestros productos se elaboran a partir de fruta de temporada, con recetas tradicionales y sin aditivos artificiales. La lista completa de ingredientes de cada producto figura en su ficha y en el envase.</p>
+            <p className="mt-4 text-gray-700">El aceite de oliva ecológico cuenta con certificación de agricultura ecológica.</p>
+            <p className="mt-4 text-gray-700">Las imágenes y descripciones son orientativas. Nos reservamos el derecho de modificar las características de los productos, informando de ello en la ficha correspondiente.</p>
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-bold text-primary mb-4">
-              {isEn ? '4. Prices' : '4. Precios'}
-            </h2>
-            <p className="text-gray-700 leading-relaxed">
-              {isEn
-                ? 'Prices shown on the website include VAT and are expressed in euros (€). Shipping costs will be calculated and displayed before completing the purchase.'
-                : 'Los precios mostrados en la web incluyen IVA y están expresados en euros (€). Los gastos de envío se calcularán y mostrarán antes de finalizar la compra.'}
-            </p>
-            <p className="text-gray-700 leading-relaxed mt-4">
-              {isEn
-                ? 'We reserve the right to modify prices at any time, although orders already placed will be honoured at the price agreed at the time of purchase.'
-                : 'Nos reservamos el derecho de modificar los precios en cualquier momento, aunque los pedidos ya realizados se respetarán al precio acordado en el momento de la compra.'}
-            </p>
+            <h2 className="mb-4 text-2xl font-bold text-primary">4. Precios</h2>
+            <p className="text-gray-700">Los precios mostrados incluyen IVA y están expresados en euros. Los gastos de envío se calculan y se muestran antes de finalizar la compra.</p>
+            <p className="mt-4 text-gray-700">Podemos modificar los precios en cualquier momento; los pedidos ya realizados se respetan al precio acordado en el momento de la compra.</p>
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-bold text-primary mb-4">
-              {isEn ? '5. Purchase Process' : '5. Proceso de compra'}
-            </h2>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              {isEn ? 'To make a purchase:' : 'Para realizar una compra:'}
-            </p>
-            <ol className="list-decimal pl-6 text-gray-700 space-y-2">
-              <li>{isEn ? 'Select products and add them to your cart' : 'Seleccione los productos y añádalos al carrito'}</li>
-              <li>{isEn ? 'Review your order in the cart' : 'Revise su pedido en el carrito'}</li>
-              <li>{isEn ? 'Apply discount codes if you have any' : 'Aplique códigos de descuento si dispone de ellos'}</li>
-              <li>{isEn ? 'Complete the form with your shipping and billing details' : 'Complete el formulario con sus datos de envío y facturación'}</li>
-              <li>{isEn ? 'Select the payment method' : 'Seleccione el método de pago'}</li>
-              <li>{isEn ? 'Confirm the order' : 'Confirme el pedido'}</li>
+            <h2 className="mb-4 text-2xl font-bold text-primary">5. Proceso de compra</h2>
+            <ol className="list-decimal space-y-2 pl-6 text-gray-700">
+              <li>Seleccione los productos y añádalos al carrito.</li>
+              <li>Revise su pedido.</li>
+              <li>Aplique códigos de descuento, si dispone de ellos.</li>
+              <li>Complete sus datos de envío y facturación.</li>
+              <li>Seleccione el método de pago.</li>
+              <li>Confirme el pedido.</li>
             </ol>
-            <p className="text-gray-700 leading-relaxed mt-4">
-              {isEn ? 'You will receive a confirmation email with the details of your order.' : 'Recibirá un email de confirmación con los detalles de su pedido.'}
-            </p>
+            <p className="mt-4 text-gray-700">Recibirá un correo de confirmación con el detalle de su pedido.</p>
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-bold text-primary mb-4">
-              {isEn ? '6. Payment Methods' : '6. Métodos de pago'}
-            </h2>
-            <p className="text-gray-700 leading-relaxed">
-              {isEn ? 'We accept the following payment methods through our secure Stripe gateway:' : 'Aceptamos los siguientes métodos de pago a través de nuestra pasarela segura Stripe:'}
-            </p>
-            <ul className="list-disc pl-6 text-gray-700 space-y-2">
-              <li>{isEn ? 'Credit and debit cards (Visa, Mastercard, American Express)' : 'Tarjetas de crédito y débito (Visa, Mastercard, American Express)'}</li>
-              <li>Bizum</li>
-              <li>{isEn ? 'Bank transfer' : 'Transferencia bancaria'}</li>
-            </ul>
-            <p className="text-gray-700 leading-relaxed mt-4">
-              {isEn ? 'All payments are processed securely. We do not store credit card data.' : 'Todos los pagos se procesan de forma segura. No almacenamos datos de tarjetas de crédito.'}
-            </p>
+            <h2 className="mb-4 text-2xl font-bold text-primary">6. Métodos de pago</h2>
+            <p className="text-gray-700">Aceptamos tarjetas de crédito y débito, Bizum y transferencia bancaria, a través de la pasarela segura de Stripe. No almacenamos los datos de su tarjeta.</p>
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-bold text-primary mb-4">
-              {isEn ? '7. Shipping' : '7. Envíos'}
-            </h2>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              <strong>{isEn ? 'Shipping zones:' : 'Zonas de envío:'}</strong> {isEn ? 'We ship to mainland Spain, the Balearic Islands, and selected European countries.' : 'Realizamos envíos a toda España peninsular y Baleares.'}
-            </p>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              <strong>{isEn ? 'Delivery times:' : 'Plazos de entrega:'}</strong> {isEn ? '3-5 working days from order confirmation.' : '3-5 días laborables desde la confirmación del pedido.'}
-            </p>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              <strong>{isEn ? 'Shipping costs:' : 'Gastos de envío:'}</strong> {isEn ? 'Calculated based on weight and destination.' : 'Se calcularán en función del peso y destino del pedido.'}
-            </p>
-            <p className="text-gray-700 leading-relaxed">
-              {isEn ? 'You will receive a tracking number to follow your order.' : 'Recibirá un número de seguimiento para rastrear su pedido.'}
-            </p>
+            <h2 className="mb-4 text-2xl font-bold text-primary">7. Envíos</h2>
+            <p className="text-gray-700">Enviamos a España peninsular y Baleares.</p>
+            <p className="mt-4 text-gray-700"><strong>Plazo de entrega:</strong> máximo 72 horas laborables desde la confirmación del pedido. Recibirá un número de seguimiento.</p>
+            <p className="mt-4 text-gray-700">Los gastos de envío se calculan según el peso y el destino, y se muestran antes de pagar.</p>
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-bold text-primary mb-4">
-              {isEn ? '8. Right of Withdrawal' : '8. Derecho de desistimiento'}
-            </h2>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              {isEn
-                ? 'Under the General Consumer Protection Act, you have 14 calendar days from receipt of the order to exercise your right of withdrawal.'
-                : 'Según la Ley General para la Defensa de los Consumidores y Usuarios, dispone de 14 días naturales desde la recepción del pedido para ejercer su derecho de desistimiento.'}
-            </p>
-            <p className="text-gray-700 leading-relaxed mb-4">
-              <strong>{isEn ? 'Exceptions:' : 'Excepciones:'}</strong> {isEn
-                ? 'As these are perishable food products, we only accept returns in case of defective products or shipping errors.'
-                : 'Por tratarse de productos alimentarios perecederos, solo aceptaremos devoluciones en caso de productos defectuosos o errores en el envío.'}
-            </p>
-            <p className="text-gray-700 leading-relaxed">
-              {isEn ? 'To exercise the right of withdrawal, contact us at info@mikels.es' : 'Para ejercer el derecho de desistimiento, contacte con nosotros en info@mikels.es'}
-            </p>
+            <h2 className="mb-4 text-2xl font-bold text-primary">8. Derecho de desistimiento</h2>
+            <p className="text-gray-700">Dispone de <strong>14 días naturales</strong> desde la recepción del pedido para desistir de la compra sin necesidad de justificación, conforme a la normativa de defensa de consumidores y usuarios.</p>
+            <p className="mt-4 text-gray-700">Para ejercerlo, escríbanos a <a href="mailto:info@mikels.es">info@mikels.es</a>. Le devolveremos el importe abonado, incluidos los gastos de envío estándar, en un plazo máximo de catorce días desde que nos comunique su decisión.</p>
+            <p className="mt-4 text-gray-700"><strong>Única excepción:</strong> por razones de higiene y protección de la salud, no se admite la devolución de productos alimentarios precintados que hayan sido abiertos tras la entrega. Los productos sin abrir y en buen estado se admiten con normalidad.</p>
+            <p className="mt-4 text-gray-700">Los costes de la devolución corren a cargo del comprador, salvo que el producto llegue defectuoso o se haya producido un error en el envío, en cuyo caso los asumimos nosotros.</p>
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-bold text-primary mb-4">
-              {isEn ? '9. Guarantees' : '9. Garantías'}
-            </h2>
-            <p className="text-gray-700 leading-relaxed">
-              {isEn
-                ? 'All our products comply with current food safety regulations. If you receive a defective or damaged product, contact us within the first 24 hours of receipt to arrange replacement or refund.'
-                : 'Todos nuestros productos cumplen con la normativa vigente en materia de seguridad alimentaria. Si recibe un producto defectuoso o en mal estado, contacte con nosotros en las primeras 24 horas desde la recepción para gestionar su sustitución o reembolso.'}
-            </p>
+            <h2 className="mb-4 text-2xl font-bold text-primary">9. Garantías</h2>
+            <p className="text-gray-700">Todos nuestros productos cumplen la normativa de seguridad alimentaria.</p>
+            <p className="mt-4 text-gray-700">Si recibe un producto defectuoso, roto o en mal estado, le rogamos que nos lo comunique cuanto antes en <a href="mailto:info@mikels.es">info@mikels.es</a>, con una fotografía si es posible: así podemos resolverlo con rapidez. Esto no limita en modo alguno la garantía legal de conformidad que le corresponde.</p>
+            <p className="mt-4 text-gray-700">Gestionaremos la sustitución o el reembolso sin coste para usted.</p>
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-bold text-primary mb-4">
-              {isEn ? '10. Discount Codes' : '10. Códigos de descuento'}
-            </h2>
-            <p className="text-gray-700 leading-relaxed">
-              {isEn
-                ? 'Discount codes are single-use per customer and cannot be combined with other promotions unless expressly stated. We reserve the right to cancel fraudulent or misused codes.'
-                : 'Los códigos de descuento son de un solo uso por cliente y no son acumulables con otras promociones salvo indicación expresa. Nos reservamos el derecho de cancelar códigos fraudulentos o mal utilizados.'}
-            </p>
+            <h2 className="mb-4 text-2xl font-bold text-primary">10. Códigos de descuento</h2>
+            <p className="text-gray-700">Los códigos son de un solo uso por cliente y no acumulables con otras promociones, salvo indicación expresa. Podemos cancelar códigos obtenidos o utilizados de forma fraudulenta.</p>
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-bold text-primary mb-4">
-              {isEn ? '11. Intellectual Property' : '11. Propiedad intelectual'}
-            </h2>
-            <p className="text-gray-700 leading-relaxed">
-              {isEn
-                ? "All content on this website (texts, images, trademarks, logos) is the property of Mikel's by Farms Planet SL and is protected by intellectual property laws. Reproduction without express authorisation is prohibited."
-                : 'Todos los contenidos de esta web (textos, imágenes, marcas, logotipos) son propiedad de Mikel\'s by Farms Planet SL y están protegidos por las leyes de propiedad intelectual. Queda prohibida su reproducción sin autorización expresa.'}
-            </p>
+            <h2 className="mb-4 text-2xl font-bold text-primary">11. Propiedad intelectual</h2>
+            <p className="text-gray-700">Los contenidos de esta web —textos, imágenes, marcas y logotipos— son propiedad de FARMS PLANET SL y están protegidos por la legislación de propiedad intelectual e industrial. Queda prohibida su reproducción sin autorización expresa.</p>
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-bold text-primary mb-4">
-              {isEn ? '12. Data Protection' : '12. Protección de datos'}
-            </h2>
-            <p className="text-gray-700 leading-relaxed">
-              {isEn ? 'The processing of your personal data is carried out in accordance with our ' : 'El tratamiento de sus datos personales se realiza conforme a nuestra '}
-              <a href="/politica-privacidad" className="text-primary hover:underline">
-                {isEn ? 'Privacy Policy' : 'Política de Privacidad'}
-              </a>.
-            </p>
+            <h2 className="mb-4 text-2xl font-bold text-primary">12. Protección de datos</h2>
+            <p className="text-gray-700">El tratamiento de sus datos personales se realiza conforme a nuestra <a href="/politica-privacidad">Política de Privacidad</a>.</p>
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-bold text-primary mb-4">
-              {isEn ? '13. Liability' : '13. Responsabilidad'}
-            </h2>
-            <p className="text-gray-700 leading-relaxed">
-              {isEn ? "Mikel's by Farms Planet SL is not liable for:" : 'Mikel\'s by Farms Planet SL no se hace responsable de:'}
-            </p>
-            <ul className="list-disc pl-6 text-gray-700 space-y-2">
-              <li>{isEn ? 'Delivery delays caused by the courier company' : 'Retrasos en la entrega causados por la empresa de mensajería'}</li>
-              <li>{isEn ? 'Errors in shipping details provided by the customer' : 'Errores en los datos de envío proporcionados por el cliente'}</li>
-              <li>{isEn ? 'Improper use of products' : 'Uso indebido de los productos'}</li>
-              <li>{isEn ? 'Technical interruptions of the website' : 'Interrupciones técnicas del sitio web'}</li>
-            </ul>
+            <h2 className="mb-4 text-2xl font-bold text-primary">13. Responsabilidad</h2>
+            <p className="text-gray-700">Respondemos de la correcta entrega de su pedido conforme a la normativa de consumo.</p>
+            <p className="mt-4 text-gray-700">No respondemos de los errores en los datos de envío facilitados por el comprador, del uso indebido de los productos ni de las interrupciones técnicas del sitio web ajenas a nuestro control, sin que ello limite los derechos que le reconoce la ley.</p>
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-bold text-primary mb-4">
-              {isEn ? '14. Modifications' : '14. Modificaciones'}
-            </h2>
-            <p className="text-gray-700 leading-relaxed">
-              {isEn
-                ? 'We reserve the right to modify these terms and conditions at any time. Changes will be effective from their publication on the website.'
-                : 'Nos reservamos el derecho de modificar estos términos y condiciones en cualquier momento. Los cambios serán efectivos desde su publicación en la web.'}
-            </p>
+            <h2 className="mb-4 text-2xl font-bold text-primary">14. Modificaciones</h2>
+            <p className="text-gray-700">Podemos modificar estas condiciones. Los cambios se aplican a los pedidos realizados a partir de su publicación.</p>
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-bold text-primary mb-4">
-              {isEn ? '15. Applicable Law' : '15. Legislación aplicable'}
-            </h2>
-            <p className="text-gray-700 leading-relaxed">
-              {isEn
-                ? 'These conditions are governed by Spanish law. For any dispute, the parties submit to the courts of Lleida, Spain.'
-                : 'Estas condiciones se rigen por la legislación española. Para cualquier controversia, las partes se someten a los juzgados y tribunales de Lleida, España.'}
-            </p>
+            <h2 className="mb-4 text-2xl font-bold text-primary">15. Legislación aplicable</h2>
+            <p className="text-gray-700">Estas condiciones se rigen por la legislación española. En los contratos con consumidores serán competentes los juzgados y tribunales correspondientes al domicilio del comprador.</p>
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-bold text-primary mb-4">
-              {isEn ? '16. Contact' : '16. Contacto'}
-            </h2>
-            <p className="text-gray-700 leading-relaxed">
-              {isEn ? 'For any enquiry about these terms and conditions:' : 'Para cualquier consulta sobre estos términos y condiciones:'}
-            </p>
-            <p className="text-gray-700 leading-relaxed mt-4">
-              Email: <a href="mailto:info@mikels.es" className="text-primary hover:underline">info@mikels.es</a><br />
-              {isEn ? 'Phone' : 'Teléfono'}: +34 973 23 45 67<br />
-              {isEn ? 'Address' : 'Dirección'}: Carrer Cardenal Cisneros, 10, Lérida, {isEn ? 'Spain' : 'España'}
-            </p>
+            <h2 className="mb-4 text-2xl font-bold text-primary">16. Contacto</h2>
+            <CompanyLegalBlock className="text-gray-700" />
           </section>
         </div>
       </div>

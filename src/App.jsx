@@ -15,7 +15,7 @@ const NewsletterPopup = lazy(() => import('./components/NewsletterPopup'));
 const Home = lazy(() => import('./pages/Home'));
 const LaFamilia = lazy(() => import('./pages/LaFamilia'));
 const NuestraTierra = lazy(() => import('./pages/NuestraTierra'));
-const ElObrador = lazy(() => import('./pages/ElObrador'));
+const ComoSeHace = lazy(() => import('./pages/ComoSeHace'));
 const NuestrasJoyas = lazy(() => import('./pages/NuestrasJoyas'));
 const Experiencias = lazy(() => import('./pages/Experiencias'));
 const Recetario = lazy(() => import('./pages/Recetario'));
@@ -125,7 +125,8 @@ function App() {
                       <Route path="/" element={<Home />} />
                       <Route path="/la-familia" element={<LaFamilia />} />
                       <Route path="/nuestra-tierra" element={<NuestraTierra />} />
-                      <Route path="/el-obrador" element={<ElObrador />} />
+                      <Route path="/como-se-hace" element={<ComoSeHace />} />
+                      <Route path="/el-obrador" element={<Navigate to="/como-se-hace" replace />} />
                       <Route path="/nuestras-joyas" element={<NuestrasJoyas />} />
                       <Route path="/experiencias" element={<Experiencias />} />
                       <Route path="/recetario" element={<Recetario />} />

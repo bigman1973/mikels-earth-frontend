@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAdminAuth } from '../../context/AdminAuthContext';
+import logoMikelsFruit from '../../assets/mikels-fruit-logo-bn-1600.png';
 
 const NAV_ITEMS = [
   {
@@ -75,7 +76,7 @@ function LoadingScreen() {
       <div className="flex flex-col items-center gap-8">
         <div className="relative flex items-center justify-center">
           <img
-            src="/logo-mikels-earth.svg"
+            src={logoMikelsFruit}
             alt="Mikel's Fruit"
             className="w-44 h-44 object-contain animate-pulse"
             style={{ filter: 'brightness(0) invert(1)' }}
@@ -116,14 +117,14 @@ export default function AdminLayout({ children }) {
         <div className={`h-16 flex items-center ${sidebarCollapsed ? 'justify-center px-2' : 'px-5'} border-b border-white/5`}>
           {!sidebarCollapsed ? (
             <div className="flex items-center gap-3">
-              <img src="/logo-mikels-earth.svg" alt="" className="w-7 h-7 object-contain" style={{ filter: 'brightness(0) invert(1)' }} />
+              <img src={logoMikelsFruit} alt="" className="w-7 h-7 object-contain" style={{ filter: 'brightness(0) invert(1)' }} />
               <div>
                 <h1 className="text-sm font-semibold text-white tracking-tight">Mikel's Fruit</h1>
                 <p className="text-[10px] text-gray-500 font-medium uppercase tracking-wider">Admin Panel</p>
               </div>
             </div>
           ) : (
-            <img src="/logo-mikels-earth.svg" alt="" className="w-7 h-7 object-contain" style={{ filter: 'brightness(0) invert(1)' }} />
+            <img src={logoMikelsFruit} alt="" className="w-7 h-7 object-contain" style={{ filter: 'brightness(0) invert(1)' }} />
           )}
         </div>
 
@@ -212,7 +213,7 @@ export default function AdminLayout({ children }) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={mobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
             </svg>
           </button>
-          <img src="/logo-mikels-earth.svg" alt="" className="w-6 h-6 object-contain" style={{ filter: 'brightness(0) invert(1)' }} />
+          <img src={logoMikelsFruit} alt="" className="w-6 h-6 object-contain" style={{ filter: 'brightness(0) invert(1)' }} />
           <span className="text-sm font-semibold text-white">Admin</span>
         </div>
         <div className="flex items-center gap-2">
@@ -228,7 +229,7 @@ export default function AdminLayout({ children }) {
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)}></div>
           <div className="absolute left-0 top-0 bottom-0 w-72 bg-[#0f0f17] border-r border-white/5 p-4 flex flex-col">
             <div className="flex items-center gap-3 mb-6 pb-4 border-b border-white/5">
-              <img src="/logo-mikels-earth.svg" alt="" className="w-7 h-7 object-contain" style={{ filter: 'brightness(0) invert(1)' }} />
+              <img src={logoMikelsFruit} alt="" className="w-7 h-7 object-contain" style={{ filter: 'brightness(0) invert(1)' }} />
               <div>
                 <h1 className="text-sm font-semibold text-white">Mikel's Fruit</h1>
                 <p className="text-[10px] text-gray-500 uppercase tracking-wider">Admin Panel</p>

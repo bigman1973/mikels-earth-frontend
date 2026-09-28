@@ -102,7 +102,7 @@ export const products = [
     name: "Aceite de Oliva Virgen Extra Temprano 500ml sin filtrar",
     slug: "aceite-temprano-sin-filtrar",
     description: "Aceitunas recolectadas en su momento verde. Sin filtrar. Verde intenso, ligeramente picante, con ese amargor noble que indica frescura y calidad.",
-    longDescription: "Aceitunas recolectadas en su momento verde, cuando concentran hasta tres veces más polifenoles y antioxidantes.\n\nSin filtrar. Conserva todos sus compuestos beneficiosos: alto contenido en polifenoles, vitamina E y antioxidantes naturales.\n\nVerde intenso, ligeramente picante, con ese amargor noble que indica frescura y calidad. Prensado en frío.\n\nIdeal en crudo: ensaladas, tostadas, carpaccios.\n\nUn aceite que no se disculpa por ser auténtico.",
+    longDescription: "Aceite de oliva virgen extra de primera cosecha, sin filtrar. De perfil verde, fresco y ligeramente picante, prensado en frío e ideal para ensaladas, tostadas y carpaccios.",
     price: 14.90,
     currency: "EUR",
     image: "/images/aceite-temprano-principal.jpeg",
@@ -140,7 +140,7 @@ export const products = [
       { value: "biannual", label: "Semestral", discount: 7 }
     ],
     tieredDiscount: [
-      { minQuantity: 2, discount: 0, label: "Pack Duo", actualQuantity: 2, freeShipping: true, description: "Incluye polifenoles para dos meses" },
+      { minQuantity: 2, discount: 0, label: "Pack Duo", actualQuantity: 2, freeShipping: true },
       { minQuantity: 12, discount: 15, label: "1 caja", actualQuantity: 12 },
       { minQuantity: 24, discount: 20, label: "2 cajas", actualQuantity: 24 },
       { minQuantity: 36, discount: 25, label: "4 CAJAS (Pagas 3 + 1 GRATIS)", actualQuantity: 48 }
@@ -205,7 +205,7 @@ export const products = [
     slug: "aceite-oliva-equilibrado",
     soldOut: true,
     description: "Aceite de oliva virgen extra equilibrado. Versátil y perfecto para todo tipo de platos.",
-    longDescription: "Nuestro aceite de oliva virgen extra equilibrado es el todoterreno de la cocina. Con un perfil organoléptico balanceado entre suavidad e intensidad, es perfecto tanto para cocinar como para aliñar. Prensado en frío para preservar todas sus propiedades antioxidantes y su perfil excepcional. Ideal para el uso diario en cualquier preparación culinaria.",
+    longDescription: "Nuestro aceite de oliva virgen extra equilibrado es el todoterreno de la cocina. Con un perfil organoléptico balanceado entre suavidad e intensidad, es perfecto tanto para cocinar como para aliñar. Prensado en frío. Ideal para el uso diario en cualquier preparación culinaria.",
     price: 10.00,
     currency: "EUR",
     image: "/images/aceite-equilibrado-principal.webp",
@@ -270,7 +270,7 @@ export const products = [
       "/images/aceite-ecologico-lifestyle-campo.webp"
     ],
     category: "Aceites",
-    tags: ["Vegano", "Sin Gluten", "Prensado en Frío", "Ecológico", "Premiado", "Alto en Polifenoles"],
+    tags: ["Vegano", "Sin Gluten", "Prensado en Frío", "Ecológico", "Premiado"],
     stock: 0,
     soldOut: true,
     soldOutMessage: "En cosecha - Disponible pronto",
@@ -515,7 +515,7 @@ export const products = [
     name: "Pack Temprano Premium",
     slug: "pack-temprano-premium",
     description: "Aceite temprano sin filtrar en estuche premium. El regalo perfecto para los amantes del aceite de calidad excepcional.",
-    longDescription: "**El aceite que no se disculpa por ser auténtico**\n\nPara los que entienden de aceite. Para los que buscan algo más que lo ordinario. Para los que aprecian la autenticidad sin filtros.\n\n**CONTENIDO DEL PACK:**\n\n- **Aceite de Oliva Virgen Extra Temprano 500ml sin filtrar** - Aceitunas recolectadas en su momento verde, cuando concentran hasta tres veces más polifenoles y antioxidantes. Sin filtrar para conservar todos sus compuestos beneficiosos.\n\n- **Estuche Premium Temprano** - Presentación elegante y exclusiva que realza la calidad excepcional del aceite. Perfecto para regalo o para lucir en tu cocina.\n\n**Características del aceite:**\n\n🍂 **Cosecha temprana** - Aceitunas verdes en su punto óptimo\n🌿 **Sin filtrar** - Conserva todos sus antioxidantes naturales\n💚 **Verde intenso** - Color que indica frescura y calidad\n🔥 **Ligeramente picante** - Con ese amargor noble de los grandes aceites\n❄️ **Prensado en frío** - Para preservar todas sus propiedades\n\n**Perfil de sabor:**\n- Frutado: Extremadamente intenso\n- Amargo: Noble\n- Picante: Ligero\n- Notas: Hierba recién cortada, verde intenso, frescura extrema\n\n**Ideal para:**\n- Ensaladas en crudo\n- Tostadas y pan\n- Carpaccios\n- Platos que requieren frescura\n\n**¿Por qué este pack?**\n\nEste no es un aceite para cocinar. Es un aceite para disfrutar. Para saborear. Para apreciar cada matiz.\n\nEl estuche premium incluido convierte este aceite excepcional en un regalo memorable. Por solo 4,10€ adicionales, transformas una botella de aceite en una experiencia de regalo completa.\n\n**Edición limitada - Disponible solo en temporada**\n\nEl aceite temprano solo se produce una vez al año, cuando las aceitunas están en su momento verde perfecto. Una vez agotado, hay que esperar a la próxima cosecha.\n\nUn regalo para los que saben apreciar lo auténtico.",
+    longDescription: "**Aceite temprano, sin filtros**\n\nUn estuche de regalo con una botella de 500 ml de aceite de oliva virgen extra de primera cosecha, sin filtrar, y su estuche premium.\n\n**Perfil del aceite:**\n- Verde, fresco y ligeramente picante\n- Prensado en frío\n- Ideal para ensaladas, tostadas y carpaccios\n\nUna edición limitada de temporada para quienes disfrutan de un aceite auténtico.",
     price: 19.00,
     originalPrice: 14.90,
     currency: "EUR",
@@ -555,7 +555,7 @@ export const products = [
       "1x Aceite Temprano 500ml sin filtrar (14,90€)",
       "1x Estuche premium temprano exclusivo"
     ],
-    claims: ["Estuche premium incluido", "Edición limitada", "Sin filtrar", "3x más antioxidantes", "Solo 4,10€ más por el estuche"],
+    claims: ["Estuche premium incluido", "Edición limitada", "Sin filtrar", "Solo 4,10€ más por el estuche"],
     badges: [
       { text: "🍂 EDICIÓN TEMPRANO", textKey: "early_edition", color: "bg-gradient-to-r from-orange-600 to-amber-600" }
     ]
@@ -635,7 +635,6 @@ export const tags = [
   "Prensado en Frío",
   "Ecológico",
   "Premiado",
-  "Alto en Polifenoles",
   "Versátil",
   "Regalo",
   "Premium",
