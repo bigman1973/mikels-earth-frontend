@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import Newsletter from '../common/Newsletter';
+import CompanyLegalBlock from '../CompanyLegalBlock';
 
 const Footer = () => {
   const { t } = useTranslation();
@@ -64,11 +65,7 @@ const Footer = () => {
             <h3 className="font-bold text-primary mb-4 uppercase tracking-wide text-sm">
               {t('footer.contact_title')}
             </h3>
-            <address className="text-gray-600 text-sm not-italic space-y-1">
-              <p>Mikel's by Farms Planet SL</p>
-              <p>Carrer Cardenal Cisneros, 10</p>
-              <p>Lérida, España</p>
-            </address>
+            <CompanyLegalBlock className="space-y-1 text-sm text-gray-600" />
           </div>
 
           {/* Social media */}

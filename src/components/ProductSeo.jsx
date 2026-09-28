@@ -23,6 +23,12 @@ const ProductSeo = ({ product, slug }) => {
       <title>{seo.title}</title>
       <meta name="description" content={seo.description} />
       <link rel="canonical" href={canonical} />
+      <meta property="og:title" content={seo.title} />
+      <meta property="og:description" content={seo.description} />
+      <meta property="og:url" content={canonical} />
+      <meta property="og:type" content="product" />
+      <meta name="twitter:title" content={seo.title} />
+      <meta name="twitter:description" content={seo.description} />
     </Helmet>
   );
 };

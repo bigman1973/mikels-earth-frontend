@@ -75,3 +75,12 @@ test('replaces the retired workshop page with Cómo se hace', async () => {
     permanent: true,
   });
 });
+
+test('writes the approved jam description into static and social metadata', async () => {
+  const jam = await htmlFor('/producto/mermelada-paraguayo');
+  const expected = 'Tres tarros de mermelada de paraguayo con un 60 % de fruta. Solo paraguayo, agua, azúcar y limón. Sin conservantes ni colorantes.';
+
+  assert.equal(tagContent(jam, /<meta name="description" content="([^"]+)"/i), expected);
+  assert.equal(tagContent(jam, /<meta property="og:description" content="([^"]+)"/i), expected);
+  assert.equal(tagContent(jam, /<meta name="twitter:description" content="([^"]+)"/i), expected);
+});

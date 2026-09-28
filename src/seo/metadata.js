@@ -95,7 +95,7 @@ const PRODUCT_SEO = {
   },
   'mermelada-paraguayo': {
     title: "Mermelada de Paraguayo Artesanal · Pack de 3 · 60 % fruta | Mikel's Fruit",
-    description: 'Tres tarros de mermelada de paraguayo con 60 % de fruta, tres veces más que la industria. Solo paraguayo, agua, azúcar y limón. Elaborada a mano en Alcarràs.',
+    description: 'Tres tarros de mermelada de paraguayo con un 60 % de fruta. Solo paraguayo, agua, azúcar y limón. Sin conservantes ni colorantes.',
   },
 };
 

@@ -40,6 +40,70 @@ const applyEditorialOverrides = (product, language = 'es') => {
     };
   }
 
+  if (product.slug === 'mermelada-paraguayo') {
+    const isEnglish = language === 'en';
+
+    return {
+      ...normalizedProduct,
+      description: isEnglish
+        ? 'Three jars of flat peach jam with 60% fruit. Only flat peach, water, sugar and lemon. No preservatives or colourings.'
+        : 'Tres tarros de mermelada de paraguayo con un 60 % de fruta. Solo paraguayo, agua, azúcar y limón. Sin conservantes ni colorantes.',
+      longDescription: isEnglish
+        ? 'Flat peach, water, sugar and natural lemon juice.\n\n60% fruit. Only four ingredients. No preservatives or colourings.\n\nPack of three 250 g jars in a cardboard case.'
+        : 'Paraguayo, agua, azúcar y zumo de limón natural.\n\n60 % de fruta. Solo cuatro ingredientes. Sin conservantes ni colorantes.\n\nPack de tres tarros de 250 g, en estuche de cartón.',
+    };
+  }
+
+  if (product.slug === 'pack-fruta-premium') {
+    return {
+      ...normalizedProduct,
+      longDescription: normalizedProduct.longDescription
+        ?.replace(
+          '60% de fruta (3 veces más que la industria). Solo 4 ingredientes: paraguayo, agua, azúcar y zumo de limón natural. Sin conservantes, sin colorantes, sin espesantes.',
+          '60 % de fruta. Solo cuatro ingredientes: paraguayo, agua, azúcar y zumo de limón natural. Sin conservantes ni colorantes.'
+        )
+        ?.replace(
+          '60% fruit (3 times more than the industry). Only 4 ingredients: flat peach, water, sugar and natural lemon juice. No preservatives, colourings or thickeners.',
+          '60% fruit. Only four ingredients: flat peach, water, sugar and natural lemon juice. No preservatives or colourings.'
+        ),
+    };
+  }
+
+  if (product.slug === 'aceite-temprano-sin-filtrar') {
+    const isEnglish = language === 'en';
+
+    return {
+      ...normalizedProduct,
+      longDescription: isEnglish
+        ? 'First-harvest, unfiltered extra virgin olive oil. Green, fresh and slightly peppery, cold-pressed and ideal for salads, toast and carpaccios.'
+        : 'Aceite de oliva virgen extra de primera cosecha, sin filtrar. De perfil verde, fresco y ligeramente picante, prensado en frío e ideal para ensaladas, tostadas y carpaccios.',
+      tieredDiscount: (normalizedProduct.tieredDiscount || []).map((tier) => {
+        const sanitizedTier = { ...tier };
+        delete sanitizedTier.description;
+        return sanitizedTier;
+      }),
+    };
+  }
+
+  if (product.slug === 'pack-temprano-premium') {
+    const isEnglish = language === 'en';
+
+    return {
+      ...normalizedProduct,
+      longDescription: isEnglish
+        ? '**Early-harvest oil, without filters**\n\nA premium gift set with a 500 ml bottle of first-harvest, unfiltered extra virgin olive oil and its premium case.\n\n**Oil profile:**\n- Green, fresh and slightly peppery\n- Cold-pressed\n- Ideal for salads, toast and carpaccios\n\nA limited seasonal edition for those who enjoy authentic olive oil.'
+        : '**Aceite temprano, sin filtros**\n\nUn estuche de regalo con una botella de 500 ml de aceite de oliva virgen extra de primera cosecha, sin filtrar, y su estuche premium.\n\n**Perfil del aceite:**\n- Verde, fresco y ligeramente picante\n- Prensado en frío\n- Ideal para ensaladas, tostadas y carpaccios\n\nUna edición limitada de temporada para quienes disfrutan de un aceite auténtico.',
+      claims: (normalizedProduct.claims || []).filter((claim) => !/antioxid|polifenol/i.test(claim)),
+    };
+  }
+
+  if (product.slug === 'aceite-oliva-ecologico') {
+    return {
+      ...normalizedProduct,
+      tags: (normalizedProduct.tags || []).filter((tag) => !/polifenol|antioxid/i.test(tag)),
+    };
+  }
+
   if (product.slug !== 'aceite-5l-caja-3') return normalizedProduct;
 
   return {
