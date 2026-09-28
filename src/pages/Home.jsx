@@ -33,7 +33,7 @@ const Home = () => {
           {/* Overlay oscuro para mejorar legibilidad */}
           <span className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/50" />
         </picture>
-        
+
         <div className="container mx-auto px-4 py-20 relative z-10">
           <div className="max-w-5xl mx-auto text-center">
             <div>
@@ -46,7 +46,7 @@ const Home = () => {
               <p className="text-xl text-white/90 mb-12 max-w-2xl mx-auto drop-shadow-lg">
                 {t('home.hero_text')}
               </p>
-              
+
               <div className="flex gap-4 justify-center flex-wrap">
                 <Link
                   to="/la-familia"
@@ -104,7 +104,7 @@ const Home = () => {
           <h2 className="text-5xl font-bold text-primary text-center mb-16">
             {t('home.pillars_title')}
           </h2>
-          
+
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
             {[
               {
@@ -195,8 +195,8 @@ const Home = () => {
                   className="bg-gradient-to-b from-accent/20 to-white rounded-xl shadow-lg hover:shadow-2xl transition-shadow overflow-hidden group"
                 >
                   <div className="h-64 overflow-hidden flex items-center justify-center">
-                    <img 
-                      src={product.image} 
+                    <img
+                      src={product.image}
                       alt={product.name}
                       width="640"
                       height="640"
@@ -282,7 +282,7 @@ const Home = () => {
               <p className="text-2xl text-gray-700 mb-12 leading-relaxed">
                 {t('home.cta_subtitle')}
               </p>
-              
+
               <div className="grid md:grid-cols-3 gap-6 mb-12">
                 <div className="bg-white p-6 rounded-lg shadow-md">
                   <h3 className="font-bold text-primary mb-2">{t('home.cta_visit_title')}</h3>
@@ -301,9 +301,9 @@ const Home = () => {
                 <div className="bg-white p-6 rounded-lg shadow-md">
                   <h3 className="font-bold text-primary mb-2">{t('home.cta_follow_title')}</h3>
                   <p className="text-gray-700 mb-4">{t('home.cta_follow_text')}</p>
-                  <a 
-                    href="https://www.instagram.com/mikelsfruit/" 
-                    target="_blank" 
+                  <a
+                    href="https://instagram.com/mikelsfruit"
+                    target="_blank"
                     rel="noopener noreferrer"
                     className="text-secondary font-semibold"
                   >
