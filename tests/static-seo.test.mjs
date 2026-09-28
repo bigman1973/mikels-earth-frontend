@@ -8,6 +8,7 @@ const ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const DIST = join(ROOT, 'dist');
 const SITEMAP = join(ROOT, 'public', 'sitemap.xml');
 const VERCEL_CONFIG = join(ROOT, 'vercel.json');
+const MIDDLEWARE = join(ROOT, 'middleware.js');
 
 const pathsFromSitemap = async () => {
   const xml = await readFile(SITEMAP, 'utf8');
@@ -75,6 +76,7 @@ test('writes page-specific legal titles into the static HTML', async () => {
 test('replaces the retired workshop page with Cómo se hace', async () => {
   const sitemap = await readFile(SITEMAP, 'utf8');
   const config = JSON.parse(await readFile(VERCEL_CONFIG, 'utf8'));
+  const middleware = await readFile(MIDDLEWARE, 'utf8');
   const howItsMade = await htmlFor('/como-se-hace');
   const redirect = config.redirects?.find(({ source }) => source === '/el-obrador');
 
@@ -90,6 +92,7 @@ test('replaces the retired workshop page with Cómo se hace', async () => {
     destination: '/como-se-hace',
     permanent: true,
   });
+  assert.match(middleware, /['"]\/como-se-hace['"]/);
 });
 
 test('writes the approved jam description into static and social metadata', async () => {

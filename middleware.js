@@ -7,6 +7,7 @@ const STATIC_ROUTES = new Set([
   '/',
   '/la-familia',
   '/nuestra-tierra',
+  '/como-se-hace',
   '/el-obrador',
   '/nuestras-joyas',
   '/experiencias',
