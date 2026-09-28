@@ -5,6 +5,11 @@ import { useProducts } from '../hooks/useProducts';
 import ProductCard from '../components/products/ProductCard';
 import { Filter } from 'lucide-react';
 
+const REDIRECTED_PRODUCT_SLUGS = new Set([
+  'pack-aceite-ecologico-premium-estuche-regalo',
+  'pack-temprano-premium',
+]);
+
 const Products = () => {
   const { t } = useTranslation();
   const { products, categories } = useProducts();
@@ -12,6 +17,8 @@ const Products = () => {
   const [sortBy, setSortBy] = useState('default');
 
   const filteredProducts = products.filter(product => {
+    if (product.visibleInStore === false) return false;
+    if (REDIRECTED_PRODUCT_SLUGS.has(product.slug)) return false;
     if (selectedCategory === 'all') return true;
     return product.category.toLowerCase() === selectedCategory.toLowerCase();
   });

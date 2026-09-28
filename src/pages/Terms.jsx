@@ -8,7 +8,7 @@ const Terms = () => {
   return (
     <>
       <Helmet>
-        <title>{isEn ? "Terms & Conditions - Mikel's Earth" : "Términos y Condiciones - Mikel's Earth"}</title>
+        <title>{isEn ? "Terms & Conditions - Mikel's Fruit" : "Términos y Condiciones - Mikel's Fruit"}</title>
       </Helmet>
 
       <div className="container mx-auto px-4 py-12 max-w-4xl">

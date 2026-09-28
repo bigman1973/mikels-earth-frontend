@@ -74,7 +74,7 @@ const Experiencias = () => {
             
             <h1 className="text-6xl md:text-8xl font-bold text-white mb-8 leading-tight">
               {t('experiences.hero_title')}<br />
-              <span className="font-script text-secondary">Mikel's Earth</span>
+              <span className="font-script text-secondary">Mikel's Fruit</span>
             </h1>
             
             <p className="text-2xl md:text-3xl text-white/90 mb-6 max-w-3xl mx-auto leading-relaxed">

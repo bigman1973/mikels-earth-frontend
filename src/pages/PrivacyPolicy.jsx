@@ -8,7 +8,7 @@ const PrivacyPolicy = () => {
   return (
     <>
       <Helmet>
-        <title>{isEn ? "Privacy Policy - Mikel's Earth" : "Política de Privacidad - Mikel's Earth"}</title>
+        <title>{isEn ? "Privacy Policy - Mikel's Fruit" : "Política de Privacidad - Mikel's Fruit"}</title>
       </Helmet>
 
       <div className="container mx-auto px-4 py-12 max-w-4xl">

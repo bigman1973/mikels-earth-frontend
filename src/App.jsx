@@ -131,6 +131,9 @@ function App() {
                       <Route path="/recetario" element={<Recetario />} />
                       <Route path="/tienda" element={<Products />} />
                       <Route path="/productos" element={<Navigate to="/tienda" replace />} />
+                      <Route path="/familia" element={<Navigate to="/la-familia" replace />} />
+                      <Route path="/producto/pack-aceite-ecologico-premium-estuche-regalo" element={<Navigate to="/producto/aceite-oliva-ecologico" replace />} />
+                      <Route path="/producto/pack-temprano-premium" element={<Navigate to="/producto/aceite-temprano-sin-filtrar" replace />} />
                       <Route path="/producto/:slug" element={<ProductDetail />} />
                       <Route path="/checkout" element={<Checkout />} />
                       <Route path="/order-success" element={<OrderSuccess />} />

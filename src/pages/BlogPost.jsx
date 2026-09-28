@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { useState, useEffect, useCallback } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { motion as Motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import { Helmet } from 'react-helmet-async';
 import { 
   Calendar, 
   User, 
@@ -13,23 +14,20 @@ import {
   Link as LinkIcon,
   Check
 } from 'lucide-react';
+import NotFoundSeo from '../components/NotFoundSeo';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://mikels-earth-backend-production.up.railway.app';
+const SITE_ORIGIN = 'https://www.mikels.es';
 
 const BlogPost = () => {
   const { t } = useTranslation();
   const { slug } = useParams();
-  const navigate = useNavigate();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [copied, setCopied] = useState(false);
 
-  useEffect(() => {
-    fetchPost();
-  }, [slug]);
-
-  const fetchPost = async () => {
+  const fetchPost = useCallback(async () => {
     try {
       setLoading(true);
       const response = await fetch(`${API_URL}/api/blog/posts/${slug}`);
@@ -46,14 +44,18 @@ const BlogPost = () => {
       setError(null);
       
       // Actualizar título de la página
-      document.title = `${data.title} | Blog Mikel's Earth`;
+      document.title = `${data.title} | Blog Mikel's Fruit`;
     } catch (err) {
       console.error('Error fetching post:', err);
       setError(err.message);
     } finally {
       setLoading(false);
     }
-  };
+  }, [slug]);
+
+  useEffect(() => {
+    fetchPost();
+  }, [fetchPost]);
 
   const formatDate = (dateString) => {
     if (!dateString) return '';
@@ -65,13 +67,20 @@ const BlogPost = () => {
     });
   };
 
+  const truncate = (value, maxLength) => {
+    if (!value) return '';
+    const text = value.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+    if (text.length <= maxLength) return text;
+    return `${text.slice(0, maxLength - 1).trimEnd()}…`;
+  };
+
   const shareUrl = window.location.href;
   const shareTitle = post?.title || '';
 
   const handleShare = async (method) => {
     switch (method) {
       case 'email':
-        window.location.href = `mailto:?subject=${encodeURIComponent(shareTitle)}&body=${encodeURIComponent(`Te comparto este artículo de Mikel's Earth: ${shareUrl}`)}`;
+        window.location.href = `mailto:?subject=${encodeURIComponent(shareTitle)}&body=${encodeURIComponent(`Te comparto este artículo de Mikel's Fruit: ${shareUrl}`)}`;
         break;
       case 'whatsapp':
         window.open(`https://wa.me/?text=${encodeURIComponent(`${shareTitle} - ${shareUrl}`)}`, '_blank');
@@ -109,6 +118,7 @@ const BlogPost = () => {
   if (error) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center" style={{ backgroundColor: 'var(--mikels-red-10)' }}>
+        <NotFoundSeo />
         <h1 
           className="text-3xl font-bold mb-4"
           style={{ 
@@ -139,6 +149,11 @@ const BlogPost = () => {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: 'var(--mikels-red-10)' }}>
+      <Helmet>
+        <title>{`${post.title} | Blog Mikel's Fruit`}</title>
+        <meta name="description" content={truncate(post.content, 155)} />
+        <link rel="canonical" href={`${SITE_ORIGIN}/blog/${slug}`} />
+      </Helmet>
       {/* Breadcrumb */}
       <div className="py-4" style={{ backgroundColor: 'white' }}>
         <div className="container mx-auto px-4">
@@ -172,7 +187,7 @@ const BlogPost = () => {
         {/* Título superpuesto */}
         <div className="absolute bottom-0 left-0 right-0 pb-8 md:pb-12">
           <div className="container mx-auto px-4">
-            <motion.div
+            <Motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
@@ -195,7 +210,7 @@ const BlogPost = () => {
               >
                 {post?.title}
               </h1>
-            </motion.div>
+            </Motion.div>
           </div>
         </div>
       </section>
@@ -205,7 +220,7 @@ const BlogPost = () => {
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto">
             {/* Meta info */}
-            <motion.div
+            <Motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -217,7 +232,7 @@ const BlogPost = () => {
                 style={{ color: 'var(--mikels-gray-medium)' }}
               >
                 <User className="w-5 h-5" />
-                {post?.author || "Mikel's Earth"}
+                {post?.author || "Mikel's Fruit"}
               </span>
               <span 
                 className="flex items-center gap-2"
@@ -226,10 +241,10 @@ const BlogPost = () => {
                 <Calendar className="w-5 h-5" />
                 {formatDate(post?.published_at)}
               </span>
-            </motion.div>
+            </Motion.div>
 
             {/* Contenido del post */}
-            <motion.article
+            <Motion.article
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
@@ -252,11 +267,11 @@ const BlogPost = () => {
                   color: 'var(--mikels-gray-dark)'
                 }}
               />
-            </motion.article>
+            </Motion.article>
 
             {/* Tags */}
             {post?.tags && post.tags.length > 0 && (
-              <motion.div
+              <Motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
@@ -275,11 +290,11 @@ const BlogPost = () => {
                     #{tag}
                   </span>
                 ))}
-              </motion.div>
+              </Motion.div>
             )}
 
             {/* Compartir */}
-            <motion.div
+            <Motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.5 }}
@@ -341,10 +356,10 @@ const BlogPost = () => {
                   )}
                 </button>
               </div>
-            </motion.div>
+            </Motion.div>
 
             {/* CTA */}
-            <motion.div
+            <Motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.6 }}
@@ -361,7 +376,7 @@ const BlogPost = () => {
                 <ArrowLeft className="w-5 h-5" />
                 Ver más noticias
               </Link>
-            </motion.div>
+            </Motion.div>
           </div>
         </div>
       </section>

@@ -203,7 +203,7 @@ const BlogAdmin = () => {
       <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
         <div style={{ backgroundColor: 'white', width: '100%', maxWidth: '400px', borderRadius: '1rem', boxShadow: '0 10px 25px rgba(0,0,0,0.1)', padding: '2rem', border: '1px solid #f3f4f6' }}>
           <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-            <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#111827', marginBottom: '0.5rem' }}>Mikel's Earth</h1>
+            <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#111827', marginBottom: '0.5rem' }}>Mikel's Fruit</h1>
             <p style={{ color: '#6b7280' }}>Panel de Administración</p>
           </div>
           {error && (
