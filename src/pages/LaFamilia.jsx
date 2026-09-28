@@ -82,8 +82,8 @@ const LaFamilia = () => {
               },
               {
                 year: "1920",
-                title: "El Obrador Familiar",
-                text: "El obrador familiar se alzó con el mas, donde pasaban los veranos y transformaban los frutos a conserva para pasar el invierno."
+                title: "La receta de casa",
+                text: "En el mas, los veranos terminaban con la fruta convertida en conserva para pasar el invierno."
               },
               {
                 year: "1975",
@@ -154,7 +154,7 @@ const LaFamilia = () => {
               {
                 title: "Transparencia",
                 icon: "👁️",
-                text: "Abrimos las puertas de nuestro obrador. Mostramos nuestro proceso. No tenemos nada que ocultar, porque hacemos las cosas bien."
+                text: "Contamos la receta y los ingredientes de cada producto con claridad."
               },
               {
                 title: "Pasión",
@@ -249,10 +249,10 @@ const LaFamilia = () => {
               {t('family.cta_products', { defaultValue: 'Descubre Nuestros Productos' })}
             </a>
             <a
-              href="/el-obrador"
+              href="/como-se-hace"
               className="bg-primary text-white px-8 py-3 rounded-lg font-bold hover:bg-primary/90 transition-colors"
             >
-              {t('family.cta_workshop', { defaultValue: 'Visita Nuestro Obrador' })}
+              {t('family.cta_workshop', { defaultValue: 'Cómo se hace' })}
             </a>
           </div>
         </div>

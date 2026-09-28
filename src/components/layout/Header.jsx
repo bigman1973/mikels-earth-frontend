@@ -131,7 +131,7 @@ const Header = () => {
                 {t('nav.land')}
               </Link>
               <Link
-                to="/el-obrador"
+                to="/como-se-hace"
                 className="text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
               >
                 {t('nav.workshop')}
@@ -231,7 +231,7 @@ const Header = () => {
                   {t('nav.land')}
                 </Link>
                 <Link
-                  to="/el-obrador"
+                  to="/como-se-hace"
                   className="text-sm font-medium hover:text-secondary transition-colors uppercase"
                   onClick={() => setMobileMenuOpen(false)}
                 >

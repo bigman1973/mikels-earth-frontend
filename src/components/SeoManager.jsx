@@ -6,7 +6,7 @@ const CANONICAL_STATIC_ROUTES = new Set([
   '/',
   '/la-familia',
   '/nuestra-tierra',
-  '/el-obrador',
+  '/como-se-hace',
   '/nuestras-joyas',
   '/experiencias',
   '/recetario',
@@ -43,7 +43,7 @@ const SeoManager = () => {
     : `${SITE_ORIGIN}${normalizedPathname}`;
 
   return (
-    <Helmet>
+    <Helmet key={normalizedPathname}>
       {supportsCanonical ? <link rel="canonical" href={canonical} /> : null}
       {routeSeo?.title ? <title>{routeSeo.title}</title> : null}
       {routeSeo?.description ? (

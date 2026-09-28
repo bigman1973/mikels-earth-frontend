@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ShoppingCart, Tag } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { useCart } from '../../context/CartContext';
 
 const getOptimizedProductImage = (url) => {
@@ -16,6 +17,7 @@ const getOptimizedProductImage = (url) => {
 
 const ProductCard = ({ product }) => {
   const { addToCart, toggleCart, setIsCartOpen } = useCart();
+  const { t } = useTranslation();
 
   const handleBadgeClick = (e, badge) => {
     if (badge.action === 'addPackDuo') {
@@ -52,14 +54,14 @@ const ProductCard = ({ product }) => {
                 onClick={(e) => handleBadgeClick(e, badge)}
                 className={`${badge.color} text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg uppercase tracking-wide cursor-pointer hover:scale-105 transition-transform`}
               >
-                {badge.text}
+                {badge.textKey ? t(`badges.${badge.textKey}`, badge.text) : badge.text}
               </button>
             ) : (
               <div 
                 key={index}
                 className={`${badge.color} text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg uppercase tracking-wide`}
               >
-                {badge.text}
+                {badge.textKey ? t(`badges.${badge.textKey}`, badge.text) : badge.text}
               </div>
             )
           ))}
@@ -186,4 +188,3 @@ const ProductCard = ({ product }) => {
 };
 
 export default ProductCard;
-

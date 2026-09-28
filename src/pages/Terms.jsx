@@ -56,7 +56,7 @@ const Terms = () => {
             </p>
             <ul className="list-disc pl-6 text-gray-700 space-y-2">
               <li>{isEn ? '100% natural and artisanal' : '100% naturales y artesanales'}</li>
-              <li>{isEn ? 'Made in our workshop in Lleida' : 'Elaborados en nuestro obrador de Lleida'}</li>
+              <li>{isEn ? 'Made as described for each product' : 'Elaborados conforme a la descripción de cada producto'}</li>
               <li>{isEn ? 'Vegan and free from artificial additives' : 'Veganos y sin aditivos artificiales'}</li>
               <li>{isEn ? 'From sustainable agriculture' : 'Procedentes de agricultura sostenible'}</li>
             </ul>

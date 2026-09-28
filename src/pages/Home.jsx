@@ -123,7 +123,7 @@ const Home = () => {
                 icon: <Award className="text-secondary" size={48} />,
                 title: t('home.pillar_craft_title'),
                 text: t('home.pillar_craft_text'),
-                link: "/el-obrador"
+                link: "/como-se-hace"
               },
               {
                 icon: <Users className="text-secondary" size={48} />,

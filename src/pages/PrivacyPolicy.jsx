@@ -62,7 +62,7 @@ const PrivacyPolicy = () => {
               <li>{isEn ? 'Manage and process your orders' : 'Gestionar y procesar sus pedidos'}</li>
               <li>{isEn ? 'Send purchase confirmations and shipping updates' : 'Enviar confirmaciones de compra y actualizaciones de envío'}</li>
               <li>{isEn ? 'Issue invoices when requested' : 'Emitir facturas cuando sea solicitado'}</li>
-              <li>{isEn ? 'Manage workshop visit requests' : 'Gestionar solicitudes de visita al obrador'}</li>
+              <li>{isEn ? 'Manage information requests' : 'Gestionar solicitudes de información'}</li>
               <li>{isEn ? 'Respond to enquiries and contact requests' : 'Responder a consultas y solicitudes de contacto'}</li>
               <li>{isEn ? 'Send commercial communications (only with your consent)' : 'Enviar comunicaciones comerciales (solo con su consentimiento)'}</li>
               <li>{isEn ? 'Comply with legal obligations' : 'Cumplir con obligaciones legales'}</li>

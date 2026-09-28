@@ -14,9 +14,9 @@ export const STATIC_ROUTE_SEO = {
     title: "Nuestra tierra: Alcarràs y los olivares de Córdoba | Mikel's",
     description: 'Fruta de Alcarràs y olivos de Córdoba y Lleida. De dónde sale exactamente lo que ponemos en el tarro, finca por finca.',
   },
-  '/el-obrador': {
-    title: "El obrador: cómo hacemos las conservas a mano | Mikel's",
-    description: 'Conservas preparadas a mano, en pequeñas partidas y sin aditivos. Así trabajamos la fruta el mismo día que se recoge.',
+  '/como-se-hace': {
+    title: "Cómo se hace el paraguayo en almíbar | Mikel's Fruit",
+    description: 'Paraguayo pelado a mano, agua, azúcar y zumo de limón. Así se hace la conserva de fruta de Mikel’s Fruit.',
   },
   '/nuestras-joyas': {
     title: "Nuestras joyas: productos de edición limitada | Mikel's",
@@ -28,7 +28,7 @@ export const STATIC_ROUTE_SEO = {
   },
   '/tienda': {
     title: "Tienda online de conservas y AOVE | Mikel's Fruit",
-    description: 'Conservas de fruta y aceite de oliva virgen extra de nuestros campos. Envío desde el obrador, sin intermediarios.',
+    description: 'Conservas de fruta y aceite de oliva virgen extra. Compra online con envío a domicilio.',
   },
   '/blog': {
     title: "Blog: historias, recetas y tradición | Mikel's",
@@ -36,7 +36,7 @@ export const STATIC_ROUTE_SEO = {
   },
   '/contacto': {
     title: "Contacto | Mikel's",
-    description: 'Habla con nosotros: pedidos, distribución, hostelería y visitas. Respondemos en 24 horas laborables.',
+    description: 'Habla con nosotros: pedidos, distribución y hostelería. Respondemos en 24 horas laborables.',
   },
   '/opiniones': {
     title: "Opiniones de clientes | Mikel's Fruit",
@@ -54,8 +54,8 @@ export const STATIC_ROUTE_SEO = {
 
 const PRODUCT_SEO = {
   'paraguayo-almibar': {
-    title: "Paraguayo en Almíbar 720g, de Alcarràs | Mikel's",
-    description: 'Melocotón plano de nuestros campos de Alcarràs, pelado y preparado a mano. Sin aditivos artificiales, vegano y sin gluten. Tarro de 720 g.',
+    title: "Paraguayo en Almíbar 720g, del Segrià | Mikel's",
+    description: 'Paraguayo pelado a mano, pieza a pieza, en almíbar de agua, azúcar y zumo de limón. Sin conservantes ni colorantes. Tarro de 720 g.',
   },
   'nectarina-almibar': {
     title: "Nectarina en Almíbar Artesanal 720 g | Mikel's Fruit",

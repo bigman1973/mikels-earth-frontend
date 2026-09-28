@@ -10,13 +10,35 @@ const replaceLegacyBrand = (value) => (
     : value
 );
 
-const applyEditorialOverrides = (product) => {
+const applyEditorialOverrides = (product, language = 'es') => {
   const normalizedProduct = {
     ...product,
     name: replaceLegacyBrand(product.name),
     description: replaceLegacyBrand(product.description),
     longDescription: replaceLegacyBrand(product.longDescription),
   };
+
+  if (product.slug === 'paraguayo-almibar') {
+    const isEnglish = language === 'en';
+
+    return {
+      ...normalizedProduct,
+      description: isEnglish
+        ? 'Flat peach grown in Segrià, hand-peeled piece by piece. No preservatives or colourings.'
+        : 'Paraguayo cultivado en el Segrià, pelado a mano, pieza a pieza. Sin conservantes, sin colorantes.',
+      longDescription: isEnglish
+        ? 'Flat peach in syrup grown in Segrià. It is hand-peeled, piece by piece, so the fruit reaches the jar with its shape, texture and flavour. No preservatives or colourings.'
+        : 'Paraguayo en almíbar cultivado en el Segrià. Se pela a mano, pieza a pieza, para que la fruta llegue al tarro con su forma, textura y sabor. Sin conservantes, sin colorantes.',
+      ingredients: isEnglish
+        ? 'Hand-peeled flat peach, water, sugar, lemon juice'
+        : 'Paraguayo pelado, agua, azúcar, zumo de limón',
+      badges: (normalizedProduct.badges || []).map((badge) => (
+        badge?.text === '🌍 ÚNICO EN EL MUNDO'
+          ? { ...badge, text: 'Pelado a mano, pieza a pieza', textKey: 'peeled_by_hand' }
+          : badge
+      )),
+    };
+  }
 
   if (product.slug !== 'aceite-5l-caja-3') return normalizedProduct;
 
@@ -30,8 +52,6 @@ const applyEditorialOverrides = (product) => {
   };
 };
 
-const editorialProducts = localProducts.map(applyEditorialOverrides);
-
 /**
  * Hook para cargar productos desde la API con fallback a products.js local.
  * Garantiza que la web SIEMPRE funciona, incluso si la API está caída.
@@ -44,13 +64,20 @@ export function useProducts() {
   const { i18n } = useTranslation();
   const currentLang = i18n.language?.substring(0, 2) || 'es';
   
-  const [products, setProducts] = useState(editorialProducts);
+  const [products, setProducts] = useState(() => (
+    localProducts.map((product) => applyEditorialOverrides(product, currentLang))
+  ));
   const [categories, setCategories] = useState(localCategories);
   const [loading, setLoading] = useState(true);
   const [source, setSource] = useState('local'); // 'api' o 'local'
 
   useEffect(() => {
     let cancelled = false;
+
+    setProducts(localProducts.map((product) => applyEditorialOverrides(product, currentLang)));
+    setCategories(localCategories);
+    setSource('local');
+    setLoading(true);
 
     async function fetchProducts() {
       try {
@@ -63,11 +90,11 @@ export function useProducts() {
         const data = await response.json();
         
         if (!cancelled && data.products && data.products.length > 0) {
-          setProducts(data.products.map(applyEditorialOverrides));
+          setProducts(data.products.map((product) => applyEditorialOverrides(product, currentLang)));
           setCategories(data.categories || localCategories);
           setSource('api');
         }
-      } catch (err) {
+      } catch {
         // Silencioso: usar datos locales como fallback
         console.log('Products: usando datos locales (fallback)');
         if (!cancelled) {
