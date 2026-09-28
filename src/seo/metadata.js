@@ -4,7 +4,7 @@ export const DEFAULT_SOCIAL_IMAGE = `${SITE_ORIGIN}/images/hero-olivos-backgroun
 export const STATIC_ROUTE_SEO = {
   '/': {
     title: "Mikel's Fruit | Productos Naturales y Aceite de Oliva Gourmet desde 1819",
-    description: 'Conservas de fruta y aceite de oliva virgen extra cultivados por la familia Giró en Alcarràs desde 1819. Del campo al tarro, sin aditivos.',
+    description: 'Conservas de fruta y aceite de oliva virgen extra cultivados por la familia Giró en el Segrià desde 1819. Del campo al tarro, sin aditivos.',
   },
   '/la-familia': {
     title: "La familia Giró: siete generaciones desde 1819 | Mikel's",

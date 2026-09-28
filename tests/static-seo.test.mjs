@@ -20,6 +20,11 @@ const htmlFor = (pathname) => readFile(
   'utf8'
 );
 
+const directoryHtmlFor = (pathname) => readFile(
+  join(DIST, pathname.slice(1), 'index.html'),
+  'utf8'
+);
+
 const tagContent = (html, tag) => html.match(tag)?.[1] || '';
 const decodeApostrophes = (value) => value.replaceAll('&#39;', "'");
 
@@ -40,6 +45,17 @@ test('generates one Spanish static head for every sitemap route', async () => {
     assert.match(html, /<meta property="og:title" content="[^"]+"/i, `${pathname} needs OG title`);
     assert.match(html, /<meta property="og:description" content="[^"]+"/i, `${pathname} needs OG description`);
     assert.match(html, /<meta property="og:image" content="https?:\/\/[^\"]+"/i, `${pathname} needs OG image`);
+  }
+});
+
+test('generates a directory index fallback for every non-root sitemap route', async () => {
+  const paths = await pathsFromSitemap();
+
+  for (const pathname of paths.filter((path) => path !== '/')) {
+    const html = await directoryHtmlFor(pathname);
+    const canonical = tagContent(html, /<link rel="canonical" href="([^"]+)"/i);
+
+    assert.equal(canonical, `https://www.mikels.es${pathname}`);
   }
 });
 
@@ -83,4 +99,12 @@ test('writes the approved jam description into static and social metadata', asyn
   assert.equal(tagContent(jam, /<meta name="description" content="([^"]+)"/i), expected);
   assert.equal(tagContent(jam, /<meta property="og:description" content="([^"]+)"/i), expected);
   assert.equal(tagContent(jam, /<meta name="twitter:description" content="([^"]+)"/i), expected);
+});
+
+test('uses Segrià in the homepage description', async () => {
+  const home = await htmlFor('/');
+  const description = tagContent(home, /<meta name="description" content="([^"]+)"/i);
+
+  assert.match(description, /Segrià/);
+  assert.doesNotMatch(description, /Alcarràs/);
 });

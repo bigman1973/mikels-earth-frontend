@@ -56,9 +56,15 @@ const parseSitemapPaths = (xml) => [...xml.matchAll(/<loc>https:\/\/www\.mikels\
   .map((match) => match[1] || '/')
   .filter((pathname) => pathname.startsWith('/'));
 
-const routeFile = (pathname) => pathname === '/'
-  ? join(DIST, 'index.html')
-  : join(DIST, `${pathname.replace(/^\//, '')}.html`);
+const routeFiles = (pathname) => {
+  if (pathname === '/') return [join(DIST, 'index.html')];
+
+  const relativePath = pathname.replace(/^\//, '');
+  return [
+    join(DIST, `${relativePath}.html`),
+    join(DIST, relativePath, 'index.html'),
+  ];
+};
 
 const cleanHead = (html) => html
   .replace(/<html\s+lang=(['"])[^'"]*\1/i, '<html lang="es"')
@@ -146,10 +152,12 @@ const main = async () => {
 
   const metadata = await loadMetadata(paths);
   const baseHtml = await readFile(join(DIST, 'index.html'), 'utf8');
-  await Promise.all([...metadata.values()].map(async (entry) => {
-    const target = routeFile(entry.pathname);
-    await mkdir(dirname(target), { recursive: true });
-    await writeFile(target, injectHead(baseHtml, entry), 'utf8');
+  await Promise.all([...metadata.values()].flatMap((entry) => {
+    const html = injectHead(baseHtml, entry);
+    return routeFiles(entry.pathname).map(async (target) => {
+      await mkdir(dirname(target), { recursive: true });
+      await writeFile(target, html, 'utf8');
+    });
   }));
 
   const elapsedMs = Math.round(performance.now() - startedAt);
