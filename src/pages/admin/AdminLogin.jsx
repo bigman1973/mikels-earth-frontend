@@ -20,7 +20,7 @@ export default function AdminLogin() {
         <div className="flex flex-col items-center gap-6">
           <div className="relative">
             <img
-              src="/logo-mikels-earth.svg"
+              src="/logo-mikels-fruit.png"
               alt="Mikel's Fruit"
               className="w-36 h-36 object-contain animate-pulse"
               style={{ filter: 'brightness(0) invert(1)' }}
@@ -53,7 +53,7 @@ export default function AdminLogin() {
           {/* Logo */}
           <div className="text-center mb-8">
             <img
-              src="/logo-mikels-earth.svg"
+              src="/logo-mikels-fruit.png"
               alt="Mikel's Fruit"
               className="w-28 h-28 mx-auto mb-4 object-contain"
               style={{ filter: 'brightness(0) invert(1)' }}
