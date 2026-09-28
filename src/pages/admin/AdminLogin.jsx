@@ -19,9 +19,9 @@ export default function AdminLogin() {
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
         <div className="flex flex-col items-center gap-6">
           <div className="relative">
-            <img 
-              src="/logo-mikels-earth.svg" 
-              alt="Mikel's Fruit" 
+            <img
+              src="/logo-mikels-earth.svg"
+              alt="Mikel's Fruit"
               className="w-36 h-36 object-contain animate-pulse"
               style={{ filter: 'brightness(0) invert(1)' }}
             />
@@ -52,9 +52,9 @@ export default function AdminLogin() {
         <div className="bg-gray-800 rounded-2xl p-8 shadow-2xl border border-gray-700">
           {/* Logo */}
           <div className="text-center mb-8">
-            <img 
-              src="/logo-mikels-earth.svg" 
-              alt="Mikel's Fruit" 
+            <img
+              src="/logo-mikels-earth.svg"
+              alt="Mikel's Fruit"
               className="w-28 h-28 mx-auto mb-4 object-contain"
               style={{ filter: 'brightness(0) invert(1)' }}
             />
