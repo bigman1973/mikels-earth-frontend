@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { ArrowRight, Heart, Leaf, Award, Users } from 'lucide-react';
+import { ArrowRight, Heart, Leaf, Award, ShoppingBag } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import Newsletter from '../components/common/Newsletter';
 import ReviewCarousel from '../components/ReviewCarousel';
@@ -117,6 +117,7 @@ const Home = () => {
                 icon: <Leaf className="text-secondary" size={48} />,
                 title: t('home.pillar_terroir_title'),
                 text: t('home.pillar_terroir_text'),
+                // Córdoba remains unchanged pending Jordi's confirmation of its origin.
                 link: "/nuestra-tierra"
               },
               {
@@ -126,10 +127,11 @@ const Home = () => {
                 link: "/como-se-hace"
               },
               {
-                icon: <Users className="text-secondary" size={48} />,
-                title: t('home.pillar_transparency_title'),
-                text: t('home.pillar_transparency_text'),
-                link: "/experiencias"
+                icon: <ShoppingBag className="text-secondary" size={48} />,
+                title: t('home.pillar_ingredients_title'),
+                text: t('home.pillar_ingredients_text'),
+                link: "/tienda",
+                linkText: t('home.view_products')
               }
             ].map((pillar, index) => (
               <div key={index}>
@@ -147,7 +149,7 @@ const Home = () => {
                     {pillar.text}
                   </p>
                   <div className="text-center text-secondary font-semibold">
-                    {t('home.discover_more')}
+                    {pillar.linkText || t('home.discover_more')}
                   </div>
                 </Link>
               </div>
@@ -283,14 +285,7 @@ const Home = () => {
                 {t('home.cta_subtitle')}
               </p>
 
-              <div className="grid md:grid-cols-3 gap-6 mb-12">
-                <div className="bg-white p-6 rounded-lg shadow-md">
-                  <h3 className="font-bold text-primary mb-2">{t('home.cta_visit_title')}</h3>
-                  <p className="text-gray-700 mb-4">{t('home.cta_visit_text')}</p>
-                  <Link to="/experiencias" className="text-secondary font-semibold">
-                    {t('home.cta_visit_link')}
-                  </Link>
-                </div>
+              <div className="grid md:grid-cols-2 gap-6 mb-12 max-w-2xl mx-auto">
                 <div className="bg-white p-6 rounded-lg shadow-md">
                   <h3 className="font-bold text-primary mb-2">{t('home.cta_shop_title')}</h3>
                   <p className="text-gray-700 mb-4">{t('home.cta_shop_text')}</p>

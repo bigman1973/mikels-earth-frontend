@@ -10,7 +10,6 @@ const STATIC_ROUTES = new Set([
   '/como-se-hace',
   '/el-obrador',
   '/nuestras-joyas',
-  '/experiencias',
   '/recetario',
   '/tienda',
   '/checkout',

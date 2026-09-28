@@ -17,7 +17,6 @@ const LaFamilia = lazy(() => import('./pages/LaFamilia'));
 const NuestraTierra = lazy(() => import('./pages/NuestraTierra'));
 const ComoSeHace = lazy(() => import('./pages/ComoSeHace'));
 const NuestrasJoyas = lazy(() => import('./pages/NuestrasJoyas'));
-const Experiencias = lazy(() => import('./pages/Experiencias'));
 const Recetario = lazy(() => import('./pages/Recetario'));
 const Products = lazy(() => import('./pages/Products'));
 const ProductDetail = lazy(() => import('./pages/ProductDetail'));
@@ -128,7 +127,6 @@ function App() {
                       <Route path="/como-se-hace" element={<ComoSeHace />} />
                       <Route path="/el-obrador" element={<Navigate to="/como-se-hace" replace />} />
                       <Route path="/nuestras-joyas" element={<NuestrasJoyas />} />
-                      <Route path="/experiencias" element={<Experiencias />} />
                       <Route path="/recetario" element={<Recetario />} />
                       <Route path="/tienda" element={<Products />} />
                       <Route path="/productos" element={<Navigate to="/tienda" replace />} />

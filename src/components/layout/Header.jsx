@@ -144,12 +144,6 @@ const Header = () => {
                 {t('nav.jewels')}
               </Link>
               <Link
-                to="/experiencias"
-                className="text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
-              >
-                {t('nav.experiences')}
-              </Link>
-              <Link
                 to="/recetario"
                 className="text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
               >
@@ -244,13 +238,6 @@ const Header = () => {
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {t('nav.jewels')}
-                </Link>
-                <Link
-                  to="/experiencias"
-                  className="text-sm font-medium hover:text-secondary transition-colors uppercase"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {t('nav.experiences')}
                 </Link>
                 <Link
                   to="/recetario"
