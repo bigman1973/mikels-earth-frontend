@@ -93,7 +93,7 @@ const Header = () => {
         <div className="container mx-auto px-4 flex justify-center">
           <Link to="/" className="flex items-center">
             <img
-              src="/logo-mikels-earth.svg"
+              src="/logo-mikels-fruit.png"
               alt="Mikel's Fruit - Since 1819"
               className="h-28 md:h-32 w-auto"
             />
