@@ -8,7 +8,6 @@ const CANONICAL_STATIC_ROUTES = new Set([
   '/nuestra-tierra',
   '/como-se-hace',
   '/nuestras-joyas',
-  '/experiencias',
   '/recetario',
   '/tienda',
   '/checkout',

@@ -9,6 +9,9 @@ const DIST = join(ROOT, 'dist');
 const SITEMAP = join(ROOT, 'public', 'sitemap.xml');
 const VERCEL_CONFIG = join(ROOT, 'vercel.json');
 const MIDDLEWARE = join(ROOT, 'middleware.js');
+const APP = join(ROOT, 'src', 'App.jsx');
+const HEADER = join(ROOT, 'src', 'components', 'layout', 'Header.jsx');
+const HOME = join(ROOT, 'src', 'pages', 'Home.jsx');
 
 const pathsFromSitemap = async () => {
   const xml = await readFile(SITEMAP, 'utf8');
@@ -110,4 +113,19 @@ test('uses Segrià in the homepage description', async () => {
 
   assert.match(description, /Segrià/);
   assert.doesNotMatch(description, /Alcarràs/);
+});
+
+test('removes the non-existent experiences destination from public navigation and routes', async () => {
+  const [app, header, home, middleware] = await Promise.all([
+    readFile(APP, 'utf8'),
+    readFile(HEADER, 'utf8'),
+    readFile(HOME, 'utf8'),
+    readFile(MIDDLEWARE, 'utf8'),
+  ]);
+
+  for (const source of [app, header, home, middleware]) {
+    assert.doesNotMatch(source, /\/experiencias/);
+  }
+  assert.match(home, /pillar_ingredients_title/);
+  assert.match(home, /link: "\/tienda"/);
 });
