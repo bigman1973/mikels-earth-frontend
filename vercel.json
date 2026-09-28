@@ -1,4 +1,5 @@
 {
+  "cleanUrls": true,
   "rewrites": [
     {
       "source": "/(.*)",
@@ -37,4 +38,3 @@
   "buildCommand": "pnpm build",
   "framework": "vite"
 }
-
