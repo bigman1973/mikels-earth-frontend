@@ -180,10 +180,11 @@ test('uses the approved family timeline without the unverified 1975 and 2010 ent
 });
 
 test('keeps the family preserve photo and shortened quote on the family page only', async () => {
-  const [family, app, spanish] = await Promise.all([
+  const [family, app, spanish, english] = await Promise.all([
     readFile(FAMILY, 'utf8'),
     readFile(APP, 'utf8'),
     readFile(SPANISH_LOCALE, 'utf8'),
+    readFile(ENGLISH_LOCALE, 'utf8'),
   ]);
 
   assert.match(family, /familyConservaCasa/);
@@ -192,5 +193,10 @@ test('keeps the family preserve photo and shortened quote on the family page onl
   assert.match(family, /family\.jordi_text/);
   assert.doesNotMatch(family, /family\.jordi_quote/);
   assert.doesNotMatch(app, /familyConservaCasa/);
-  assert.match(spanish, /"jordi_text": "Desde Alcarràs y Córdoba, comparto nuestra historia con el mundo\./);
+  const spanishFamily = JSON.parse(spanish).family;
+  const englishFamily = JSON.parse(english).family;
+  assert.equal(spanishFamily.home_preserve_quote, '«En casa hacemos conserva cada verano, desde siempre.»');
+  assert.match(spanishFamily.jordi_text, /^Séptima generación de una familia de agricultores de Alcarràs\. Dirige Farms Planet/);
+  assert.doesNotMatch(spanishFamily.jordi_text, /productos industriales y sin alma|Córdoba/i);
+  assert.doesNotMatch(englishFamily.jordi_text, /industrial, soulless products|Córdoba/i);
 });
