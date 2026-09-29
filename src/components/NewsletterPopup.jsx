@@ -1,94 +1,126 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { X, Mail, Gift, Copy, Check } from 'lucide-react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Mail, X } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { API_URL } from '../config/api';
+
+const POPUP_STORAGE_KEY = 'mikels_newsletter_popup_v2';
+const POPUP_TTL_MS = 30 * 24 * 60 * 60 * 1000;
+const EXCLUDED_PATHS = new Set(['/carrito', '/checkout']);
+const MotionAside = motion.aside;
+
+const hasResolvedCookieConsent = () => {
+  const consentApi = window.Cookiebot || window.CookieConsent;
+  return consentApi?.hasResponse === true;
+};
+
+const hasValidPopupRecord = () => {
+  try {
+    const record = JSON.parse(localStorage.getItem(POPUP_STORAGE_KEY));
+    return Number.isFinite(record?.expiresAt) && record.expiresAt > Date.now();
+  } catch {
+    return false;
+  }
+};
+
+const persistPopupRecord = () => {
+  localStorage.setItem(POPUP_STORAGE_KEY, JSON.stringify({
+    shownAt: Date.now(),
+    expiresAt: Date.now() + POPUP_TTL_MS,
+  }));
+};
 
 const NewsletterPopup = () => {
-  const navigate = useNavigate();
   const { t } = useTranslation();
+  const location = useLocation();
+  const [isCookieConsentResolved, setIsCookieConsentResolved] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
-    email: '',
     firstName: '',
     lastName: '',
-    phone: ''
+    email: '',
+    phone: '',
+    privacyPolicyAccepted: false,
+    whatsappMarketingAccepted: false,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState({ text: '', type: '' });
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [couponCode, setCouponCode] = useState('');
-  const [copied, setCopied] = useState(false);
+  const shownRef = useRef(false);
+
+  const excludedPath = EXCLUDED_PATHS.has(location.pathname);
 
   useEffect(() => {
-    // Check if popup was already shown today
-    const popupData = localStorage.getItem('newsletter_popup_shown');
-    
-    if (popupData) {
-      const { timestamp } = JSON.parse(popupData);
-      const now = Date.now();
-      const oneDayInMs = 24 * 60 * 60 * 1000; // 24 horas
-      
-      // Si han pasado menos de 24 horas, no mostrar
-      if (now - timestamp < oneDayInMs) {
-        return;
+    const markConsentResolved = () => {
+      if (hasResolvedCookieConsent()) {
+        setIsCookieConsentResolved(true);
       }
-    }
-    
-    // Show popup after 3 seconds
-    const timer = setTimeout(() => {
-      setIsOpen(true);
-      localStorage.setItem('newsletter_popup_shown', JSON.stringify({
-        timestamp: Date.now()
-      }));
-    }, 3000);
+    };
 
-    return () => clearTimeout(timer);
+    markConsentResolved();
+    document.addEventListener('CookiebotOnConsentReady', markConsentResolved);
+    document.addEventListener('CookiebotOnAccept', markConsentResolved);
+    document.addEventListener('CookiebotOnDecline', markConsentResolved);
+
+    const consentPoll = window.setInterval(markConsentResolved, 500);
+    const stopPolling = window.setTimeout(() => window.clearInterval(consentPoll), 30_000);
+
+    return () => {
+      document.removeEventListener('CookiebotOnConsentReady', markConsentResolved);
+      document.removeEventListener('CookiebotOnAccept', markConsentResolved);
+      document.removeEventListener('CookiebotOnDecline', markConsentResolved);
+      window.clearInterval(consentPoll);
+      window.clearTimeout(stopPolling);
+    };
   }, []);
 
+  const showPopup = useCallback(() => {
+    if (shownRef.current || hasValidPopupRecord()) return;
+
+    shownRef.current = true;
+    persistPopupRecord();
+    setIsOpen(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isCookieConsentResolved || excludedPath || hasValidPopupRecord()) return undefined;
+
+    const timer = window.setTimeout(showPopup, 25_000);
+    const onScroll = () => {
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      if (maxScroll > 0 && window.scrollY / maxScroll >= 0.5) {
+        showPopup();
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, [excludedPath, isCookieConsentResolved, showPopup]);
+
   const handleClose = () => {
+    persistPopupRecord();
     setIsOpen(false);
-    if (showSuccess) {
-      navigate('/tienda');
-    }
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+  const handleChange = (event) => {
+    const { name, value, type, checked } = event.target;
+    setFormData((current) => ({
+      ...current,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
     setMessage({ text: '', type: '' });
   };
 
-  const handleCopyCoupon = async () => {
-    try {
-      await navigator.clipboard.writeText(couponCode);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      // Fallback para navegadores que no soportan clipboard API
-      const textArea = document.createElement('textarea');
-      textArea.value = couponCode;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textArea);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  };
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    if (!formData.firstName.trim()) {
-      setMessage({ text: 'Por favor, introduce tu nombre', type: 'error' });
-      return;
-    }
-    if (!formData.lastName.trim()) {
-      setMessage({ text: 'Por favor, introduce tus apellidos', type: 'error' });
-      return;
-    }
-    if (!formData.email || !formData.email.includes('@')) {
-      setMessage({ text: 'Por favor, introduce un email válido', type: 'error' });
+    if (!formData.privacyPolicyAccepted) {
+      setMessage({ text: t('newsletter_popup.privacy_required'), type: 'error' });
       return;
     }
 
@@ -96,216 +128,208 @@ const NewsletterPopup = () => {
     setMessage({ text: '', type: '' });
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/newsletter/subscribe`, {
+      const response = await fetch(`${API_URL}/api/newsletter/subscribe`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: formData.email,
           first_name: formData.firstName,
           last_name: formData.lastName,
           phone: formData.phone || undefined,
-          source: 'popup'
+          privacy_policy_accepted: formData.privacyPolicyAccepted,
+          whatsapp_marketing_accepted: formData.whatsappMarketingAccepted,
+          source: 'popup',
         }),
       });
-
       const data = await response.json();
 
       if (response.ok && data.success) {
-        setShowSuccess(true);
-        setCouponCode(data.coupon_code || '');
-        setMessage({ 
-          text: '¡Suscripción exitosa!', 
-          type: 'success' 
-        });
-      } else if (response.ok && data.already_subscribed) {
-        // Email ya suscrito previamente
-        setMessage({ 
-          text: data.message || '¡Ya estás suscrito/a! Revisa tu email original para tu cupón.', 
-          type: 'error' 
-        });
-      } else {
-        setMessage({ 
-          text: data.message || 'Error al suscribirse. Inténtalo de nuevo.', 
-          type: 'error' 
-        });
+        persistPopupRecord();
+        setMessage({ text: t('newsletter_popup.success'), type: 'success' });
+        return;
       }
-    } catch (error) {
-      console.error('Error subscribing:', error);
-      setMessage({ 
-        text: 'Error de conexión. Por favor, inténtalo más tarde.', 
-        type: 'error' 
+
+      setMessage({
+        text: data.message || data.error || t('newsletter_popup.error_generic'),
+        type: 'error',
       });
+    } catch {
+      setMessage({ text: t('newsletter_popup.error_generic'), type: 'error' });
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  if (excludedPath) return null;
+
   return (
-    isOpen ? (
-          <div
+    <AnimatePresence>
+      {isOpen && (
+        <MotionAside
+          aria-label={t('newsletter_popup.title')}
+          aria-live="polite"
+          className="fixed bottom-0 right-0 z-50 w-full border border-stone-200 bg-white p-5 shadow-2xl sm:bottom-5 sm:right-5 sm:max-w-[360px] sm:rounded-2xl"
+          initial={{ opacity: 0, x: 400 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: 400 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 28 }}
+        >
+          <button
+            type="button"
             onClick={handleClose}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            className="absolute right-3 top-3 rounded-full p-2 text-stone-500 transition-colors hover:bg-stone-100 hover:text-stone-800"
+            aria-label={t('newsletter_popup.close')}
           >
-            {/* Popup */}
-            <div
-              onClick={(e) => e.stopPropagation()}
-              className="relative bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden"
-            >
-              {/* Close button */}
-              <button
-                onClick={handleClose}
-                className="absolute top-3 right-3 z-10 p-1.5 hover:bg-gray-100 rounded-full transition-colors"
-                aria-label="Cerrar"
-              >
-                <X className="w-5 h-5 text-gray-500" />
-              </button>
+            <X className="h-5 w-5" />
+          </button>
 
-              {/* Content */}
-              <div className="p-6">
-                {/* Icon */}
-                <div className="flex justify-center mb-4">
-                  <div className="relative">
-                    <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
-                      <Mail className="w-8 h-8 text-primary" />
-                    </div>
-                    <div className="absolute -top-1 -right-1 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                      <Gift className="w-4 h-4 text-white" />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Title */}
-                <h2 className="text-2xl font-bold text-primary text-center mb-2">
-                  ¡Obtén un 10% de descuento!
-                </h2>
-                <p className="text-gray-600 text-center mb-6">
-                  Suscríbete a nuestro newsletter y recibe un cupón de bienvenida
-                </p>
-
-                {!showSuccess ? (
-                  /* Form */
-                  <form onSubmit={handleSubmit} className="space-y-3">
-                    <div className="grid grid-cols-2 gap-3">
-                      <input
-                        type="text"
-                        name="firstName"
-                        value={formData.firstName}
-                        onChange={handleChange}
-                        placeholder="Nombre *"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
-                        disabled={isSubmitting}
-                      />
-                      <input
-                        type="text"
-                        name="lastName"
-                        value={formData.lastName}
-                        onChange={handleChange}
-                        placeholder="Apellidos *"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
-                        disabled={isSubmitting}
-                      />
-                    </div>
-                    <div>
-                      <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        placeholder="tu@email.com *"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                        disabled={isSubmitting}
-                      />
-                    </div>
-                    <div>
-                      <input
-                        type="tel"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
-                        placeholder="Teléfono (opcional)"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                        disabled={isSubmitting}
-                      />
-                    </div>
-
-                    {message.text && (
-                      <div className={`text-sm text-center ${
-                        message.type === 'success' ? 'text-green-600' : 'text-red-600'
-                      }`}>
-                        {message.text}
-                      </div>
-                    )}
-
-                    <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="w-full bg-primary text-white font-semibold py-3 rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {isSubmitting ? 'Suscribiendo...' : 'Obtener mi cupón'}
-                    </button>
-
-                    <p className="text-xs text-gray-500 text-center">
-                      Al suscribirte, aceptas recibir emails de Mikel's Fruit
-                    </p>
-                  </form>
-                ) : (
-                  /* Success state con cupón */
-                  <div className="text-center space-y-4">
-                    <div className="bg-green-50 border-2 border-green-200 rounded-lg p-5">
-                      <div className="w-14 h-14 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-3">
-                        <Gift className="w-7 h-7 text-white" />
-                      </div>
-                      <h3 className="text-xl font-bold text-green-800 mb-2">
-                        ¡Bienvenido/a a Mikel's Fruit!
-                      </h3>
-                      <p className="text-green-700 mb-4">
-                        Aquí tienes tu cupón de <strong>10% de descuento</strong>:
-                      </p>
-                      
-                      {/* Cupón con botón de copiar */}
-                      {couponCode && (
-                        <div className="bg-white border-2 border-dashed border-primary rounded-lg p-3 mb-3">
-                          <div className="flex items-center justify-center gap-2">
-                            <span className="text-xl font-bold text-primary tracking-wider">
-                              {couponCode}
-                            </span>
-                            <button
-                              onClick={handleCopyCoupon}
-                              className="p-2 hover:bg-primary/10 rounded-lg transition-colors"
-                              title="Copiar cupón"
-                            >
-                              {copied ? (
-                                <Check className="w-5 h-5 text-green-600" />
-                              ) : (
-                                <Copy className="w-5 h-5 text-primary" />
-                              )}
-                            </button>
-                          </div>
-                          {copied && (
-                            <p className="text-xs text-green-600 mt-1">{t('newsletter.copied')}</p>
-                          )}
-                        </div>
-                      )}
-
-                      <p className="text-sm text-green-600">
-                        También te lo hemos enviado por email
-                      </p>
-                    </div>
-
-                    <button
-                      onClick={handleClose}
-                      className="w-full bg-primary text-white font-semibold py-3 rounded-lg hover:bg-primary/90 transition-colors"
-                    >
-                      ¡Empezar a comprar!
-                    </button>
-                  </div>
-                )}
-              </div>
+          <div className="mb-4 pr-8">
+            <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+              <Mail className="h-5 w-5 text-primary" />
             </div>
+            <h2 className="font-serif text-2xl font-bold text-primary">
+              {t('newsletter_popup.title')}
+            </h2>
+            <p className="mt-1 text-sm leading-5 text-stone-600">
+              {t('newsletter_popup.subtitle')}
+            </p>
           </div>
-    ) : null
+
+          {message.type === 'success' ? (
+            <div className="space-y-4">
+              <p className="rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-800">
+                {message.text}
+              </p>
+              <button
+                type="button"
+                onClick={handleClose}
+                className="w-full rounded-lg bg-primary px-4 py-3 font-semibold text-white transition-colors hover:bg-primary/90"
+              >
+                {t('newsletter_popup.close')}
+              </button>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-3">
+              <div className="grid grid-cols-2 gap-3">
+                <label className="sr-only" htmlFor="newsletter-first-name">
+                  {t('newsletter_popup.first_name')}
+                </label>
+                <input
+                  id="newsletter-first-name"
+                  type="text"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  placeholder={t('newsletter_popup.first_name')}
+                  autoComplete="given-name"
+                  required
+                  disabled={isSubmitting}
+                  className="min-w-0 rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:bg-stone-100"
+                />
+                <label className="sr-only" htmlFor="newsletter-last-name">
+                  {t('newsletter_popup.last_name')}
+                </label>
+                <input
+                  id="newsletter-last-name"
+                  type="text"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  placeholder={t('newsletter_popup.last_name')}
+                  autoComplete="family-name"
+                  required
+                  disabled={isSubmitting}
+                  className="min-w-0 rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:bg-stone-100"
+                />
+              </div>
+
+              <label className="sr-only" htmlFor="newsletter-email">
+                {t('newsletter_popup.email')}
+              </label>
+              <input
+                id="newsletter-email"
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder={t('newsletter_popup.email')}
+                autoComplete="email"
+                required
+                disabled={isSubmitting}
+                className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:bg-stone-100"
+              />
+
+              <div>
+                <label className="sr-only" htmlFor="newsletter-phone">
+                  {t('newsletter_popup.phone')}
+                </label>
+                <input
+                  id="newsletter-phone"
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder={t('newsletter_popup.phone')}
+                  autoComplete="tel"
+                  disabled={isSubmitting}
+                  className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:bg-stone-100"
+                />
+                <p className="mt-1.5 text-xs leading-4 text-stone-500">
+                  {t('newsletter_popup.phone_help')}
+                </p>
+              </div>
+
+              <label className="flex cursor-pointer items-start gap-2.5 text-xs leading-5 text-stone-700">
+                <input
+                  type="checkbox"
+                  name="privacyPolicyAccepted"
+                  checked={formData.privacyPolicyAccepted}
+                  onChange={handleChange}
+                  required
+                  disabled={isSubmitting}
+                  className="mt-1 h-4 w-4 shrink-0 accent-primary"
+                />
+                <span>
+                  {t('newsletter_popup.privacy_prefix')}{' '}
+                  <Link className="font-semibold text-primary underline underline-offset-2" to="/politica-privacidad">
+                    {t('newsletter_popup.privacy_link')}
+                  </Link>
+                </span>
+              </label>
+
+              <label className="flex cursor-pointer items-start gap-2.5 text-xs leading-5 text-stone-700">
+                <input
+                  type="checkbox"
+                  name="whatsappMarketingAccepted"
+                  checked={formData.whatsappMarketingAccepted}
+                  onChange={handleChange}
+                  disabled={isSubmitting}
+                  className="mt-1 h-4 w-4 shrink-0 accent-primary"
+                />
+                <span>{t('newsletter_popup.whatsapp_consent')}</span>
+              </label>
+
+              {message.text && (
+                <p
+                  role="alert"
+                  className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700"
+                >
+                  {message.text}
+                </p>
+              )}
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full rounded-lg bg-primary px-4 py-3 font-semibold text-white transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {isSubmitting ? t('newsletter_popup.submitting') : t('newsletter_popup.submit')}
+              </button>
+            </form>
+          )}
+        </MotionAside>
+      )}
+    </AnimatePresence>
   );
 };
 

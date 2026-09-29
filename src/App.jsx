@@ -9,7 +9,6 @@ import SeoManager from './components/SeoManager';
 import './App.css';
 
 const CartDrawer = lazy(() => import('./components/cart/CartDrawer'));
-const FloatingNewsletterButton = lazy(() => import('./components/FloatingNewsletterButton'));
 const NewsletterPopup = lazy(() => import('./components/NewsletterPopup'));
 
 const Home = lazy(() => import('./pages/Home'));
@@ -63,28 +62,6 @@ const DeferredCartDrawer = () => {
   return (
     <Suspense fallback={null}>
       <CartDrawer />
-    </Suspense>
-  );
-};
-
-const DeferredMarketingWidgets = () => {
-  const [isReady, setIsReady] = useState(false);
-
-  useEffect(() => {
-    if ('requestIdleCallback' in window) {
-      const idleId = window.requestIdleCallback(() => setIsReady(true), { timeout: 2500 });
-      return () => window.cancelIdleCallback(idleId);
-    }
-
-    const timerId = window.setTimeout(() => setIsReady(true), 1500);
-    return () => window.clearTimeout(timerId);
-  }, []);
-
-  if (!isReady) return null;
-
-  return (
-    <Suspense fallback={null}>
-      <FloatingNewsletterButton />
     </Suspense>
   );
 };
@@ -155,7 +132,6 @@ function App() {
                     <NewsletterPopup />
                   </Suspense>
                   <DeferredCartDrawer />
-                  <DeferredMarketingWidgets />
                 </div>
               } />
             </Routes>

@@ -109,6 +109,24 @@
     "popup_close": "No, thanks",
     "copied": "Copied!"
   },
+  "newsletter_popup": {
+    "title": "Join Mikel's Fruit",
+    "subtitle": "Receive news, recipes and offers from the family.",
+    "first_name": "First name *",
+    "last_name": "Last name *",
+    "email": "your@email.com *",
+    "phone": "Phone (optional)",
+    "phone_help": "Optional. We use it to update you about your order and news by WhatsApp.",
+    "privacy_prefix": "I have read and accept the",
+    "privacy_link": "privacy policy",
+    "whatsapp_consent": "I want to receive news and offers by WhatsApp",
+    "privacy_required": "You must accept the privacy policy to subscribe.",
+    "submit": "Subscribe",
+    "submitting": "Subscribing...",
+    "success": "Thank you for subscribing. We will keep you up to date.",
+    "error_generic": "The subscription could not be completed. Please try again.",
+    "close": "Close"
+  },
   "products": {
     "seo_title": "Shop | Mikel's Fruit - Artisan Products",
     "seo_description": "Buy extra virgin olive oil, fruits in syrup and artisan jams. Free shipping on orders over €30.",
