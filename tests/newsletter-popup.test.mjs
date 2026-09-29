@@ -21,6 +21,13 @@ test('newsletter popup waits for a resolved Cookiebot response', () => {
   assert.match(popup, /window\.scrollY \/ maxScroll >= 0\.5/);
 });
 
+test('only unblocks Vercel Previews when Cookiebot cannot show an authorized banner', () => {
+  assert.match(popup, /window\.location\.hostname\.endsWith\('\.vercel\.app'\)/);
+  assert.match(popup, /consentApi\?\.settingsLoaded === true/);
+  assert.match(popup, /consentApi\?\.dialog === null/);
+  assert.match(popup, /hasResolvedCookieConsent\(\) \|\| isVercelPreviewWithoutCookieBanner\(\)/);
+});
+
 test('newsletter popup persists dismissal for thirty days and excludes checkout and cart contexts', () => {
   assert.match(popup, /30 \* 24 \* 60 \* 60 \* 1000/);
   assert.match(popup, /new Set\(\['\/carrito', '\/checkout'\]\)/);

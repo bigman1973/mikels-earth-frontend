@@ -16,6 +16,20 @@ const hasResolvedCookieConsent = () => {
   return consentApi?.hasResponse === true;
 };
 
+const isVercelPreviewWithoutCookieBanner = () => {
+  const consentApi = window.Cookiebot || window.CookieConsent;
+  const isVercelPreview = window.location.hostname.endsWith('.vercel.app');
+
+  // Cookiebot does not render a banner on ephemeral Preview domains unless each
+  // hostname is explicitly authorized in its domain group. This narrow Preview-
+  // only condition avoids blocking a test panel forever while production keeps
+  // the strict hasResponse requirement above.
+  return isVercelPreview
+    && consentApi?.settingsLoaded === true
+    && consentApi?.dialog === null
+    && consentApi?.hasResponse === false;
+};
+
 const hasValidPopupRecord = () => {
   try {
     const record = JSON.parse(localStorage.getItem(POPUP_STORAGE_KEY));
@@ -55,7 +69,7 @@ const NewsletterPopup = () => {
 
   useEffect(() => {
     const markConsentResolved = () => {
-      if (hasResolvedCookieConsent()) {
+      if (hasResolvedCookieConsent() || isVercelPreviewWithoutCookieBanner()) {
         setIsCookieConsentResolved(true);
       }
     };
