@@ -116,10 +116,34 @@ export const toAbsoluteUrl = (url) => {
   return new URL(url, SITE_ORIGIN).toString();
 };
 
-const PRODUCT_GTIN = {
-  'paraguayo-almibar': '8437022141008',
-  'nectarina-almibar': '8437022141138',
-};
+// Fuente: maestro de artículos validado por Jordi (29/09/2026).
+// Solo se emite gtin13 cuando el artículo vendido en la web coincide con este SKU.
+export const GTIN13_BY_SKU = Object.freeze({
+  MIKPARA450: '8437022141008',
+  MIKNECT450: '8437022141138',
+  MIKPARJ250: '8437022141152',
+  MIKBIO19: '8437022141107',
+  MIKVE500: '8437022141176',
+  MIKVE1000: '8437022141183',
+  MIKVE5LP: '8437022141169',
+  MIKVET500: '8437022141220',
+});
+
+// La API pública no expone SKU. Este mapa corresponde solo a las fichas de venta
+// actuales; los packs no tienen GTIN y conservan SKU/MPN para identificarse.
+const PRODUCT_SKU_BY_SLUG = Object.freeze({
+  'paraguayo-almibar': 'MIKPARA450',
+  'nectarina-almibar': 'MIKNECT450',
+  'aceite-oliva-ecologico': 'MIKBIO19',
+  'aceite-temprano-sin-filtrar': 'MIKVET500',
+  'aceite-5l-caja-3': 'MIKVE5LP',
+  'mermelada-paraguayo': 'MIKPACKMER3',
+  'pack-mermelada-aceites': 'MIKPACKYPO',
+  'pack-fruta-premium': 'MIKPACKFR',
+  'pack-navidad-completo': 'MIKPACKF',
+  'pack-temprano-premium': 'MIKVET500R',
+  'pack-aceite-ecologico-premium-estuche-regalo': 'MIKBIO19R',
+});
 
 const EDITORIAL_PRODUCT_CONTENT = {
   'paraguayo-almibar': {
@@ -176,6 +200,8 @@ export const buildProductMetadata = (product, slug) => {
 export const buildProductStructuredData = (product, slug = product?.slug) => {
   const content = getProductSeoContent(product, slug);
   const canonical = `${SITE_ORIGIN}/producto/${encodeURIComponent(slug)}`;
+  const sku = product.sku || PRODUCT_SKU_BY_SLUG[slug];
+  const gtin13 = sku ? GTIN13_BY_SKU[sku] : undefined;
   const name = content.weight && !content.name.includes(content.weight)
     ? `${content.name} ${content.weight}`
     : content.name;
@@ -190,8 +216,8 @@ export const buildProductStructuredData = (product, slug = product?.slug) => {
     name,
     image: imageList.length ? imageList : [toAbsoluteUrl(DEFAULT_SOCIAL_IMAGE)],
     description: normalizeText(content.longDescription || content.description),
-    ...(PRODUCT_GTIN[slug] ? { gtin13: PRODUCT_GTIN[slug] } : {}),
-    ...(product.sku ? { sku: product.sku } : {}),
+    ...(gtin13 ? { gtin13 } : {}),
+    ...(sku ? { sku, mpn: sku } : {}),
     brand: { '@type': 'Brand', name: "Mikel's Fruit" },
     offers: {
       '@type': 'Offer',

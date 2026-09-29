@@ -3,6 +3,7 @@ import { readFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
+import { GTIN13_BY_SKU, buildProductStructuredData } from '../src/seo/metadata.js';
 
 const ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const DIST = join(ROOT, 'dist');
@@ -12,6 +13,7 @@ const MIDDLEWARE = join(ROOT, 'middleware.js');
 const APP = join(ROOT, 'src', 'App.jsx');
 const HEADER = join(ROOT, 'src', 'components', 'layout', 'Header.jsx');
 const HOME = join(ROOT, 'src', 'pages', 'Home.jsx');
+const INDEX_HTML = join(ROOT, 'index.html');
 
 const pathsFromSitemap = async () => {
   const xml = await readFile(SITEMAP, 'utf8');
@@ -137,9 +139,12 @@ test('uses the approved Tienda title and description', async () => {
   );
 });
 
-test('publishes Product JSON-LD without invented rating data', async () => {
+test('publishes Product JSON-LD with validated EANs and no invented rating data', async () => {
   const paraguayo = await htmlFor('/producto/paraguayo-almibar');
   const nectarina = await htmlFor('/producto/nectarina-almibar');
+  const ecologico = await htmlFor('/producto/aceite-oliva-ecologico');
+  const temprano = await htmlFor('/producto/aceite-temprano-sin-filtrar');
+  const garrafa = await htmlFor('/producto/aceite-5l-caja-3');
   const findProduct = (html) => jsonLdEntries(html).find((entry) => entry['@type'] === 'Product');
   const productSchemas = (html) => jsonLdEntries(html).filter((entry) => entry['@type'] === 'Product');
   const paraguayoData = findProduct(paraguayo);
@@ -147,14 +152,62 @@ test('publishes Product JSON-LD without invented rating data', async () => {
 
   assert.equal(paraguayoData.name, 'Paraguayo en Almíbar 720 g');
   assert.equal(paraguayoData.gtin13, '8437022141008');
+  assert.equal(paraguayoData.sku, 'MIKPARA450');
+  assert.equal(paraguayoData.mpn, 'MIKPARA450');
   assert.equal(paraguayoData.offers.priceCurrency, 'EUR');
   assert.equal(paraguayoData.offers.price, '17.15');
   assert.equal(paraguayoData.offers.availability, 'https://schema.org/InStock');
   assert.equal(nectarinaData.name, 'Nectarina en Almíbar 720 g');
   assert.equal(nectarinaData.gtin13, '8437022141138');
+  assert.equal(nectarinaData.sku, 'MIKNECT450');
+  assert.equal(findProduct(ecologico).gtin13, '8437022141107');
+  assert.equal(findProduct(temprano).gtin13, '8437022141220');
+  assert.equal(findProduct(garrafa).gtin13, '8437022141169');
   assert.doesNotMatch(JSON.stringify(paraguayoData), /aggregateRating|reviewCount|ratingValue/);
   assert.equal(productSchemas(paraguayo).length, 1);
   assert.match(paraguayo, /<script id="seo-product-schema" type="application\/ld\+json">/);
+});
+
+test('keeps all confirmed EANs tied to their verified master SKU', () => {
+  assert.deepEqual(GTIN13_BY_SKU, {
+    MIKPARA450: '8437022141008',
+    MIKNECT450: '8437022141138',
+    MIKPARJ250: '8437022141152',
+    MIKBIO19: '8437022141107',
+    MIKVE500: '8437022141176',
+    MIKVE1000: '8437022141183',
+    MIKVE5LP: '8437022141169',
+    MIKVET500: '8437022141220',
+  });
+});
+
+test('identifies packs with SKU and MPN but never borrows a component EAN', async () => {
+  const packCases = [
+    { slug: 'mermelada-paraguayo', indexed: true },
+    { slug: 'pack-mermelada-aceites', indexed: true },
+    { slug: 'pack-fruta-premium', indexed: true },
+    { slug: 'pack-navidad-completo', indexed: true },
+    // Estas fichas redirigen a la tienda y por eso no se generan en el sitemap.
+    { slug: 'pack-temprano-premium', indexed: false },
+    { slug: 'pack-aceite-ecologico-premium-estuche-regalo', indexed: false },
+  ];
+
+  for (const { slug, indexed } of packCases) {
+    const product = indexed
+      ? jsonLdEntries(await htmlFor(`/producto/${slug}`)).find((entry) => entry['@type'] === 'Product')
+      : buildProductStructuredData({ slug, name: 'Pack', price: 19.9, currency: 'EUR', stock: 1 }, slug);
+    assert.ok(product.sku, `${slug} needs its own SKU`);
+    assert.equal(product.mpn, product.sku, `${slug} MPN must match its own SKU`);
+    assert.equal(product.gtin13, undefined, `${slug} must not inherit a component EAN`);
+  }
+});
+
+test('loads Klaviyo only after Cookiebot marketing consent', async () => {
+  const indexHtml = await readFile(INDEX_HTML, 'utf8');
+
+  assert.doesNotMatch(indexHtml, /<script\s+async\s+src="https:\/\/static\.klaviyo\.com/i);
+  assert.match(indexHtml, /<script type="text\/plain" data-cookieconsent="marketing">[\s\S]*static\.klaviyo\.com\/onsite\/js\/klaviyo\.js/i);
+  assert.match(indexHtml, /<script type="text\/plain" data-cookieconsent="marketing">[\s\S]*tracker\.metricool\.com/i);
 });
 
 test('publishes Organization JSON-LD on the homepage with verified corporate data', async () => {
