@@ -43,7 +43,7 @@ const Recetario = () => {
     yogur_paraguayo: '1'
   };
 
-  const pairingKeys = ['arbequina', 'picual', 'temprano', 'paraguayo', 'hojiblanca', 'mermeladas'];
+  const pairingKeys = ['temprano', 'ecologico', 'garrafa', 'paraguayo', 'mermeladas'];
 
   const categoryMap = {
     'Desayuno': 'breakfast',

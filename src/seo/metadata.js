@@ -59,7 +59,7 @@ const PRODUCT_SEO = {
   },
   'nectarina-almibar': {
     title: "Nectarina en Almíbar Artesanal 720 g | Mikel's Fruit",
-    description: 'Nectarina cultivada en Alcarràs y envasada en almíbar suave. Seleccionada a mano, sin conservantes ni colorantes. El verano en un tarro, todo el año.',
+    description: 'Nectarina cultivada en Alcarràs y envasada en almíbar suave. Sin conservantes ni colorantes. El verano en un tarro, todo el año.',
   },
   'aceite-oliva-ecologico': {
     title: "AOVE Ecológico 500ml | Medalla de Oro Japón y NY | Mikel's",

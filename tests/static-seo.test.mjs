@@ -12,6 +12,12 @@ const MIDDLEWARE = join(ROOT, 'middleware.js');
 const APP = join(ROOT, 'src', 'App.jsx');
 const HEADER = join(ROOT, 'src', 'components', 'layout', 'Header.jsx');
 const HOME = join(ROOT, 'src', 'pages', 'Home.jsx');
+const FAMILY = join(ROOT, 'src', 'pages', 'LaFamilia.jsx');
+const LAND = join(ROOT, 'src', 'pages', 'NuestraTierra.jsx');
+const TREASURES = join(ROOT, 'src', 'pages', 'NuestrasJoyas.jsx');
+const RECIPES = join(ROOT, 'src', 'pages', 'Recetario.jsx');
+const SPANISH_LOCALE = join(ROOT, 'src', 'i18n', 'locales', 'es.json');
+const ENGLISH_LOCALE = join(ROOT, 'src', 'i18n', 'locales', 'en.json');
 
 const pathsFromSitemap = async () => {
   const xml = await readFile(SITEMAP, 'utf8');
@@ -128,4 +134,47 @@ test('removes the non-existent experiences destination from public navigation an
   }
   assert.match(home, /pillar_ingredients_title/);
   assert.match(home, /link: "\/tienda"/);
+});
+
+test('keeps only verified sustainability evidence and removes confirmed false claims', async () => {
+  const [land, spanish, english] = await Promise.all([
+    readFile(LAND, 'utf8'),
+    readFile(SPANISH_LOCALE, 'utf8'),
+    readFile(ENGLISH_LOCALE, 'utf8'),
+  ]);
+
+  assert.match(land, /evidence_organic/);
+  assert.match(land, /evidence_eco_garden/);
+  assert.match(land, /evidence_pruning/);
+  for (const source of [land, spanish, english]) {
+    assert.doesNotMatch(source, /producci[oó]n integrada|huella de carbono|energ[ií]a renovable|sin pesticidas|corredores ecol[oó]gicos|fauna auxiliar|t[eé]cnicas ancestrales/i);
+  }
+});
+
+test('removes unsupported fruit-selection and nutrition claims and uses current oil products in pairings', async () => {
+  const [family, treasures, recipes, spanish, english] = await Promise.all([
+    readFile(FAMILY, 'utf8'),
+    readFile(TREASURES, 'utf8'),
+    readFile(RECIPES, 'utf8'),
+    readFile(SPANISH_LOCALE, 'utf8'),
+    readFile(ENGLISH_LOCALE, 'utf8'),
+  ]);
+
+  for (const source of [family, treasures, spanish, english]) {
+    assert.doesNotMatch(source, /seleccionamos cada fruta|fruta seleccionada a mano|favourite of chefs|favorito de los chefs/i);
+  }
+  assert.doesNotMatch(recipes, /sin az[uú]cares añadidos|without added sugars/i);
+  assert.match(recipes, /\['temprano', 'ecologico', 'garrafa', 'paraguayo', 'mermeladas'\]/);
+  assert.doesNotMatch(recipes, /pairingKeys = \['arbequina', 'picual'/);
+});
+
+test('uses the approved family timeline without the unverified 1975 and 2010 entries', async () => {
+  const family = await readFile(FAMILY, 'utf8');
+
+  assert.match(family, /year: "Años 1920"/);
+  assert.match(family, /year: "Años 60-70"/);
+  assert.match(family, /year: "2017"/);
+  assert.match(family, /certificación Eco Garden/);
+  assert.doesNotMatch(family, /year: "1975"/);
+  assert.doesNotMatch(family, /year: "2010"/);
 });
