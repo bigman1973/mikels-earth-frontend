@@ -58,17 +58,17 @@ const NewsletterPopup = () => {
     };
 
     markConsentResolved();
-    document.addEventListener('CookiebotOnConsentReady', markConsentResolved);
-    document.addEventListener('CookiebotOnAccept', markConsentResolved);
-    document.addEventListener('CookiebotOnDecline', markConsentResolved);
+    window.addEventListener('CookiebotOnConsentReady', markConsentResolved);
+    window.addEventListener('CookiebotOnAccept', markConsentResolved);
+    window.addEventListener('CookiebotOnDecline', markConsentResolved);
 
     const consentPoll = window.setInterval(markConsentResolved, 500);
     const stopPolling = window.setTimeout(() => window.clearInterval(consentPoll), 30_000);
 
     return () => {
-      document.removeEventListener('CookiebotOnConsentReady', markConsentResolved);
-      document.removeEventListener('CookiebotOnAccept', markConsentResolved);
-      document.removeEventListener('CookiebotOnDecline', markConsentResolved);
+      window.removeEventListener('CookiebotOnConsentReady', markConsentResolved);
+      window.removeEventListener('CookiebotOnAccept', markConsentResolved);
+      window.removeEventListener('CookiebotOnDecline', markConsentResolved);
       window.clearInterval(consentPoll);
       window.clearTimeout(stopPolling);
     };

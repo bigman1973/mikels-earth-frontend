@@ -13,6 +13,7 @@ const [popup, app, spanish] = await Promise.all([
 
 test('newsletter popup waits for a resolved Cookiebot response', () => {
   assert.match(popup, /consentApi\?\.hasResponse === true/);
+  assert.match(popup, /window\.addEventListener\('CookiebotOnConsentReady'/);
   assert.match(popup, /CookiebotOnConsentReady/);
   assert.match(popup, /CookiebotOnAccept/);
   assert.match(popup, /CookiebotOnDecline/);
