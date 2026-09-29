@@ -27,8 +27,8 @@ export const STATIC_ROUTE_SEO = {
     description: 'Recetas mediterráneas con aceite de oliva virgen extra y conservas de fruta, explicadas paso a paso.',
   },
   '/tienda': {
-    title: "Tienda online de conservas y AOVE | Mikel's Fruit",
-    description: 'Conservas de fruta y aceite de oliva virgen extra. Compra online con envío a domicilio.',
+    title: "Tienda online | Mikel's Fruit",
+    description: 'Conservas de fruta y aceite de oliva virgen extra de la familia Giró, en Alcarràs desde 1819. Paraguayo y nectarina en almíbar, AOVE y packs.',
   },
   '/blog': {
     title: "Blog: historias, recetas y tradición | Mikel's",
@@ -116,20 +116,118 @@ export const toAbsoluteUrl = (url) => {
   return new URL(url, SITE_ORIGIN).toString();
 };
 
+const PRODUCT_GTIN = {
+  'paraguayo-almibar': '8437022141008',
+  'nectarina-almibar': '8437022141138',
+};
+
+const EDITORIAL_PRODUCT_CONTENT = {
+  'paraguayo-almibar': {
+    name: 'Paraguayo en Almíbar',
+    description: 'Paraguayo cultivado en el Segrià, pelado a mano, pieza a pieza. Sin conservantes, sin colorantes.',
+    longDescription: 'Paraguayo en almíbar cultivado en el Segrià. Se pela a mano, pieza a pieza, para que la fruta llegue al tarro con su forma, textura y sabor. Sin conservantes, sin colorantes.',
+    ingredients: 'Paraguayo pelado, agua, azúcar, zumo de limón',
+  },
+  'mermelada-paraguayo': {
+    description: 'Tres tarros de mermelada de paraguayo con un 60 % de fruta. Solo paraguayo, agua, azúcar y limón. Sin conservantes ni colorantes.',
+    longDescription: 'Paraguayo, agua, azúcar y zumo de limón natural. 60 % de fruta. Solo cuatro ingredientes. Sin conservantes ni colorantes. Pack de tres tarros de 250 g, en estuche de cartón.',
+  },
+  'aceite-temprano-sin-filtrar': {
+    longDescription: 'Aceite de oliva virgen extra de primera cosecha, sin filtrar. De perfil verde, fresco y ligeramente picante, prensado en frío e ideal para ensaladas, tostadas y carpaccios.',
+  },
+  'pack-temprano-premium': {
+    longDescription: 'Un estuche de regalo con una botella de 500 ml de aceite de oliva virgen extra de primera cosecha, sin filtrar, y su estuche premium. De perfil verde, fresco y ligeramente picante; prensado en frío e ideal para ensaladas, tostadas y carpaccios.',
+  },
+  'pack-fruta-premium': {
+    longDescription: 'Paraguayo, nectarina y mermelada de paraguayo. 60 % de fruta en la mermelada; solo cuatro ingredientes: paraguayo, agua, azúcar y zumo de limón natural. Sin conservantes ni colorantes.',
+  },
+};
+
+const currentBrand = (value = '') => String(value)
+  .replaceAll("Mikel's Earth", "Mikel's Fruit")
+  .replaceAll('Mikels Earth', "Mikel's Fruit");
+
+const formattedWeight = (weight = '') => String(weight).replace(/(\d)(g|ml|l)$/i, '$1 $2');
+
+export const getProductSeoContent = (product = {}, slug = product?.slug) => {
+  const editorial = EDITORIAL_PRODUCT_CONTENT[slug] || {};
+  return {
+    name: currentBrand(editorial.name || product.name || 'Producto artesanal'),
+    description: currentBrand(editorial.description || product.description || ''),
+    longDescription: currentBrand(editorial.longDescription || product.longDescription || product.description || ''),
+    ingredients: editorial.ingredients || product.ingredients || '',
+    weight: formattedWeight(product.weight || product.format || ''),
+  };
+};
+
 export const buildProductMetadata = (product, slug) => {
   const manual = PRODUCT_SEO[slug];
   if (manual) return manual;
 
-  const name = normalizeText(product?.name) || 'Producto artesanal';
-  const format = normalizeText(product?.weight || product?.format);
-  const titleBase = `${name}${format && !name.includes(format) ? ` ${format}` : ''} | Mikel's`;
-  const descriptionSource = product?.longDescription || product?.description || `${name}, elaborado por Mikel's.`;
+  const content = getProductSeoContent(product, slug);
+  const titleBase = `${content.name}${content.weight && !content.name.includes(content.weight) ? ` ${content.weight}` : ''} | Mikel's`;
 
   return {
     title: truncate(titleBase, 60),
-    description: truncate(descriptionSource, 155),
+    description: truncate(content.longDescription || `${content.name}, elaborado por Mikel's.`, 155),
   };
 };
+
+export const buildProductStructuredData = (product, slug = product?.slug) => {
+  const content = getProductSeoContent(product, slug);
+  const canonical = `${SITE_ORIGIN}/producto/${encodeURIComponent(slug)}`;
+  const name = content.weight && !content.name.includes(content.weight)
+    ? `${content.name} ${content.weight}`
+    : content.name;
+  const imageList = (product.images?.length ? product.images : [product.image])
+    .filter(Boolean)
+    .map(toAbsoluteUrl);
+  const stock = Number(product.stock);
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name,
+    image: imageList.length ? imageList : [toAbsoluteUrl(DEFAULT_SOCIAL_IMAGE)],
+    description: normalizeText(content.longDescription || content.description),
+    ...(PRODUCT_GTIN[slug] ? { gtin13: PRODUCT_GTIN[slug] } : {}),
+    ...(product.sku ? { sku: product.sku } : {}),
+    brand: { '@type': 'Brand', name: "Mikel's Fruit" },
+    offers: {
+      '@type': 'Offer',
+      url: canonical,
+      priceCurrency: product.currency || 'EUR',
+      price: Number(product.price).toFixed(2),
+      availability: product.soldOut || !Number.isFinite(stock) || stock <= 0
+        ? 'https://schema.org/OutOfStock'
+        : 'https://schema.org/InStock',
+      itemCondition: 'https://schema.org/NewCondition',
+    },
+  };
+};
+
+export const buildOrganizationStructuredData = (logoUrl) => ({
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'FARMS PLANET SL',
+  alternateName: "Mikel's Fruit",
+  url: SITE_ORIGIN,
+  logo: logoUrl,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'C/ Cardenal Cisneros 10',
+    postalCode: '25003',
+    addressLocality: 'Lleida',
+    addressCountry: 'ES',
+  },
+  contactPoint: {
+    '@type': 'ContactPoint',
+    email: 'info@mikels.es',
+    telephone: '+34 621 144 701',
+    contactType: 'customer service',
+    availableLanguage: ['Spanish', 'English'],
+  },
+});
 
 export const buildBlogMetadata = (post) => ({
   title: `${normalizeText(post?.title) || 'Artículo'} | Blog Mikel's Fruit`,

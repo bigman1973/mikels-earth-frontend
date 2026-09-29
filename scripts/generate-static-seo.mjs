@@ -1,5 +1,5 @@
 /* global process */
-import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
@@ -7,7 +7,10 @@ import {
   SITE_ORIGIN,
   STATIC_ROUTE_SEO,
   buildBlogMetadata,
+  buildOrganizationStructuredData,
   buildProductMetadata,
+  buildProductStructuredData,
+  getProductSeoContent,
   toAbsoluteUrl,
 } from '../src/seo/metadata.js';
 
@@ -22,8 +25,14 @@ const escapeHtml = (value = '') => String(value)
   .replaceAll('&', '&amp;')
   .replaceAll('<', '&lt;')
   .replaceAll('>', '&gt;')
-  .replaceAll('"', '&quot;')
-  .replaceAll("'", '&#39;');
+  .replaceAll('"', '&quot;');
+
+const jsonForScript = (value) => JSON.stringify(value)
+  .replaceAll('<', '\\u003c')
+  .replaceAll('>', '\\u003e')
+  .replaceAll('&', '\\u0026')
+  .replaceAll('\u2028', '\\u2028')
+  .replaceAll('\u2029', '\\u2029');
 
 const fetchJson = async (path) => {
   const url = new URL(path, API_URL).toString();
@@ -72,42 +81,111 @@ const cleanHead = (html) => html
   .replace(/\s*<meta\s+name=(['"])description\1[^>]*>/gi, '')
   .replace(/\s*<link\s+rel=(['"])canonical\1[^>]*>/gi, '')
   .replace(/\s*<meta\s+property=(['"])(?:og:[^'"]+)\1[^>]*>/gi, '')
-  .replace(/\s*<meta\s+name=(['"])(?:twitter:[^'"]+)\1[^>]*>/gi, '');
+  .replace(/\s*<meta\s+name=(['"])(?:twitter:[^'"]+)\1[^>]*>/gi, '')
+  .replace(/\s*<script\s+type=(['"])application\/ld\+json\1[^>]*>[\s\S]*?<\/script>/gi, '');
 
-const buildHead = ({ pathname, title, description, image, type }) => {
+const buildHead = ({ pathname, title, description, image, type, structuredData = [] }) => {
   const canonical = pathname === '/' ? `${SITE_ORIGIN}/` : `${SITE_ORIGIN}${pathname}`;
   const absoluteImage = toAbsoluteUrl(image || DEFAULT_SOCIAL_IMAGE);
   const escapedTitle = escapeHtml(title);
   const escapedDescription = escapeHtml(description);
   const escapedCanonical = escapeHtml(canonical);
   const escapedImage = escapeHtml(absoluteImage);
+  const jsonLd = structuredData.map((item, index) => {
+    const schemaId = item['@type'] === 'Product'
+      ? 'seo-product-schema'
+      : item['@type'] === 'Organization'
+        ? 'seo-organization-schema'
+        : `seo-schema-${index}`;
+    return (
+      `\n    <script id="${schemaId}" type="application/ld+json">${jsonForScript(item)}</script>`
+    );
+  }).join('');
 
-  return `\n    <title>${escapedTitle}</title>\n    <meta name="description" content="${escapedDescription}" />\n    <link rel="canonical" href="${escapedCanonical}" />\n    <meta property="og:site_name" content="Mikel's Fruit" />\n    <meta property="og:locale" content="es_ES" />\n    <meta property="og:type" content="${type}" />\n    <meta property="og:title" content="${escapedTitle}" />\n    <meta property="og:description" content="${escapedDescription}" />\n    <meta property="og:url" content="${escapedCanonical}" />\n    <meta property="og:image" content="${escapedImage}" />\n    <meta name="twitter:card" content="summary_large_image" />\n    <meta name="twitter:title" content="${escapedTitle}" />\n    <meta name="twitter:description" content="${escapedDescription}" />\n    <meta name="twitter:image" content="${escapedImage}" />`;
+  return `
+    <title>${escapedTitle}</title>
+    <meta name="description" content="${escapedDescription}" />
+    <link rel="canonical" href="${escapedCanonical}" />
+    <meta property="og:site_name" content="Mikel's Fruit" />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:type" content="${type}" />
+    <meta property="og:title" content="${escapedTitle}" />
+    <meta property="og:description" content="${escapedDescription}" />
+    <meta property="og:url" content="${escapedCanonical}" />
+    <meta property="og:image" content="${escapedImage}" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="${escapedTitle}" />
+    <meta name="twitter:description" content="${escapedDescription}" />
+    <meta name="twitter:image" content="${escapedImage}" />${jsonLd}`;
 };
 
-const injectHead = (html, metadata) => {
+const buildFallbackBody = (entry, products) => {
+  const safeLink = (pathname, text) => `<a href="${escapeHtml(pathname)}">${escapeHtml(text)}</a>`;
+  const intro = `<p>${escapeHtml(entry.description)}</p>`;
+
+  if (entry.pathname === '/tienda') {
+    const items = products.map((product) => {
+      const content = getProductSeoContent(product, product.slug);
+      return `<li>${safeLink(`/producto/${product.slug}`, content.name)} — ${escapeHtml(Number(product.price).toFixed(2))} €</li>`;
+    }).join('');
+    return `<main id="seo-static-content"><header><h1>Tienda online | Mikel's Fruit</h1>${intro}</header><section aria-label="Productos"><h2>Productos</h2><ul>${items}</ul></section></main>`;
+  }
+
+  if (entry.product) {
+    const content = getProductSeoContent(entry.product, entry.product.slug);
+    const image = toAbsoluteUrl(entry.image);
+    const ingredients = content.ingredients ? `<p><strong>Ingredientes:</strong> ${escapeHtml(content.ingredients)}</p>` : '';
+    const availability = entry.product.soldOut || Number(entry.product.stock) <= 0 ? 'Agotado temporalmente' : 'Disponible';
+    return `<main id="seo-static-content"><article><header><h1>${escapeHtml(content.name)}</h1>${intro}</header><img src="${escapeHtml(image)}" alt="${escapeHtml(content.name)}" width="1200" height="1200" /><p>${escapeHtml(content.longDescription || content.description)}</p>${ingredients}<p><strong>Precio:</strong> ${escapeHtml(Number(entry.product.price).toFixed(2))} €</p><p><strong>Disponibilidad:</strong> ${availability}</p></article></main>`;
+  }
+
+  if (entry.post) {
+    const articleText = entry.post.excerpt || entry.post.content || entry.description;
+    return `<main id="seo-static-content"><article><h1>${escapeHtml(entry.post.title || entry.title)}</h1><p>${escapeHtml(articleText)}</p></article></main>`;
+  }
+
+  return `<main id="seo-static-content"><article><h1>${escapeHtml(entry.title)}</h1>${intro}</article></main>`;
+};
+
+const injectHeadAndBody = (html, entry, products) => {
   const cleaned = cleanHead(html);
-  const head = buildHead(metadata);
+  const head = buildHead(entry);
+  const fallback = buildFallbackBody(entry, products);
   if (!cleaned.includes('</head>')) throw new Error('Vite output has no </head> tag');
-  return cleaned.replace('</head>', `${head}\n  </head>`);
+  if (!cleaned.includes('<div id="root"></div>')) throw new Error('Vite output has no empty root element');
+
+  const withHead = cleaned.replace('</head>', `${head}\n  </head>`);
+  return withHead.replace('<div id="root"></div>', `<div id="root">${fallback}</div>`);
 };
 
-const loadMetadata = async (paths) => {
+const resolveLogoUrl = async () => {
+  const assets = await readdir(join(DIST, 'assets'));
+  const filename = assets.find((name) => /^mikels-fruit-logo-bn-1600-[A-Za-z0-9_-]+\.png$/.test(name));
+  if (!filename) throw new Error('Compiled Mikel\'s Fruit logo asset is missing from dist/assets');
+  return `${SITE_ORIGIN}/assets/${filename}`;
+};
+
+const loadMetadata = async (paths, logoUrl) => {
   const productsPromise = fetchJson('/api/products?lang=es');
   const blogIndexPromise = fetchJson('/api/blog/posts?per_page=100');
   const [productsPayload, blogIndexPayload] = await Promise.all([productsPromise, blogIndexPromise]);
 
-  const products = new Map((productsPayload.products || []).map((product) => [product.slug, product]));
+  const productsList = productsPayload.products || [];
+  const products = new Map(productsList.map((product) => [product.slug, product]));
   const blogIndex = new Map((blogIndexPayload.posts || []).map((post) => [post.slug, post]));
   const metadata = new Map();
 
   for (const pathname of paths) {
     if (STATIC_ROUTE_SEO[pathname]) {
+      const structuredData = pathname === '/'
+        ? [buildOrganizationStructuredData(logoUrl)]
+        : [];
       metadata.set(pathname, {
         pathname,
         ...STATIC_ROUTE_SEO[pathname],
         image: DEFAULT_SOCIAL_IMAGE,
         type: 'website',
+        structuredData,
       });
       continue;
     }
@@ -116,11 +194,14 @@ const loadMetadata = async (paths) => {
       const slug = decodeURIComponent(pathname.slice('/producto/'.length));
       const product = products.get(slug);
       if (!product) throw new Error(`Sitemap product ${slug} is missing from /api/products?lang=es`);
+      const image = product.image || product.images?.[0] || DEFAULT_SOCIAL_IMAGE;
       metadata.set(pathname, {
         pathname,
         ...buildProductMetadata(product, slug),
-        image: product.image || product.images?.[0] || DEFAULT_SOCIAL_IMAGE,
+        image,
         type: 'product',
+        product,
+        structuredData: [buildProductStructuredData(product, slug)],
       });
       continue;
     }
@@ -134,6 +215,7 @@ const loadMetadata = async (paths) => {
         ...buildBlogMetadata(post),
         image: post.featured_image || DEFAULT_SOCIAL_IMAGE,
         type: 'article',
+        post,
       });
       continue;
     }
@@ -141,7 +223,7 @@ const loadMetadata = async (paths) => {
     throw new Error(`Sitemap path has no metadata policy: ${pathname}`);
   }
 
-  return metadata;
+  return { metadata, products: productsList };
 };
 
 const main = async () => {
@@ -150,10 +232,11 @@ const main = async () => {
   const paths = parseSitemapPaths(sitemap);
   if (paths.length !== 24) throw new Error(`Expected 24 indexable routes from sitemap, got ${paths.length}`);
 
-  const metadata = await loadMetadata(paths);
   const baseHtml = await readFile(join(DIST, 'index.html'), 'utf8');
+  const logoUrl = await resolveLogoUrl();
+  const { metadata, products } = await loadMetadata(paths, logoUrl);
   await Promise.all([...metadata.values()].flatMap((entry) => {
-    const html = injectHead(baseHtml, entry);
+    const html = injectHeadAndBody(baseHtml, entry, products);
     return routeFiles(entry.pathname).map(async (target) => {
       await mkdir(dirname(target), { recursive: true });
       await writeFile(target, html, 'utf8');
@@ -162,7 +245,7 @@ const main = async () => {
 
   const elapsedMs = Math.round(performance.now() - startedAt);
   console.log(JSON.stringify({
-    generator: 'static-seo-head',
+    generator: 'static-seo-head-and-body',
     language: 'es',
     routes: metadata.size,
     elapsed_ms: elapsedMs,
