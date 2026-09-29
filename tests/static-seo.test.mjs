@@ -12,6 +12,9 @@ const MIDDLEWARE = join(ROOT, 'middleware.js');
 const APP = join(ROOT, 'src', 'App.jsx');
 const HEADER = join(ROOT, 'src', 'components', 'layout', 'Header.jsx');
 const HOME = join(ROOT, 'src', 'pages', 'Home.jsx');
+const PRODUCT_DETAIL = join(ROOT, 'src', 'pages', 'ProductDetail.jsx');
+const PRODUCT_REVIEWS = join(ROOT, 'src', 'components', 'ProductReviews.jsx');
+const SPANISH_LOCALE = join(ROOT, 'src', 'i18n', 'locales', 'es.json');
 
 const pathsFromSitemap = async () => {
   const xml = await readFile(SITEMAP, 'utf8');
@@ -128,4 +131,34 @@ test('removes the non-existent experiences destination from public navigation an
   }
   assert.match(home, /pillar_ingredients_title/);
   assert.match(home, /link: "\/tienda"/);
+});
+
+test('uses the product_slug review statistic in the product title rating', async () => {
+  const productDetail = await readFile(PRODUCT_DETAIL, 'utf8');
+
+  assert.match(productDetail, /\/api\/reviews\/stats\?product_slug=\$\{slug\}/);
+  assert.doesNotMatch(productDetail, /\/api\/reviews\/stats\?product=\$\{slug\}/);
+});
+
+test('serves all admin client routes through the SPA shell', async () => {
+  const middleware = await readFile(MIDDLEWARE, 'utf8');
+
+  assert.match(middleware, /pathname === '\/admin' \|\| pathname\.startsWith\('\/admin\/'\)/);
+  assert.match(middleware, /return renderSpaShell\(request\);/);
+});
+
+test('shows verified purchases and the approved review publication policy', async () => {
+  const [reviews, spanish] = await Promise.all([
+    readFile(PRODUCT_REVIEWS, 'utf8'),
+    readFile(SPANISH_LOCALE, 'utf8'),
+  ]);
+  const reviewCopy = JSON.parse(spanish).reviews;
+
+  assert.match(reviews, /review\.is_verified_purchase/);
+  assert.match(reviews, /t\('reviews\.verified_purchase'\)/);
+  assert.match(reviews, /t\('reviews\.publication_policy'\)/);
+  assert.equal(
+    reviewCopy.publication_policy,
+    'Publicamos todas las opiniones que recibimos, sin filtrar por puntuación. Las marcadas como compra verificada corresponden a pedidos realizados en esta tienda.',
+  );
 });

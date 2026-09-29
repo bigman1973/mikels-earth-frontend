@@ -676,6 +676,10 @@
     "premium_gift": "🎁 PREMIUM GIFT",
     "early_edition": "🍂 EARLY HARVEST EDITION"
   },
+  "reviews": {
+    "verified_purchase": "Verified purchase",
+    "publication_policy": "We publish all reviews we receive, without filtering by rating. Those marked as verified purchases correspond to orders placed in this store."
+  },
   "tags": {
     "vegano": "Vegan",
     "sin_gluten": "Gluten Free",
