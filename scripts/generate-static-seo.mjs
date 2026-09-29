@@ -10,7 +10,6 @@ import {
   buildOrganizationStructuredData,
   buildProductMetadata,
   buildProductStructuredData,
-  getProductSeoContent,
   toAbsoluteUrl,
 } from '../src/seo/metadata.js';
 
@@ -119,43 +118,11 @@ const buildHead = ({ pathname, title, description, image, type, structuredData =
     <meta name="twitter:image" content="${escapedImage}" />${jsonLd}`;
 };
 
-const buildFallbackBody = (entry, products) => {
-  const safeLink = (pathname, text) => `<a href="${escapeHtml(pathname)}">${escapeHtml(text)}</a>`;
-  const intro = `<p>${escapeHtml(entry.description)}</p>`;
-
-  if (entry.pathname === '/tienda') {
-    const items = products.map((product) => {
-      const content = getProductSeoContent(product, product.slug);
-      return `<li>${safeLink(`/producto/${product.slug}`, content.name)} — ${escapeHtml(Number(product.price).toFixed(2))} €</li>`;
-    }).join('');
-    return `<main id="seo-static-content"><header><h1>Tienda online | Mikel's Fruit</h1>${intro}</header><section aria-label="Productos"><h2>Productos</h2><ul>${items}</ul></section></main>`;
-  }
-
-  if (entry.product) {
-    const content = getProductSeoContent(entry.product, entry.product.slug);
-    const image = toAbsoluteUrl(entry.image);
-    const ingredients = content.ingredients ? `<p><strong>Ingredientes:</strong> ${escapeHtml(content.ingredients)}</p>` : '';
-    const availability = entry.product.soldOut || Number(entry.product.stock) <= 0 ? 'Agotado temporalmente' : 'Disponible';
-    return `<main id="seo-static-content"><article><header><h1>${escapeHtml(content.name)}</h1>${intro}</header><img src="${escapeHtml(image)}" alt="${escapeHtml(content.name)}" width="1200" height="1200" /><p>${escapeHtml(content.longDescription || content.description)}</p>${ingredients}<p><strong>Precio:</strong> ${escapeHtml(Number(entry.product.price).toFixed(2))} €</p><p><strong>Disponibilidad:</strong> ${availability}</p></article></main>`;
-  }
-
-  if (entry.post) {
-    const articleText = entry.post.excerpt || entry.post.content || entry.description;
-    return `<main id="seo-static-content"><article><h1>${escapeHtml(entry.post.title || entry.title)}</h1><p>${escapeHtml(articleText)}</p></article></main>`;
-  }
-
-  return `<main id="seo-static-content"><article><h1>${escapeHtml(entry.title)}</h1>${intro}</article></main>`;
-};
-
-const injectHeadAndBody = (html, entry, products) => {
+const injectHead = (html, entry) => {
   const cleaned = cleanHead(html);
   const head = buildHead(entry);
-  const fallback = buildFallbackBody(entry, products);
   if (!cleaned.includes('</head>')) throw new Error('Vite output has no </head> tag');
-  if (!cleaned.includes('<div id="root"></div>')) throw new Error('Vite output has no empty root element');
-
-  const withHead = cleaned.replace('</head>', `${head}\n  </head>`);
-  return withHead.replace('<div id="root"></div>', `<div id="root">${fallback}</div>`);
+  return cleaned.replace('</head>', `${head}\n  </head>`);
 };
 
 const resolveLogoUrl = async () => {
@@ -170,8 +137,7 @@ const loadMetadata = async (paths, logoUrl) => {
   const blogIndexPromise = fetchJson('/api/blog/posts?per_page=100');
   const [productsPayload, blogIndexPayload] = await Promise.all([productsPromise, blogIndexPromise]);
 
-  const productsList = productsPayload.products || [];
-  const products = new Map(productsList.map((product) => [product.slug, product]));
+  const products = new Map((productsPayload.products || []).map((product) => [product.slug, product]));
   const blogIndex = new Map((blogIndexPayload.posts || []).map((post) => [post.slug, post]));
   const metadata = new Map();
 
@@ -200,7 +166,6 @@ const loadMetadata = async (paths, logoUrl) => {
         ...buildProductMetadata(product, slug),
         image,
         type: 'product',
-        product,
         structuredData: [buildProductStructuredData(product, slug)],
       });
       continue;
@@ -215,7 +180,6 @@ const loadMetadata = async (paths, logoUrl) => {
         ...buildBlogMetadata(post),
         image: post.featured_image || DEFAULT_SOCIAL_IMAGE,
         type: 'article',
-        post,
       });
       continue;
     }
@@ -223,7 +187,7 @@ const loadMetadata = async (paths, logoUrl) => {
     throw new Error(`Sitemap path has no metadata policy: ${pathname}`);
   }
 
-  return { metadata, products: productsList };
+  return metadata;
 };
 
 const main = async () => {
@@ -234,9 +198,9 @@ const main = async () => {
 
   const baseHtml = await readFile(join(DIST, 'index.html'), 'utf8');
   const logoUrl = await resolveLogoUrl();
-  const { metadata, products } = await loadMetadata(paths, logoUrl);
+  const metadata = await loadMetadata(paths, logoUrl);
   await Promise.all([...metadata.values()].flatMap((entry) => {
-    const html = injectHeadAndBody(baseHtml, entry, products);
+    const html = injectHead(baseHtml, entry);
     return routeFiles(entry.pathname).map(async (target) => {
       await mkdir(dirname(target), { recursive: true });
       await writeFile(target, html, 'utf8');
@@ -245,7 +209,7 @@ const main = async () => {
 
   const elapsedMs = Math.round(performance.now() - startedAt);
   console.log(JSON.stringify({
-    generator: 'static-seo-head-and-body',
+    generator: 'static-seo-head',
     language: 'es',
     routes: metadata.size,
     elapsed_ms: elapsedMs,

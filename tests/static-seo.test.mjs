@@ -33,7 +33,6 @@ const tagContent = (html, tag) => html.match(tag)?.[1] || '';
 const decodeApostrophes = (value) => value.replaceAll('&#39;', "'");
 const jsonLdEntries = (html) => [...html.matchAll(/<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi)]
   .map((match) => JSON.parse(match[1]));
-const bodyWithoutHead = (html) => html.replace(/<head[\s\S]*?<\/head>/i, '');
 
 test('generates one Spanish static head for every sitemap route', async () => {
   const paths = await pathsFromSitemap();
@@ -73,18 +72,6 @@ test('includes a current lastmod date for every sitemap URL', async () => {
   assert.equal(entries.length, 24);
   for (const [, lastmod] of entries) {
     assert.match(lastmod, /^2026-09-29$/);
-  }
-});
-
-test('writes meaningful static body content for every indexable route', async () => {
-  const paths = await pathsFromSitemap();
-
-  for (const pathname of paths) {
-    const html = await htmlFor(pathname);
-    const body = bodyWithoutHead(html);
-    assert.match(body, /id="seo-static-content"/, `${pathname} needs static semantic body content`);
-    assert.match(body, /<div id="root"><main id="seo-static-content">/, `${pathname} must serve content before JavaScript hydrates`);
-    assert.match(body, /<h1>[^<]+<\/h1>/, `${pathname} needs a static H1`);
   }
 });
 
