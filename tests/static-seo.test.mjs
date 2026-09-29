@@ -12,6 +12,8 @@ const MIDDLEWARE = join(ROOT, 'middleware.js');
 const APP = join(ROOT, 'src', 'App.jsx');
 const HEADER = join(ROOT, 'src', 'components', 'layout', 'Header.jsx');
 const HOME = join(ROOT, 'src', 'pages', 'Home.jsx');
+const PRODUCT_DETAIL = join(ROOT, 'src', 'pages', 'ProductDetail.jsx');
+const PRODUCT_REVIEWS = join(ROOT, 'src', 'components', 'ProductReviews.jsx');
 const FAMILY = join(ROOT, 'src', 'pages', 'LaFamilia.jsx');
 const LAND = join(ROOT, 'src', 'pages', 'NuestraTierra.jsx');
 const TREASURES = join(ROOT, 'src', 'pages', 'NuestrasJoyas.jsx');
@@ -199,4 +201,35 @@ test('keeps the family preserve photo and shortened quote on the family page onl
   assert.match(spanishFamily.jordi_text, /^Séptima generación de una familia de agricultores de Alcarràs\. Dirige Farms Planet/);
   assert.doesNotMatch(spanishFamily.jordi_text, /productos industriales y sin alma|Córdoba/i);
   assert.doesNotMatch(englishFamily.jordi_text, /industrial, soulless products|Córdoba/i);
+});
+
+
+test('uses the product_slug review statistic in the product title rating', async () => {
+  const productDetail = await readFile(PRODUCT_DETAIL, 'utf8');
+
+  assert.match(productDetail, /\/api\/reviews\/stats\?product_slug=\$\{slug\}/);
+  assert.doesNotMatch(productDetail, /\/api\/reviews\/stats\?product=\$\{slug\}/);
+});
+
+test('serves all admin client routes through the SPA shell', async () => {
+  const middleware = await readFile(MIDDLEWARE, 'utf8');
+
+  assert.match(middleware, /pathname === '\/admin' \|\| pathname\.startsWith\('\/admin\/'\)/);
+  assert.match(middleware, /return renderSpaShell\(request\);/);
+});
+
+test('shows verified purchases and the approved review publication policy', async () => {
+  const [reviews, spanish] = await Promise.all([
+    readFile(PRODUCT_REVIEWS, 'utf8'),
+    readFile(SPANISH_LOCALE, 'utf8'),
+  ]);
+  const reviewCopy = JSON.parse(spanish).reviews;
+
+  assert.match(reviews, /review\.is_verified_purchase/);
+  assert.match(reviews, /t\('reviews\.verified_purchase'\)/);
+  assert.match(reviews, /t\('reviews\.publication_policy'\)/);
+  assert.equal(
+    reviewCopy.publication_policy,
+    'Publicamos todas las opiniones que recibimos, sin filtrar por puntuación. Las marcadas como compra verificada corresponden a pedidos realizados en esta tienda.',
+  );
 });

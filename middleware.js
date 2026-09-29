@@ -71,7 +71,7 @@ const resourceExists = async (url) => {
   }
 };
 
-const renderSpaNotFound = async (request) => {
+const renderSpaHtml = async (request, status) => {
   const indexUrl = new URL('/index.html', request.url);
   const indexResponse = await fetch(indexUrl, {
     headers: request.headers,
@@ -87,9 +87,12 @@ const renderSpaNotFound = async (request) => {
 
   return new Response(
     request.method === 'HEAD' ? null : await indexResponse.text(),
-    { status: 404, headers },
+    { status, headers },
   );
 };
+
+const renderSpaNotFound = (request) => renderSpaHtml(request, 404);
+const renderSpaShell = (request) => renderSpaHtml(request, 200);
 
 export const config = {
   matcher: '/((?!assets/|fonts/|images/|index\\.html|favicon\\.ico|robots\\.txt|sitemap\\.xml).*)',
@@ -109,6 +112,12 @@ export default async function middleware(request) {
       status: 301,
       headers: { Location: new URL(redirectTarget, requestUrl.origin).toString() },
     });
+  }
+
+  // El panel contiene una ruta dinámica de clientes. Servir directamente el
+  // shell de React evita que Vercel responda 404 antes de que cargue el router.
+  if (pathname === '/admin' || pathname.startsWith('/admin/')) {
+    return renderSpaShell(request);
   }
 
   if (
