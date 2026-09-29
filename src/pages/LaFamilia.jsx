@@ -1,5 +1,6 @@
 import { motion as Motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import familyConservaCasa from '../assets/family-conserva-casa.jpg';
 
 const LaFamilia = () => {
   const { t } = useTranslation();
@@ -63,6 +64,45 @@ const LaFamilia = () => {
               <p>{t('family.history_p3')}</p>
             </div>
           </Motion.div>
+        </div>
+      </section>
+
+      {/* Conserva familiar de verano: contexto histórico, no producto comercial */}
+      <section className="bg-accent/20 py-16">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center">
+            <Motion.figure
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              className="overflow-hidden rounded-2xl bg-white shadow-xl"
+            >
+              <img
+                src={familyConservaCasa}
+                alt={t('family.home_preserve_photo_alt')}
+                className="aspect-[4/3] w-full object-cover"
+              />
+              <figcaption className="px-5 py-4 text-sm italic text-gray-700">
+                {t('family.home_preserve_caption')}
+              </figcaption>
+            </Motion.figure>
+
+            <Motion.blockquote
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              className="border-l-4 border-secondary pl-6 md:pl-8"
+            >
+              <p className="font-script text-4xl leading-tight text-primary md:text-5xl">
+                {t('family.home_preserve_quote')}
+              </p>
+              <footer className="mt-6 text-base font-semibold text-gray-700">
+                {t('family.home_preserve_author')}
+              </footer>
+            </Motion.blockquote>
+          </div>
         </div>
       </section>
 
@@ -219,9 +259,6 @@ const LaFamilia = () => {
                 </h2>
                 <p className="text-2xl font-script mb-6 text-white">
                   {t('family.seventh_gen', { defaultValue: 'Séptima Generación' })}
-                </p>
-                <p className="text-xl mb-6 text-white leading-relaxed">
-                  "{t('family.jordi_quote')}"
                 </p>
                 <p className="text-lg text-white/90 leading-relaxed">
                   {t('family.jordi_text')}

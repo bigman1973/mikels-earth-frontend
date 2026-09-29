@@ -178,3 +178,19 @@ test('uses the approved family timeline without the unverified 1975 and 2010 ent
   assert.doesNotMatch(family, /year: "1975"/);
   assert.doesNotMatch(family, /year: "2010"/);
 });
+
+test('keeps the family preserve photo and shortened quote on the family page only', async () => {
+  const [family, app, spanish] = await Promise.all([
+    readFile(FAMILY, 'utf8'),
+    readFile(APP, 'utf8'),
+    readFile(SPANISH_LOCALE, 'utf8'),
+  ]);
+
+  assert.match(family, /familyConservaCasa/);
+  assert.match(family, /family\.home_preserve_quote/);
+  assert.match(family, /family\.home_preserve_caption/);
+  assert.match(family, /family\.jordi_text/);
+  assert.doesNotMatch(family, /family\.jordi_quote/);
+  assert.doesNotMatch(app, /familyConservaCasa/);
+  assert.match(spanish, /"jordi_text": "Desde Alcarràs y Córdoba, comparto nuestra historia con el mundo\./);
+});
