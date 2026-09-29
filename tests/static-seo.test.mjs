@@ -233,3 +233,33 @@ test('shows verified purchases and the approved review publication policy', asyn
     'Publicamos todas las opiniones que recibimos, sin filtrar por puntuación. Las marcadas como compra verificada corresponden a pedidos realizados en esta tienda.',
   );
 });
+
+test('defines all visible opinions labels and removes the review incentive', async () => {
+  const [opinions, spanish, english] = await Promise.all([
+    readFile(join(ROOT, 'src', 'pages', 'Opiniones.jsx'), 'utf8'),
+    readFile(SPANISH_LOCALE, 'utf8'),
+    readFile(ENGLISH_LOCALE, 'utf8'),
+  ]);
+  const expectedSpanish = {
+    page_title: 'Opiniones',
+    subtitle: 'Lo que dicen quienes han probado nuestros productos',
+    of_5_stars: 'sobre 5',
+    customer_reviews: 'opiniones',
+    what_means: '¿Qué significa',
+    all_products: 'Todos los productos',
+    most_recent: 'Más recientes',
+    write_review: 'Escribir una opinión',
+  };
+  const spanishReviews = JSON.parse(spanish).reviews;
+  const englishReviews = JSON.parse(english).reviews;
+  for (const [key, value] of Object.entries(expectedSpanish)) {
+    assert.equal(spanishReviews[key], value, `Spanish reviews.${key} must match approved copy`);
+    assert.ok(englishReviews[key], `English reviews.${key} must be defined`);
+  }
+  assert.match(opinions, /t\('reviews\.page_title'\)/);
+  assert.match(opinions, /t\('reviews\.write_review'\)/);
+  assert.doesNotMatch(opinions, /coupon_code|submitResult\.coupon|10% de descuento/i);
+  for (const locale of [spanish, english]) {
+    assert.doesNotMatch(locale, /"share_experience": "[^"\n]*(?:<strong>|10%|discount|descuento)/i);
+  }
+});
