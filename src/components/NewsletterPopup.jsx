@@ -4,6 +4,7 @@ import { Mail, X } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { API_URL } from '../config/api';
+import { useCart } from '../context/CartContext';
 
 const POPUP_STORAGE_KEY = 'mikels_newsletter_popup_v2';
 const POPUP_TTL_MS = 30 * 24 * 60 * 60 * 1000;
@@ -34,6 +35,7 @@ const persistPopupRecord = () => {
 const NewsletterPopup = () => {
   const { t } = useTranslation();
   const location = useLocation();
+  const { isCartOpen } = useCart();
   const [isCookieConsentResolved, setIsCookieConsentResolved] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -49,6 +51,7 @@ const NewsletterPopup = () => {
   const shownRef = useRef(false);
 
   const excludedPath = EXCLUDED_PATHS.has(location.pathname);
+  const excludedContext = excludedPath || isCartOpen;
 
   useEffect(() => {
     const markConsentResolved = () => {
@@ -83,7 +86,7 @@ const NewsletterPopup = () => {
   }, []);
 
   useEffect(() => {
-    if (!isCookieConsentResolved || excludedPath || hasValidPopupRecord()) return undefined;
+    if (!isCookieConsentResolved || excludedContext || hasValidPopupRecord()) return undefined;
 
     const timer = window.setTimeout(showPopup, 25_000);
     const onScroll = () => {
@@ -100,7 +103,7 @@ const NewsletterPopup = () => {
       window.clearTimeout(timer);
       window.removeEventListener('scroll', onScroll);
     };
-  }, [excludedPath, isCookieConsentResolved, showPopup]);
+  }, [excludedContext, isCookieConsentResolved, showPopup]);
 
   const handleClose = () => {
     persistPopupRecord();
@@ -160,7 +163,7 @@ const NewsletterPopup = () => {
     }
   };
 
-  if (excludedPath) return null;
+  if (excludedContext) return null;
 
   return (
     <AnimatePresence>
@@ -168,7 +171,7 @@ const NewsletterPopup = () => {
         <MotionAside
           aria-label={t('newsletter_popup.title')}
           aria-live="polite"
-          className="fixed bottom-0 right-0 z-50 w-full border border-stone-200 bg-white p-5 shadow-2xl sm:bottom-5 sm:right-5 sm:max-w-[360px] sm:rounded-2xl"
+          className="fixed bottom-0 right-0 z-50 max-h-[58dvh] w-full overflow-y-auto border border-stone-200 bg-white p-3 shadow-2xl sm:bottom-5 sm:right-5 sm:max-h-[calc(100dvh-2.5rem)] sm:max-w-[360px] sm:rounded-2xl sm:p-5"
           initial={{ opacity: 0, x: 400 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: 400 }}
@@ -183,14 +186,14 @@ const NewsletterPopup = () => {
             <X className="h-5 w-5" />
           </button>
 
-          <div className="mb-4 pr-8">
-            <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+          <div className="mb-2 pr-8 sm:mb-4">
+            <div className="mb-3 hidden h-10 w-10 items-center justify-center rounded-full bg-primary/10 sm:inline-flex">
               <Mail className="h-5 w-5 text-primary" />
             </div>
-            <h2 className="font-serif text-2xl font-bold text-primary">
+            <h2 className="font-serif text-xl font-bold text-primary sm:text-2xl">
               {t('newsletter_popup.title')}
             </h2>
-            <p className="mt-1 text-sm leading-5 text-stone-600">
+            <p className="mt-1 text-sm leading-4 text-stone-600 sm:leading-5">
               {t('newsletter_popup.subtitle')}
             </p>
           </div>
@@ -209,8 +212,8 @@ const NewsletterPopup = () => {
               </button>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-3">
-              <div className="grid grid-cols-2 gap-3">
+            <form onSubmit={handleSubmit} className="space-y-2 sm:space-y-3">
+              <div className="grid grid-cols-2 gap-2 sm:gap-3">
                 <label className="sr-only" htmlFor="newsletter-first-name">
                   {t('newsletter_popup.first_name')}
                 </label>
@@ -224,7 +227,7 @@ const NewsletterPopup = () => {
                   autoComplete="given-name"
                   required
                   disabled={isSubmitting}
-                  className="min-w-0 rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:bg-stone-100"
+                  className="min-w-0 rounded-lg border border-stone-300 px-3 py-2 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:bg-stone-100 sm:py-2.5"
                 />
                 <label className="sr-only" htmlFor="newsletter-last-name">
                   {t('newsletter_popup.last_name')}
@@ -239,7 +242,7 @@ const NewsletterPopup = () => {
                   autoComplete="family-name"
                   required
                   disabled={isSubmitting}
-                  className="min-w-0 rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:bg-stone-100"
+                  className="min-w-0 rounded-lg border border-stone-300 px-3 py-2 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:bg-stone-100 sm:py-2.5"
                 />
               </div>
 
@@ -256,7 +259,7 @@ const NewsletterPopup = () => {
                 autoComplete="email"
                 required
                 disabled={isSubmitting}
-                className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:bg-stone-100"
+                className="w-full rounded-lg border border-stone-300 px-3 py-2 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:bg-stone-100 sm:py-2.5"
               />
 
               <div>
@@ -272,14 +275,14 @@ const NewsletterPopup = () => {
                   placeholder={t('newsletter_popup.phone')}
                   autoComplete="tel"
                   disabled={isSubmitting}
-                  className="w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:bg-stone-100"
+                  className="w-full rounded-lg border border-stone-300 px-3 py-2 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20 disabled:bg-stone-100 sm:py-2.5"
                 />
-                <p className="mt-1.5 text-xs leading-4 text-stone-500">
+                <p className="mt-1 text-xs leading-3.5 text-stone-500 sm:mt-1.5 sm:leading-4">
                   {t('newsletter_popup.phone_help')}
                 </p>
               </div>
 
-              <label className="flex cursor-pointer items-start gap-2.5 text-xs leading-5 text-stone-700">
+              <label className="flex cursor-pointer items-start gap-2 text-xs leading-4 text-stone-700 sm:gap-2.5 sm:leading-5">
                 <input
                   type="checkbox"
                   name="privacyPolicyAccepted"
@@ -297,7 +300,7 @@ const NewsletterPopup = () => {
                 </span>
               </label>
 
-              <label className="flex cursor-pointer items-start gap-2.5 text-xs leading-5 text-stone-700">
+              <label className="flex cursor-pointer items-start gap-2 text-xs leading-4 text-stone-700 sm:gap-2.5 sm:leading-5">
                 <input
                   type="checkbox"
                   name="whatsappMarketingAccepted"
@@ -321,7 +324,7 @@ const NewsletterPopup = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full rounded-lg bg-primary px-4 py-3 font-semibold text-white transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60"
+                className="w-full rounded-lg bg-primary px-4 py-2.5 font-semibold text-white transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60 sm:py-3"
               >
                 {isSubmitting ? t('newsletter_popup.submitting') : t('newsletter_popup.submit')}
               </button>

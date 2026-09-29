@@ -21,9 +21,11 @@ test('newsletter popup waits for a resolved Cookiebot response', () => {
   assert.match(popup, /window\.scrollY \/ maxScroll >= 0\.5/);
 });
 
-test('newsletter popup persists dismissal for thirty days and excludes checkout paths', () => {
+test('newsletter popup persists dismissal for thirty days and excludes checkout and cart contexts', () => {
   assert.match(popup, /30 \* 24 \* 60 \* 60 \* 1000/);
   assert.match(popup, /new Set\(\['\/carrito', '\/checkout'\]\)/);
+  assert.match(popup, /const \{ isCartOpen \} = useCart\(\)/);
+  assert.match(popup, /const excludedContext = excludedPath \|\| isCartOpen/);
   assert.match(popup, /localStorage\.setItem\(POPUP_STORAGE_KEY/);
   assert.doesNotMatch(popup, /fixed inset-0 bg-black/);
   assert.match(popup, /sm:max-w-\[360px\]/);
