@@ -124,6 +124,7 @@
     "submit": "Suscribirme",
     "submitting": "Suscribiendo...",
     "success": "Gracias por suscribirte. Te mantendremos al día.",
+    "already_subscribed": "Ya estás suscrito. Si no encuentras tu cupón, escríbenos.",
     "error_generic": "No se ha podido completar la suscripción. Inténtalo de nuevo.",
     "close": "Cerrar"
   },

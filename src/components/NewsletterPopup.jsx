@@ -9,6 +9,7 @@ import { useCart } from '../context/CartContext';
 const POPUP_STORAGE_KEY = 'mikels_newsletter_popup_v2';
 const POPUP_TTL_MS = 30 * 24 * 60 * 60 * 1000;
 const EXCLUDED_PATHS = new Set(['/carrito', '/checkout']);
+export const NEWSLETTER_POPUP_REQUEST_EVENT = 'mikels:open-newsletter-popup';
 const MotionAside = motion.aside;
 const COOKIEBOT_PREVIEW_BYPASS_ENABLED = import.meta.env.VITE_COOKIEBOT_PREVIEW_BYPASS === 'true';
 
@@ -62,6 +63,7 @@ const NewsletterPopup = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState({ text: '', type: '' });
   const shownRef = useRef(false);
+  const manuallyRequestedRef = useRef(false);
 
   const excludedPath = EXCLUDED_PATHS.has(location.pathname);
   const excludedContext = excludedPath || isCartOpen;
@@ -97,6 +99,28 @@ const NewsletterPopup = () => {
     persistPopupRecord();
     setIsOpen(true);
   }, []);
+
+  useEffect(() => {
+    const openRequestedPopup = () => {
+      if (excludedContext || hasValidPopupRecord()) return;
+
+      if (isCookieConsentResolved) {
+        showPopup();
+      } else {
+        manuallyRequestedRef.current = true;
+      }
+    };
+
+    window.addEventListener(NEWSLETTER_POPUP_REQUEST_EVENT, openRequestedPopup);
+    return () => window.removeEventListener(NEWSLETTER_POPUP_REQUEST_EVENT, openRequestedPopup);
+  }, [excludedContext, isCookieConsentResolved, showPopup]);
+
+  useEffect(() => {
+    if (manuallyRequestedRef.current && isCookieConsentResolved && !excludedContext) {
+      manuallyRequestedRef.current = false;
+      showPopup();
+    }
+  }, [excludedContext, isCookieConsentResolved, showPopup]);
 
   useEffect(() => {
     if (!isCookieConsentResolved || excludedContext || hasValidPopupRecord()) return undefined;
@@ -161,7 +185,12 @@ const NewsletterPopup = () => {
 
       if (response.ok && data.success) {
         persistPopupRecord();
-        setMessage({ text: t('newsletter_popup.success'), type: 'success' });
+        setMessage({
+          text: data.already_subscribed
+            ? t('newsletter_popup.already_subscribed')
+            : t('newsletter_popup.success'),
+          type: 'success',
+        });
         return;
       }
 
