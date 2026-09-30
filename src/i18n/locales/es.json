@@ -109,6 +109,24 @@
     "popup_close": "No, gracias",
     "copied": "¡Copiado!"
   },
+  "newsletter_popup": {
+    "title": "Únete a Mikel's Fruit",
+    "subtitle": "Recibe novedades, recetas y ofertas de la familia.",
+    "first_name": "Nombre *",
+    "last_name": "Apellidos *",
+    "email": "tu@email.com *",
+    "phone": "Teléfono (opcional)",
+    "phone_help": "Opcional. Lo usamos para avisarte de tu pedido y de novedades por WhatsApp.",
+    "privacy_prefix": "He leído y acepto la",
+    "privacy_link": "política de privacidad",
+    "whatsapp_consent": "Quiero recibir novedades y ofertas por WhatsApp",
+    "privacy_required": "Debes aceptar la política de privacidad para suscribirte.",
+    "submit": "Suscribirme",
+    "submitting": "Suscribiendo...",
+    "success": "Gracias por suscribirte. Te mantendremos al día.",
+    "error_generic": "No se ha podido completar la suscripción. Inténtalo de nuevo.",
+    "close": "Cerrar"
+  },
   "products": {
     "seo_title": "Tienda | Mikel's Fruit - Productos Artesanales",
     "seo_description": "Compra aceite de oliva virgen extra, frutas en almíbar y mermeladas artesanales. Envío gratuito en pedidos superiores a 30€.",
