@@ -1,253 +1,50 @@
-import { useState } from 'react';
+import { Mail } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Mail, Send } from 'lucide-react';
+
+const NEWSLETTER_POPUP_REQUEST_EVENT = 'mikels:open-newsletter-popup';
 
 const Newsletter = ({ variant = 'default' }) => {
   const { t } = useTranslation();
-  const [formData, setFormData] = useState({
-    email: '',
-    firstName: '',
-    lastName: '',
-    phone: ''
-  });
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    setError('');
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    if (!formData.firstName.trim()) {
-      setError(t('newsletter.error_name'));
-      return;
-    }
-    if (!formData.lastName.trim()) {
-      setError(t('newsletter.error_lastname'));
-      return;
-    }
-    if (!formData.email.trim() || !formData.email.includes('@')) {
-      setError(t('newsletter.error_email'));
-      return;
-    }
-    
-    setLoading(true);
-    setError('');
-    
-    try {
-      const COUPONS_API_URL = 'https://mikels-coupons-service-production.up.railway.app';
-      const couponResponse = await fetch(`${COUPONS_API_URL}/api/coupon/generate`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email: formData.email }),
-      });
-      
-      if (!couponResponse.ok) {
-        throw new Error('Error generating coupon');
-      }
-      
-      const couponData = await couponResponse.json();
-      const couponCode = couponData.coupon_code;
-      
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-      const response = await fetch(`${API_URL}/api/newsletter/subscribe`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          email: formData.email, 
-          first_name: formData.firstName,
-          last_name: formData.lastName,
-          phone: formData.phone || undefined,
-          coupon_code: couponCode 
-        }),
-      });
-      
-      const responseData = await response.json().catch(() => ({}));
-      
-      if (response.ok && responseData.success) {
-        setSubmitted(true);
-        setFormData({ email: '', firstName: '', lastName: '', phone: '' });
-        setTimeout(() => setSubmitted(false), 5000);
-      } else if (response.ok && responseData.already_subscribed) {
-        setError(t('newsletter.already_subscribed'));
-      } else {
-        setError(t('newsletter.error_generic'));
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      setError(t('newsletter.error_generic'));
-    } finally {
-      setLoading(false);
-    }
+  const openConsentCompliantForm = () => {
+    window.dispatchEvent(new CustomEvent(NEWSLETTER_POPUP_REQUEST_EVENT));
   };
 
   if (variant === 'footer') {
     return (
-      <div className="bg-primary/5 rounded-lg p-6">
-        <div className="flex items-center gap-2 mb-3">
+      <div className="rounded-lg bg-primary/5 p-6">
+        <div className="mb-3 flex items-center gap-2">
           <Mail className="text-secondary" size={24} />
           <h3 className="text-lg font-bold text-primary">Newsletter</h3>
         </div>
-        <p className="text-sm text-gray-700 mb-4">
-          {t('newsletter.subtitle')}
-        </p>
-        
-          {submitted ? (
-            <div className="bg-green-50 border border-green-500 rounded-lg p-3 text-center">
-              <p className="text-green-700 font-semibold text-sm">
-                ✓ {t('newsletter.success')}
-              </p>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-2">
-              <div className="grid grid-cols-2 gap-2">
-                <input
-                  type="text"
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleChange}
-                  required
-                  placeholder={t('newsletter.placeholder_name')}
-                  className="px-3 py-2 border border-gray-300 rounded-lg focus:border-secondary focus:outline-none text-sm"
-                  disabled={loading}
-                />
-                <input
-                  type="text"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                  required
-                  placeholder={t('newsletter.placeholder_lastname')}
-                  className="px-3 py-2 border border-gray-300 rounded-lg focus:border-secondary focus:outline-none text-sm"
-                  disabled={loading}
-                />
-              </div>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                placeholder={t('newsletter.placeholder_email')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-secondary focus:outline-none text-sm"
-                disabled={loading}
-              />
-              <input
-                type="tel"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                placeholder={t('newsletter.placeholder_phone')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-secondary focus:outline-none text-sm"
-                disabled={loading}
-              />
-              {error && <p className="text-red-600 text-xs">{error}</p>}
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-secondary text-primary px-4 py-2 rounded-lg font-bold hover:bg-secondary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-1"
-              >
-                <Send size={16} />
-                {loading ? t('newsletter.sending') : t('newsletter.subscribe_btn')}
-              </button>
-            </form>
-          )}
+        <p className="mb-4 text-sm text-gray-700">{t('newsletter.subtitle')}</p>
+        <button
+          type="button"
+          onClick={openConsentCompliantForm}
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-secondary px-4 py-2 font-bold text-primary transition-colors hover:bg-secondary/90"
+        >
+          <Mail size={16} />
+          {t('newsletter.subscribe_btn')}
+        </button>
       </div>
     );
   }
 
-  // Variant 'inline' para usar en páginas
   return (
-    <div className="bg-gradient-to-r from-primary to-accent p-8 md:p-12 rounded-2xl shadow-2xl">
-      <div className="max-w-2xl mx-auto text-center">
-        <Mail className="text-secondary mx-auto mb-4" size={48} />
-        <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
-          {t('newsletter.join_title')}
-        </h3>
-        <p className="text-lg text-white/90 mb-6">
-          {t('newsletter.join_description')}
-        </p>
-        
-          {submitted ? (
-            <div className="bg-white rounded-lg p-6">
-              <div className="text-5xl mb-3">✓</div>
-              <p className="text-2xl font-bold text-green-700 mb-2">
-                {t('newsletter.welcome')}
-              </p>
-              <p className="text-gray-600">
-                {t('newsletter.check_email')}
-              </p>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-3 max-w-md mx-auto">
-              <div className="grid grid-cols-2 gap-3">
-                <input
-                  type="text"
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleChange}
-                  required
-                  placeholder={t('newsletter.placeholder_name')}
-                  className="px-4 py-3 border-2 border-white/30 bg-white/10 text-white placeholder-white/60 rounded-lg focus:border-secondary focus:outline-none backdrop-blur-sm"
-                  disabled={loading}
-                />
-                <input
-                  type="text"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                  required
-                  placeholder={t('newsletter.placeholder_lastname')}
-                  className="px-4 py-3 border-2 border-white/30 bg-white/10 text-white placeholder-white/60 rounded-lg focus:border-secondary focus:outline-none backdrop-blur-sm"
-                  disabled={loading}
-                />
-              </div>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                placeholder={t('newsletter.placeholder_email')}
-                className="w-full px-4 py-3 border-2 border-white/30 bg-white/10 text-white placeholder-white/60 rounded-lg focus:border-secondary focus:outline-none backdrop-blur-sm"
-                disabled={loading}
-              />
-              <input
-                type="tel"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                placeholder={t('newsletter.placeholder_phone')}
-                className="w-full px-4 py-3 border-2 border-white/30 bg-white/10 text-white placeholder-white/60 rounded-lg focus:border-secondary focus:outline-none backdrop-blur-sm"
-                disabled={loading}
-              />
-              {error && <p className="text-red-300 text-sm">{error}</p>}
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-secondary text-primary px-6 py-3 rounded-lg font-bold hover:bg-secondary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2 whitespace-nowrap"
-              >
-                <Send size={20} />
-                {loading ? t('newsletter.sending') : t('newsletter.subscribe_btn')}
-              </button>
-            </form>
-          )}
-        
-        {!submitted && (
-          <p className="text-white/70 text-sm mt-4">
-            {t('newsletter.no_spam')}
-          </p>
-        )}
-      </div>
+    <div className="rounded-2xl bg-gradient-to-r from-primary to-accent p-8 text-center shadow-2xl md:p-12">
+      <Mail className="mx-auto mb-4 text-secondary" size={48} />
+      <h3 className="mb-4 text-3xl font-bold text-white md:text-4xl">
+        {t('newsletter.join_title')}
+      </h3>
+      <p className="mb-6 text-lg text-white/90">{t('newsletter.join_description')}</p>
+      <button
+        type="button"
+        onClick={openConsentCompliantForm}
+        className="inline-flex items-center gap-2 rounded-lg bg-secondary px-6 py-3 font-bold text-primary transition-colors hover:bg-secondary/90"
+      >
+        <Mail size={20} />
+        {t('newsletter.subscribe_btn')}
+      </button>
     </div>
   );
 };

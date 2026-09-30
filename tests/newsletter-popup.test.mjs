@@ -5,10 +5,11 @@ import test from 'node:test';
 const root = new URL('..', import.meta.url);
 const read = (relativePath) => readFile(new URL(relativePath, root), 'utf8');
 
-const [popup, app, spanish] = await Promise.all([
+const [popup, app, spanish, legacyNewsletter] = await Promise.all([
   read('./src/components/NewsletterPopup.jsx'),
   read('./src/App.jsx'),
   read('./src/i18n/locales/es.json'),
+  read('./src/components/common/Newsletter.jsx'),
 ]);
 
 test('newsletter popup waits for a resolved Cookiebot response', () => {
@@ -52,6 +53,15 @@ test('newsletter popup requires privacy consent and submits separate consent cho
 test('legacy floating newsletter modal is not mounted', () => {
   assert.doesNotMatch(app, /FloatingNewsletterButton/);
   assert.doesNotMatch(app, /DeferredMarketingWidgets/);
+});
+
+test('homepage and footer newsletter calls use the consent-compliant popup only', () => {
+  assert.match(popup, /NEWSLETTER_POPUP_REQUEST_EVENT/);
+  assert.match(popup, /window\.addEventListener\(NEWSLETTER_POPUP_REQUEST_EVENT/);
+  assert.match(legacyNewsletter, /new CustomEvent\(NEWSLETTER_POPUP_REQUEST_EVENT\)/);
+  assert.doesNotMatch(legacyNewsletter, /mikels-coupons-service/);
+  assert.doesNotMatch(legacyNewsletter, /coupon\/generate/);
+  assert.doesNotMatch(legacyNewsletter, /api\/newsletter\/subscribe/);
 });
 
 test('Spanish newsletter labels preserve the approved privacy and WhatsApp text', () => {

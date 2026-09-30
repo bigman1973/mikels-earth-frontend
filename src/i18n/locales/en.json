@@ -124,6 +124,7 @@
     "submit": "Subscribe",
     "submitting": "Subscribing...",
     "success": "Thank you for subscribing. We will keep you up to date.",
+    "already_subscribed": "You are already subscribed. If you cannot find your coupon, please write to us.",
     "error_generic": "The subscription could not be completed. Please try again.",
     "close": "Close"
   },
