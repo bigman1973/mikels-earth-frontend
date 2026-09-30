@@ -10,6 +10,7 @@ const POPUP_STORAGE_KEY = 'mikels_newsletter_popup_v2';
 const POPUP_TTL_MS = 30 * 24 * 60 * 60 * 1000;
 const EXCLUDED_PATHS = new Set(['/carrito', '/checkout']);
 const MotionAside = motion.aside;
+const COOKIEBOT_PREVIEW_BYPASS_ENABLED = import.meta.env.VITE_COOKIEBOT_PREVIEW_BYPASS === 'true';
 
 const hasResolvedCookieConsent = () => {
   const consentApi = window.Cookiebot || window.CookieConsent;
@@ -18,13 +19,11 @@ const hasResolvedCookieConsent = () => {
 
 const isVercelPreviewWithoutCookieBanner = () => {
   const consentApi = window.Cookiebot || window.CookieConsent;
-  const isVercelPreview = window.location.hostname.endsWith('.vercel.app');
 
-  // Cookiebot does not render a banner on ephemeral Preview domains unless each
-  // hostname is explicitly authorized in its domain group. This narrow Preview-
-  // only condition avoids blocking a test panel forever while production keeps
-  // the strict hasResponse requirement above.
-  return isVercelPreview
+  // This is intentionally disabled unless Vercel supplies the Preview-only
+  // build variable. Production has no value for it and remains fail-closed on
+  // Cookiebot.hasResponse.
+  return COOKIEBOT_PREVIEW_BYPASS_ENABLED
     && consentApi?.settingsLoaded === true
     && consentApi?.dialog === null
     && consentApi?.hasResponse === false;

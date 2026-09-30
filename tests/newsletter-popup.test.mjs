@@ -21,8 +21,9 @@ test('newsletter popup waits for a resolved Cookiebot response', () => {
   assert.match(popup, /window\.scrollY \/ maxScroll >= 0\.5/);
 });
 
-test('only unblocks Vercel Previews when Cookiebot cannot show an authorized banner', () => {
-  assert.match(popup, /window\.location\.hostname\.endsWith\('\.vercel\.app'\)/);
+test('only unblocks explicitly configured Previews when Cookiebot cannot show an authorized banner', () => {
+  assert.match(popup, /VITE_COOKIEBOT_PREVIEW_BYPASS === 'true'/);
+  assert.match(popup, /return COOKIEBOT_PREVIEW_BYPASS_ENABLED/);
   assert.match(popup, /consentApi\?\.settingsLoaded === true/);
   assert.match(popup, /consentApi\?\.dialog === null/);
   assert.match(popup, /hasResolvedCookieConsent\(\) \|\| isVercelPreviewWithoutCookieBanner\(\)/);
