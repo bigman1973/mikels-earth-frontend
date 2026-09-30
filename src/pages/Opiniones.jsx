@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useCallback } from 'react';
+import { motion as Motion, AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
 import { Star, Send, CheckCircle, Info, Globe } from 'lucide-react';
@@ -41,12 +41,7 @@ const Opiniones = () => {
     order_number: ''
   });
 
-  useEffect(() => {
-    fetchReviews();
-    fetchStats();
-  }, [filter, sort]);
-
-  const fetchReviews = async () => {
+  const fetchReviews = useCallback(async () => {
     setLoading(true);
     try {
       const params = new URLSearchParams();
@@ -60,9 +55,9 @@ const Opiniones = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filter, sort]);
 
-  const fetchStats = async () => {
+  const fetchStats = useCallback(async () => {
     try {
       const response = await fetch(`${API_URL}/api/reviews/stats`);
       const data = await response.json();
@@ -70,7 +65,12 @@ const Opiniones = () => {
     } catch (error) {
       console.error('Error fetching stats:', error);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchReviews();
+    fetchStats();
+  }, [fetchReviews, fetchStats]);
 
   const handleProductChange = (slug) => {
     const product = PRODUCTS.find(p => p.slug === slug);
@@ -109,8 +109,7 @@ const Opiniones = () => {
       if (response.ok) {
         setSubmitResult({
           success: true,
-          message: data.message,
-          coupon: data.coupon_code
+          message: data.message
         });
         setFormData({
           customer_name: '',
@@ -129,7 +128,7 @@ const Opiniones = () => {
       } else {
         setSubmitResult({ success: false, message: data.error || t('reviews.error_submit', 'Error al enviar la reseña') });
       }
-    } catch (error) {
+    } catch {
       setSubmitResult({ success: false, message: t('reviews.error_connection', 'Error de conexión. Inténtalo de nuevo.') });
     } finally {
       setSubmitting(false);
@@ -219,7 +218,7 @@ const Opiniones = () => {
       {/* Hero */}
       <section className="bg-primary py-16 md:py-20">
         <div className="container mx-auto px-4 text-center">
-          <motion.div
+          <Motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -230,7 +229,7 @@ const Opiniones = () => {
             <p className="text-xl text-white/80 max-w-2xl mx-auto">
               {t('reviews.subtitle')}
             </p>
-          </motion.div>
+          </Motion.div>
         </div>
       </section>
 
@@ -331,7 +330,7 @@ const Opiniones = () => {
       <div id="nueva-resena"></div>
       <AnimatePresence>
         {showForm && (
-          <motion.section
+          <Motion.section
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
@@ -341,7 +340,7 @@ const Opiniones = () => {
               <div className="max-w-2xl mx-auto bg-accent/5 rounded-2xl p-8">
                 <h3 className="text-2xl font-bold text-primary mb-2">{t('reviews.share_experience')}</h3>
                 <p className="text-gray-600 mb-6">
-                  {t('reviews_page.share_experience', 'Tu opinión nos ayuda a mejorar y ayuda a otros a descubrir nuestros productos.')}
+                  {t('reviews_page.share_experience', 'Cuéntanos qué te ha parecido. Publicamos todas las opiniones, buenas y malas.')}
                 </p>
 
                 <form onSubmit={handleSubmit} className="space-y-5">
@@ -431,11 +430,6 @@ const Opiniones = () => {
                   {submitResult && (
                     <div className={`p-4 rounded-lg ${submitResult.success ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
                       <p className="font-medium">{submitResult.message}</p>
-                      {submitResult.coupon && (
-                        <p className="mt-2">
-                          {t('reviews_page.form_success', 'Tu código de descuento:')} <span className="font-bold text-lg">{submitResult.coupon}</span>
-                        </p>
-                      )}
                     </div>
                   )}
 
@@ -449,7 +443,7 @@ const Opiniones = () => {
                 </form>
               </div>
             </div>
-          </motion.section>
+          </Motion.section>
         )}
       </AnimatePresence>
 
@@ -480,7 +474,7 @@ const Opiniones = () => {
                   const displayTitle = isTranslated ? translatedReviews[review.id].title : review.title;
 
                   return (
-                    <motion.div
+                    <Motion.div
                       key={review.id}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -531,7 +525,7 @@ const Opiniones = () => {
                           }
                         </button>
                       </div>
-                    </motion.div>
+                    </Motion.div>
                   );
                 })}
               </div>
@@ -547,7 +541,7 @@ const Opiniones = () => {
             {t('reviews_page.have_tried', '¿Has probado nuestros productos?')}
           </h2>
           <p className="text-lg text-gray-600 mb-6 max-w-xl mx-auto">
-            {t('reviews_page.share_experience', 'Comparte tu experiencia y recibe un 10% de descuento en tu próxima compra como agradecimiento.')}
+            {t('reviews_page.share_experience', 'Cuéntanos qué te ha parecido. Publicamos todas las opiniones, buenas y malas.')}
           </p>
           <button
             onClick={() => { setShowForm(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }}

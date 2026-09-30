@@ -1,5 +1,6 @@
-import { motion } from 'framer-motion';
+import { motion as Motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import familyConservaCasa from '../assets/family-conserva-casa.jpg';
 
 const LaFamilia = () => {
   const { t } = useTranslation();
@@ -7,7 +8,7 @@ const LaFamilia = () => {
     <div className="bg-white">
       {/* Hero Section */}
       <section className="relative h-[60vh] bg-gradient-to-b from-primary/10 to-white flex items-center justify-center">
-        <motion.div
+        <Motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
@@ -19,12 +20,12 @@ const LaFamilia = () => {
           <p className="text-xl md:text-2xl text-primary/70 max-w-3xl mx-auto">
             {t('family.subtitle', { defaultValue: 'Más de 200 años cultivando la tierra con pasión, respeto y amor' })}
           </p>
-        </motion.div>
+        </Motion.div>
       </section>
 
       {/* Video Section */}
       <section className="container mx-auto px-4 py-12">
-        <motion.div
+        <Motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -41,13 +42,13 @@ const LaFamilia = () => {
               allowFullScreen
             ></iframe>
           </div>
-        </motion.div>
+        </Motion.div>
       </section>
 
       {/* Historia Principal */}
       <section className="container mx-auto px-4 py-16">
         <div className="max-w-4xl mx-auto">
-          <motion.div
+          <Motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -62,7 +63,46 @@ const LaFamilia = () => {
               <p>{t('family.history_p2')}</p>
               <p>{t('family.history_p3')}</p>
             </div>
-          </motion.div>
+          </Motion.div>
+        </div>
+      </section>
+
+      {/* Conserva familiar de verano: contexto histórico, no producto comercial */}
+      <section className="bg-accent/20 py-16">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center">
+            <Motion.figure
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              className="overflow-hidden rounded-2xl bg-white shadow-xl"
+            >
+              <img
+                src={familyConservaCasa}
+                alt={t('family.home_preserve_photo_alt')}
+                className="aspect-[4/3] w-full object-cover"
+              />
+              <figcaption className="px-5 py-4 text-sm italic text-gray-700">
+                {t('family.home_preserve_caption')}
+              </figcaption>
+            </Motion.figure>
+
+            <Motion.blockquote
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              className="border-l-4 border-secondary pl-6 md:pl-8"
+            >
+              <p className="font-script text-4xl leading-tight text-primary md:text-5xl">
+                {t('family.home_preserve_quote')}
+              </p>
+              <footer className="mt-6 text-base font-semibold text-gray-700">
+                {t('family.home_preserve_author')}
+              </footer>
+            </Motion.blockquote>
+          </div>
         </div>
       </section>
 
@@ -78,30 +118,30 @@ const LaFamilia = () => {
               {
                 year: "1819",
                 title: "Los Primeros Pasos",
-                text: "1819 comienza a cultivar las tierras en Alcarr\u00e0s, Lleida. La pasi\u00f3n por la tierra y el trabajo artesanal se convierte en el ADN de nuestra familia."
+                text: "La familia empieza a cultivar en Alcarràs."
               },
               {
-                year: "1920",
+                year: "Años 1920",
                 title: "La receta de casa",
-                text: "En el mas, los veranos terminaban con la fruta convertida en conserva para pasar el invierno."
+                text: "En el mas, los veranos terminan con la fruta convertida en conserva para pasar el invierno."
               },
               {
-                year: "1975",
-                title: "El Descubrimiento del Paraguayo",
-                text: "La sexta generación descubre el melocotón plano en Alcarràs. Su sabor único y su textura perfecta nos inspiran a crear nuestra primera conserva artesanal."
+                year: "Años 60-70",
+                title: "El paraguayo en el Segrià",
+                text: "El paraguayo llega al Segrià. La familia lo cultiva desde entonces."
               },
               {
-                year: "2010",
-                title: "Compromiso Sostenible",
-                text: "Adoptamos prácticas de agricultura sostenible y certificaciones ecológicas. La tierra que nos ha dado tanto merece nuestro máximo respeto."
+                year: "2017",
+                title: "Certificación Eco Garden",
+                text: "Pioneros en obtener la certificación Eco Garden, una de las más exigentes para exportar a Asia. Hoy solo tres empresas españolas la tienen."
               },
               {
                 year: "2024",
                 title: "Mikel's Fruit",
-                text: "La séptima generación toma las riendas. Jordi Giró continúa el legado familiar, compartiendo nuestra historia con el mundo a través de productos que honran más de 200 años de tradición."
+                text: "Nace Mikel's Fruit: esa conserva de casa, para quien no la tiene."
               }
             ].map((milestone, index) => (
-              <motion.div
+              <Motion.div
                 key={index}
                 initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -116,7 +156,7 @@ const LaFamilia = () => {
                   <h3 className="text-2xl font-bold text-primary mb-3">{milestone.title}</h3>
                   <p className="text-gray-700">{milestone.text}</p>
                 </div>
-              </motion.div>
+              </Motion.div>
             ))}
           </div>
         </div>
@@ -139,7 +179,7 @@ const LaFamilia = () => {
               {
                 title: "Calidad",
                 icon: "⭐",
-                text: "No hay atajos en la excelencia. Seleccionamos cada fruta a mano, cocinamos sin prisas, envasamos con cuidado. La calidad no se negocia."
+                text: "La calidad guía nuestras decisiones. La calidad no se negocia."
               },
               {
                 title: "Autenticidad",
@@ -162,7 +202,7 @@ const LaFamilia = () => {
                 text: "Esto no es solo un negocio. Es nuestra vida, nuestra historia, nuestro legado. Cada producto lleva nuestra pasión en cada gota, en cada bocado."
               }
             ].map((value, index) => (
-              <motion.div
+              <Motion.div
                 key={index}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -173,7 +213,7 @@ const LaFamilia = () => {
                 <div className="text-5xl mb-4">{value.icon}</div>
                 <h3 className="text-xl font-bold text-primary mb-3">{value.title}</h3>
                 <p className="text-gray-700">{value.text}</p>
-              </motion.div>
+              </Motion.div>
             ))}
           </div>
         </div>
@@ -185,7 +225,7 @@ const LaFamilia = () => {
           <div className="max-w-6xl mx-auto">
             <div className="grid md:grid-cols-2 gap-12 items-center">
               {/* Imagen de Jordi */}
-              <motion.div
+              <Motion.div
                 initial={{ opacity: 0, x: -50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
@@ -204,10 +244,10 @@ const LaFamilia = () => {
                     </p>
                   </div>
                 </div>
-              </motion.div>
+              </Motion.div>
 
               {/* Texto */}
-              <motion.div
+              <Motion.div
                 initial={{ opacity: 0, x: 50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
@@ -220,13 +260,10 @@ const LaFamilia = () => {
                 <p className="text-2xl font-script mb-6 text-white">
                   {t('family.seventh_gen', { defaultValue: 'Séptima Generación' })}
                 </p>
-                <p className="text-xl mb-6 text-white leading-relaxed">
-                  "{t('family.jordi_quote')}"
-                </p>
                 <p className="text-lg text-white/90 leading-relaxed">
                   {t('family.jordi_text')}
                 </p>
-              </motion.div>
+              </Motion.div>
             </div>
           </div>
         </div>
@@ -262,4 +299,3 @@ const LaFamilia = () => {
 };
 
 export default LaFamilia;
-

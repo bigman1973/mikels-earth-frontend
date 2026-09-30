@@ -68,7 +68,7 @@ const ProductDetail = () => {
   const [reviewStats, setReviewStats] = useState({ average: 0, count: 0 });
   useEffect(() => {
     if (slug) {
-      fetch(`${API_URL}/api/reviews/stats?product=${slug}`)
+      fetch(`${API_URL}/api/reviews/stats?product_slug=${slug}`)
         .then(res => res.json())
         .then(data => {
           if (data.average_rating !== undefined) {

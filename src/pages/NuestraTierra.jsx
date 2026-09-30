@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion as Motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { MapPin, Sun, Droplets, Wind, Leaf, Heart } from 'lucide-react';
 
@@ -17,7 +17,7 @@ const NuestraTierra = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/40"></div>
         </div>
         
-        <motion.div
+        <Motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
@@ -32,13 +32,13 @@ const NuestraTierra = () => {
           <p className="text-xl md:text-2xl text-white/95 max-w-3xl mx-auto drop-shadow-lg">
             {t('land.hero_subtitle')}
           </p>
-        </motion.div>
+        </Motion.div>
       </section>
 
       {/* Introducción */}
       <section className="container mx-auto px-4 py-16">
         <div className="max-w-4xl mx-auto">
-          <motion.div
+          <Motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -51,7 +51,7 @@ const NuestraTierra = () => {
             <p className="text-xl text-gray-700 leading-relaxed">
               {t('land.terroir_text')}
             </p>
-          </motion.div>
+          </Motion.div>
         </div>
       </section>
 
@@ -59,7 +59,7 @@ const NuestraTierra = () => {
       <section className="bg-accent/10 py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
-            <motion.div
+            <Motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -100,7 +100,7 @@ const NuestraTierra = () => {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </Motion.div>
           </div>
         </div>
       </section>
@@ -108,7 +108,7 @@ const NuestraTierra = () => {
       {/* Córdoba Section */}
       <section className="container mx-auto px-4 py-16">
         <div className="max-w-6xl mx-auto">
-          <motion.div
+          <Motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -152,15 +152,15 @@ const NuestraTierra = () => {
                 </div>
               </div>
             </div>
-          </motion.div>
+          </Motion.div>
         </div>
       </section>
 
-      {/* Sostenibilidad */}
+      {/* Evidencia verificable */}
       <section className="bg-gradient-to-b from-secondary/10 to-white py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <motion.div
+            <Motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
@@ -169,23 +169,17 @@ const NuestraTierra = () => {
             >
               <Heart className="mx-auto text-secondary mb-4" size={48} />
               <h2 className="text-4xl font-bold text-primary mb-6">
-                {t('land.sustainability_title')}
+                {t('land.evidence_title')}
               </h2>
-              <p className="text-xl text-gray-700">
-                {t('land.sustainability_subtitle')}
-              </p>
-            </motion.div>
+            </Motion.div>
 
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid md:grid-cols-3 gap-8">
               {[
-                { title: t('land.organic_title'), text: t('land.organic_text') },
-                { title: t('land.water_title'), text: t('land.water_text') },
-                { title: t('land.biodiversity_title'), text: t('land.biodiversity_text') },
-                { title: t('land.energy_title'), text: t('land.energy_text') },
-                { title: t('land.zero_waste_title'), text: t('land.zero_waste_text') },
-                { title: t('land.certifications_title'), text: t('land.certifications_text') }
-              ].map((item, index) => (
-                <motion.div
+                t('land.evidence_organic'),
+                t('land.evidence_eco_garden'),
+                t('land.evidence_pruning')
+              ].map((text, index) => (
+                <Motion.div
                   key={index}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -193,9 +187,8 @@ const NuestraTierra = () => {
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow"
                 >
-                  <h3 className="text-xl font-bold text-primary mb-3">{item.title}</h3>
-                  <p className="text-gray-700">{item.text}</p>
-                </motion.div>
+                  <p className="text-gray-700 text-lg leading-relaxed">{text}</p>
+                </Motion.div>
               ))}
             </div>
           </div>
@@ -205,7 +198,7 @@ const NuestraTierra = () => {
       {/* Quote Section */}
       <section className="bg-primary text-white py-16">
         <div className="container mx-auto px-4">
-          <motion.div
+          <Motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
@@ -218,7 +211,7 @@ const NuestraTierra = () => {
             <p className="text-lg text-white/80">
               {t('land.quote_text')}
             </p>
-          </motion.div>
+          </Motion.div>
         </div>
       </section>
 

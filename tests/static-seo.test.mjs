@@ -14,6 +14,14 @@ const APP = join(ROOT, 'src', 'App.jsx');
 const HEADER = join(ROOT, 'src', 'components', 'layout', 'Header.jsx');
 const HOME = join(ROOT, 'src', 'pages', 'Home.jsx');
 const INDEX_HTML = join(ROOT, 'index.html');
+const PRODUCT_DETAIL = join(ROOT, 'src', 'pages', 'ProductDetail.jsx');
+const PRODUCT_REVIEWS = join(ROOT, 'src', 'components', 'ProductReviews.jsx');
+const FAMILY = join(ROOT, 'src', 'pages', 'LaFamilia.jsx');
+const LAND = join(ROOT, 'src', 'pages', 'NuestraTierra.jsx');
+const TREASURES = join(ROOT, 'src', 'pages', 'NuestrasJoyas.jsx');
+const RECIPES = join(ROOT, 'src', 'pages', 'Recetario.jsx');
+const SPANISH_LOCALE = join(ROOT, 'src', 'i18n', 'locales', 'es.json');
+const ENGLISH_LOCALE = join(ROOT, 'src', 'i18n', 'locales', 'en.json');
 
 const pathsFromSitemap = async () => {
   const xml = await readFile(SITEMAP, 'utf8');
@@ -238,4 +246,130 @@ test('removes the non-existent experiences destination from public navigation an
   }
   assert.match(home, /pillar_ingredients_title/);
   assert.match(home, /link: "\/tienda"/);
+});
+
+test('keeps only verified sustainability evidence and removes confirmed false claims', async () => {
+  const [land, spanish, english] = await Promise.all([
+    readFile(LAND, 'utf8'),
+    readFile(SPANISH_LOCALE, 'utf8'),
+    readFile(ENGLISH_LOCALE, 'utf8'),
+  ]);
+
+  assert.match(land, /evidence_organic/);
+  assert.match(land, /evidence_eco_garden/);
+  assert.match(land, /evidence_pruning/);
+  for (const source of [land, spanish, english]) {
+    assert.doesNotMatch(source, /producci[oó]n integrada|huella de carbono|energ[ií]a renovable|sin pesticidas|corredores ecol[oó]gicos|fauna auxiliar|t[eé]cnicas ancestrales/i);
+  }
+});
+
+test('removes unsupported fruit-selection and nutrition claims and uses current oil products in pairings', async () => {
+  const [family, treasures, recipes, spanish, english] = await Promise.all([
+    readFile(FAMILY, 'utf8'),
+    readFile(TREASURES, 'utf8'),
+    readFile(RECIPES, 'utf8'),
+    readFile(SPANISH_LOCALE, 'utf8'),
+    readFile(ENGLISH_LOCALE, 'utf8'),
+  ]);
+
+  for (const source of [family, treasures, spanish, english]) {
+    assert.doesNotMatch(source, /seleccionamos cada fruta|fruta seleccionada a mano|favourite of chefs|favorito de los chefs/i);
+  }
+  assert.doesNotMatch(recipes, /sin az[uú]cares añadidos|without added sugars/i);
+  assert.match(recipes, /\['temprano', 'ecologico', 'garrafa', 'paraguayo', 'mermeladas'\]/);
+  assert.doesNotMatch(recipes, /pairingKeys = \['arbequina', 'picual'/);
+});
+
+test('uses the approved family timeline without the unverified 1975 and 2010 entries', async () => {
+  const family = await readFile(FAMILY, 'utf8');
+
+  assert.match(family, /year: "Años 1920"/);
+  assert.match(family, /year: "Años 60-70"/);
+  assert.match(family, /year: "2017"/);
+  assert.match(family, /certificación Eco Garden/);
+  assert.doesNotMatch(family, /year: "1975"/);
+  assert.doesNotMatch(family, /year: "2010"/);
+});
+
+test('keeps the family preserve photo and shortened quote on the family page only', async () => {
+  const [family, app, spanish, english] = await Promise.all([
+    readFile(FAMILY, 'utf8'),
+    readFile(APP, 'utf8'),
+    readFile(SPANISH_LOCALE, 'utf8'),
+    readFile(ENGLISH_LOCALE, 'utf8'),
+  ]);
+
+  assert.match(family, /familyConservaCasa/);
+  assert.match(family, /family\.home_preserve_quote/);
+  assert.match(family, /family\.home_preserve_caption/);
+  assert.match(family, /family\.jordi_text/);
+  assert.doesNotMatch(family, /family\.jordi_quote/);
+  assert.doesNotMatch(app, /familyConservaCasa/);
+  const spanishFamily = JSON.parse(spanish).family;
+  const englishFamily = JSON.parse(english).family;
+  assert.equal(spanishFamily.home_preserve_quote, '«En casa hacemos conserva cada verano, desde siempre.»');
+  assert.match(spanishFamily.jordi_text, /^Séptima generación de una familia de agricultores de Alcarràs\. Dirige Farms Planet/);
+  assert.doesNotMatch(spanishFamily.jordi_text, /productos industriales y sin alma|Córdoba/i);
+  assert.doesNotMatch(englishFamily.jordi_text, /industrial, soulless products|Córdoba/i);
+});
+
+
+test('uses the product_slug review statistic in the product title rating', async () => {
+  const productDetail = await readFile(PRODUCT_DETAIL, 'utf8');
+
+  assert.match(productDetail, /\/api\/reviews\/stats\?product_slug=\$\{slug\}/);
+  assert.doesNotMatch(productDetail, /\/api\/reviews\/stats\?product=\$\{slug\}/);
+});
+
+test('serves all admin client routes through the SPA shell', async () => {
+  const middleware = await readFile(MIDDLEWARE, 'utf8');
+
+  assert.match(middleware, /pathname === '\/admin' \|\| pathname\.startsWith\('\/admin\/'\)/);
+  assert.match(middleware, /return renderSpaShell\(request\);/);
+});
+
+test('shows verified purchases and the approved review publication policy', async () => {
+  const [reviews, spanish] = await Promise.all([
+    readFile(PRODUCT_REVIEWS, 'utf8'),
+    readFile(SPANISH_LOCALE, 'utf8'),
+  ]);
+  const reviewCopy = JSON.parse(spanish).reviews;
+
+  assert.match(reviews, /review\.is_verified_purchase/);
+  assert.match(reviews, /t\('reviews\.verified_purchase'\)/);
+  assert.match(reviews, /t\('reviews\.publication_policy'\)/);
+  assert.equal(
+    reviewCopy.publication_policy,
+    'Publicamos todas las opiniones que recibimos, sin filtrar por puntuación. Las marcadas como compra verificada corresponden a pedidos realizados en esta tienda.',
+  );
+});
+
+test('defines all visible opinions labels and removes the review incentive', async () => {
+  const [opinions, spanish, english] = await Promise.all([
+    readFile(join(ROOT, 'src', 'pages', 'Opiniones.jsx'), 'utf8'),
+    readFile(SPANISH_LOCALE, 'utf8'),
+    readFile(ENGLISH_LOCALE, 'utf8'),
+  ]);
+  const expectedSpanish = {
+    page_title: 'Opiniones',
+    subtitle: 'Lo que dicen quienes han probado nuestros productos',
+    of_5_stars: 'sobre 5',
+    customer_reviews: 'opiniones',
+    what_means: '¿Qué significa',
+    all_products: 'Todos los productos',
+    most_recent: 'Más recientes',
+    write_review: 'Escribir una opinión',
+  };
+  const spanishReviews = JSON.parse(spanish).reviews;
+  const englishReviews = JSON.parse(english).reviews;
+  for (const [key, value] of Object.entries(expectedSpanish)) {
+    assert.equal(spanishReviews[key], value, `Spanish reviews.${key} must match approved copy`);
+    assert.ok(englishReviews[key], `English reviews.${key} must be defined`);
+  }
+  assert.match(opinions, /t\('reviews\.page_title'\)/);
+  assert.match(opinions, /t\('reviews\.write_review'\)/);
+  assert.doesNotMatch(opinions, /coupon_code|submitResult\.coupon|10% de descuento/i);
+  for (const locale of [spanish, english]) {
+    assert.doesNotMatch(locale, /"share_experience": "[^"\n]*(?:<strong>|10%|discount|descuento)/i);
+  }
 });

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Star, MessageSquare } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://api.mikels.es';
 
@@ -19,7 +20,8 @@ const StarRating = ({ rating }) => {
   );
 };
 
-const ProductReviews = ({ productSlug, productName }) => {
+const ProductReviews = ({ productSlug }) => {
+  const { t } = useTranslation();
   const [reviews, setReviews] = useState([]);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -124,7 +126,7 @@ const ProductReviews = ({ productSlug, productName }) => {
                 </span>
                 {review.is_verified_purchase && (
                   <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
-                    Compra verificada
+                    {t('reviews.verified_purchase')}
                   </span>
                 )}
               </div>
@@ -139,6 +141,10 @@ const ProductReviews = ({ productSlug, productName }) => {
           </div>
         ))}
       </div>
+
+      <p className="mt-6 rounded-lg bg-gray-50 px-4 py-3 text-xs leading-relaxed text-gray-600">
+        {t('reviews.publication_policy')}
+      </p>
 
       {/* Footer con link */}
       <div className="mt-6 pt-4 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
