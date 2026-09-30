@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Send } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import CompanyLegalBlock from '../components/CompanyLegalBlock';
+import Turnstile from '../components/Turnstile';
 
 const Contact = () => {
   const { t } = useTranslation();
@@ -13,6 +14,9 @@ const Contact = () => {
     company: '' // honeypot field - must remain empty
   });
   const [formStartTime] = useState(Date.now());
+  const [turnstileToken, setTurnstileToken] = useState('');
+  const [turnstileResetKey, setTurnstileResetKey] = useState(0);
+  const handleTurnstileError = useCallback(() => setTurnstileToken(''), []);
 
   const handleChange = (e) => {
     setFormData({
@@ -38,7 +42,8 @@ const Contact = () => {
         body: JSON.stringify({
           ...formData,
           _hp: formData.company,
-          _ts: formStartTime
+          _ts: formStartTime,
+          turnstile_token: turnstileToken,
         }),
       });
       
@@ -50,8 +55,12 @@ const Contact = () => {
           phone: '',
           message: ''
         });
+        setTurnstileToken('');
+        setTurnstileResetKey((current) => current + 1);
         setTimeout(() => setSubmitted(false), 5000);
       } else {
+        setTurnstileToken('');
+        setTurnstileResetKey((current) => current + 1);
         console.error('Error enviando mensaje');
         alert('Hubo un error al enviar tu mensaje. Por favor, inténtalo de nuevo.');
       }
@@ -177,6 +186,13 @@ const Contact = () => {
                 ></textarea>
               </div>
 
+              <Turnstile
+                action="contact_form"
+                onVerify={setTurnstileToken}
+                onError={handleTurnstileError}
+                resetKey={turnstileResetKey}
+              />
+
               {submitted ? (
                 <div className="bg-green-50 border border-green-500 rounded-lg p-4 text-center">
                   <p className="text-green-700 font-semibold">
@@ -187,7 +203,7 @@ const Contact = () => {
                 <>
                   <button
                     type="submit"
-                    disabled={loading}
+                    disabled={loading || !turnstileToken}
                     className="w-full bg-primary text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
                   >
                     <Send className="w-5 h-5" />

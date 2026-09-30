@@ -5,11 +5,12 @@ import test from 'node:test';
 const root = new URL('..', import.meta.url);
 const read = (relativePath) => readFile(new URL(relativePath, root), 'utf8');
 
-const [popup, app, spanish, legacyNewsletter] = await Promise.all([
+const [popup, app, spanish, legacyNewsletter, turnstile] = await Promise.all([
   read('./src/components/NewsletterPopup.jsx'),
   read('./src/App.jsx'),
   read('./src/i18n/locales/es.json'),
   read('./src/components/common/Newsletter.jsx'),
+  read('./src/components/Turnstile.jsx'),
 ]);
 
 test('newsletter popup waits for a resolved Cookiebot response', () => {
@@ -48,6 +49,15 @@ test('newsletter popup requires privacy consent and submits separate consent cho
   assert.match(popup, /whatsapp_marketing_accepted: formData\.whatsappMarketingAccepted/);
   assert.match(popup, /source: 'popup'/);
   assert.match(popup, /to="\/politica-privacidad"/);
+});
+
+test('newsletter popup sends a server-verifiable Turnstile token before it can submit', () => {
+  assert.match(popup, /<Turnstile/);
+  assert.match(popup, /action="newsletter_signup"/);
+  assert.match(popup, /turnstile_token: turnstileToken/);
+  assert.match(popup, /disabled=\{isSubmitting \|\| !turnstileToken\}/);
+  assert.match(turnstile, /challenges\.cloudflare\.com\/turnstile/);
+  assert.match(turnstile, /VITE_TURNSTILE_SITE_KEY/);
 });
 
 test('legacy floating newsletter modal is not mounted', () => {

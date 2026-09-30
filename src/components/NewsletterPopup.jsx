@@ -5,6 +5,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { API_URL } from '../config/api';
 import { useCart } from '../context/CartContext';
+import Turnstile from './Turnstile';
 
 const POPUP_STORAGE_KEY = 'mikels_newsletter_popup_v2';
 const POPUP_TTL_MS = 30 * 24 * 60 * 60 * 1000;
@@ -62,6 +63,8 @@ const NewsletterPopup = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState({ text: '', type: '' });
+  const [turnstileToken, setTurnstileToken] = useState('');
+  const [turnstileResetKey, setTurnstileResetKey] = useState(0);
   const shownRef = useRef(false);
   const manuallyRequestedRef = useRef(false);
 
@@ -156,6 +159,8 @@ const NewsletterPopup = () => {
     setMessage({ text: '', type: '' });
   };
 
+  const handleTurnstileError = useCallback(() => setTurnstileToken(''), []);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -178,6 +183,7 @@ const NewsletterPopup = () => {
           phone: formData.phone || undefined,
           privacy_policy_accepted: formData.privacyPolicyAccepted,
           whatsapp_marketing_accepted: formData.whatsappMarketingAccepted,
+          turnstile_token: turnstileToken,
           source: 'popup',
         }),
       });
@@ -198,8 +204,12 @@ const NewsletterPopup = () => {
         text: data.message || data.error || t('newsletter_popup.error_generic'),
         type: 'error',
       });
+      setTurnstileToken('');
+      setTurnstileResetKey((current) => current + 1);
     } catch {
       setMessage({ text: t('newsletter_popup.error_generic'), type: 'error' });
+      setTurnstileToken('');
+      setTurnstileResetKey((current) => current + 1);
     } finally {
       setIsSubmitting(false);
     }
@@ -324,6 +334,13 @@ const NewsletterPopup = () => {
                 </p>
               </div>
 
+              <Turnstile
+                action="newsletter_signup"
+                onVerify={setTurnstileToken}
+                onError={handleTurnstileError}
+                resetKey={turnstileResetKey}
+              />
+
               <label className="flex cursor-pointer items-start gap-2 text-xs leading-4 text-stone-700 sm:gap-2.5 sm:leading-5">
                 <input
                   type="checkbox"
@@ -365,7 +382,7 @@ const NewsletterPopup = () => {
 
               <button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isSubmitting || !turnstileToken}
                 className="w-full rounded-lg bg-primary px-4 py-2.5 font-semibold text-white transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-60 sm:py-3"
               >
                 {isSubmitting ? t('newsletter_popup.submitting') : t('newsletter_popup.submit')}
