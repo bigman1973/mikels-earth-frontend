@@ -32,7 +32,8 @@ test('removes decorative emoji and incomplete awards from other product metadata
   const product = applyEditorialOverrides({
     slug: 'otro-producto',
     name: 'Producto',
-    description: 'Descripción',
+    description: '🌿 Descripción',
+    longDescription: '✨ Texto de producto',
     tags: ['🌿 Vegano'],
     claims: ['✨ Producción limitada'],
     badges: [
@@ -45,4 +46,6 @@ test('removes decorative emoji and incomplete awards from other product metadata
   assert.deepEqual(product.tags, ['Vegano']);
   assert.deepEqual(product.claims, ['Producción limitada']);
   assert.deepEqual(product.badges, [{ text: 'REGALO PREMIUM' }]);
+  assert.equal(product.description, 'Descripción');
+  assert.equal(product.longDescription, 'Texto de producto');
 });

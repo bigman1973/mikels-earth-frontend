@@ -22,9 +22,9 @@ const isIncompleteAwardBadge = (text) => (
 export const applyEditorialOverrides = (product, language = 'es') => {
   const normalizedProduct = {
     ...product,
-    name: replaceLegacyBrand(product.name),
-    description: replaceLegacyBrand(product.description),
-    longDescription: replaceLegacyBrand(product.longDescription),
+    name: stripDecorativeEmoji(replaceLegacyBrand(product.name)),
+    description: stripDecorativeEmoji(replaceLegacyBrand(product.description)),
+    longDescription: stripDecorativeEmoji(replaceLegacyBrand(product.longDescription)),
     tags: (product.tags || []).map(stripDecorativeEmoji),
     claims: (product.claims || []).map(stripDecorativeEmoji),
     badges: (product.badges || [])
