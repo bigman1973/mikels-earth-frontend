@@ -70,6 +70,26 @@ const OrderSuccess = () => {
     order.shipping_country,
   ].filter(Boolean);
 
+  if (!order) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-16">
+        <div className="container mx-auto px-4">
+          <section className="mx-auto max-w-xl rounded-lg bg-white p-8 text-center shadow-lg md:p-12">
+            <h1 className="mb-4 text-3xl font-bold text-primary">Estamos comprobando tu pedido</h1>
+            <p className="mb-8 text-gray-700">
+              {sessionId
+                ? 'El pago puede tardar unos segundos en quedar registrado. Si ya se ha cobrado, recibirás la confirmación por correo cuando terminemos de procesarlo.'
+                : 'Para ver los detalles de un pedido necesitamos el enlace de confirmación que recibiste al pagar.'}
+            </p>
+            <Link to="/contacto" className="inline-block rounded-lg bg-primary px-5 py-3 font-semibold text-white transition-colors hover:bg-primary/90">
+              Contactar con Mikel\'s Fruit
+            </Link>
+          </section>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen py-16 bg-gray-50">
       <div className="container mx-auto px-4">
@@ -104,7 +124,11 @@ const OrderSuccess = () => {
             <div className="bg-accent/30 rounded-lg p-6 mb-8">
               <div className="flex items-center justify-center gap-2 text-primary mb-2">
                 <Mail className="w-5 h-5" />
-                <span className="font-semibold">{t('order_success.confirmation_sent', { defaultValue: 'Confirmación enviada a:' })}</span>
+                <span className="font-semibold">
+                  {sessionData.confirmation_sent
+                    ? t('order_success.confirmation_sent', { defaultValue: 'Confirmación enviada a:' })
+                    : 'Estamos preparando la confirmación para:'}
+                </span>
               </div>
               <p className="text-gray-700">{sessionData.customer_email}</p>
             </div>
