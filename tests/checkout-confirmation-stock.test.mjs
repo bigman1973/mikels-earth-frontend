@@ -37,6 +37,8 @@ test('confirmation page renders persisted order details and confirmation notice'
   }
   assert.match(page, /formatEuro/);
   assert.match(page, /order_pending/);
+  assert.match(page, /Estamos comprobando tu pedido/);
+  assert.match(page, /sessionData\.confirmation_sent/);
 });
 
 test('stock controls retain a backend-enforced checkout boundary', async () => {
