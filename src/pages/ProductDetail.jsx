@@ -303,7 +303,7 @@ const ProductDetail = () => {
                       {product.soldOutMessage || 'Agotado'}
                     </span>
                   )}
-                  {!product.soldOut && product.badges?.slice(0, 1).map((badge, index) => (
+                  {product.badges?.slice(0, 1).map((badge, index) => (
                     <span
                       key={index}
                       className="rounded-full bg-[#f5efe4] px-4 py-2 text-sm font-semibold uppercase tracking-wide text-[#1a1a1a]"

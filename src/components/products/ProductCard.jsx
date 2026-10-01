@@ -21,7 +21,7 @@ const ProductCard = ({ product }) => {
   const { addToCart, setIsCartOpen } = useCart();
   const { t } = useTranslation();
   const productImage = getOptimizedProductImage(product.image || product.images?.[0]);
-  const displayBadge = product.badges?.[0];
+  const displayBadge = product.badges?.find((badge) => !badge.detailOnly);
   const badgeText = displayBadge
     ? (displayBadge.textKey ? t(`badges.${displayBadge.textKey}`, displayBadge.text) : displayBadge.text)
     : null;
