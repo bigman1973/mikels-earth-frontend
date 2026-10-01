@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { CART_STORAGE_KEY, loadStoredCart } from '../utils/cartStorage';
 
 const CartContext = createContext();
 
@@ -11,26 +12,17 @@ export const useCart = () => {
 };
 
 export const CartProvider = ({ children }) => {
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState(() => (
+    typeof window === 'undefined' ? [] : loadStoredCart(window.localStorage)
+  ));
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [discountCode, setDiscountCode] = useState('');
   const [appliedDiscount, setAppliedDiscount] = useState(null);
 
-  // Cargar carrito desde localStorage al iniciar
+  // El estado se inicializa desde almacenamiento antes del primer render, así
+  // que esta escritura nunca reemplaza un carrito existente por [] al recargar.
   useEffect(() => {
-    const savedCart = localStorage.getItem('mikels_cart');
-    if (savedCart) {
-      try {
-        setCart(JSON.parse(savedCart));
-      } catch (error) {
-        console.error('Error loading cart from localStorage:', error);
-      }
-    }
-  }, []);
-
-  // Guardar carrito en localStorage cuando cambie
-  useEffect(() => {
-    localStorage.setItem('mikels_cart', JSON.stringify(cart));
+    window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
   }, [cart]);
 
   const addToCart = (product, quantity = 1, purchaseType = 'one-time', subscriptionFrequency = null) => {
@@ -258,4 +250,3 @@ export const CartProvider = ({ children }) => {
     </CartContext.Provider>
   );
 };
-
