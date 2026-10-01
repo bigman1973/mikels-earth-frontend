@@ -111,9 +111,14 @@ export default async function middleware(request) {
   const redirectTarget = PERMANENT_REDIRECTS.get(pathname);
 
   if (redirectTarget) {
+    const destination = new URL(redirectTarget, requestUrl.origin);
+    // Old Stripe completion links still contain session_id. A permanent
+    // canonical redirect must not discard it before the confirmation page
+    // reads the checkout status.
+    destination.search = requestUrl.search;
     return new Response(null, {
       status: 301,
-      headers: { Location: new URL(redirectTarget, requestUrl.origin).toString() },
+      headers: { Location: destination.toString() },
     });
   }
 

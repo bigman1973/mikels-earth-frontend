@@ -22,6 +22,7 @@ test('legacy English completion URLs redirect permanently to their Spanish canon
   assert.match(app, /<Route path="\/suscripcion-exitosa" element=\{<SubscriptionSuccess \/>\}/);
   assert.match(middleware, /\['\/order-success', '\/pedido-confirmado'\]/);
   assert.match(middleware, /\['\/subscription-success', '\/suscripcion-exitosa'\]/);
+  assert.match(middleware, /destination\.search = requestUrl\.search/);
 });
 
 test('the cart URL opens the existing side-panel without redirecting the customer', async () => {
