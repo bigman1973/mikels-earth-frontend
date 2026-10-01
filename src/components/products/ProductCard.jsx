@@ -25,8 +25,10 @@ const ProductCard = ({ product }) => {
   const badgeText = displayBadge
     ? (displayBadge.textKey ? t(`badges.${displayBadge.textKey}`, displayBadge.text) : displayBadge.text)
     : null;
+  const isSoldOut = product.soldOut || Number(product.stock || 0) < 1;
 
   const addProduct = () => {
+    if (isSoldOut) return;
     addToCart(product, 1);
     setIsCartOpen(true);
   };
@@ -38,12 +40,12 @@ const ProductCard = ({ product }) => {
       transition={{ duration: 0.4 }}
       className="group relative overflow-hidden rounded-lg bg-white shadow-sm transition-shadow duration-300 hover:shadow-lg"
     >
-      {badgeText && !product.soldOut && (
+      {badgeText && !isSoldOut && (
         <span className="absolute left-3 top-3 z-10 rounded-full bg-[#f5efe4] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[#1a1a1a]">
           {badgeText}
         </span>
       )}
-      {product.soldOut && (
+      {isSoldOut && (
         <span className="absolute left-3 top-3 z-10 rounded-full bg-[#1a1a1a] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white">
           {product.soldOutMessage || 'Agotado'}
         </span>
@@ -84,7 +86,7 @@ const ProductCard = ({ product }) => {
       </Link>
 
       <div className="px-5 pb-5">
-        {product.soldOut ? (
+        {isSoldOut ? (
           <span className="block w-full rounded-lg border border-stone-300 px-4 py-3 text-center text-sm font-semibold text-[#1a1a1a]">
             {product.soldOutMessage || 'Agotado'}
           </span>

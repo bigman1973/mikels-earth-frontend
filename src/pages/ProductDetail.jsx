@@ -126,6 +126,7 @@ const ProductDetail = () => {
   const volumeDiscountedPrice = discountedPrice;
   
   const currentPrice = volumeDiscountedPrice;
+  const availableStock = Math.max(0, Number(product.stock) || 0);
 
   // El backend solo adjunta complementos activos y vendibles. Esta segunda
   // comprobación defensiva evita mostrar una fila incompleta ante cualquier
@@ -513,7 +514,7 @@ const ProductDetail = () => {
               ) : null}
 
               {/* Quantity selector */}
-              {product.slug !== 'estuche-regalo' && (
+              {product.slug !== 'estuche-regalo' && availableStock > 0 && (
               <div className="mb-6">
                 <label className="block text-sm font-semibold text-primary mb-3">
                   {t('product_detail.quantity')}
@@ -531,14 +532,16 @@ const ProductDetail = () => {
                     type="number"
                     value={quantity}
                     onChange={(e) => {
-                      setQuantity(Math.max(1, parseInt(e.target.value) || 1));
+                      setQuantity(Math.min(availableStock, Math.max(1, parseInt(e.target.value) || 1)));
                     }}
                     className="w-20 h-12 text-center border-2 border-gray-200 rounded-lg font-semibold text-lg focus:outline-none focus:border-primary"
                     min={1}
+                    max={availableStock}
                   />
                   <button
-                    onClick={() => setQuantity(quantity + 1)}
-                    className="w-12 h-12 bg-gray-100 hover:bg-gray-200 rounded-lg font-bold text-xl transition-colors"
+                    onClick={() => setQuantity(Math.min(availableStock, quantity + 1))}
+                    disabled={quantity >= availableStock}
+                    className="w-12 h-12 bg-gray-100 hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50 rounded-lg font-bold text-xl transition-colors"
                   >
                     +
                   </button>
@@ -657,7 +660,7 @@ const ProductDetail = () => {
               )}
 
               {/* Action buttons or Sold Out Notification */}
-              {product.soldOut ? (
+              {product.soldOut || availableStock < 1 ? (
                 <SoldOutNotification productName={product.name} productSlug={product.slug} />
               ) : (
                 <button

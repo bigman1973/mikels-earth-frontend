@@ -13,9 +13,6 @@ const STATIC_ROUTES = new Set([
   '/nuestras-joyas',
   '/recetario',
   '/tienda',
-  '/checkout',
-  '/pedido-confirmado',
-  '/suscripcion-exitosa',
   '/blog',
   '/contacto',
   '/horeca',
@@ -36,8 +33,8 @@ const STATIC_ROUTES = new Set([
 const PERMANENT_REDIRECTS = new Map([
   ['/familia', '/la-familia'],
   ['/productos', '/tienda'],
-  ['/order-success', '/pedido-confirmado'],
-  ['/subscription-success', '/suscripcion-exitosa'],
+  ['/pedido-confirmado', '/order-success'],
+  ['/suscripcion-exitosa', '/subscription-success'],
   [
     '/producto/pack-aceite-ecologico-premium-estuche-regalo',
     '/producto/aceite-oliva-ecologico',
@@ -112,9 +109,8 @@ export default async function middleware(request) {
 
   if (redirectTarget) {
     const destination = new URL(redirectTarget, requestUrl.origin);
-    // Old Stripe completion links still contain session_id. A permanent
-    // canonical redirect must not discard it before the confirmation page
-    // reads the checkout status.
+    // Stripe completion links contain session_id. The canonical redirect must
+    // preserve it before the confirmation page reads checkout status.
     destination.search = requestUrl.search;
     return new Response(null, {
       status: 301,
