@@ -3,9 +3,13 @@
 export const SPA_SHELL_ROUTES = new Set([
   '/carrito',
   '/checkout',
+  '/order-success',
   '/pedido-confirmado',
+  '/subscription-success',
   '/suscripcion-exitosa',
   '/horeca',
 ]);
 
-export const shouldRenderSpaShell = (pathname) => SPA_SHELL_ROUTES.has(pathname);
+export const shouldRenderSpaShell = (pathname) => (
+  SPA_SHELL_ROUTES.has(pathname) || /^\/recuperar-carrito\/[^/]+$/.test(pathname)
+);

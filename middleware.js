@@ -131,7 +131,6 @@ export default async function middleware(request) {
   if (
     STATIC_ROUTES.has(pathname)
     || /^\/admin\/clientes\/[^/]+$/.test(pathname)
-    || /^\/recuperar-carrito\/[^/]+$/.test(pathname)
   ) {
     return next();
   }
