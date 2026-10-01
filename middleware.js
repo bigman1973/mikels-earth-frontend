@@ -14,6 +14,7 @@ const STATIC_ROUTES = new Set([
   '/tienda',
   '/checkout',
   '/order-success',
+  '/pedido-confirmado',
   '/subscription-success',
   '/blog',
   '/contacto',
@@ -35,6 +36,7 @@ const STATIC_ROUTES = new Set([
 const PERMANENT_REDIRECTS = new Map([
   ['/familia', '/la-familia'],
   ['/productos', '/tienda'],
+  ['/pedido-confirmado', '/order-success'],
   [
     '/producto/pack-aceite-ecologico-premium-estuche-regalo',
     '/producto/aceite-oliva-ecologico',
@@ -108,9 +110,11 @@ export default async function middleware(request) {
   const redirectTarget = PERMANENT_REDIRECTS.get(pathname);
 
   if (redirectTarget) {
+    const destination = new URL(redirectTarget, requestUrl.origin);
+    destination.search = requestUrl.search;
     return new Response(null, {
       status: 301,
-      headers: { Location: new URL(redirectTarget, requestUrl.origin).toString() },
+      headers: { Location: destination.toString() },
     });
   }
 

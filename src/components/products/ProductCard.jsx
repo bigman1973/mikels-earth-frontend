@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ShoppingCart, Tag } from 'lucide-react';
+// eslint-disable-next-line no-unused-vars -- JSX uses the `motion.*` namespace.
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useCart } from '../../context/CartContext';
@@ -16,7 +17,7 @@ const getOptimizedProductImage = (url) => {
 };
 
 const ProductCard = ({ product }) => {
-  const { addToCart, toggleCart, setIsCartOpen } = useCart();
+  const { addToCart, setIsCartOpen } = useCart();
   const { t } = useTranslation();
 
   const handleBadgeClick = (e, badge) => {
@@ -34,8 +35,8 @@ const ProductCard = ({ product }) => {
   const maxDiscount = hasSubscription && product.subscriptionFrequencies && product.subscriptionFrequencies.length > 0
     ? Math.max(...product.subscriptionFrequencies.map(f => f.discount))
     : 0;
-  const savingsPercent = maxDiscount;
   const productImage = getOptimizedProductImage(product.image || product.images?.[0]);
+  const isSoldOut = product.soldOut || Number(product.stock || 0) < 1;
 
   return (
     <motion.div
@@ -100,7 +101,7 @@ const ProductCard = ({ product }) => {
           </div>
           
           {/* Badge de Sold Out */}
-          {product.soldOut && (
+          {isSoldOut && (
             <div className="absolute top-3 left-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg uppercase tracking-wide">
               🌾 {product.soldOutMessage || 'Sold Out'}
             </div>
@@ -156,7 +157,7 @@ const ProductCard = ({ product }) => {
               )}
             </div>
             
-            {product.soldOut ? (
+            {isSoldOut ? (
               <div className="bg-gray-400 text-white px-4 py-2 rounded-full text-sm font-semibold cursor-not-allowed">
                 Agotado
               </div>
@@ -175,12 +176,6 @@ const ProductCard = ({ product }) => {
             )}
           </div>
 
-          {/* Stock indicator - oculto temporalmente */}
-          {false && product.stock < 10 && (
-            <div className="mt-3 text-xs text-orange-600 font-semibold">
-              ¡Solo quedan {product.stock} unidades!
-            </div>
-          )}
         </div>
       </Link>
     </motion.div>

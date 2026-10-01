@@ -35,6 +35,8 @@ export const CartProvider = ({ children }) => {
 
   const addToCart = (product, quantity = 1, purchaseType = 'one-time', subscriptionFrequency = null) => {
     setCart(prevCart => {
+      const sellableStock = Math.max(0, Number(product.stock) || 0);
+      const requestedQuantity = Math.max(1, Number(quantity) || 1);
       const existingItemIndex = prevCart.findIndex(
         item => 
           item.id === product.id && 
@@ -46,9 +48,13 @@ export const CartProvider = ({ children }) => {
       if (existingItemIndex > -1) {
         // Si el producto ya existe con las mismas opciones, incrementar cantidad
         const newCart = [...prevCart];
-        newCart[existingItemIndex].quantity += quantity;
+        newCart[existingItemIndex].quantity = Math.min(
+          sellableStock,
+          newCart[existingItemIndex].quantity + requestedQuantity,
+        );
         return newCart;
       } else {
+        if (sellableStock < 1) return prevCart;
         // Si es nuevo, añadirlo al carrito
         let price = product.price;
         
@@ -70,7 +76,8 @@ export const CartProvider = ({ children }) => {
           image: product.image,
           price: price,
           originalPrice: product.price,
-          quantity: quantity,
+          quantity: Math.min(sellableStock, requestedQuantity),
+          stock: sellableStock,
           purchaseType: purchaseType,
           subscriptionFrequency: subscriptionFrequency,
           selectedVariant: product.selectedVariant || null,
@@ -96,7 +103,8 @@ export const CartProvider = ({ children }) => {
     
     setCart(prevCart => {
       const newCart = [...prevCart];
-      newCart[itemIndex].quantity = newQuantity;
+      const limit = Math.max(0, Number(newCart[itemIndex].stock) || 0);
+      newCart[itemIndex].quantity = Math.min(limit, newQuantity);
       return newCart;
     });
   };
@@ -258,4 +266,3 @@ export const CartProvider = ({ children }) => {
     </CartContext.Provider>
   );
 };
-

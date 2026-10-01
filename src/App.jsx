@@ -113,6 +113,7 @@ function App() {
                       <Route path="/producto/:slug" element={<ProductDetail />} />
                       <Route path="/checkout" element={<Checkout />} />
                       <Route path="/order-success" element={<OrderSuccess />} />
+                      <Route path="/pedido-confirmado" element={<OrderSuccess />} />
                       <Route path="/subscription-success" element={<SubscriptionSuccess />} />
                       <Route path="/blog" element={<Blog />} />
                       <Route path="/blog/:slug" element={<BlogPost />} />

@@ -14,6 +14,8 @@ export default function AdminOrders() {
   const [syncing, setSyncing] = useState(false);
   const [syncMessage, setSyncMessage] = useState(null);
   const [monthFilter, setMonthFilter] = useState('all');
+  const [stockMovements, setStockMovements] = useState({});
+  const [stockMovementsLoading, setStockMovementsLoading] = useState({});
 
   useEffect(() => {
     loadOrders();
@@ -31,6 +33,25 @@ export default function AdminOrders() {
       console.error('Error loading orders:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const toggleOrderDetails = async (orderId) => {
+    const willOpen = expandedOrder !== orderId;
+    setExpandedOrder(willOpen ? orderId : null);
+    if (!willOpen || stockMovements[orderId] || stockMovementsLoading[orderId]) return;
+
+    setStockMovementsLoading((current) => ({ ...current, [orderId]: true }));
+    try {
+      const response = await authFetch(`${API_URL}/api/admin/orders/${orderId}/stock-movements`);
+      if (response?.ok) {
+        const data = await response.json();
+        setStockMovements((current) => ({ ...current, [orderId]: data.movements || [] }));
+      }
+    } catch (error) {
+      console.error('Error loading stock movements:', error);
+    } finally {
+      setStockMovementsLoading((current) => ({ ...current, [orderId]: false }));
     }
   };
 
@@ -357,7 +378,7 @@ export default function AdminOrders() {
                   <div className="p-5">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                       {/* Order info */}
-                      <div className="flex-1 cursor-pointer" onClick={() => setExpandedOrder(isExpanded ? null : order.id)}>
+                      <div className="flex-1 cursor-pointer" onClick={() => toggleOrderDetails(order.id)}>
                         <div className="flex items-center gap-2 flex-wrap mb-1.5">
                           <span className="text-sm text-white font-bold font-mono">#{orderNum}</span>
                           <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-semibold rounded-lg border ${colorMap[status.color]}`}>
@@ -546,6 +567,26 @@ export default function AdminOrders() {
                           </div>
                         </div>
                       )}
+
+                      <div className="mt-4 pt-4 border-t border-white/5">
+                        <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Movimientos de stock web</h4>
+                        {stockMovementsLoading[order.id] ? (
+                          <p className="text-xs text-gray-500">Cargando trazabilidad…</p>
+                        ) : (stockMovements[order.id] || []).length === 0 ? (
+                          <p className="text-xs text-gray-500">Sin movimientos registrados para este pedido.</p>
+                        ) : (
+                          <div className="space-y-2">
+                            {stockMovements[order.id].map((movement) => (
+                              <div key={movement.id} className="flex flex-wrap justify-between gap-x-4 gap-y-1 text-xs text-gray-300">
+                                <span>{movement.product_name} <span className="font-mono text-gray-500">{movement.sku || 'sin SKU'}</span></span>
+                                <span className={movement.quantity_delta > 0 ? 'text-emerald-400' : 'text-amber-400'}>{movement.quantity_delta > 0 ? '+' : ''}{movement.quantity_delta} · {movement.reason}</span>
+                                <span className="text-gray-500">{movement.stock_before} → {movement.stock_after}</span>
+                                <span className="text-gray-600">{movement.created_at ? new Date(movement.created_at).toLocaleString('es-ES') : ''}</span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   )}
                 </div>
