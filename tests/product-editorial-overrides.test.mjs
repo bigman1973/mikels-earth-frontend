@@ -29,7 +29,7 @@ test('shows the definitive award history only on ecological oil', () => {
   assert.deepEqual(ecological.tags, ['Ecológico']);
   assert.match(
     ecological.longDescription,
-    /\*\*Premiado cinco años seguidos\.\*\* Seis medallas en los dos concursos internacionales de referencia: oro en el NYIOOC de Nueva York en 2022 y 2024, y oro en OLIVE JAPAN de Tokio en 2025, más plata en 2023, 2022 y 2026\./,
+    /\*\*Premiado cinco años seguidos\.\*\* Seis medallas en los dos concursos internacionales de referencia: oro en el NYIOOC de Nueva York en 2022 y 2024, y oro en OLIVE JAPAN de Tokio en 2025, más plata en 2022, 2023 y 2026\./,
   );
   assert.doesNotMatch(ecological.longDescription, /Japón & Nueva York/);
   assert.doesNotMatch(ecological.longDescription, /sabores más potentes y complejos que el convencional/i);

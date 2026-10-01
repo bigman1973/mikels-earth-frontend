@@ -130,7 +130,7 @@ export const applyEditorialOverrides = (product, language = 'es') => {
 
   if (product.slug === 'aceite-oliva-ecologico') {
     const approvedDescription = 'Coupage de tres variedades de cultivo ecológico certificado: hojiblanca como principal, con picual y arbequina. Vegano, prensado en frío, sin gluten.';
-    const approvedAwardLine = '**Premiado cinco años seguidos.** Seis medallas en los dos concursos internacionales de referencia: oro en el NYIOOC de Nueva York en 2022 y 2024, y oro en OLIVE JAPAN de Tokio en 2025, más plata en 2023, 2022 y 2026.';
+    const approvedAwardLine = '**Premiado cinco años seguidos.** Seis medallas en los dos concursos internacionales de referencia: oro en el NYIOOC de Nueva York en 2022 y 2024, y oro en OLIVE JAPAN de Tokio en 2025, más plata en 2022, 2023 y 2026.';
 
     return {
       ...normalizedProduct,
