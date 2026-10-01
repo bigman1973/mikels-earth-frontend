@@ -12,10 +12,6 @@ const STATIC_ROUTES = new Set([
   '/nuestras-joyas',
   '/recetario',
   '/tienda',
-  '/checkout',
-  '/order-success',
-  '/pedido-confirmado',
-  '/subscription-success',
   '/blog',
   '/contacto',
   '/horeca',
@@ -31,6 +27,17 @@ const STATIC_ROUTES = new Set([
   '/admin/usuarios',
   '/admin/cupones',
   '/admin/blog',
+]);
+
+// These stateful purchase routes intentionally have no static SEO HTML. Serve
+// Vite's React shell on a direct request instead of asking Vercel for a file
+// that was never generated during the static SEO build.
+const SPA_ROUTES = new Set([
+  '/carrito',
+  '/checkout',
+  '/order-success',
+  '/pedido-confirmado',
+  '/subscription-success',
 ]);
 
 const PERMANENT_REDIRECTS = new Map([
@@ -124,10 +131,13 @@ export default async function middleware(request) {
     return renderSpaShell(request);
   }
 
+  if (SPA_ROUTES.has(pathname) || /^\/recuperar-carrito\/[^/]+$/.test(pathname)) {
+    return renderSpaShell(request);
+  }
+
   if (
     STATIC_ROUTES.has(pathname)
     || /^\/admin\/clientes\/[^/]+$/.test(pathname)
-    || /^\/recuperar-carrito\/[^/]+$/.test(pathname)
   ) {
     return next();
   }

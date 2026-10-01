@@ -19,6 +19,7 @@ const NuestrasJoyas = lazy(() => import('./pages/NuestrasJoyas'));
 const Recetario = lazy(() => import('./pages/Recetario'));
 const Products = lazy(() => import('./pages/Products'));
 const ProductDetail = lazy(() => import('./pages/ProductDetail'));
+const CartRoute = lazy(() => import('./pages/CartRoute'));
 const Checkout = lazy(() => import('./pages/Checkout'));
 const OrderSuccess = lazy(() => import('./pages/OrderSuccess'));
 const SubscriptionSuccess = lazy(() => import('./pages/SubscriptionSuccess'));
@@ -111,6 +112,7 @@ function App() {
                       <Route path="/producto/pack-aceite-ecologico-premium-estuche-regalo" element={<Navigate to="/producto/aceite-oliva-ecologico" replace />} />
                       <Route path="/producto/pack-temprano-premium" element={<Navigate to="/producto/aceite-temprano-sin-filtrar" replace />} />
                       <Route path="/producto/:slug" element={<ProductDetail />} />
+                      <Route path="/carrito" element={<CartRoute />} />
                       <Route path="/checkout" element={<Checkout />} />
                       <Route path="/order-success" element={<OrderSuccess />} />
                       <Route path="/pedido-confirmado" element={<OrderSuccess />} />

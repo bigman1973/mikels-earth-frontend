@@ -15,9 +15,13 @@ test('routes both confirmation paths to the real confirmation component', async 
 
   assert.match(app, /path="\/order-success" element={<OrderSuccess\s*\/>}/);
   assert.match(app, /path="\/pedido-confirmado" element={<OrderSuccess\s*\/>}/);
+  assert.match(app, /path="\/carrito" element={<CartRoute\s*\/>}/);
   assert.match(middleware, /\['\/pedido-confirmado', '\/order-success'\]/);
   assert.match(middleware, /destination\.search = requestUrl\.search/);
-  assert.match(middleware, /'\/order-success'/);
+  for (const route of ['/carrito', '/checkout', '/order-success', '/pedido-confirmado']) {
+    assert.match(middleware, new RegExp(`'${route}'`));
+  }
+  assert.match(middleware, /SPA_ROUTES\.has\(pathname\)/);
 });
 
 test('confirmation page renders persisted order details and confirmation notice', async () => {
