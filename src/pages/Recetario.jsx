@@ -124,7 +124,7 @@ const Recetario = () => {
               onClick={() => setSelectedCategory(cat)}
               className={`px-5 py-2 rounded-full text-sm font-semibold transition-colors ${
                 selectedCategory === cat
-                  ? 'bg-secondary text-primary'
+                  ? 'bg-secondary text-white'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >

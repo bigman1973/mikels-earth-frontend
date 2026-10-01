@@ -144,7 +144,7 @@ const NuestrasJoyas = () => {
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                       />
                     </div>
-                    <div className="absolute -top-4 -right-4 bg-secondary text-primary px-6 py-2 rounded-full font-bold shadow-lg">
+                    <div className="absolute -top-4 -right-4 bg-secondary text-white px-6 py-2 rounded-full font-bold shadow-lg">
                       {collection.tagline}
                     </div>
                   </div>
