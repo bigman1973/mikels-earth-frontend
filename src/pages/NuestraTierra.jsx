@@ -226,7 +226,7 @@ const NuestraTierra = () => {
           </p>
           <a
             href="/nuestras-joyas"
-            className="inline-block bg-secondary text-primary px-8 py-3 rounded-lg font-bold hover:bg-secondary/90 transition-colors"
+            className="inline-block bg-secondary text-white px-8 py-3 rounded-lg font-bold hover:bg-secondary/90 transition-colors"
           >
             {t('land.cta_button')}
           </a>

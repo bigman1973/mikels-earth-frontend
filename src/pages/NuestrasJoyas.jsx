@@ -256,7 +256,7 @@ const NuestrasJoyas = () => {
           <div className="flex gap-4 justify-center flex-wrap">
             <Link
               to="/tienda"
-              className="bg-secondary text-primary px-8 py-3 rounded-lg font-bold hover:bg-secondary/90 transition-colors"
+              className="bg-secondary text-white px-8 py-3 rounded-lg font-bold hover:bg-secondary/90 transition-colors"
             >
               {t('jewels.go_to_shop')}
             </Link>

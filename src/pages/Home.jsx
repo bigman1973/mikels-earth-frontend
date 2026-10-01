@@ -57,7 +57,7 @@ const Home = () => {
                 </Link>
                 <Link
                   to="/nuestras-joyas"
-                  className="bg-secondary text-primary px-8 py-4 rounded-lg font-bold text-lg hover:bg-secondary/90 transition-colors"
+                  className="bg-secondary text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-secondary/90 transition-colors"
                 >
                   {t('home.hero_cta_jewels')}
                 </Link>
@@ -231,7 +231,7 @@ const Home = () => {
             <div className="text-center mt-12">
               <Link
                 to="/tienda"
-                className="inline-block bg-secondary text-primary px-8 py-4 rounded-lg font-bold text-lg hover:bg-secondary/90 transition-colors"
+                className="inline-block bg-secondary text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-secondary/90 transition-colors"
               >
                 {t('home.view_shop')}
               </Link>

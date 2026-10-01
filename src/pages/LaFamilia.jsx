@@ -273,7 +273,7 @@ const LaFamilia = () => {
           <div className="flex gap-4 justify-center flex-wrap">
             <a
               href="/tienda"
-              className="bg-secondary text-primary px-8 py-3 rounded-lg font-bold hover:bg-secondary/90 transition-colors"
+              className="bg-secondary text-white px-8 py-3 rounded-lg font-bold hover:bg-secondary/90 transition-colors"
             >
               {t('family.cta_products', { defaultValue: 'Descubre Nuestros Productos' })}
             </a>

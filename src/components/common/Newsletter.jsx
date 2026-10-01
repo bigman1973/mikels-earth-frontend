@@ -21,7 +21,7 @@ const Newsletter = ({ variant = 'default' }) => {
         <button
           type="button"
           onClick={openConsentCompliantForm}
-          className="flex w-full items-center justify-center gap-2 rounded-lg bg-secondary px-4 py-2 font-bold text-primary transition-colors hover:bg-secondary/90"
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-secondary px-4 py-2 font-bold text-white transition-colors hover:bg-secondary/90"
         >
           <Mail size={16} />
           {t('newsletter.subscribe_btn')}
@@ -40,7 +40,7 @@ const Newsletter = ({ variant = 'default' }) => {
       <button
         type="button"
         onClick={openConsentCompliantForm}
-        className="inline-flex items-center gap-2 rounded-lg bg-secondary px-6 py-3 font-bold text-primary transition-colors hover:bg-secondary/90"
+        className="inline-flex items-center gap-2 rounded-lg bg-secondary px-6 py-3 font-bold text-white transition-colors hover:bg-secondary/90"
       >
         <Mail size={20} />
         {t('newsletter.subscribe_btn')}

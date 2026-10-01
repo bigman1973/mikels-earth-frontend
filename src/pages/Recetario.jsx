@@ -210,7 +210,7 @@ const Recetario = () => {
                         <ol className="space-y-2">
                           {(t(`recipes_data.${id}.steps`, { returnObjects: true }) || []).map((step, idx) => (
                             <li key={idx} className="text-sm text-gray-700 flex gap-2">
-                              <span className="flex-shrink-0 w-5 h-5 bg-secondary text-primary rounded-full flex items-center justify-center text-xs font-bold">
+                              <span className="flex-shrink-0 w-5 h-5 bg-secondary text-white rounded-full flex items-center justify-center text-xs font-bold">
                                 {idx + 1}
                               </span>
                               <span>{step}</span>
@@ -291,7 +291,7 @@ const Recetario = () => {
           <div className="flex gap-4 justify-center flex-wrap">
             <a
               href="/tienda"
-              className="bg-secondary text-primary px-8 py-3 rounded-lg font-bold hover:bg-secondary/90 transition-colors"
+              className="bg-secondary text-white px-8 py-3 rounded-lg font-bold hover:bg-secondary/90 transition-colors"
             >
               {t('recipes_data.cta_shop')}
             </a>
