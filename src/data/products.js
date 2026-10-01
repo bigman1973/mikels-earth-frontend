@@ -258,8 +258,8 @@ export const products = [
     id: 4,
     name: "Aceite de Oliva Virgen Extra Ecológico Mikel's Fruit",
     slug: "aceite-oliva-ecologico",
-    description: "Coupage ecológico Picual, Hojiblanca y Arbequina. Botella de 500 ml.",
-    longDescription: "Coupage de variedades Picual, Hojiblanca y Arbequina de cultivo ecológico.\n\nVegano, Prensado en Frío, Sin Gluten, Versátil.",
+    description: "Coupage de tres variedades de cultivo ecológico certificado: hojiblanca como principal, con picual y arbequina. Vegano, prensado en frío, sin gluten.",
+    longDescription: "Coupage de tres variedades de cultivo ecológico certificado: hojiblanca como principal, con picual y arbequina. Vegano, prensado en frío, sin gluten.",
     price: 13.50,
     currency: "EUR",
     image: "/images/aceite-ecologico-principal.jpg",
@@ -278,7 +278,7 @@ export const products = [
     ingredients: "Aceite de oliva virgen extra ecológico 100%",
     nutritionalInfo: {
       ingredientes: "Aceite de oliva virgen extra ecológico 100%",
-      coupage: "Picual, Hojiblanca y Arbequina",
+      coupage: "Hojiblanca (principal), Picual y Arbequina",
       perfilSabor: {
         frutado: "Intenso",
         amargo: "Medio",

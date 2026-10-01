@@ -118,24 +118,34 @@ export const applyEditorialOverrides = (product, language = 'es') => {
     };
   }
 
+  if (product.slug === 'pack-aceite-ecologico-premium-estuche-regalo') {
+    return {
+      ...normalizedProduct,
+      description: 'Aceite de oliva virgen extra ecológico presentado en estuche de regalo.',
+      longDescription: 'Incluye una botella de 500 ml de aceite de oliva virgen extra ecológico y un estuche de regalo con la Seu Vella de Lleida. Vegano, sin gluten y prensado en frío.',
+      tags: (normalizedProduct.tags || []).filter((tag) => !/polifenol|antioxid|premiado/i.test(tag)),
+      badges: [],
+    };
+  }
+
   if (product.slug === 'aceite-oliva-ecologico') {
+    const approvedDescription = 'Coupage de tres variedades de cultivo ecológico certificado: hojiblanca como principal, con picual y arbequina. Vegano, prensado en frío, sin gluten.';
     const approvedAwardLine = '**Premiado cinco años seguidos.** Seis medallas en los dos concursos internacionales de referencia: oro en el NYIOOC de Nueva York en 2022 y 2024, y oro en OLIVE JAPAN de Tokio en 2025, más plata en 2023, 2022 y 2026.';
-    const descriptionWithoutObsoleteAward = (normalizedProduct.longDescription || normalizedProduct.description || '')
-      .replace(/Medalla de Oro en Japón & Nueva York\.\s*/gi, '')
-      .replace(/Reconocido internacionalmente por su intensidad excepcional y equilibrio perfecto\.\s*/gi, '')
-      .replace(/El resultado: un aceite premiado que destaca en cada cata\.\s*/gi, '')
-      .replace(/Ideal para quienes buscan un aceite de autor, con personalidad y reconocimiento mundial\.\s*/gi, '')
-      .trim();
 
     return {
       ...normalizedProduct,
       name: normalizedProduct.name.replace(/\s+Premiado\b/gi, '').replace(/\s{2,}/g, ' ').trim(),
+      description: approvedDescription,
+      nutritionalInfo: {
+        ...normalizedProduct.nutritionalInfo,
+        coupage: 'Hojiblanca (principal), Picual y Arbequina',
+      },
       tags: (normalizedProduct.tags || []).filter((tag) => !/polifenol|antioxid|premiado/i.test(tag)),
       badges: [{
         text: 'Medalla de Oro · OLIVE JAPAN 2025',
         detailOnly: true,
       }],
-      longDescription: `${descriptionWithoutObsoleteAward}\n\n${approvedAwardLine}`,
+      longDescription: `${approvedDescription}\n\n${approvedAwardLine}`,
     };
   }
 

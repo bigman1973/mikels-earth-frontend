@@ -8,6 +8,7 @@ test('shows the definitive award history only on ecological oil', () => {
     name: 'Aceite ecológico Premiado',
     description: 'Aceite ecológico',
     longDescription: 'Medalla de Oro en Japón & Nueva York. Aceite ecológico certificado.',
+    nutritionalInfo: { coupage: 'Picual, Hojiblanca y Arbequina' },
     tags: ['Ecológico', 'Premiado'],
     badges: [
       { text: '🏅 MEDALLA DE ORO' },
@@ -20,12 +21,33 @@ test('shows the definitive award history only on ecological oil', () => {
     detailOnly: true,
   }]);
   assert.equal(ecological.name, 'Aceite ecológico');
+  assert.equal(
+    ecological.description,
+    'Coupage de tres variedades de cultivo ecológico certificado: hojiblanca como principal, con picual y arbequina. Vegano, prensado en frío, sin gluten.',
+  );
+  assert.equal(ecological.nutritionalInfo.coupage, 'Hojiblanca (principal), Picual y Arbequina');
   assert.deepEqual(ecological.tags, ['Ecológico']);
   assert.match(
     ecological.longDescription,
     /\*\*Premiado cinco años seguidos\.\*\* Seis medallas en los dos concursos internacionales de referencia: oro en el NYIOOC de Nueva York en 2022 y 2024, y oro en OLIVE JAPAN de Tokio en 2025, más plata en 2023, 2022 y 2026\./,
   );
   assert.doesNotMatch(ecological.longDescription, /Japón & Nueva York/);
+  assert.doesNotMatch(ecological.longDescription, /sabores más potentes y complejos que el convencional/i);
+});
+
+test('removes obsolete awards from the ecological gift pack', () => {
+  const pack = applyEditorialOverrides({
+    slug: 'pack-aceite-ecologico-premium-estuche-regalo',
+    name: 'Pack Aceite Ecológico Premium',
+    description: 'Medalla de Oro en Japón & Nueva York.',
+    longDescription: 'Galardonado con Medalla de Oro en Olive Japan 2022 y 2025.',
+    tags: ['Ecológico', 'Premiado'],
+    badges: [{ text: 'MEDALLA DE ORO' }],
+  });
+
+  assert.equal(pack.description, 'Aceite de oliva virgen extra ecológico presentado en estuche de regalo.');
+  assert.doesNotMatch(pack.longDescription, /medalla|premiad/i);
+  assert.deepEqual(pack.badges, []);
 });
 
 test('shows the Olive Japan 2026 silver medal only on early unfiltered oil', () => {
