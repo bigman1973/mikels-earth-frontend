@@ -14,8 +14,8 @@ const STATIC_ROUTES = new Set([
   '/recetario',
   '/tienda',
   '/checkout',
-  '/order-success',
-  '/subscription-success',
+  '/pedido-confirmado',
+  '/suscripcion-exitosa',
   '/blog',
   '/contacto',
   '/horeca',
@@ -36,6 +36,8 @@ const STATIC_ROUTES = new Set([
 const PERMANENT_REDIRECTS = new Map([
   ['/familia', '/la-familia'],
   ['/productos', '/tienda'],
+  ['/order-success', '/pedido-confirmado'],
+  ['/subscription-success', '/suscripcion-exitosa'],
   [
     '/producto/pack-aceite-ecologico-premium-estuche-regalo',
     '/producto/aceite-oliva-ecologico',

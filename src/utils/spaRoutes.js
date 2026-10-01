@@ -3,8 +3,8 @@
 export const SPA_SHELL_ROUTES = new Set([
   '/carrito',
   '/checkout',
-  '/order-success',
-  '/subscription-success',
+  '/pedido-confirmado',
+  '/suscripcion-exitosa',
   '/horeca',
 ]);
 
