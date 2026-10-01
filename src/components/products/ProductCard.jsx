@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom';
 import { ShoppingCart, Tag } from 'lucide-react';
+// eslint-disable-next-line no-unused-vars -- JSX uses the namespace `<motion.*>`.
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useCart } from '../../context/CartContext';
+import { formatEuro } from '../../utils/formatMoney';
 
 const getOptimizedProductImage = (url) => {
   if (!url || !url.includes('res.cloudinary.com') || !url.includes('/image/upload/')) {
@@ -16,174 +18,88 @@ const getOptimizedProductImage = (url) => {
 };
 
 const ProductCard = ({ product }) => {
-  const { addToCart, toggleCart, setIsCartOpen } = useCart();
+  const { addToCart, setIsCartOpen } = useCart();
   const { t } = useTranslation();
-
-  const handleBadgeClick = (e, badge) => {
-    if (badge.action === 'addPackDuo') {
-      e.preventDefault();
-      e.stopPropagation();
-      // Añadir 2 unidades al carrito (Pack Dúo)
-      addToCart(product, 2);
-      // Abrir directamente el carrito
-      setIsCartOpen(true);
-    }
-  };
-  const hasSubscription = product.subscriptionAvailable;
-  // Calcular el descuento máximo disponible según las frecuencias
-  const maxDiscount = hasSubscription && product.subscriptionFrequencies && product.subscriptionFrequencies.length > 0
-    ? Math.max(...product.subscriptionFrequencies.map(f => f.discount))
-    : 0;
-  const savingsPercent = maxDiscount;
   const productImage = getOptimizedProductImage(product.image || product.images?.[0]);
+  const displayBadge = product.badges?.[0];
+  const badgeText = displayBadge
+    ? (displayBadge.textKey ? t(`badges.${displayBadge.textKey}`, displayBadge.text) : displayBadge.text)
+    : null;
+
+  const addProduct = () => {
+    addToCart(product, 1);
+    setIsCartOpen(true);
+  };
 
   return (
-    <motion.div
+    <motion.article
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 group relative"
+      className="group relative overflow-hidden rounded-lg bg-white shadow-sm transition-shadow duration-300 hover:shadow-lg"
     >
-      {/* Badges clickeables FUERA del Link */}
-      {product.badges && product.badges.length > 0 && (
-        <div className={`absolute ${product.soldOut ? 'top-12' : 'top-3'} left-3 flex flex-col gap-2 z-20`}>
-          {product.badges.map((badge, index) => (
-            badge.action ? (
-              <button 
-                key={index}
-                onClick={(e) => handleBadgeClick(e, badge)}
-                className={`${badge.color} text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg uppercase tracking-wide cursor-pointer hover:scale-105 transition-transform`}
-              >
-                {badge.textKey ? t(`badges.${badge.textKey}`, badge.text) : badge.text}
-              </button>
-            ) : (
-              <div 
-                key={index}
-                className={`${badge.color} text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg uppercase tracking-wide`}
-              >
-                {badge.textKey ? t(`badges.${badge.textKey}`, badge.text) : badge.text}
-              </div>
-            )
-          ))}
-        </div>
+      {badgeText && !product.soldOut && (
+        <span className="absolute left-3 top-3 z-10 rounded-full bg-[#f5efe4] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[#1a1a1a]">
+          {badgeText}
+        </span>
       )}
-      
+      {product.soldOut && (
+        <span className="absolute left-3 top-3 z-10 rounded-full bg-[#1a1a1a] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white">
+          {product.soldOutMessage || 'Agotado'}
+        </span>
+      )}
+
       <Link to={`/producto/${product.slug}`} className="block">
-        {/* Image container */}
-        <div className="relative h-64 bg-gray-200 overflow-hidden">
-          {/* Imagen del producto */}
+        <div className="relative h-64 overflow-hidden bg-stone-100">
           {productImage ? (
-            <img 
+            <img
               src={productImage}
               alt={product.name}
               width="640"
               height="640"
               loading="lazy"
               decoding="async"
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              onError={(e) => {
-                e.target.style.display = 'none';
-                e.target.nextSibling.style.display = 'flex';
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              onError={(event) => {
+                event.currentTarget.style.display = 'none';
+                event.currentTarget.nextSibling.style.display = 'flex';
               }}
             />
           ) : null}
-          
-          {/* Placeholder para imagen (fallback) */}
-          <div 
-            className="absolute inset-0 flex items-center justify-center text-gray-400 bg-gradient-to-br from-gray-100 to-gray-200"
-            style={{ display: (product.image || product.images?.[0]) ? 'none' : 'flex' }}
+          <div
+            className="absolute inset-0 hidden items-center justify-center bg-stone-100 text-stone-500"
+            style={{ display: productImage ? 'none' : 'flex' }}
           >
-            <div className="text-center">
-              <Tag className="w-16 h-16 mx-auto mb-2 opacity-30" />
-              <p className="text-sm">{product.name}</p>
-            </div>
+            <Tag className="h-12 w-12" aria-hidden="true" />
           </div>
-          
-          {/* Badge de Sold Out */}
-          {product.soldOut && (
-            <div className="absolute top-3 left-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg uppercase tracking-wide">
-              🌾 {product.soldOutMessage || 'Sold Out'}
-            </div>
-          )}
-          
-          {/* Badges ahora están fuera del Link para ser clickeables */}
-          
-          {/* Badge de suscripción disponible - ELIMINADO para mantener imagen premium */}
-
-          {/* Overlay en hover */}
-          <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-all duration-300" />
         </div>
-
-        {/* Content */}
-        <div className="p-5">
-          {/* Category */}
-          <p className="text-xs text-primary/60 uppercase tracking-wide mb-2 font-semibold">
-            {product.category}
-          </p>
-
-          {/* Product name */}
-          <h3 className="text-lg font-bold text-primary mb-2 group-hover:text-primary/80 transition-colors line-clamp-2">
+        <div className="p-5 pb-3">
+          <h3 className="line-clamp-2 min-h-[3.5rem] text-lg font-semibold text-[#1a1a1a]">
             {product.name}
           </h3>
-
-          {/* Description */}
-          <p className="text-sm text-gray-600 mb-4 line-clamp-2">
-            {product.description}
+          <p className="mt-2 text-xl font-bold text-price">
+            {formatEuro(product.price)}
           </p>
-
-          {/* Tags */}
-          <div className="flex flex-wrap gap-1 mb-4">
-            {product.tags.slice(0, 3).map((tag, index) => (
-              <span
-                key={index}
-                className="text-xs bg-accent/50 text-primary px-2 py-1 rounded-full"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-
-          {/* Price and CTA */}
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-2xl font-bold text-primary">
-                {product.price.toFixed(2)}€
-              </div>
-              {hasSubscription && maxDiscount > 0 && (
-                <div className="text-xs text-gray-500">
-                  o desde {(product.price * (1 - maxDiscount / 100)).toFixed(2)}€
-                </div>
-              )}
-            </div>
-            
-            {product.soldOut ? (
-              <div className="bg-gray-400 text-white px-4 py-2 rounded-full text-sm font-semibold cursor-not-allowed">
-                Agotado
-              </div>
-            ) : (
-              <button
-                className="bg-primary text-white p-3 rounded-full hover:bg-primary/90 transition-all duration-300 transform hover:scale-110 shadow-md"
-                onClick={(e) => {
-                  e.preventDefault();
-                  addToCart(product, 1);
-                  setIsCartOpen(true);
-                }}
-                aria-label="Añadir al carrito"
-              >
-                <ShoppingCart className="w-5 h-5" />
-              </button>
-            )}
-          </div>
-
-          {/* Stock indicator - oculto temporalmente */}
-          {false && product.stock < 10 && (
-            <div className="mt-3 text-xs text-orange-600 font-semibold">
-              ¡Solo quedan {product.stock} unidades!
-            </div>
-          )}
         </div>
       </Link>
-    </motion.div>
+
+      <div className="px-5 pb-5">
+        {product.soldOut ? (
+          <span className="block w-full rounded-lg border border-stone-300 px-4 py-3 text-center text-sm font-semibold text-[#1a1a1a]">
+            {product.soldOutMessage || 'Agotado'}
+          </span>
+        ) : (
+          <button
+            type="button"
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary/90"
+            onClick={addProduct}
+          >
+            <ShoppingCart className="h-4 w-4" aria-hidden="true" />
+            {t('product_detail.add_to_cart')}
+          </button>
+        )}
+      </div>
+    </motion.article>
   );
 };
 

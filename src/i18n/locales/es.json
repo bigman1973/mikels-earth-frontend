@@ -132,7 +132,7 @@
     "seo_title": "Tienda | Mikel's Fruit - Productos Artesanales",
     "seo_description": "Compra aceite de oliva virgen extra, frutas en almíbar y mermeladas artesanales. Envío gratuito en pedidos superiores a 30€.",
     "page_title": "Nuestra Tienda",
-    "page_subtitle": "Cada producto es una joya elaborada con más de 200 años de tradición familiar.",
+    "page_subtitle": "Pocas referencias y una temporada al año. El aceite, de nuestros olivos en Córdoba. La conserva, de la fruta del Segrià.",
     "all_products": "Todos",
     "filter_by": "Filtrar por",
     "sort_by": "Ordenar por",
@@ -212,9 +212,9 @@
     "subscription_price_note": "El precio final depende de la frecuencia elegida",
     "save_with_subscription": "Ahorras {{percent}}% con suscripción {{label}}",
     "discount_applied": "¡Descuento aplicado! Ahorras {{percent}}% ({{label}})",
-    "price_per_unit": "Precio por unidad: {{price}}€ (antes {{original}}€)",
-    "total_price": "Total: {{price}}€",
-    "you_save": "ahorras {{amount}}€",
+    "price_per_unit": "Precio por unidad: {{price}} (antes {{original}})",
+    "total_price": "Total: {{price}}",
+    "you_save": "ahorras {{amount}}",
     "volume_discounts": "Descuentos por volumen:",
     "units": "unidades",
     "best_value": "MEJOR VALOR",
@@ -232,7 +232,8 @@
     "only_left": "Solo quedan {{count}}",
     "related_products": "También te puede interesar",
     "reviews_count": "{{count}} opiniones",
-    "review_count_one": "{{count}} opinión"
+    "review_count_one": "{{count}} opinión",
+    "one_time": "Compra única"
   },
   "cart": {
     "title": "Tu Carrito",
@@ -361,47 +362,39 @@
     "question": "¿Tienes alguna pregunta sobre tu pedido?"
   },
   "reviews": {
-    "seo_title": "Opiniones de Clientes | Mikel's Fruit",
-    "page_title": "Opiniones",
-    "subtitle": "La mejor recomendación es la de quienes ya nos han probado",
     "verified_purchase": "Compra verificada",
-    "write_review": "Escribir opinión",
-    "submit": "Enviar mi opinión",
-    "submitting": "Enviando...",
-    "total_reviews": "opiniones de clientes",
-    "average_rating": "valoración media",
-    "verified_info_title": "¿Qué significa \"Compra verificada\"?",
-    "verified_info_text": "Este distintivo indica que hemos podido confirmar que la persona ha realizado una compra real en nuestra tienda.",
-    "title": "Opiniones de nuestros clientes",
-    "all_reviews": "Todas",
-    "stars": "estrellas",
-    "no_reviews": "Aún no hay opiniones",
-    "be_first": "Sé el primero en opinar",
-    "filter_by": "Filtrar por",
-    "sort_by": "Ordenar por",
-    "most_recent": "Más recientes",
-    "highest_rated": "Mejor puntuación",
-    "lowest_rated": "Menor puntuación",
-    "verified_info_1": "\"Compra verificada\" indica que hemos podido confirmar que la persona ha realizado una compra real en nuestra tienda.",
-    "verified_info_2": "Las opiniones sin este distintivo son igualmente válidas — simplemente no se han podido vincular automáticamente a un pedido.",
-    "verified_info_3": "Todas las opiniones publicadas son revisadas por nuestro equipo antes de aparecer en la web. No editamos ni censuramos opiniones negativas.",
-    "customer_reviews": "opiniones de clientes",
-    "of_5_stars": "de 5 estrellas",
+    "publication_policy": "Publicamos todas las opiniones que recibimos, sin filtrar por puntuación. Las marcadas como compra verificada corresponden a pedidos realizados en esta tienda.",
+    "seo_title": "Opiniones de clientes | Mikel's Fruit",
+    "page_title": "Opiniones",
+    "subtitle": "Lo que dicen quienes han probado nuestros productos",
+    "of_5_stars": "sobre 5",
+    "customer_reviews": "opiniones",
+    "what_means": "¿Qué significa",
+    "verified_explanation_1": "El distintivo «Compra verificada» indica que hemos podido confirmar que la persona que deja la opinión ha realizado una compra en esta tienda.",
+    "verified_explanation_2": "Las opiniones sin este distintivo no se han podido vincular automáticamente a un pedido.",
+    "verified_explanation_3": "Publicamos todas las opiniones que recibimos, sin filtrar por puntuación.",
     "all_products": "Todos los productos",
+    "most_recent": "Más recientes",
+    "highest_rated": "Mejor valoradas",
+    "lowest_rated": "Peor valoradas",
+    "write_review": "Escribir una opinión",
     "share_experience": "Comparte tu experiencia",
-    "name": "Nombre",
-    "email": "Email",
+    "name": "Tu nombre",
+    "email": "Tu email",
     "product": "Producto",
     "select_product": "Selecciona un producto",
-    "rating": "Puntuación",
+    "rating": "Valoración",
     "title_optional": "Título (opcional)",
     "your_review": "Tu opinión",
+    "submitting": "Enviando...",
+    "submit": "Enviar opinión",
     "loading": "Cargando opiniones...",
-    "no_reviews_filter": "Aún no hay opiniones para este filtro.",
-    "what_means": "¿Qué significa",
-    "verified_explanation_1": "El distintivo \"Compra verificada\" indica que hemos podido confirmar que la persona que deja la opinión ha realizado una compra real en nuestra tienda. Nuestro sistema cruza automáticamente el email del autor de la reseña con nuestros registros de pedidos completados.",
-    "verified_explanation_2": "Las opiniones que no llevan este distintivo son igualmente válidas y reales — simplemente no hemos podido vincularlas automáticamente a un pedido (por ejemplo, si el cliente usó un email diferente al de su compra, o si dejó la opinión desde el formulario público).",
-    "verified_explanation_3": "Todas las opiniones publicadas son revisadas por nuestro equipo antes de aparecer en la web. No editamos ni censuramos opiniones negativas."
+    "no_reviews_filter": "No hay opiniones que coincidan con este filtro.",
+    "be_first": "Sé la primera persona en dejar una opinión",
+    "error_no_rating": "Por favor, selecciona una puntuación",
+    "error_no_product": "Por favor, selecciona un producto",
+    "error_submit": "Error al enviar la opinión",
+    "error_connection": "Error de conexión. Inténtalo de nuevo."
   },
   "family": {
     "title": "La Familia",
@@ -582,9 +575,9 @@
     "delivery_section": "Dirección de Entrega",
     "comments_section": "Comentarios Adicionales (opcional)",
     "comments_placeholder": "Horarios de entrega preferidos, necesidades especiales, etc.",
-    "newsletter_subscribe": "✉️ Suscribirme al newsletter",
+    "newsletter_subscribe": "Suscribirme al newsletter",
     "newsletter_text": "Recibe los mejores consejos, recetas exclusivas y ofertas especiales. Puedes anular la suscripción en cualquier momento.",
-    "newsletter_discount": "🎁 ¡Obtén un 10% de descuento en tu primera compra online!",
+    "newsletter_discount": "¡Obtén un 10% de descuento en tu primera compra online!",
     "privacy_accept": "Acepto la",
     "privacy_policy": "política de privacidad",
     "sending": "Enviando...",
@@ -655,49 +648,14 @@
   "badges": {
     "best_seller": "Más Vendido",
     "from_field": "Directo del Campo",
-    "unique_world": "🌍 ÚNICO EN EL MUNDO",
+    "unique_world": "ÚNICO EN EL MUNDO",
     "peeled_by_hand": "Pelado a mano, pieza a pieza",
-    "pack_duo": "📦 PACK DÚO",
-    "promo_25": "🎁 PROMOCIÓN: Hasta 25% dto",
-    "gold_medal": "🏅 MEDALLA DE ORO",
+    "pack_duo": "PACK DÚO",
+    "promo_25": "PROMOCIÓN: Hasta 25% dto",
+    "gold_medal": "MEDALLA DE ORO",
     "awarded": "PREMIADO",
-    "premium_gift": "🎁 REGALO PREMIUM",
-    "early_edition": "🍂 EDICIÓN TEMPRANO"
-  },
-  "reviews": {
-    "verified_purchase": "Compra verificada",
-    "publication_policy": "Publicamos todas las opiniones que recibimos, sin filtrar por puntuación. Las marcadas como compra verificada corresponden a pedidos realizados en esta tienda.",
-    "seo_title": "Opiniones de clientes | Mikel's Fruit",
-    "page_title": "Opiniones",
-    "subtitle": "Lo que dicen quienes han probado nuestros productos",
-    "of_5_stars": "sobre 5",
-    "customer_reviews": "opiniones",
-    "what_means": "¿Qué significa",
-    "verified_explanation_1": "El distintivo «Compra verificada» indica que hemos podido confirmar que la persona que deja la opinión ha realizado una compra en esta tienda.",
-    "verified_explanation_2": "Las opiniones sin este distintivo no se han podido vincular automáticamente a un pedido.",
-    "verified_explanation_3": "Publicamos todas las opiniones que recibimos, sin filtrar por puntuación.",
-    "all_products": "Todos los productos",
-    "most_recent": "Más recientes",
-    "highest_rated": "Mejor valoradas",
-    "lowest_rated": "Peor valoradas",
-    "write_review": "Escribir una opinión",
-    "share_experience": "Comparte tu experiencia",
-    "name": "Tu nombre",
-    "email": "Tu email",
-    "product": "Producto",
-    "select_product": "Selecciona un producto",
-    "rating": "Valoración",
-    "title_optional": "Título (opcional)",
-    "your_review": "Tu opinión",
-    "submitting": "Enviando...",
-    "submit": "Enviar opinión",
-    "loading": "Cargando opiniones...",
-    "no_reviews_filter": "No hay opiniones que coincidan con este filtro.",
-    "be_first": "Sé la primera persona en dejar una opinión",
-    "error_no_rating": "Por favor, selecciona una puntuación",
-    "error_no_product": "Por favor, selecciona un producto",
-    "error_submit": "Error al enviar la opinión",
-    "error_connection": "Error de conexión. Inténtalo de nuevo."
+    "premium_gift": "REGALO PREMIUM",
+    "early_edition": "EDICIÓN TEMPRANO"
   },
   "tags": {
     "vegano": "Vegano",
@@ -726,8 +684,21 @@
       "category": "Desayuno",
       "difficulty": "Fácil",
       "description": "La manera más simple y deliciosa de disfrutar nuestro aceite Temprano. Un desayuno que te transporta al Mediterráneo.",
-      "ingredients": ["2 rebanadas de pan de masa madre", "2 cucharadas de Aceite Temprano", "1 tomate maduro", "Sal en escamas", "Ajo (opcional)"],
-      "steps": ["Tuesta el pan hasta que esté crujiente", "Frota el ajo en el pan caliente (opcional)", "Ralla el tomate sobre el pan", "Rocía generosamente con el Aceite Temprano", "Espolvorea sal en escamas", "Disfruta inmediatamente"],
+      "ingredients": [
+        "2 rebanadas de pan de masa madre",
+        "2 cucharadas de Aceite Temprano",
+        "1 tomate maduro",
+        "Sal en escamas",
+        "Ajo (opcional)"
+      ],
+      "steps": [
+        "Tuesta el pan hasta que esté crujiente",
+        "Frota el ajo en el pan caliente (opcional)",
+        "Ralla el tomate sobre el pan",
+        "Rocía generosamente con el Aceite Temprano",
+        "Espolvorea sal en escamas",
+        "Disfruta inmediatamente"
+      ],
       "tips": "El Temprano es intenso. Si prefieres algo más suave, usa nuestro Arbequina. El pan debe estar caliente para que absorba bien el aceite."
     },
     "ensalada_paraguayo": {
@@ -735,8 +706,24 @@
       "category": "Entrante",
       "difficulty": "Fácil",
       "description": "Una combinación sorprendente que equilibra lo dulce del paraguayo con la cremosidad de la burrata. Perfecta para verano.",
-      "ingredients": ["1 frasco de Paraguayo en Almíbar", "2 bolas de burrata", "Rúcula fresca", "Aceite Arbequina", "Vinagre balsámico", "Nueces tostadas", "Sal y pimienta"],
-      "steps": ["Escurre los paraguayos y córtalos en cuartos", "Dispón la rúcula en una fuente", "Coloca la burrata en el centro", "Distribuye los paraguayos alrededor", "Esparce las nueces tostadas", "Aliña con aceite Arbequina y vinagre balsámico", "Salpimienta al gusto"],
+      "ingredients": [
+        "1 frasco de Paraguayo en Almíbar",
+        "2 bolas de burrata",
+        "Rúcula fresca",
+        "Aceite Arbequina",
+        "Vinagre balsámico",
+        "Nueces tostadas",
+        "Sal y pimienta"
+      ],
+      "steps": [
+        "Escurre los paraguayos y córtalos en cuartos",
+        "Dispón la rúcula en una fuente",
+        "Coloca la burrata en el centro",
+        "Distribuye los paraguayos alrededor",
+        "Esparce las nueces tostadas",
+        "Aliña con aceite Arbequina y vinagre balsámico",
+        "Salpimienta al gusto"
+      ],
       "tips": "Guarda un poco del almíbar del paraguayo y mézclalo con el vinagre balsámico para un aliño único. La burrata debe estar a temperatura ambiente."
     },
     "carpaccio_temprano": {
@@ -744,8 +731,24 @@
       "category": "Entrante",
       "difficulty": "Media",
       "description": "El Temprano eleva el carpaccio a otro nivel. Su intensidad complementa perfectamente la carne cruda.",
-      "ingredients": ["400g de solomillo de ternera", "Aceite Temprano", "Parmesano en lascas", "Rúcula", "Zumo de limón", "Sal en escamas", "Pimienta negra recién molida"],
-      "steps": ["Congela la carne 30 minutos para facilitar el corte", "Corta láminas finas con un cuchillo bien afilado", "Dispón las láminas en un plato frío", "Rocía generosamente con Aceite Temprano", "Añade zumo de limón", "Decora con rúcula y parmesano", "Salpimienta y sirve inmediatamente"],
+      "ingredients": [
+        "400g de solomillo de ternera",
+        "Aceite Temprano",
+        "Parmesano en lascas",
+        "Rúcula",
+        "Zumo de limón",
+        "Sal en escamas",
+        "Pimienta negra recién molida"
+      ],
+      "steps": [
+        "Congela la carne 30 minutos para facilitar el corte",
+        "Corta láminas finas con un cuchillo bien afilado",
+        "Dispón las láminas en un plato frío",
+        "Rocía generosamente con Aceite Temprano",
+        "Añade zumo de limón",
+        "Decora con rúcula y parmesano",
+        "Salpimienta y sirve inmediatamente"
+      ],
       "tips": "La carne debe ser de máxima calidad. El Temprano aporta el picante y el frutado verde que hacen brillar este plato."
     },
     "postre_paraguayo": {
@@ -753,8 +756,22 @@
       "category": "Postre",
       "difficulty": "Fácil",
       "description": "Un postre simple pero espectacular. El calor carameliza el almíbar y el contraste con el helado es mágico.",
-      "ingredients": ["1 frasco de Paraguayo en Almíbar", "Helado de vainilla", "Azúcar moreno", "Canela en polvo", "Menta fresca"],
-      "steps": ["Escurre los paraguayos (guarda el almíbar)", "Colócalos en una sartén caliente", "Espolvorea azúcar moreno", "Carameliza 2-3 minutos por lado", "Sirve calientes sobre helado de vainilla", "Rocía con el almíbar", "Decora con canela y menta"],
+      "ingredients": [
+        "1 frasco de Paraguayo en Almíbar",
+        "Helado de vainilla",
+        "Azúcar moreno",
+        "Canela en polvo",
+        "Menta fresca"
+      ],
+      "steps": [
+        "Escurre los paraguayos (guarda el almíbar)",
+        "Colócalos en una sartén caliente",
+        "Espolvorea azúcar moreno",
+        "Carameliza 2-3 minutos por lado",
+        "Sirve calientes sobre helado de vainilla",
+        "Rocía con el almíbar",
+        "Decora con canela y menta"
+      ],
       "tips": "El contraste caliente-frío es clave. Sirve inmediatamente. Puedes flamear con un poco de brandy para un toque espectacular."
     },
     "pasta_picual": {
@@ -762,8 +779,24 @@
       "category": "Principal",
       "difficulty": "Fácil",
       "description": "La receta italiana más simple, elevada con nuestro ecológico. Cuando menos es más.",
-      "ingredients": ["400g de espaguetis", "6 dientes de ajo", "100ml de Aceite Ecológico", "Guindilla seca", "Perejil fresco", "Sal", "Parmesano (opcional)"],
-      "steps": ["Cuece la pasta al dente", "Lamina el ajo finamente", "Calienta el aceite ecológico a fuego bajo", "Dora el ajo sin que se queme", "Añade la guindilla", "Mezcla con la pasta y agua de cocción", "Espolvorea perejil y sirve"],
+      "ingredients": [
+        "400g de espaguetis",
+        "6 dientes de ajo",
+        "100ml de Aceite Ecológico",
+        "Guindilla seca",
+        "Perejil fresco",
+        "Sal",
+        "Parmesano (opcional)"
+      ],
+      "steps": [
+        "Cuece la pasta al dente",
+        "Lamina el ajo finamente",
+        "Calienta el aceite ecológico a fuego bajo",
+        "Dora el ajo sin que se queme",
+        "Añade la guindilla",
+        "Mezcla con la pasta y agua de cocción",
+        "Espolvorea perejil y sirve"
+      ],
       "tips": "Nuestro ecológico aporta el picante perfecto. No dejes que el ajo se queme o amargará. El agua de cocción emulsiona el aceite creando una salsa cremosa."
     },
     "yogur_paraguayo": {
@@ -771,8 +804,21 @@
       "category": "Desayuno",
       "difficulty": "Muy Fácil",
       "description": "Un desayuno delicioso con paraguayo en almíbar y granola.",
-      "ingredients": ["Yogur griego natural", "2-3 mitades de Paraguayo en Almíbar", "Granola casera", "Miel (opcional)", "Frutos secos"],
-      "steps": ["Coloca el yogur en un bol", "Corta el paraguayo en trozos", "Dispón sobre el yogur", "Añade la granola", "Esparce frutos secos", "Rocía con miel si deseas"],
+      "ingredients": [
+        "Yogur griego natural",
+        "2-3 mitades de Paraguayo en Almíbar",
+        "Granola casera",
+        "Miel (opcional)",
+        "Frutos secos"
+      ],
+      "steps": [
+        "Coloca el yogur en un bol",
+        "Corta el paraguayo en trozos",
+        "Dispón sobre el yogur",
+        "Añade la granola",
+        "Esparce frutos secos",
+        "Rocía con miel si deseas"
+      ],
       "tips": "El almíbar del paraguayo puede sustituir la miel. Perfecto para un desayuno rápido pero nutritivo."
     },
     "categories": {
@@ -796,11 +842,51 @@
     "cta_instagram": "Síguenos en Instagram"
   },
   "pairings": {
-    "temprano": { "product": "Aceite Temprano", "items": ["Carpaccios", "Pescado crudo", "Tostadas", "Gazpacho"] },
-    "ecologico": { "product": "Aceite Ecológico", "items": ["Pasta", "Arroces", "Sopas", "Aliños"] },
-    "garrafa": { "product": "Aceite de oliva virgen extra 5 L", "items": ["Sofritos", "Plancha", "Guisos", "Uso diario"] },
-    "paraguayo": { "product": "Paraguayo", "items": ["Yogur", "Helados", "Quesos", "Ensaladas"] },
-    "mermeladas": { "product": "Mermeladas", "items": ["Quesos", "Tostadas", "Yogur", "Repostería"] }
+    "temprano": {
+      "product": "Aceite Temprano",
+      "items": [
+        "Carpaccios",
+        "Pescado crudo",
+        "Tostadas",
+        "Gazpacho"
+      ]
+    },
+    "ecologico": {
+      "product": "Aceite Ecológico",
+      "items": [
+        "Pasta",
+        "Arroces",
+        "Sopas",
+        "Aliños"
+      ]
+    },
+    "garrafa": {
+      "product": "Aceite de oliva virgen extra 5 L",
+      "items": [
+        "Sofritos",
+        "Plancha",
+        "Guisos",
+        "Uso diario"
+      ]
+    },
+    "paraguayo": {
+      "product": "Paraguayo",
+      "items": [
+        "Yogur",
+        "Helados",
+        "Quesos",
+        "Ensaladas"
+      ]
+    },
+    "mermeladas": {
+      "product": "Mermeladas",
+      "items": [
+        "Quesos",
+        "Tostadas",
+        "Yogur",
+        "Repostería"
+      ]
+    }
   },
   "translate_btn": {
     "translate": "Traducir",

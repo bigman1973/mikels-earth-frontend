@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node scripts/generate-static-seo.mjs",
+    "build": "node --test tests/i18n-completeness.test.mjs && vite build && node scripts/generate-static-seo.mjs",
     "lint": "eslint .",
     "test:seo": "node --test tests/static-seo.test.mjs",
     "preview": "vite preview"

@@ -212,9 +212,9 @@
     "subscription_price_note": "Final price depends on the chosen frequency",
     "save_with_subscription": "Save {{percent}}% with {{label}} subscription",
     "discount_applied": "Discount applied! You save {{percent}}% ({{label}})",
-    "price_per_unit": "Price per unit: €{{price}} (was €{{original}})",
-    "total_price": "Total: €{{price}}",
-    "you_save": "you save €{{amount}}",
+    "price_per_unit": "Price per unit: {{price}} (was {{original}})",
+    "total_price": "Total: {{price}}",
+    "you_save": "you save {{amount}}",
     "volume_discounts": "Volume discounts:",
     "units": "units",
     "best_value": "BEST VALUE",
@@ -232,7 +232,8 @@
     "only_left": "Only {{count}} left",
     "related_products": "You may also like",
     "reviews_count": "{{count}} reviews",
-    "review_count_one": "{{count}} review"
+    "review_count_one": "{{count}} review",
+    "one_time": "One-time purchase"
   },
   "cart": {
     "title": "Your Cart",
@@ -361,47 +362,39 @@
     "question": "Have a question about your order?"
   },
   "reviews": {
-    "seo_title": "Customer Reviews | Mikel's Fruit",
+    "verified_purchase": "Verified purchase",
+    "publication_policy": "We publish all reviews we receive, without filtering by rating. Those marked as verified purchases correspond to orders placed in this store.",
+    "seo_title": "Customer reviews | Mikel's Fruit",
     "page_title": "Reviews",
-    "subtitle": "The best recommendation comes from those who have already tried us",
-    "verified_purchase": "Verified Purchase",
-    "write_review": "Write a review",
-    "submit": "Submit my review",
-    "submitting": "Submitting...",
-    "total_reviews": "customer reviews",
-    "average_rating": "average rating",
-    "verified_info_title": "What does \"Verified purchase\" mean?",
-    "verified_info_text": "This badge indicates that we have confirmed the person made a real purchase in our shop.",
-    "title": "Customer reviews",
-    "all_reviews": "All",
-    "stars": "stars",
-    "no_reviews": "No reviews yet",
-    "be_first": "Be the first to review",
-    "filter_by": "Filter by",
-    "sort_by": "Sort by",
+    "subtitle": "What people who have tried our products say",
+    "of_5_stars": "out of 5",
+    "customer_reviews": "reviews",
+    "what_means": "What does",
+    "verified_explanation_1": "The «Verified purchase» badge indicates that we have confirmed that the person leaving the review made a purchase in this store.",
+    "verified_explanation_2": "Reviews without this badge could not be linked automatically to an order.",
+    "verified_explanation_3": "We publish all reviews we receive, without filtering by rating.",
+    "all_products": "All products",
     "most_recent": "Most recent",
     "highest_rated": "Highest rated",
     "lowest_rated": "Lowest rated",
-    "verified_info_1": "\"Verified purchase\" means we have confirmed that the person made a real purchase in our shop.",
-    "verified_info_2": "Reviews without this badge are equally valid — they simply could not be automatically linked to an order.",
-    "verified_info_3": "All published reviews are checked by our team before appearing on the website. We do not edit or censor negative reviews.",
-    "customer_reviews": "customer reviews",
-    "of_5_stars": "out of 5 stars",
-    "all_products": "All products",
+    "write_review": "Write a review",
     "share_experience": "Share your experience",
-    "name": "Name",
-    "email": "Email",
+    "name": "Your name",
+    "email": "Your email",
     "product": "Product",
     "select_product": "Select a product",
     "rating": "Rating",
     "title_optional": "Title (optional)",
     "your_review": "Your review",
+    "submitting": "Submitting...",
+    "submit": "Submit review",
     "loading": "Loading reviews...",
-    "no_reviews_filter": "No reviews for this filter yet.",
-    "what_means": "What does",
-    "verified_explanation_1": "The \"Verified Purchase\" badge indicates that we have been able to confirm that the person leaving the review has made a real purchase in our shop. Our system automatically cross-references the reviewer's email with our completed order records.",
-    "verified_explanation_2": "Reviews without this badge are equally valid and real — we simply could not automatically link them to an order (for example, if the customer used a different email from their purchase, or left the review via the public form).",
-    "verified_explanation_3": "All published reviews are checked by our team before appearing on the website. We do not edit or censor negative reviews."
+    "no_reviews_filter": "There are no reviews matching this filter.",
+    "be_first": "Be the first person to leave a review",
+    "error_no_rating": "Please select a rating",
+    "error_no_product": "Please select a product",
+    "error_submit": "Error submitting the review",
+    "error_connection": "Connection error. Please try again."
   },
   "family": {
     "title": "The Family",
@@ -604,9 +597,9 @@
     "delivery_section": "Delivery Address",
     "comments_section": "Additional Comments (optional)",
     "comments_placeholder": "Preferred delivery times, special needs, etc.",
-    "newsletter_subscribe": "✉️ Subscribe to newsletter",
+    "newsletter_subscribe": "Subscribe to newsletter",
     "newsletter_text": "Receive the best tips, exclusive recipes and special offers. You can unsubscribe at any time.",
-    "newsletter_discount": "🎁 Get 10% off your first online purchase!",
+    "newsletter_discount": "Get 10% off your first online purchase!",
     "privacy_accept": "I accept the",
     "privacy_policy": "privacy policy",
     "sending": "Sending...",
@@ -677,49 +670,14 @@
   "badges": {
     "best_seller": "Best Seller",
     "from_field": "Straight from the Field",
-    "unique_world": "🌍 UNIQUE IN THE WORLD",
+    "unique_world": "UNIQUE IN THE WORLD",
     "peeled_by_hand": "Hand-peeled, piece by piece",
-    "pack_duo": "📦 DUO PACK",
-    "promo_25": "🎁 PROMO: Up to 25% off",
-    "gold_medal": "🏅 GOLD MEDAL",
+    "pack_duo": "DUO PACK",
+    "promo_25": "PROMO: Up to 25% off",
+    "gold_medal": "GOLD MEDAL",
     "awarded": "AWARD-WINNING",
-    "premium_gift": "🎁 PREMIUM GIFT",
-    "early_edition": "🍂 EARLY HARVEST EDITION"
-  },
-  "reviews": {
-    "verified_purchase": "Verified purchase",
-    "publication_policy": "We publish all reviews we receive, without filtering by rating. Those marked as verified purchases correspond to orders placed in this store.",
-    "seo_title": "Customer reviews | Mikel's Fruit",
-    "page_title": "Reviews",
-    "subtitle": "What people who have tried our products say",
-    "of_5_stars": "out of 5",
-    "customer_reviews": "reviews",
-    "what_means": "What does",
-    "verified_explanation_1": "The «Verified purchase» badge indicates that we have confirmed that the person leaving the review made a purchase in this store.",
-    "verified_explanation_2": "Reviews without this badge could not be linked automatically to an order.",
-    "verified_explanation_3": "We publish all reviews we receive, without filtering by rating.",
-    "all_products": "All products",
-    "most_recent": "Most recent",
-    "highest_rated": "Highest rated",
-    "lowest_rated": "Lowest rated",
-    "write_review": "Write a review",
-    "share_experience": "Share your experience",
-    "name": "Your name",
-    "email": "Your email",
-    "product": "Product",
-    "select_product": "Select a product",
-    "rating": "Rating",
-    "title_optional": "Title (optional)",
-    "your_review": "Your review",
-    "submitting": "Submitting...",
-    "submit": "Submit review",
-    "loading": "Loading reviews...",
-    "no_reviews_filter": "There are no reviews matching this filter.",
-    "be_first": "Be the first person to leave a review",
-    "error_no_rating": "Please select a rating",
-    "error_no_product": "Please select a product",
-    "error_submit": "Error submitting the review",
-    "error_connection": "Connection error. Please try again."
+    "premium_gift": "PREMIUM GIFT",
+    "early_edition": "EARLY HARVEST EDITION"
   },
   "tags": {
     "vegano": "Vegan",
@@ -748,8 +706,21 @@
       "category": "Breakfast",
       "difficulty": "Easy",
       "description": "The simplest and most delicious way to enjoy our Early Harvest oil. A breakfast that transports you to the Mediterranean.",
-      "ingredients": ["2 slices of sourdough bread", "2 tablespoons of Early Harvest Oil", "1 ripe tomato", "Flaked salt", "Garlic (optional)"],
-      "steps": ["Toast the bread until crispy", "Rub garlic on the hot bread (optional)", "Grate the tomato over the bread", "Drizzle generously with Early Harvest Oil", "Sprinkle with flaked salt", "Enjoy immediately"],
+      "ingredients": [
+        "2 slices of sourdough bread",
+        "2 tablespoons of Early Harvest Oil",
+        "1 ripe tomato",
+        "Flaked salt",
+        "Garlic (optional)"
+      ],
+      "steps": [
+        "Toast the bread until crispy",
+        "Rub garlic on the hot bread (optional)",
+        "Grate the tomato over the bread",
+        "Drizzle generously with Early Harvest Oil",
+        "Sprinkle with flaked salt",
+        "Enjoy immediately"
+      ],
       "tips": "The Early Harvest is intense. If you prefer something milder, use our Arbequina. The bread must be hot to absorb the oil well."
     },
     "ensalada_paraguayo": {
@@ -757,8 +728,24 @@
       "category": "Starter",
       "difficulty": "Easy",
       "description": "A surprising combination that balances the sweetness of the flat peach with the creaminess of burrata. Perfect for summer.",
-      "ingredients": ["1 jar of Flat Peach in Syrup", "2 burrata balls", "Fresh rocket", "Arbequina Oil", "Balsamic vinegar", "Toasted walnuts", "Salt and pepper"],
-      "steps": ["Drain the flat peaches and cut into quarters", "Arrange rocket on a serving plate", "Place burrata in the centre", "Distribute flat peaches around", "Scatter toasted walnuts", "Dress with Arbequina oil and balsamic vinegar", "Season to taste"],
+      "ingredients": [
+        "1 jar of Flat Peach in Syrup",
+        "2 burrata balls",
+        "Fresh rocket",
+        "Arbequina Oil",
+        "Balsamic vinegar",
+        "Toasted walnuts",
+        "Salt and pepper"
+      ],
+      "steps": [
+        "Drain the flat peaches and cut into quarters",
+        "Arrange rocket on a serving plate",
+        "Place burrata in the centre",
+        "Distribute flat peaches around",
+        "Scatter toasted walnuts",
+        "Dress with Arbequina oil and balsamic vinegar",
+        "Season to taste"
+      ],
       "tips": "Save some of the flat peach syrup and mix it with balsamic vinegar for a unique dressing. The burrata should be at room temperature."
     },
     "carpaccio_temprano": {
@@ -766,8 +753,24 @@
       "category": "Starter",
       "difficulty": "Medium",
       "description": "The Early Harvest elevates carpaccio to another level. Its intensity perfectly complements the raw meat.",
-      "ingredients": ["400g beef tenderloin", "Early Harvest Oil", "Parmesan shavings", "Rocket", "Lemon juice", "Flaked salt", "Freshly ground black pepper"],
-      "steps": ["Freeze the meat for 30 minutes to make slicing easier", "Cut thin slices with a sharp knife", "Arrange slices on a cold plate", "Drizzle generously with Early Harvest Oil", "Add lemon juice", "Garnish with rocket and parmesan", "Season and serve immediately"],
+      "ingredients": [
+        "400g beef tenderloin",
+        "Early Harvest Oil",
+        "Parmesan shavings",
+        "Rocket",
+        "Lemon juice",
+        "Flaked salt",
+        "Freshly ground black pepper"
+      ],
+      "steps": [
+        "Freeze the meat for 30 minutes to make slicing easier",
+        "Cut thin slices with a sharp knife",
+        "Arrange slices on a cold plate",
+        "Drizzle generously with Early Harvest Oil",
+        "Add lemon juice",
+        "Garnish with rocket and parmesan",
+        "Season and serve immediately"
+      ],
       "tips": "The meat must be top quality. The Early Harvest brings the spice and green fruitiness that make this dish shine."
     },
     "postre_paraguayo": {
@@ -775,8 +778,22 @@
       "category": "Dessert",
       "difficulty": "Easy",
       "description": "A simple but spectacular dessert. The heat caramelises the syrup and the contrast with ice cream is magical.",
-      "ingredients": ["1 jar of Flat Peach in Syrup", "Vanilla ice cream", "Brown sugar", "Cinnamon powder", "Fresh mint"],
-      "steps": ["Drain the flat peaches (save the syrup)", "Place them in a hot pan", "Sprinkle with brown sugar", "Caramelise 2-3 minutes per side", "Serve hot over vanilla ice cream", "Drizzle with syrup", "Garnish with cinnamon and mint"],
+      "ingredients": [
+        "1 jar of Flat Peach in Syrup",
+        "Vanilla ice cream",
+        "Brown sugar",
+        "Cinnamon powder",
+        "Fresh mint"
+      ],
+      "steps": [
+        "Drain the flat peaches (save the syrup)",
+        "Place them in a hot pan",
+        "Sprinkle with brown sugar",
+        "Caramelise 2-3 minutes per side",
+        "Serve hot over vanilla ice cream",
+        "Drizzle with syrup",
+        "Garnish with cinnamon and mint"
+      ],
       "tips": "The hot-cold contrast is key. Serve immediately. You can flambé with a little brandy for a spectacular touch."
     },
     "pasta_picual": {
@@ -784,8 +801,24 @@
       "category": "Main",
       "difficulty": "Easy",
       "description": "The simplest Italian recipe, elevated with our organic oil. When less is more.",
-      "ingredients": ["400g spaghetti", "6 garlic cloves", "100ml Organic Oil", "Dried chilli", "Fresh parsley", "Salt", "Parmesan (optional)"],
-      "steps": ["Cook pasta al dente", "Thinly slice the garlic", "Heat the organic oil on low heat", "Brown the garlic without burning", "Add the chilli", "Mix with pasta and cooking water", "Sprinkle with parsley and serve"],
+      "ingredients": [
+        "400g spaghetti",
+        "6 garlic cloves",
+        "100ml Organic Oil",
+        "Dried chilli",
+        "Fresh parsley",
+        "Salt",
+        "Parmesan (optional)"
+      ],
+      "steps": [
+        "Cook pasta al dente",
+        "Thinly slice the garlic",
+        "Heat the organic oil on low heat",
+        "Brown the garlic without burning",
+        "Add the chilli",
+        "Mix with pasta and cooking water",
+        "Sprinkle with parsley and serve"
+      ],
       "tips": "Our organic oil provides the perfect spice. Don't let the garlic burn or it will taste bitter. The cooking water emulsifies the oil creating a creamy sauce."
     },
     "yogur_paraguayo": {
@@ -793,8 +826,21 @@
       "category": "Breakfast",
       "difficulty": "Very Easy",
       "description": "A delicious breakfast with flat peach in syrup and granola.",
-      "ingredients": ["Natural Greek yoghurt", "2-3 halves of Flat Peach in Syrup", "Homemade granola", "Honey (optional)", "Mixed nuts"],
-      "steps": ["Place yoghurt in a bowl", "Cut the flat peach into pieces", "Arrange over the yoghurt", "Add granola", "Scatter mixed nuts", "Drizzle with honey if desired"],
+      "ingredients": [
+        "Natural Greek yoghurt",
+        "2-3 halves of Flat Peach in Syrup",
+        "Homemade granola",
+        "Honey (optional)",
+        "Mixed nuts"
+      ],
+      "steps": [
+        "Place yoghurt in a bowl",
+        "Cut the flat peach into pieces",
+        "Arrange over the yoghurt",
+        "Add granola",
+        "Scatter mixed nuts",
+        "Drizzle with honey if desired"
+      ],
       "tips": "The flat peach syrup can replace honey. Perfect for a quick but nutritious breakfast."
     },
     "categories": {
@@ -818,11 +864,51 @@
     "cta_instagram": "Follow Us on Instagram"
   },
   "pairings": {
-    "temprano": { "product": "Early Harvest Oil", "items": ["Carpaccios", "Raw fish", "Toast", "Gazpacho"] },
-    "ecologico": { "product": "Organic Oil", "items": ["Pasta", "Rice dishes", "Soups", "Dressings"] },
-    "garrafa": { "product": "Extra Virgin Olive Oil 5 L", "items": ["Sofritos", "Griddle cooking", "Stews", "Everyday cooking"] },
-    "paraguayo": { "product": "Flat Peach", "items": ["Yoghurt", "Ice cream", "Cheese", "Salads"] },
-    "mermeladas": { "product": "Jams", "items": ["Cheese", "Toast", "Yoghurt", "Baking"] }
+    "temprano": {
+      "product": "Early Harvest Oil",
+      "items": [
+        "Carpaccios",
+        "Raw fish",
+        "Toast",
+        "Gazpacho"
+      ]
+    },
+    "ecologico": {
+      "product": "Organic Oil",
+      "items": [
+        "Pasta",
+        "Rice dishes",
+        "Soups",
+        "Dressings"
+      ]
+    },
+    "garrafa": {
+      "product": "Extra Virgin Olive Oil 5 L",
+      "items": [
+        "Sofritos",
+        "Griddle cooking",
+        "Stews",
+        "Everyday cooking"
+      ]
+    },
+    "paraguayo": {
+      "product": "Flat Peach",
+      "items": [
+        "Yoghurt",
+        "Ice cream",
+        "Cheese",
+        "Salads"
+      ]
+    },
+    "mermeladas": {
+      "product": "Jams",
+      "items": [
+        "Cheese",
+        "Toast",
+        "Yoghurt",
+        "Baking"
+      ]
+    }
   },
   "translate_btn": {
     "translate": "Translate",

@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
-import { Package, CreditCard, Truck, ShoppingBag } from 'lucide-react';
+import { Package, CreditCard, Truck, ShoppingBag, AlertTriangle } from 'lucide-react';
+// eslint-disable-next-line no-unused-vars -- JSX uses the namespace `<motion.*>`.
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { createCheckoutSession, createSubscriptionCheckout } from '../services/stripeService';
+import { formatEuro } from '../utils/formatMoney';
 
 const Checkout = () => {
-  const { cart, getCartTotal, clearCart, getItemPrice, appliedDiscount, getDiscountAmount, updateItemPrices } = useCart();
+  const { cart, getCartTotal, getItemPrice, appliedDiscount, getDiscountAmount, updateItemPrices } = useCart();
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const [loading, setLoading] = useState(false);
@@ -237,7 +239,7 @@ const Checkout = () => {
                       name="name"
                       value={formData.name}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#1a1a1a]"
                       placeholder="Juan Pérez"
                     />
                   </div>
@@ -251,7 +253,7 @@ const Checkout = () => {
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#1a1a1a]"
                       placeholder="tu@email.com"
                     />
                   </div>
@@ -265,7 +267,7 @@ const Checkout = () => {
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#1a1a1a]"
                       placeholder="+34 600 000 000"
                     />
                   </div>
@@ -279,7 +281,7 @@ const Checkout = () => {
                       name="address"
                       value={formData.address}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#1a1a1a]"
                       placeholder="Calle, número, piso, puerta"
                     />
                   </div>
@@ -293,7 +295,7 @@ const Checkout = () => {
                       name="city"
                       value={formData.city}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#1a1a1a]"
                       placeholder="Barcelona"
                     />
                   </div>
@@ -307,7 +309,7 @@ const Checkout = () => {
                       name="postal_code"
                       value={formData.postal_code}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#1a1a1a]"
                       placeholder="08001"
                     />
                   </div>
@@ -320,7 +322,7 @@ const Checkout = () => {
                       name="country"
                       value={formData.country}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#1a1a1a]"
                     >
                       <option value="España">{t('checkout.spain')}</option>
                       <option value="Portugal">Portugal</option>
@@ -337,7 +339,7 @@ const Checkout = () => {
                       value={formData.notes}
                       onChange={handleInputChange}
                       rows="3"
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#1a1a1a]"
                       placeholder="Instrucciones especiales para la entrega..."
                     />
                   </div>
@@ -349,7 +351,7 @@ const Checkout = () => {
                         type="checkbox"
                         checked={needsInvoice}
                         onChange={(e) => setNeedsInvoice(e.target.checked)}
-                        className="w-5 h-5 text-primary border-gray-300 rounded focus:ring-primary"
+                        className="w-5 h-5 text-[#1a1a1a] border-gray-300 rounded focus:ring-[#1a1a1a]"
                       />
                       <span className="text-sm font-semibold text-primary">
                         ¿Necesitas factura?
@@ -360,9 +362,9 @@ const Checkout = () => {
                   {/* Campos de factura */}
                   {needsInvoice && (
                     <>
-                      <div className="md:col-span-2 bg-green-50 border border-green-200 rounded-lg p-4">
-                        <p className="text-sm text-green-800 font-medium mb-3">
-                          📝 Datos para la factura
+                      <div className="md:col-span-2 bg-[#f5efe4] border border-stone-300 rounded-lg p-4">
+                        <p className="text-sm text-[#1a1a1a] font-medium mb-3">
+                          Datos para la factura
                         </p>
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -375,7 +377,7 @@ const Checkout = () => {
                               name="fiscalName"
                               value={invoiceData.fiscalName}
                               onChange={handleInvoiceInputChange}
-                              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+                              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#1a1a1a]"
                               placeholder="Nombre completo o razón social"
                             />
                           </div>
@@ -389,7 +391,7 @@ const Checkout = () => {
                               name="nif"
                               value={invoiceData.nif}
                               onChange={handleInvoiceInputChange}
-                              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+                              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#1a1a1a]"
                               placeholder="12345678A o B12345678"
                             />
                           </div>
@@ -403,7 +405,7 @@ const Checkout = () => {
                               name="fiscalAddress"
                               value={invoiceData.fiscalAddress}
                               onChange={handleInvoiceInputChange}
-                              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+                              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#1a1a1a]"
                               placeholder="Calle, número, piso, puerta"
                             />
                           </div>
@@ -417,7 +419,7 @@ const Checkout = () => {
                               name="fiscalCity"
                               value={invoiceData.fiscalCity}
                               onChange={handleInvoiceInputChange}
-                              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+                              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#1a1a1a]"
                               placeholder="Ciudad"
                             />
                           </div>
@@ -431,7 +433,7 @@ const Checkout = () => {
                               name="fiscalPostalCode"
                               value={invoiceData.fiscalPostalCode}
                               onChange={handleInvoiceInputChange}
-                              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary"
+                              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-[#1a1a1a]"
                               placeholder="08001"
                             />
                           </div>
@@ -451,7 +453,7 @@ const Checkout = () => {
               {priceMismatchWarning && (
                 <div className="mb-6 p-4 bg-amber-50 border border-amber-300 rounded-lg text-amber-800">
                   <div className="flex items-start gap-2">
-                    <span className="text-lg">⚠️</span>
+                    <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
                     <div>
                       <p className="font-semibold">{t('checkout.price_mismatch_warning', { defaultValue: 'Precios actualizados' }).split('.')[0]}</p>
                       <p className="text-sm mt-1">{priceMismatchWarning}</p>
@@ -492,8 +494,8 @@ const Checkout = () => {
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="font-bold text-primary">
-                        {(getItemPrice(item) * item.quantity).toFixed(2)}€
+                      <p className="font-bold text-price">
+                        {formatEuro(getItemPrice(item) * item.quantity)}
                       </p>
                     </div>
                   </div>
@@ -503,21 +505,21 @@ const Checkout = () => {
               <div className="space-y-2 mb-6 pt-4 border-t-2 border-gray-200">
                 <div className="flex justify-between text-gray-700">
                   <span>{t('cart.subtotal')}</span>
-                  <span>{appliedDiscount ? (getCartTotal() + getDiscountAmount()).toFixed(2) : getCartTotal().toFixed(2)}€</span>
+                  <span>{formatEuro(appliedDiscount ? getCartTotal() + getDiscountAmount() : getCartTotal())}</span>
                 </div>
                 {appliedDiscount && (
-                  <div className="flex justify-between text-green-600 font-medium">
+                  <div className="flex justify-between font-medium text-[#1a1a1a]">
                     <span>{t('checkout.discount_code')} {appliedDiscount.code}</span>
-                    <span>-{getDiscountAmount().toFixed(2)}€</span>
+                    <span>-{formatEuro(getDiscountAmount())}</span>
                   </div>
                 )}
                 <div className="flex justify-between text-gray-700">
                   <span>{t('cart.shipping')}</span>
-                  <span className="text-green-600 font-semibold">{t('cart.shipping_free').toUpperCase()}</span>
+                  <span className="font-semibold text-[#1a1a1a]">{t('cart.shipping_free').toUpperCase()}</span>
                 </div>
                 <div className="flex justify-between text-xl font-bold text-primary pt-2 border-t border-gray-200">
                   <span>{t('cart.total')}</span>
-                  <span>{getCartTotal().toFixed(2)}€</span>
+                  <span className="text-price">{formatEuro(getCartTotal())}</span>
                 </div>
               </div>
 
@@ -551,4 +553,3 @@ const Checkout = () => {
 };
 
 export default Checkout;
-

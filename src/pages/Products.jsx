@@ -72,7 +72,7 @@ const Products = () => {
                     onClick={() => setSelectedCategory(category.slug)}
                     className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
                       selectedCategory === category.slug
-                        ? 'bg-primary text-white shadow-md'
+                        ? 'bg-[#1a1a1a] text-white shadow-md'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     }`}
                   >
@@ -88,7 +88,7 @@ const Products = () => {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black/10"
               >
                 <option value="default">{t('products.sort_featured')}</option>
                 <option value="name">{t('products.sort_name')}</option>
@@ -102,7 +102,9 @@ const Products = () => {
         {/* Products count */}
         <div className="mb-6">
           <p className="text-gray-600">
-            {sortedProducts.length} {sortedProducts.length !== 1 ? t('products.products_count_plural', { count: sortedProducts.length }) : t('products.products_count', { count: sortedProducts.length })}
+            {sortedProducts.length !== 1
+              ? t('products.products_count_plural', { count: sortedProducts.length })
+              : t('products.products_count', { count: sortedProducts.length })}
           </p>
         </div>
 
@@ -114,7 +116,7 @@ const Products = () => {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
             {sortedProducts.map(product => (
               <ProductCard key={product.id} product={product} />
             ))}

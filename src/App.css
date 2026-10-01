@@ -75,8 +75,8 @@
      ============================================ */
   
   /* Colores Principales */
-  --mikels-red: #CD545B;        /* Pantone 7418 - Rojo corporativo */
-  --mikels-green: #B7BF10;      /* Pantone 583 - Verde corporativo */
+  --mikels-red: #9E2F3C;        /* Granate de acento */
+  --mikels-green: #1A1A1A;      /* Compatibilidad heredada: texto casi negro */
   
   /* Degradados del Rojo (Pantone 7418) */
   --mikels-red-90: rgba(205, 84, 91, 0.9);
@@ -121,8 +121,8 @@
      TEMA BASE - SOLO COLORES DEL MANUAL
      ============================================ */
   
-  --background: #ffffff;                    /* Blanco puro */
-  --foreground: var(--mikels-gray-dark);    /* Gris oscuro en lugar de negro */
+  --background: #f5efe4;                    /* Crema */
+  --foreground: #1a1a1a;                    /* Texto casi negro */
   --card: #ffffff;
   --card-foreground: var(--mikels-gray-dark);
   --popover: #ffffff;
@@ -133,12 +133,12 @@
   --primary-foreground: #ffffff;
   
   /* Secondary: Verde Mikel's */
-  --secondary: var(--mikels-green);
-  --secondary-foreground: var(--mikels-gray-dark);
+  --secondary: #1a1a1a;
+  --secondary-foreground: #ffffff;
   
   /* Accent: Degradado del rojo al 70% */
-  --accent: var(--mikels-red-70);
-  --accent-foreground: #ffffff;
+  --accent: #f5efe4;
+  --accent-foreground: #1a1a1a;
   
   --muted: var(--mikels-gray-lighter);
   --muted-foreground: var(--mikels-gray-medium);
@@ -149,9 +149,9 @@
   
   /* Charts con colores corporativos */
   --chart-1: var(--mikels-red);
-  --chart-2: var(--mikels-green);
+  --chart-2: #1a1a1a;
   --chart-3: var(--mikels-red-70);
-  --chart-4: var(--mikels-green-70);
+  --chart-4: #4a4a4a;
   --chart-5: var(--mikels-details);
   
   /* Sidebar */
@@ -213,7 +213,7 @@
     font-family: Georgia, 'Times New Roman', serif;
     font-weight: 700;
     font-style: italic;
-    color: var(--mikels-red); /* Títulos en rojo corporativo */
+    color: #1a1a1a;
   }
   
   /* Montserrat para textos de cuerpo */
@@ -347,3 +347,11 @@ html {
   box-shadow: 0 4px 6px -1px var(--mikels-green-30), 0 2px 4px -1px var(--mikels-green-20);
 }
 
+/* Storefront palette: near-black copy, cream backgrounds, and a single
+   burgundy sales accent reserved for prices and purchase controls. */
+.text-primary {
+  color: #1a1a1a;
+}
+.text-price {
+  color: var(--mikels-red);
+}

@@ -93,7 +93,7 @@ export const products = [
       discount: 8
     },
     badges: [
-      { text: "🌍 ÚNICO EN EL MUNDO", textKey: "unique_world", color: "bg-gradient-to-r from-blue-600 to-purple-600" }
+      { text: "ÚNICO EN EL MUNDO", textKey: "unique_world", color: "bg-gradient-to-r from-blue-600 to-purple-600" }
     ]
   },
   {
@@ -155,8 +155,8 @@ export const products = [
     freeShipping: true,
     limitedEdition: true,
     badges: [
-      { text: "📦 PACK DÚO", textKey: "pack_duo", color: "bg-gradient-to-r from-green-600 to-emerald-600", action: "addPackDuo" },
-      { text: "🎁 PROMOCIÓN: Hasta 25% dto", textKey: "promo_25", color: "bg-gradient-to-r from-red-600 to-pink-600" }
+      { text: "PACK DÚO", textKey: "pack_duo", color: "bg-gradient-to-r from-green-600 to-emerald-600", action: "addPackDuo" },
+      { text: "PROMOCIÓN: Hasta 25% dto", textKey: "promo_25", color: "bg-gradient-to-r from-red-600 to-pink-600" }
     ]
   },
   {
@@ -312,7 +312,7 @@ export const products = [
     featured: true,
     award: "Medalla de Oro - Japón & Nueva York",
     badges: [
-      { text: "🏅 MEDALLA DE ORO", textKey: "gold_medal", color: "bg-gradient-to-r from-yellow-500 to-yellow-600" },
+      { text: "MEDALLA DE ORO", textKey: "gold_medal", color: "bg-gradient-to-r from-yellow-500 to-yellow-600" },
       { text: "PREMIADO", textKey: "awarded", color: "bg-gradient-to-r from-purple-600 to-purple-700" }
     ]
   },
@@ -473,7 +473,7 @@ export const products = [
     name: "Pack Fruta Premium",
     slug: "pack-fruta-premium",
     description: "El regalo perfecto para los amantes de la fruta artesanal. Pack completo con paraguayo, nectarina y mermelada en estuche de madera premium.",
-    longDescription: "**El sabor del verano en un estuche de madera premium**\n\n¿Buscas un regalo especial que transmita calidad y tradición? El Pack Fruta de Mikel's Fruit es la elección perfecta.\n\n**CONTENIDO DEL PACK:**\n\n- **1x Paraguayo en Almíbar 720g** - Nuestro producto estrella. Melocotón plano cultivado en Alcarràs, seleccionado a mano y preparado siguiendo métodos artesanales de generación en generación.\n\n- **1x Nectarina en Almíbar 720g** - El melocotón sin complejos: piel lisa, sabor intenso, carácter definido. Cultivada en nuestros campos y seleccionada en su momento de máxima expresión.\n\n- **1x Mermelada de Paraguayo Artesanal 250g** - 60% de fruta (3 veces más que la industria). Solo 4 ingredientes: paraguayo, agua, azúcar y zumo de limón natural. Sin conservantes, sin colorantes, sin espesantes.\n\n- **Estuche de madera premium** - Presentación elegante y reutilizable, perfecta para regalo. Un detalle que marca la diferencia.\n\n**¿Por qué elegir este pack?**\n\n✨ **Fruta 100% artesanal** de nuestros campos de Alcarràs\n🎁 **Presentación premium** en estuche de madera\n❤️ **Sin aditivos artificiales** - Solo ingredientes naturales\n🌿 **Vegano y sin gluten** - Apto para todos\n🎄 **Regalo perfecto** para cualquier ocasión\n\n**Ahorro real**\n\nCuando compras los productos por separado pagas 36,30€. Con este pack, por solo 35€ recibes todo en un elegante estuche de madera que podrás reutilizar para siempre. ¡Ahorras 1,30€ y consigues el estuche gratis!\n\nUn regalo que transmite calidad, tradición y el amor por lo artesanal.",
+    longDescription: "**El sabor del verano en un estuche de madera premium**\n\n¿Buscas un regalo especial que transmita calidad y tradición? El Pack Fruta de Mikel's Fruit es la elección perfecta.\n\n**CONTENIDO DEL PACK:**\n\n- **1x Paraguayo en Almíbar 720g** - Nuestro producto estrella. Melocotón plano cultivado en Alcarràs, seleccionado a mano y preparado siguiendo métodos artesanales de generación en generación.\n\n- **1x Nectarina en Almíbar 720g** - El melocotón sin complejos: piel lisa, sabor intenso, carácter definido. Cultivada en nuestros campos y seleccionada en su momento de máxima expresión.\n\n- **1x Mermelada de Paraguayo Artesanal 250g** - 60% de fruta (3 veces más que la industria). Solo 4 ingredientes: paraguayo, agua, azúcar y zumo de limón natural. Sin conservantes, sin colorantes, sin espesantes.\n\n- **Estuche de madera premium** - Presentación elegante y reutilizable, perfecta para regalo. Un detalle que marca la diferencia.\n\n**¿Por qué elegir este pack?**\n\n**Fruta 100% artesanal** de nuestros campos de Alcarràs\n**Presentación premium** en estuche de madera\n**Sin aditivos artificiales** - Solo ingredientes naturales\n**Vegano y sin gluten** - Apto para todos\n**Regalo perfecto** para cualquier ocasión\n\n**Ahorro real**\n\nCuando compras los productos por separado pagas 36,30€. Con este pack, por solo 35€ recibes todo en un elegante estuche de madera que podrás reutilizar para siempre. ¡Ahorras 1,30€ y consigues el estuche gratis!\n\nUn regalo que transmite calidad, tradición y el amor por lo artesanal.",
     price: 35.00,
     originalPrice: 36.30,
     currency: "EUR",
@@ -506,7 +506,7 @@ export const products = [
     ],
     claims: ["Estuche de madera incluido", "Fruta 100% artesanal", "Sin aditivos", "Regalo perfecto", "Ahorra 1,30€ + estuche gratis"],
     badges: [
-      { text: "🎁 REGALO PREMIUM", textKey: "premium_gift", color: "bg-gradient-to-r from-amber-600 to-orange-600" }
+      { text: "REGALO PREMIUM", textKey: "premium_gift", color: "bg-gradient-to-r from-amber-600 to-orange-600" }
     ]
   },
   {
@@ -557,7 +557,7 @@ export const products = [
     ],
     claims: ["Estuche premium incluido", "Edición limitada", "Sin filtrar", "Solo 4,10€ más por el estuche"],
     badges: [
-      { text: "🍂 EDICIÓN TEMPRANO", textKey: "early_edition", color: "bg-gradient-to-r from-orange-600 to-amber-600" }
+      { text: "EDICIÓN TEMPRANO", textKey: "early_edition", color: "bg-gradient-to-r from-orange-600 to-amber-600" }
     ]
   },
   {

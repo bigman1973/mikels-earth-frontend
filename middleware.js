@@ -1,4 +1,5 @@
 import { next } from '@vercel/functions';
+import { shouldRenderSpaShell } from './src/utils/spaRoutes.js';
 
 const API_URL = globalThis.process?.env?.VITE_API_URL
   || 'https://mikels-earth-backend-production.up.railway.app';
@@ -117,6 +118,10 @@ export default async function middleware(request) {
   // El panel contiene una ruta dinámica de clientes. Servir directamente el
   // shell de React evita que Vercel responda 404 antes de que cargue el router.
   if (pathname === '/admin' || pathname.startsWith('/admin/')) {
+    return renderSpaShell(request);
+  }
+
+  if (shouldRenderSpaShell(pathname)) {
     return renderSpaShell(request);
   }
 

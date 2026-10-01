@@ -1,4 +1,4 @@
-import { ShoppingCart, User, Search, Menu } from 'lucide-react';
+import { ShoppingCart, Menu, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,280 +11,62 @@ const Header = () => {
   const { getCartCount, toggleCart } = useCart();
   const { t } = useTranslation();
   const cartCount = getCartCount();
+  const links = [
+    ['/tienda', 'nav.shop'],
+    ['/la-familia', 'nav.family'],
+    ['/nuestra-tierra', 'nav.land'],
+    ['/como-se-hace', 'nav.workshop'],
+    ['/nuestras-joyas', 'nav.jewels'],
+    ['/recetario', 'nav.recipes'],
+    ['/opiniones', 'nav.reviews'],
+    ['/horeca', 'nav.horecaB2B'],
+  ];
 
   return (
-    <header className="w-full">
-      {/* Top bar con redes sociales + HORECA */}
-      <div className="bg-mikels-dark text-white py-2" style={{backgroundColor: 'var(--mikels-gray-dark)'}}>
-        <div className="container mx-auto px-4 flex justify-between items-center">
-          <div className="flex gap-3">
-            <a
-              href="https://facebook.com/mikelsfruit"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-accent transition-colors"
-              aria-label="Facebook"
-            >
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-              </svg>
-            </a>
-            <a
-              href="https://instagram.com/mikelsfruit"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-accent transition-colors"
-              aria-label="Instagram"
-            >
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-              </svg>
-            </a>
-            <a
-              href="https://tiktok.com/@mikelsfruit"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-accent transition-colors"
-              aria-label="TikTok"
-            >
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
-              </svg>
-            </a>
-            <a
-              href="https://youtube.com/@Mikelsfruit"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-accent transition-colors"
-              aria-label="YouTube"
-            >
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-              </svg>
-            </a>
-            <Link
-              to="/blog"
-              className="hover:text-accent transition-colors flex items-center gap-1"
-              aria-label="Blog"
-            >
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
-              </svg>
-              <span className="text-xs font-medium">Blog</span>
+    <header className="sticky top-0 z-40 border-b border-stone-200 bg-[#f5efe4]/95 backdrop-blur">
+      <div className="container mx-auto flex h-16 items-center gap-4 px-4 md:h-18">
+        <Link to="/" className="flex shrink-0 items-center" aria-label="Mikel's Fruit">
+          <img src={logoMikelsFruit} alt="Mikel's Fruit" className="h-11 w-auto md:h-12" />
+        </Link>
+
+        <nav className="hidden min-w-0 flex-1 items-center gap-4 overflow-x-auto lg:flex" aria-label="Navegación principal">
+          {links.map(([to, key]) => (
+            <Link key={to} to={to} className="shrink-0 text-xs font-semibold uppercase tracking-wide text-[#1a1a1a] transition-colors hover:text-primary">
+              {t(key)}
             </Link>
-          </div>
-          {/* HORECA a la derecha en la barra superior, sin destacar */}
-          <div className="flex items-center">
-            <Link
-              to="/horeca"
-              className="text-xs font-medium hover:text-accent transition-colors uppercase tracking-wide flex items-center gap-1"
-            >
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/>
-              </svg>
-              HORECA B2B
-            </Link>
-            <LanguageSelector compact className="ml-3" />
-          </div>
+          ))}
+        </nav>
+
+        <div className="ml-auto flex items-center gap-2">
+          <LanguageSelector compact className="hidden md:flex" />
+          <button type="button" onClick={toggleCart} className="relative rounded-lg p-2 text-[#1a1a1a] hover:bg-white" aria-label="Carrito">
+            <ShoppingCart className="h-5 w-5" />
+            {cartCount > 0 && (
+              <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#1a1a1a] px-1 text-xs font-bold text-white">
+                {cartCount}
+              </span>
+            )}
+          </button>
+          <button type="button" className="rounded-lg p-2 text-[#1a1a1a] hover:bg-white lg:hidden" onClick={() => setMobileMenuOpen((open) => !open)} aria-expanded={mobileMenuOpen} aria-label="Menú">
+            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </div>
       </div>
 
-      {/* Logo section */}
-      <div className="py-4" style={{backgroundColor: 'var(--mikels-sun-light)'}}>
-        <div className="container mx-auto px-4 flex justify-center">
-          <Link to="/" className="flex items-center">
-            <img
-              src={logoMikelsFruit}
-              alt="Mikel's Fruit - Since 1819"
-              className="h-28 md:h-32 w-auto"
-            />
-          </Link>
-        </div>
-      </div>
-
-      {/* Navigation */}
-      <nav className="text-white" style={{backgroundColor: 'var(--mikels-gray-dark)'}}>
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-14">
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-6 mx-auto">
-              {/* TIENDA como primer campo, destacado con color rojo corporativo */}
-              <Link
-                to="/tienda"
-                className="text-base font-bold uppercase tracking-wider transition-all hover:opacity-80"
-                style={{
-                  color: 'var(--mikels-red)',
-                  textShadow: '0 0 1px rgba(205, 84, 91, 0.3)',
-                }}
-              >
-                {t('nav.shop')}
+      {mobileMenuOpen && (
+        <nav className="border-t border-stone-200 bg-[#f5efe4] lg:hidden" aria-label="Navegación móvil">
+          <div className="container mx-auto grid grid-cols-2 gap-x-5 gap-y-1 px-4 py-4">
+            {links.map(([to, key]) => (
+              <Link key={to} to={to} className="py-2 text-sm font-semibold text-[#1a1a1a]" onClick={() => setMobileMenuOpen(false)}>
+                {t(key)}
               </Link>
-              <Link
-                to="/la-familia"
-                className="text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
-              >
-                {t('nav.family')}
-              </Link>
-              <Link
-                to="/nuestra-tierra"
-                className="text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
-              >
-                {t('nav.land')}
-              </Link>
-              <Link
-                to="/como-se-hace"
-                className="text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
-              >
-                {t('nav.workshop')}
-              </Link>
-              <Link
-                to="/nuestras-joyas"
-                className="text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
-              >
-                {t('nav.jewels')}
-              </Link>
-              <Link
-                to="/recetario"
-                className="text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
-              >
-                {t('nav.recipes')}
-              </Link>
-              <Link
-                to="/opiniones"
-                className="text-sm font-medium hover:text-secondary transition-colors uppercase tracking-wide"
-              >
-                {t('nav.reviews')}
-              </Link>
+            ))}
+            <div className="col-span-2 border-t border-stone-200 pt-3">
+              <LanguageSelector />
             </div>
-
-            {/* Right icons */}
-            <div className="hidden md:flex items-center gap-4 ml-auto">
-              <button
-                className="hover:text-secondary transition-colors"
-                aria-label="Buscar"
-              >
-                <Search className="w-5 h-5" />
-              </button>
-              <button
-                onClick={toggleCart}
-                className="relative hover:text-secondary transition-colors"
-                aria-label="Carrito"
-              >
-                <ShoppingCart className="w-5 h-5" />
-                {cartCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-secondary text-primary text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
-                    {cartCount}
-                  </span>
-                )}
-              </button>
-              <Link
-                to="/login"
-                className="hover:text-secondary transition-colors"
-                aria-label="Usuario"
-              >
-                <User className="w-5 h-5" />
-              </Link>
-            </div>
-
-            {/* Mobile menu button */}
-            <button
-              className="md:hidden"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label="Menú"
-            >
-              <Menu className="w-6 h-6" />
-            </button>
           </div>
-
-          {/* Mobile Navigation */}
-          {mobileMenuOpen && (
-            <div className="md:hidden py-4 border-t border-white/10">
-              <div className="flex flex-col space-y-3">
-                {/* TIENDA como primer campo, destacado en móvil */}
-                <Link
-                  to="/tienda"
-                  className="text-base font-bold uppercase text-center py-2"
-                  style={{
-                    color: 'var(--mikels-red)',
-                  }}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {t('nav.shop')}
-                </Link>
-                <Link
-                  to="/la-familia"
-                  className="text-sm font-medium hover:text-secondary transition-colors uppercase"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {t('nav.family')}
-                </Link>
-                <Link
-                  to="/nuestra-tierra"
-                  className="text-sm font-medium hover:text-secondary transition-colors uppercase"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {t('nav.land')}
-                </Link>
-                <Link
-                  to="/como-se-hace"
-                  className="text-sm font-medium hover:text-secondary transition-colors uppercase"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {t('nav.workshop')}
-                </Link>
-                <Link
-                  to="/nuestras-joyas"
-                  className="text-sm font-medium hover:text-secondary transition-colors uppercase"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {t('nav.jewels')}
-                </Link>
-                <Link
-                  to="/recetario"
-                  className="text-sm font-medium hover:text-secondary transition-colors uppercase"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {t('nav.recipes')}
-                </Link>
-                <Link
-                  to="/opiniones"
-                  className="text-sm font-medium hover:text-secondary transition-colors uppercase"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {t('nav.reviews')}
-                </Link>
-                <Link
-                  to="/horeca"
-                  className="text-sm font-medium hover:text-secondary transition-colors uppercase"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {t('nav.horecaB2B')}
-                </Link>
-                <div className="pt-2">
-                  <LanguageSelector className="justify-center" />
-                </div>
-
-                <div className="flex items-center gap-4 pt-3 border-t border-white/10">
-                  <button aria-label="Buscar">
-                    <Search className="w-5 h-5" />
-                  </button>
-                  <button onClick={toggleCart} className="relative" aria-label="Carrito">
-                    <ShoppingCart className="w-5 h-5" />
-                    {cartCount > 0 && (
-                      <span className="absolute -top-2 -right-2 bg-secondary text-primary text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
-                        {cartCount}
-                      </span>
-                    )}
-                  </button>
-                  <Link to="/login" aria-label="Usuario">
-                    <User className="w-5 h-5" />
-                  </Link>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </nav>
+        </nav>
+      )}
     </header>
   );
 };

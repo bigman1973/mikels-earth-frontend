@@ -33,7 +33,7 @@ const applyEditorialOverrides = (product, language = 'es') => {
         ? 'Hand-peeled flat peach, water, sugar, lemon juice'
         : 'Paraguayo pelado, agua, azúcar, zumo de limón',
       badges: (normalizedProduct.badges || []).map((badge) => (
-        badge?.text === '🌍 ÚNICO EN EL MUNDO'
+        badge?.text === 'ÚNICO EN EL MUNDO'
           ? { ...badge, text: 'Pelado a mano, pieza a pieza', textKey: 'peeled_by_hand' }
           : badge
       )),

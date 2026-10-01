@@ -9,6 +9,7 @@ import SeoManager from './components/SeoManager';
 import './App.css';
 
 const CartDrawer = lazy(() => import('./components/cart/CartDrawer'));
+const CartRoute = lazy(() => import('./pages/CartRoute'));
 const NewsletterPopup = lazy(() => import('./components/NewsletterPopup'));
 
 const Home = lazy(() => import('./pages/Home'));
@@ -111,6 +112,7 @@ function App() {
                       <Route path="/producto/pack-aceite-ecologico-premium-estuche-regalo" element={<Navigate to="/producto/aceite-oliva-ecologico" replace />} />
                       <Route path="/producto/pack-temprano-premium" element={<Navigate to="/producto/aceite-temprano-sin-filtrar" replace />} />
                       <Route path="/producto/:slug" element={<ProductDetail />} />
+                      <Route path="/carrito" element={<CartRoute />} />
                       <Route path="/checkout" element={<Checkout />} />
                       <Route path="/order-success" element={<OrderSuccess />} />
                       <Route path="/subscription-success" element={<SubscriptionSuccess />} />

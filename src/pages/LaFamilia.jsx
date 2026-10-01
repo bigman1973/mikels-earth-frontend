@@ -162,58 +162,47 @@ const LaFamilia = () => {
         </div>
       </section>
 
-      {/* Valores Familiares */}
+      {/* Hechos verificables */}
       <section className="container mx-auto px-4 py-16">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-4xl font-bold text-primary text-center mb-12">
-            {t('family.values_title', { defaultValue: 'Los Valores que Nos Definen' })}
-          </h2>
-          
-          <div className="grid md:grid-cols-3 gap-8">
+        <div className="mx-auto max-w-5xl">
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {[
               {
-                title: "Tradición",
-                icon: "🌿",
-                text: "Más de 200 años de conocimiento transmitido de generación en generación. Cada receta, cada técnica, es un tesoro familiar que guardamos con orgullo."
+                title: 'De dónde viene',
+                text: 'La fruta, del Segrià. El aceite, de nuestros olivos en la campiña cordobesa. Son dos sitios distintos y lo decimos, porque no es lo mismo una cosa que la otra.',
               },
               {
-                title: "Calidad",
-                icon: "⭐",
-                text: "La calidad guía nuestras decisiones. La calidad no se negocia."
+                title: 'Qué lleva',
+                text: 'Paraguayo, agua, azúcar y zumo de limón. Eso es todo. El limón es lo que hace que la conserva aguante: no hacen falta conservantes ni colorantes.',
               },
               {
-                title: "Autenticidad",
-                icon: "❤️",
-                text: "Somos quienes somos. Una familia de Lleida que ama su tierra y sus productos. Sin artificios, sin aditivos, sin mentiras. Solo autenticidad."
+                title: 'Quién lo hace',
+                text: 'El aceite es nuestro, de principio a fin. La conserva la hace un productor que la elabora igual que se hace en casa: pelada a mano, pieza a pieza. Lo buscamos durante mucho tiempo, porque a máquina la fruta se deshace y casi nadie la envasa entera.',
               },
               {
-                title: "Sostenibilidad",
-                icon: "🌍",
-                text: "La tierra nos ha alimentado durante siete generaciones. Es nuestra responsabilidad cuidarla para las próximas siete. Agricultura sostenible, siempre."
+                title: 'Lo que está certificado',
+                text: 'Aceite ecológico con certificación. Y desde 2017, certificación Eco Garden, una de las más exigentes para exportar a Asia: solo tres empresas españolas la tienen.',
               },
               {
-                title: "Transparencia",
-                icon: "👁️",
-                text: "Contamos la receta y los ingredientes de cada producto con claridad."
+                title: 'Cuánto hay',
+                text: 'Una temporada al año y una cantidad limitada. Cuando se acaba, hay que esperar a la cosecha siguiente. No aspiramos a estar en todas partes.',
               },
               {
-                title: "Pasión",
-                icon: "🔥",
-                text: "Esto no es solo un negocio. Es nuestra vida, nuestra historia, nuestro legado. Cada producto lleva nuestra pasión en cada gota, en cada bocado."
-              }
+                title: 'Desde cuándo',
+                text: 'Las escrituras de la tierra que trabajamos datan de 1819. Siete generaciones después, la familia sigue en Alcarràs.',
+              },
             ].map((value, index) => (
-              <Motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
+              <Motion.article
+                key={value.title}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="bg-accent/20 p-6 rounded-lg text-center hover:shadow-lg transition-shadow"
+                transition={{ duration: 0.45, delay: index * 0.06 }}
+                className="border-t-2 border-primary bg-[#f5efe4] p-6"
               >
-                <div className="text-5xl mb-4">{value.icon}</div>
-                <h3 className="text-xl font-bold text-primary mb-3">{value.title}</h3>
-                <p className="text-gray-700">{value.text}</p>
-              </Motion.div>
+                <h2 className="text-xl font-semibold text-[#1a1a1a]">{value.title}</h2>
+                <p className="mt-4 leading-7 text-[#1a1a1a]">{value.text}</p>
+              </Motion.article>
             ))}
           </div>
         </div>

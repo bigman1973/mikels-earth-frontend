@@ -1,4 +1,5 @@
 import { useState } from 'react';
+// eslint-disable-next-line no-unused-vars -- JSX uses the namespace `<motion.*>`.
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
@@ -157,7 +158,7 @@ const Horeca = () => {
         setStatus('error');
         setMessage(data.error || 'Ha ocurrido un error. Por favor, inténtalo de nuevo o contáctanos por WhatsApp.');
       }
-    } catch (error) {
+    } catch {
       setStatus('error');
       setMessage('Error de conexión. Por favor, contáctanos directamente por WhatsApp o email.');
     }
@@ -455,7 +456,7 @@ const Horeca = () => {
               <div className="space-y-4">
                 <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                   <div className="flex-1">
-                    <p className="font-semibold text-gray-900">🫒 Aceite 5L (Caja 3 uds)</p>
+                    <p className="font-semibold text-gray-900">Aceite 5L (Caja 3 uds)</p>
                     <p className="text-sm text-gray-600">15 litros en total por caja</p>
                   </div>
                   <div className="flex items-center gap-2">
@@ -474,7 +475,7 @@ const Horeca = () => {
 
                 <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                   <div className="flex-1">
-                    <p className="font-semibold text-gray-900">🍂 {t('horeca.temprano_name')}</p>
+                    <p className="font-semibold text-gray-900">{t('horeca.temprano_name')}</p>
                     <p className="text-sm text-gray-600">{t('horeca.temprano_order_desc')}</p>
                   </div>
                   <div className="flex items-center gap-2">
@@ -647,9 +648,6 @@ const Horeca = () => {
               transition={{ delay: 0.5 }}
               className="text-center"
             >
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
-                <span className="text-3xl">🚚</span>
-              </div>
               <h3 className="text-xl font-bold text-primary mb-2">{t('horeca.benefit_delivery')}</h3>
               <p className="text-gray-600">{t('horeca.benefit_delivery_text')}</p>
             </motion.div>
@@ -660,9 +658,6 @@ const Horeca = () => {
               transition={{ delay: 0.6 }}
               className="text-center"
             >
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
-                <span className="text-3xl">💰</span>
-              </div>
               <h3 className="text-xl font-bold text-primary mb-2">{t('horeca.benefit_prices')}</h3>
               <p className="text-gray-600">{t('horeca.benefit_prices_text')}</p>
             </motion.div>
@@ -673,9 +668,6 @@ const Horeca = () => {
               transition={{ delay: 0.7 }}
               className="text-center"
             >
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
-                <span className="text-3xl">⭐</span>
-              </div>
               <h3 className="text-xl font-bold text-primary mb-2">{t('horeca.benefit_quality')}</h3>
               <p className="text-gray-600">{t('horeca.benefit_quality_text')}</p>
             </motion.div>
@@ -686,9 +678,6 @@ const Horeca = () => {
               transition={{ delay: 0.8 }}
               className="text-center"
             >
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
-                <span className="text-3xl">📞</span>
-              </div>
               <h3 className="text-xl font-bold text-primary mb-2">{t('horeca.benefit_attention')}</h3>
               <p className="text-gray-600">{t('horeca.benefit_attention_text')}</p>
             </motion.div>
@@ -699,9 +688,6 @@ const Horeca = () => {
               transition={{ delay: 0.9 }}
               className="text-center"
             >
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
-                <span className="text-3xl">🌿</span>
-              </div>
               <h3 className="text-xl font-bold text-primary mb-2">{t('horeca.benefit_natural')}</h3>
               <p className="text-gray-600">{t('horeca.benefit_natural_text')}</p>
             </motion.div>
@@ -712,9 +698,6 @@ const Horeca = () => {
               transition={{ delay: 1.0 }}
               className="text-center"
             >
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
-                <span className="text-3xl">📦</span>
-              </div>
               <h3 className="text-xl font-bold text-primary mb-2">{t('horeca.benefit_recurring')}</h3>
               <p className="text-gray-600">{t('horeca.benefit_recurring_text')}</p>
             </motion.div>
