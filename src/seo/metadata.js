@@ -62,12 +62,12 @@ const PRODUCT_SEO = {
     description: 'Nectarina cultivada en Alcarràs y envasada en almíbar suave. Sin conservantes ni colorantes. El verano en un tarro, todo el año.',
   },
   'aceite-oliva-ecologico': {
-    title: "AOVE Ecológico 500ml | Medalla de Oro Japón y NY | Mikel's",
-    description: 'Aceite de oliva virgen extra ecológico premiado con Medalla de Oro en Japón y Nueva York. Coupage de Picual, Hojiblanca y Arbequina. Botella de 500 ml.',
+    title: "AOVE Ecológico 500ml | Oro OLIVE JAPAN 2025 | Mikel's",
+    description: 'Aceite de oliva virgen extra ecológico. Seis medallas en cinco años seguidos: oro en NYIOOC 2022 y 2024, y en OLIVE JAPAN 2025. Botella de 500 ml.',
   },
   'aceite-temprano-sin-filtrar': {
-    title: 'AOVE Temprano sin Filtrar 500ml | Cosecha verde',
-    description: 'Aceitunas recogidas aún verdes y aceite sin filtrar: verde intenso, ligeramente picante y con toda la pulpa. Botella de 500 ml con estuche.',
+    title: "AOVE Temprano sin Filtrar 500ml | Plata OLIVE JAPAN 2026 | Mikel's",
+    description: 'Medalla de Plata en OLIVE JAPAN 2026, el concurso internacional de aceite de oliva de Tokio, en su primera participación.',
   },
   'aceite-5l-caja-3': {
     title: 'Aceite de Oliva Virgen Extra 5L | Garrafa hostelería',
@@ -91,7 +91,7 @@ const PRODUCT_SEO = {
   },
   'pack-aceite-ecologico-premium-estuche-regalo': {
     title: 'Pack Aceite Ecológico Premium | Estuche de regalo',
-    description: 'Nuestro aceite ecológico premiado con Medalla de Oro, presentado en estuche de regalo. Listo para regalar sin envolver nada.',
+    description: 'Aceite de oliva virgen extra ecológico presentado en estuche de regalo. Listo para regalar sin envolver nada.',
   },
   'mermelada-paraguayo': {
     title: "Mermelada de Paraguayo Artesanal · Pack de 3 · 60 % fruta | Mikel's Fruit",

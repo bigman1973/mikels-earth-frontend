@@ -181,7 +181,7 @@ const LaFamilia = () => {
               },
               {
                 title: 'Lo que está certificado',
-                text: 'Aceite ecológico con certificación. Y desde 2017, certificación Eco Garden, una de las más exigentes para exportar a Asia: solo tres empresas españolas la tienen.',
+                text: 'Aceite ecológico con certificación. Desde 2017, certificación Eco Garden, una de las más exigentes para exportar a Asia: solo tres empresas españolas la tienen. Y siete medallas en cinco años seguidos en los dos concursos internacionales de referencia, el NYIOOC de Nueva York y OLIVE JAPAN de Tokio.',
               },
               {
                 title: 'Cuánto hay',

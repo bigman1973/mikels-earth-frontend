@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { applyEditorialOverrides } from '../src/utils/productEditorialOverrides.js';
 
-test('shows the detailed Olive Japan award only on ecological oil', () => {
+test('shows the definitive award history only on ecological oil', () => {
   const ecological = applyEditorialOverrides({
     slug: 'aceite-oliva-ecologico',
     name: 'Aceite ecológico Premiado',
@@ -23,9 +23,28 @@ test('shows the detailed Olive Japan award only on ecological oil', () => {
   assert.deepEqual(ecological.tags, ['Ecológico']);
   assert.match(
     ecological.longDescription,
-    /Medalla de Oro en OLIVE JAPAN 2025 y Medalla de Plata en 2026, el concurso internacional de aceite de oliva de Tokio\./,
+    /\*\*Premiado cinco años seguidos\.\*\* Seis medallas en los dos concursos internacionales de referencia: oro en el NYIOOC de Nueva York en 2022 y 2024, y oro en OLIVE JAPAN de Tokio en 2025, más plata en 2023, 2022 y 2026\./,
   );
   assert.doesNotMatch(ecological.longDescription, /Japón & Nueva York/);
+});
+
+test('shows the Olive Japan 2026 silver medal only on early unfiltered oil', () => {
+  const earlyOil = applyEditorialOverrides({
+    slug: 'aceite-temprano-sin-filtrar',
+    name: 'Aceite temprano sin filtrar',
+    description: 'Aceite temprano',
+    longDescription: 'Texto anterior',
+    badges: [{ text: 'PREMIADO' }],
+  });
+
+  assert.deepEqual(earlyOil.badges, [{
+    text: 'Medalla de Plata · OLIVE JAPAN 2026',
+    detailOnly: true,
+  }]);
+  assert.match(
+    earlyOil.longDescription,
+    /\*\*Medalla de Plata en OLIVE JAPAN 2026\*\*, el concurso internacional de aceite de oliva de Tokio, en su primera participación\./,
+  );
 });
 
 test('removes decorative emoji and incomplete awards from other product metadata', () => {

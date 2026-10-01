@@ -87,12 +87,17 @@ export const applyEditorialOverrides = (product, language = 'es') => {
 
   if (product.slug === 'aceite-temprano-sin-filtrar') {
     const isEnglish = language === 'en';
+    const approvedAwardLine = '**Medalla de Plata en OLIVE JAPAN 2026**, el concurso internacional de aceite de oliva de Tokio, en su primera participación.';
 
     return {
       ...normalizedProduct,
       longDescription: isEnglish
-        ? 'First-harvest, unfiltered extra virgin olive oil. Green, fresh and slightly peppery, cold-pressed and ideal for salads, toast and carpaccios.'
-        : 'Aceite de oliva virgen extra de primera cosecha, sin filtrar. De perfil verde, fresco y ligeramente picante, prensado en frío e ideal para ensaladas, tostadas y carpaccios.',
+        ? `First-harvest, unfiltered extra virgin olive oil. Green, fresh and slightly peppery, cold-pressed and ideal for salads, toast and carpaccios.\n\n${approvedAwardLine}`
+        : `Aceite de oliva virgen extra de primera cosecha, sin filtrar. De perfil verde, fresco y ligeramente picante, prensado en frío e ideal para ensaladas, tostadas y carpaccios.\n\n${approvedAwardLine}`,
+      badges: [{
+        text: 'Medalla de Plata · OLIVE JAPAN 2026',
+        detailOnly: true,
+      }],
       tieredDiscount: (normalizedProduct.tieredDiscount || []).map((tier) => {
         const sanitizedTier = { ...tier };
         delete sanitizedTier.description;
@@ -114,9 +119,12 @@ export const applyEditorialOverrides = (product, language = 'es') => {
   }
 
   if (product.slug === 'aceite-oliva-ecologico') {
-    const approvedAwardLine = 'Medalla de Oro en OLIVE JAPAN 2025 y Medalla de Plata en 2026, el concurso internacional de aceite de oliva de Tokio.';
+    const approvedAwardLine = '**Premiado cinco años seguidos.** Seis medallas en los dos concursos internacionales de referencia: oro en el NYIOOC de Nueva York en 2022 y 2024, y oro en OLIVE JAPAN de Tokio en 2025, más plata en 2023, 2022 y 2026.';
     const descriptionWithoutObsoleteAward = (normalizedProduct.longDescription || normalizedProduct.description || '')
       .replace(/Medalla de Oro en Japón & Nueva York\.\s*/gi, '')
+      .replace(/Reconocido internacionalmente por su intensidad excepcional y equilibrio perfecto\.\s*/gi, '')
+      .replace(/El resultado: un aceite premiado que destaca en cada cata\.\s*/gi, '')
+      .replace(/Ideal para quienes buscan un aceite de autor, con personalidad y reconocimiento mundial\.\s*/gi, '')
       .trim();
 
     return {

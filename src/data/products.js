@@ -258,8 +258,8 @@ export const products = [
     id: 4,
     name: "Aceite de Oliva Virgen Extra Ecológico Mikel's Fruit",
     slug: "aceite-oliva-ecologico",
-    description: "Medalla de Oro en Japón & Nueva York. Coupage ecológico Picual, Hojiblanca y Arbequina. Reconocido internacionalmente por su intensidad excepcional y equilibrio perfecto.",
-    longDescription: "Medalla de Oro en Japón & Nueva York.\n\nCoupage de variedades Picual, Hojiblanca y Arbequina de cultivo ecológico. Reconocido internacionalmente por su intensidad excepcional y equilibrio perfecto.\n\nEl cultivo orgánico concentra sabores más potentes y complejos que el convencional. El resultado: un aceite premiado que destaca en cada cata.\n\nIdeal para quienes buscan un aceite de autor, con personalidad y reconocimiento mundial.\n\nVegano, Prensado en Frío, Sin Gluten, Versátil.",
+    description: "Coupage ecológico Picual, Hojiblanca y Arbequina. Botella de 500 ml.",
+    longDescription: "Coupage de variedades Picual, Hojiblanca y Arbequina de cultivo ecológico.\n\nVegano, Prensado en Frío, Sin Gluten, Versátil.",
     price: 13.50,
     currency: "EUR",
     image: "/images/aceite-ecologico-principal.jpg",
@@ -310,7 +310,7 @@ export const products = [
       }
     ],
     featured: true,
-    award: "Medalla de Oro - Japón & Nueva York",
+    award: "Medalla de Oro · OLIVE JAPAN 2025",
     badges: [
       { text: "MEDALLA DE ORO", textKey: "gold_medal", color: "bg-gradient-to-r from-yellow-500 to-yellow-600" },
       { text: "PREMIADO", textKey: "awarded", color: "bg-gradient-to-r from-purple-600 to-purple-700" }
