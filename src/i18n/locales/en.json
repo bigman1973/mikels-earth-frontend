@@ -132,7 +132,7 @@
     "seo_title": "Shop | Mikel's Fruit - Artisan Products",
     "seo_description": "Buy extra virgin olive oil, fruits in syrup and artisan jams. Free shipping on orders over €30.",
     "page_title": "Our Shop",
-    "page_subtitle": "Every product is a treasure crafted with over 200 years of family tradition.",
+    "page_subtitle": "Pocas referencias y una temporada al año. El aceite, de nuestros olivos en Córdoba. La conserva, de la fruta del Segrià.",
     "all_products": "All",
     "filter_by": "Filter by",
     "sort_by": "Sort by",
@@ -233,7 +233,7 @@
     "related_products": "You may also like",
     "reviews_count": "{{count}} reviews",
     "review_count_one": "{{count}} review",
-    "one_time": "One-time purchase"
+    "one_time": "Compra única"
   },
   "cart": {
     "title": "Your Cart",
@@ -432,11 +432,12 @@
     "home_preserve_quote": "“At home, we make preserves every summer, as we always have.”",
     "home_preserve_author": "Jordi Giró, seventh generation",
     "home_preserve_caption": "At home, every summer. This is how it has always been done.",
-    "jordi_text": "He is the seventh generation of a family of farmers from Alcarràs. He leads Farms Planet, where Mikel's Fruit and the export of the family's products were born. His work is to ensure that everything carrying the family name is made as it has always been made.",
+    "jordi_text": "Séptima generación de una familia de agricultores de Alcarràs. Dirige Farms Planet, desde donde nacieron Mikel's Fruit y la exportación de los productos de la casa. Su trabajo es que lo que lleva el nombre de la familia se haga como se ha hecho siempre.",
     "cta_title": "Be Part of Our Story",
     "cta_text": "When you choose Mikel's Fruit, you're not just buying a product. You become part of a tradition spanning more than 200 years. You join a family that believes in quality, authenticity and respect for the land.",
     "cta_products": "Discover Our Products",
-    "cta_workshop": "How it’s made"
+    "cta_workshop": "How it’s made",
+    "jordi_quote": "«En casa hacemos conserva cada verano, desde siempre. Lo único que he hecho es buscar a alguien que la hiciera igual.»"
   },
   "land": {
     "title": "Our Land",
@@ -482,7 +483,13 @@
     "cta_title": "Taste the Flavour of Our Land",
     "cta_text": "Every product we make carries the soul of these two lands. The Lleida sun, the Cordoba breeze, the work of seven generations.",
     "cta_products": "See Our Products",
-    "cta_visit": "Visit Our Fields"
+    "cta_visit": "Visit Our Fields",
+    "terroir_text": "Dos tierras y dos oficios distintos. La fruta, en el Segrià, donde la familia cultiva desde 1819. El aceite, en la campiña cordobesa, donde están nuestros olivos.",
+    "alcarras_p3": "El paraguayo llegó al Segrià en los años sesenta y setenta. Es una fruta difícil: delicada de recoger, delicada de pelar, y con una ventana de maduración de apenas unas semanas. Por eso hay poco, y por eso vale lo que vale.",
+    "terroir_characteristics": "Datos de la zona",
+    "temprano_text": "La aceituna se recoge antes de tiempo, todavía verde. Se saca menos aceite de cada kilo, y el que sale es más intenso: verde, con cuerpo y ligeramente picante. Es una producción limitada cada año; cuando se acaba, hay que esperar a la cosecha siguiente.",
+    "quote_text": "Jordi Giró · séptima generación",
+    "cta_button": "Ver los productos"
   },
   "jewels": {
     "title": "Our Treasures",
@@ -553,7 +560,25 @@
     "cta_title": "Discover Our Treasures",
     "cta_text": "Every product is an invitation to discover over 200 years of family tradition. Taste the artisan difference.",
     "go_to_shop": "Go to Shop",
-    "view_recipes": "View Recipes"
+    "view_recipes": "View Recipes",
+    "intro_p1": "Cuatro productos. No más. Cada uno está aquí porque tiene una razón para estar, no para llenar un catálogo.",
+    "intro_p2": "Los aceites salen de nuestros olivos en Córdoba. La conserva, de la fruta del Segrià y de una receta que en casa se hace cada verano desde hace generaciones.",
+    "paraguayo_description": "Paraguayo entero, pelado a mano pieza a pieza, en almíbar ligero. Cuatro ingredientes: fruta, agua, azúcar y zumo de limón.",
+    "oils_description": "Aceite de oliva virgen extra de nuestros olivos en la campiña cordobesa. Árboles centenarios, acidez por debajo de 0,3.",
+    "temprano_description": "Aceituna recogida verde, antes de tiempo. Menos aceite por kilo y más carácter. Producción limitada cada año.",
+    "packs_description": "Combinaciones pensadas para regalar: los aceites, la conserva o ambos, con la presentación resuelta.",
+    "special_origin_title": "Origen",
+    "special_origin_text": "La fruta, del Segrià. El aceite, de nuestros olivos en Córdoba. Sabemos de dónde viene cada cosa porque no compramos a ciegas.",
+    "special_artisanal_title": "Pelado a mano",
+    "special_artisanal_text": "El paraguayo se pela pieza a pieza. A máquina se deshace y lo que llega al tarro es puré. Por eso casi nadie lo envasa entero.",
+    "special_natural_title": "Cuatro ingredientes",
+    "special_natural_text": "Paraguayo, agua, azúcar y zumo de limón. El limón es lo que hace que la conserva aguante: no hacen falta conservantes.",
+    "special_tradition_title": "Una receta de casa",
+    "special_tradition_text": "No la inventó un departamento de producto. Es la que se hace en el mas cuando llega el paraguayo, y se ha hecho siempre.",
+    "special_quality_title": "Lo que se puede demostrar",
+    "special_quality_text": "Aceite ecológico certificado. Y desde 2017, certificación Eco Garden, una de las más exigentes para exportar a Asia: solo tres empresas españolas la tienen.",
+    "special_passion_title": "Poco y bien",
+    "special_passion_text": "Cuatro referencias, producción limitada y una temporada al año. No aspiramos a estar en todas partes."
   },
   "horeca": {
     "hero_title": "Olive oil for hospitality and HORECA professionals",
@@ -624,7 +649,8 @@
     "info_address": "Address",
     "contact_whatsapp": "Contact via WhatsApp",
     "meta_title": "Olive Oil for Hospitality | Wholesale EVOO for HORECA",
-    "meta_description": "Buy wholesale olive oil for hospitality. Premium EVOO direct from the producer for restaurants and Horeca businesses."
+    "meta_description": "Buy wholesale olive oil for hospitality. Premium EVOO direct from the producer for restaurants and Horeca businesses.",
+    "hero_desc": "Suministro directo del productor para restaurantes, hoteles y establecimientos de hostelería"
   },
   "blog": {
     "title": "Blog",

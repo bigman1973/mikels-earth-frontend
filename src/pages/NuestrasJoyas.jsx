@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars -- JSX uses the namespace `<motion.*>`.
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';

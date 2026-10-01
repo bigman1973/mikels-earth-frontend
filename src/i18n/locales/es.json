@@ -414,7 +414,8 @@
     "cta_title": "Forma Parte de Nuestra Historia",
     "cta_text": "Cuando eliges Mikel's Fruit, no solo compras un producto. Te conviertes en parte de una tradición de más de 200 años. Te unes a una familia que cree en la calidad, la autenticidad y el respeto por la tierra.",
     "cta_products": "Descubre Nuestros Productos",
-    "cta_workshop": "Cómo se hace"
+    "cta_workshop": "Cómo se hace",
+    "jordi_quote": "«En casa hacemos conserva cada verano, desde siempre. Lo único que he hecho es buscar a alguien que la hiciera igual.»"
   },
   "land": {
     "title": "Nuestra Tierra",
@@ -460,7 +461,13 @@
     "cta_title": "Prueba el Sabor de Nuestra Tierra",
     "cta_text": "Cada producto que elaboramos lleva dentro el alma de estas dos tierras. El sol de Lleida, la brisa de Cordoba, el trabajo de siete generaciones.",
     "cta_products": "Ver Nuestros Productos",
-    "cta_visit": "Visita Nuestros Campos"
+    "cta_visit": "Visita Nuestros Campos",
+    "terroir_text": "Dos tierras y dos oficios distintos. La fruta, en el Segrià, donde la familia cultiva desde 1819. El aceite, en la campiña cordobesa, donde están nuestros olivos.",
+    "alcarras_p3": "El paraguayo llegó al Segrià en los años sesenta y setenta. Es una fruta difícil: delicada de recoger, delicada de pelar, y con una ventana de maduración de apenas unas semanas. Por eso hay poco, y por eso vale lo que vale.",
+    "terroir_characteristics": "Datos de la zona",
+    "temprano_text": "La aceituna se recoge antes de tiempo, todavía verde. Se saca menos aceite de cada kilo, y el que sale es más intenso: verde, con cuerpo y ligeramente picante. Es una producción limitada cada año; cuando se acaba, hay que esperar a la cosecha siguiente.",
+    "quote_text": "Jordi Giró · séptima generación",
+    "cta_button": "Ver los productos"
   },
   "jewels": {
     "title": "Nuestras Joyas",
@@ -531,7 +538,25 @@
     "cta_title": "Descubre Nuestras Joyas",
     "cta_text": "Cada producto es una invitacion a descubrir mas de 200 anos de tradicion familiar. Prueba la diferencia de lo artesanal.",
     "go_to_shop": "Ir a la Tienda",
-    "view_recipes": "Ver Recetas"
+    "view_recipes": "Ver Recetas",
+    "intro_p1": "Cuatro productos. No más. Cada uno está aquí porque tiene una razón para estar, no para llenar un catálogo.",
+    "intro_p2": "Los aceites salen de nuestros olivos en Córdoba. La conserva, de la fruta del Segrià y de una receta que en casa se hace cada verano desde hace generaciones.",
+    "paraguayo_description": "Paraguayo entero, pelado a mano pieza a pieza, en almíbar ligero. Cuatro ingredientes: fruta, agua, azúcar y zumo de limón.",
+    "oils_description": "Aceite de oliva virgen extra de nuestros olivos en la campiña cordobesa. Árboles centenarios, acidez por debajo de 0,3.",
+    "temprano_description": "Aceituna recogida verde, antes de tiempo. Menos aceite por kilo y más carácter. Producción limitada cada año.",
+    "packs_description": "Combinaciones pensadas para regalar: los aceites, la conserva o ambos, con la presentación resuelta.",
+    "special_origin_title": "Origen",
+    "special_origin_text": "La fruta, del Segrià. El aceite, de nuestros olivos en Córdoba. Sabemos de dónde viene cada cosa porque no compramos a ciegas.",
+    "special_artisanal_title": "Pelado a mano",
+    "special_artisanal_text": "El paraguayo se pela pieza a pieza. A máquina se deshace y lo que llega al tarro es puré. Por eso casi nadie lo envasa entero.",
+    "special_natural_title": "Cuatro ingredientes",
+    "special_natural_text": "Paraguayo, agua, azúcar y zumo de limón. El limón es lo que hace que la conserva aguante: no hacen falta conservantes.",
+    "special_tradition_title": "Una receta de casa",
+    "special_tradition_text": "No la inventó un departamento de producto. Es la que se hace en el mas cuando llega el paraguayo, y se ha hecho siempre.",
+    "special_quality_title": "Lo que se puede demostrar",
+    "special_quality_text": "Aceite ecológico certificado. Y desde 2017, certificación Eco Garden, una de las más exigentes para exportar a Asia: solo tres empresas españolas la tienen.",
+    "special_passion_title": "Poco y bien",
+    "special_passion_text": "Cuatro referencias, producción limitada y una temporada al año. No aspiramos a estar en todas partes."
   },
   "horeca": {
     "hero_title": "Aceite de oliva para hostelería y profesionales Horeca",
@@ -602,7 +627,8 @@
     "info_address": "Dirección",
     "contact_whatsapp": "Contactar por WhatsApp",
     "meta_title": "Aceite de oliva para hostelería | AOVE al por mayor HORECA",
-    "meta_description": "Compra aceite de oliva al por mayor para hostelería. AOVE premium directo del productor para restaurantes y negocios Horeca."
+    "meta_description": "Compra aceite de oliva al por mayor para hostelería. AOVE premium directo del productor para restaurantes y negocios Horeca.",
+    "hero_desc": "Suministro directo del productor para restaurantes, hoteles y establecimientos de hostelería"
   },
   "blog": {
     "title": "Blog",
