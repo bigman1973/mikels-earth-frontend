@@ -1,6 +1,6 @@
 import { motion as Motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { MapPin, Sun, Droplets, Wind, Leaf, Heart } from 'lucide-react';
+import { Sun, Droplets, Wind, Leaf } from 'lucide-react';
 
 const NuestraTierra = () => {
   const { t } = useTranslation();
@@ -23,12 +23,9 @@ const NuestraTierra = () => {
           transition={{ duration: 0.8 }}
           className="text-center px-4 relative z-10"
         >
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <MapPin className="text-white drop-shadow-lg" size={40} />
-            <h1 className="text-5xl md:text-7xl font-script text-white drop-shadow-2xl">
-              {t('land.hero_title')}
-            </h1>
-          </div>
+          <h1 className="mb-4 text-5xl font-script text-white drop-shadow-2xl md:text-7xl">
+            {t('land.hero_title')}
+          </h1>
           <p className="text-xl md:text-2xl text-white/95 max-w-3xl mx-auto drop-shadow-lg">
             {t('land.hero_subtitle')}
           </p>
@@ -167,7 +164,6 @@ const NuestraTierra = () => {
               transition={{ duration: 0.8 }}
               className="text-center mb-12"
             >
-              <Heart className="mx-auto text-secondary mb-4" size={48} />
               <h2 className="text-4xl font-bold text-primary mb-6">
                 {t('land.evidence_title')}
               </h2>

@@ -2,7 +2,6 @@
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { Sparkles, Leaf, Droplet, Gift } from 'lucide-react';
 
 const NuestrasJoyas = () => {
   const { t } = useTranslation();
@@ -11,7 +10,6 @@ const NuestrasJoyas = () => {
       id: 'paraguayo',
       name: t('jewels.paraguayo_name'),
       tagline: t('jewels.paraguayo_tagline'),
-      icon: <Sparkles className="text-secondary" size={48} />,
       image: '/images/paraguayo-principal.webp',
       description: t('jewels.paraguayo_description'),
       features: [
@@ -29,7 +27,6 @@ const NuestrasJoyas = () => {
       id: 'aceites',
       name: t('jewels.oils_name'),
       tagline: t('jewels.oils_tagline'),
-      icon: <Droplet className="text-secondary" size={48} />,
       image: '/images/aceite-5l-portada.jpg',
       description: t('jewels.oils_description'),
       features: [
@@ -46,7 +43,6 @@ const NuestrasJoyas = () => {
       id: 'temprano',
       name: t('jewels.temprano_name'),
       tagline: t('jewels.temprano_tagline'),
-      icon: <Leaf className="text-secondary" size={48} />,
       image: '/images/aceite-temprano-principal.jpeg',
       description: t('jewels.temprano_description'),
       features: [
@@ -63,7 +59,6 @@ const NuestrasJoyas = () => {
       id: 'packs',
       name: t('jewels.packs_name'),
       tagline: t('jewels.packs_tagline'),
-      icon: <Gift className="text-secondary" size={48} />,
       image: '/images/pack-degustacion-principal.jpeg',
       description: t('jewels.packs_description'),
       features: [
@@ -90,7 +85,6 @@ const NuestrasJoyas = () => {
           transition={{ duration: 0.8 }}
           className="text-center px-4 relative z-10"
         >
-          <Sparkles className="mx-auto text-secondary mb-4" size={60} />
           <h1 className="text-5xl md:text-7xl font-script text-primary mb-6">
             {t('jewels.hero_title')}
           </h1>
@@ -171,8 +165,7 @@ const NuestrasJoyas = () => {
                   </div>
 
                   <div className="bg-accent/10 p-6 rounded-lg mb-6">
-                    <h4 className="font-bold text-primary mb-3 flex items-center gap-2">
-                      <Sparkles size={20} className="text-secondary" />
+                    <h4 className="mb-3 font-bold text-primary">
                       {t('jewels.story_label')}
                     </h4>
                     <p className="text-gray-700 italic leading-relaxed">

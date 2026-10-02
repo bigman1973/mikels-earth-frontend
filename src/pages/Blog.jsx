@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { Calendar, User, ArrowRight, Loader2, BookOpen } from 'lucide-react';
+import { Calendar, ArrowRight, Loader2 } from 'lucide-react';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://mikels-earth-backend-production.up.railway.app';
 
@@ -67,8 +67,7 @@ const Blog = () => {
             transition={{ duration: 0.6 }}
             className="text-center max-w-3xl mx-auto"
           >
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <BookOpen className="w-8 h-8" style={{ color: 'var(--mikels-green)' }} />
+            <div className="mb-4">
               <span 
                 className="text-sm font-semibold uppercase tracking-wider"
                 style={{ color: 'var(--mikels-green)' }}
@@ -124,11 +123,7 @@ const Blog = () => {
             </div>
           ) : posts.length === 0 ? (
             <div className="text-center py-20">
-              <BookOpen 
-                className="w-16 h-16 mx-auto mb-4" 
-                style={{ color: 'var(--mikels-gray-light)' }} 
-              />
-              <h2 
+              <h2
                 className="text-2xl font-bold mb-4"
                 style={{ 
                   fontFamily: 'Georgia, serif', 

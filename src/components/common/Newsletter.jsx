@@ -32,7 +32,6 @@ const Newsletter = ({ variant = 'default' }) => {
 
   return (
     <div className="rounded-2xl bg-gradient-to-r from-primary to-accent p-8 text-center shadow-2xl md:p-12">
-      <Mail className="mx-auto mb-4 text-secondary" size={48} />
       <h3 className="mb-4 text-3xl font-bold text-white md:text-4xl">
         {t('newsletter.join_title')}
       </h3>

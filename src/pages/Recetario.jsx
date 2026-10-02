@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion as Motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
-import { ChefHat, Clock, Users, Flame } from 'lucide-react';
+import { Clock, Users } from 'lucide-react';
 
 const Recetario = () => {
   const { t } = useTranslation();
@@ -83,7 +83,6 @@ const Recetario = () => {
           transition={{ duration: 0.8 }}
           className="text-center px-4"
         >
-          <ChefHat className="mx-auto text-secondary mb-4" size={60} />
           <h1 className="text-5xl md:text-7xl font-script text-primary mb-6">
             {t('recipes_data.hero_title')}
           </h1>
@@ -221,8 +220,7 @@ const Recetario = () => {
 
                       {/* Tips */}
                       <div className="bg-accent/10 p-4 rounded-lg">
-                        <h4 className="font-bold text-primary mb-2 flex items-center gap-2">
-                          <Flame size={16} className="text-secondary" />
+                        <h4 className="mb-2 font-bold text-primary">
                           {t('recipes_data.chef_tip')}
                         </h4>
                         <p className="text-sm text-gray-700 italic">{t(`recipes_data.${id}.tips`)}</p>

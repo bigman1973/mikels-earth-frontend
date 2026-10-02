@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { ArrowRight, Heart, Leaf, Award, ShoppingBag } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import Newsletter from '../components/common/Newsletter';
 import ReviewCarousel from '../components/ReviewCarousel';
@@ -108,49 +108,37 @@ const Home = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
             {[
               {
-                icon: <Heart className="text-secondary" size={48} />,
                 title: t('home.pillar_tradition_title'),
                 text: t('home.pillar_tradition_text'),
                 link: "/la-familia"
               },
               {
-                icon: <Leaf className="text-secondary" size={48} />,
                 title: t('home.pillar_terroir_title'),
                 text: t('home.pillar_terroir_text'),
-                // Córdoba remains unchanged pending Jordi's confirmation of its origin.
                 link: "/nuestra-tierra"
               },
               {
-                icon: <Award className="text-secondary" size={48} />,
                 title: t('home.pillar_craft_title'),
                 text: t('home.pillar_craft_text'),
                 link: "/como-se-hace"
               },
               {
-                icon: <ShoppingBag className="text-secondary" size={48} />,
                 title: t('home.pillar_ingredients_title'),
                 text: t('home.pillar_ingredients_text'),
-                link: "/tienda",
-                linkText: t('home.view_products')
+                link: "/tienda"
               }
             ].map((pillar, index) => (
               <div key={index}>
                 <Link
                   to={pillar.link}
-                  className="block bg-white p-8 rounded-xl shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2 h-full"
+                  className="block h-full rounded-xl bg-white p-8 shadow-lg transition-all hover:-translate-y-2 hover:shadow-2xl"
                 >
-                  <div className="flex justify-center mb-6">
-                    {pillar.icon}
-                  </div>
-                  <h3 className="text-2xl font-bold text-primary mb-4 text-center">
+                  <h3 className="mb-8 text-center text-2xl font-medium text-primary">
                     {pillar.title}
                   </h3>
-                  <p className="text-gray-700 text-center leading-relaxed mb-4">
+                  <p className="text-center leading-relaxed text-gray-700">
                     {pillar.text}
                   </p>
-                  <div className="text-center text-secondary font-semibold">
-                    {pillar.linkText || t('home.discover_more')}
-                  </div>
                 </Link>
               </div>
             ))}
