@@ -91,6 +91,6 @@ test('reservation purchase surfaces use the saved reservation contract', async (
   assert.match(products, /to=\{`\/producto\/\$\{reservationProduct\.slug\}`\}/);
   assert.match(footer, /new Date\(\)\.getFullYear\(\)/);
   assert.match(footer, /t\('footer\.copyright', \{ year: currentYear \}\)/);
-  assert.match(es, /Copyright © \{\{year\}\} Mikel's Fruit/);
-  assert.match(en, /Copyright © \{\{year\}\} Mikel's Fruit/);
+  assert.match(es, /© \{\{year\}\} Farms Planet SL · Mikel's Fruit es una marca registrada/);
+  assert.match(en, /© \{\{year\}\} Farms Planet SL · Mikel's Fruit es una marca registrada/);
 });
