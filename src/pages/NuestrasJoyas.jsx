@@ -43,6 +43,7 @@ const NuestrasJoyas = () => {
       id: 'temprano',
       name: t('jewels.temprano_name'),
       tagline: t('jewels.temprano_tagline'),
+      badge: t('jewels.temprano_reservation_badge'),
       image: '/images/aceite-temprano-principal.jpeg',
       description: t('jewels.temprano_description'),
       features: [
@@ -138,6 +139,11 @@ const NuestrasJoyas = () => {
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                       />
                     </div>
+                    {collection.badge && (
+                      <span className="absolute -top-4 left-4 rounded-full bg-primary px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white shadow-lg">
+                        {collection.badge}
+                      </span>
+                    )}
                     <div className="absolute -top-4 -right-4 bg-secondary text-white px-6 py-2 rounded-full font-bold shadow-lg">
                       {collection.tagline}
                     </div>
