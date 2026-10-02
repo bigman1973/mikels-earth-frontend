@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { createCheckoutSession, createSubscriptionCheckout } from '../services/stripeService';
 import { formatEuro } from '../utils/formatMoney';
+import { deliveryEligibility } from '../utils/deliveryPolicy';
 
 const Checkout = () => {
   const { cart, getCartTotal, getItemPrice, appliedDiscount, getDiscountAmount, updateItemPrices } = useCart();
@@ -66,6 +67,16 @@ const Checkout = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       setError('Por favor, introduce un email válido');
+      return false;
+    }
+
+    const eligibility = deliveryEligibility({
+      country: formData.country,
+      postalCode: formData.postal_code,
+      orderTotal: getCartTotal(),
+    });
+    if (!eligibility.eligible) {
+      setError(eligibility.message);
       return false;
     }
     
@@ -212,6 +223,10 @@ const Checkout = () => {
           {t('checkout.title')}
         </h1>
 
+        <p className="mx-auto mb-8 max-w-3xl rounded-lg border border-stone-300 bg-[#f5efe4] px-4 py-3 text-center text-sm text-[#1a1a1a]">
+          {t('delivery.notice')}
+        </p>
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Checkout Form */}
           <div className="lg:col-span-2">
@@ -326,7 +341,6 @@ const Checkout = () => {
                     >
                       <option value="España">{t('checkout.spain')}</option>
                       <option value="Portugal">Portugal</option>
-                      <option value="Francia">{t('checkout.france')}</option>
                     </select>
                   </div>
 

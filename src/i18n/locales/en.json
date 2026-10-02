@@ -131,7 +131,7 @@
   },
   "products": {
     "seo_title": "Shop | Mikel's Fruit - Artisan Products",
-    "seo_description": "Buy extra virgin olive oil, fruits in syrup and artisan jams. Free shipping on orders over €30.",
+    "seo_description": "Compra aceite de oliva virgen extra, frutas en almíbar y mermeladas artesanales. Envío gratuito en península, Portugal y Baleares; pedido mínimo de 59 € en Baleares.",
     "page_title": "Our Shop",
     "page_subtitle": "Pocas referencias y una temporada al año. El aceite, de nuestros olivos en Córdoba. La conserva, de la fruta del Segrià.",
     "all_products": "All",
@@ -191,7 +191,7 @@
     "add_to_cart": "Add to cart",
     "added": "Added",
     "free_shipping": "Free shipping",
-    "free_shipping_text": "On orders over €49",
+    "free_shipping_text": "Envío gratuito en península, Portugal y Baleares",
     "secure_payment": "Secure payment",
     "secure_payment_text": "100% secure transactions",
     "fast_delivery": "Fast delivery",
@@ -251,9 +251,12 @@
     "continue_shopping": "Continue shopping",
     "remove": "Remove",
     "quantity": "Quantity",
-    "free_shipping_threshold": "Free shipping on orders over €30!",
-    "free_shipping_remaining": "You're {{amount}}€ away from free shipping",
+    "free_shipping_threshold": "Envío gratuito en todos los destinos disponibles",
+    "free_shipping_remaining": "En Baleares, pedido mínimo de 59 €",
     "add_products": "Add products to start shopping"
+  },
+  "delivery": {
+    "notice": "Envío gratuito en península, Portugal y Baleares. En Baleares, pedido mínimo de 59 €. No enviamos a Canarias, Ceuta ni Melilla."
   },
   "checkout": {
     "title": "Checkout",

@@ -153,6 +153,10 @@ const CartDrawer = () => {
                   <span className="text-2xl font-bold text-price">{formatEuro(getCartTotal())}</span>
                 </div>
 
+                <p className="mt-3 text-xs leading-5 text-[#1a1a1a]">
+                  {t('delivery.notice')}
+                </p>
+
                 {!appliedDiscount && (
                   <div className="mt-3">
                     <button

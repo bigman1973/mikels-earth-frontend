@@ -131,7 +131,7 @@
   },
   "products": {
     "seo_title": "Tienda | Mikel's Fruit - Productos Artesanales",
-    "seo_description": "Compra aceite de oliva virgen extra, frutas en almíbar y mermeladas artesanales. Envío gratuito en pedidos superiores a 30€.",
+    "seo_description": "Compra aceite de oliva virgen extra, frutas en almíbar y mermeladas artesanales. Envío gratuito en península, Portugal y Baleares; pedido mínimo de 59 € en Baleares.",
     "page_title": "Nuestra Tienda",
     "page_subtitle": "Pocas referencias y una temporada al año. El aceite, de nuestros olivos en Córdoba. La conserva, de la fruta del Segrià.",
     "all_products": "Todos",
@@ -191,7 +191,7 @@
     "add_to_cart": "Añadir al carrito",
     "added": "Añadido",
     "free_shipping": "Envío gratis",
-    "free_shipping_text": "En pedidos superiores a 49€",
+    "free_shipping_text": "Envío gratuito en península, Portugal y Baleares",
     "secure_payment": "Pago seguro",
     "secure_payment_text": "Transacciones 100% seguras",
     "fast_delivery": "Entrega rápida",
@@ -251,9 +251,12 @@
     "continue_shopping": "Seguir comprando",
     "remove": "Eliminar",
     "quantity": "Cantidad",
-    "free_shipping_threshold": "¡Envío gratis en pedidos superiores a 30€!",
-    "free_shipping_remaining": "Te faltan {{amount}}€ para envío gratis",
+    "free_shipping_threshold": "Envío gratuito en todos los destinos disponibles",
+    "free_shipping_remaining": "En Baleares, pedido mínimo de 59 €",
     "add_products": "Añade productos para comenzar tu compra"
+  },
+  "delivery": {
+    "notice": "Envío gratuito en península, Portugal y Baleares. En Baleares, pedido mínimo de 59 €. No enviamos a Canarias, Ceuta ni Melilla."
   },
   "checkout": {
     "title": "Finalizar Compra",

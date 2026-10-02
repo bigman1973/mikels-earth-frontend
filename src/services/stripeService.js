@@ -54,7 +54,7 @@ export const createCheckoutSession = async (cartItems, customerInfo) => {
         err.priceUpdates = errorData.price_updates;
         throw err;
       }
-      throw new Error(errorData.error || 'Error al crear la sesión de pago');
+      throw new Error(errorData.message || errorData.error || 'Error al crear la sesión de pago');
     }
 
     const { sessionId, url, order_number } = await response.json();
@@ -142,4 +142,3 @@ export const getSessionStatus = async (sessionId) => {
     throw error;
   }
 };
-

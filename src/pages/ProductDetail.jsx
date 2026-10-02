@@ -673,6 +673,10 @@ const ProductDetail = () => {
                 </button>
               )}
 
+              <p className="mt-4 rounded-lg border border-stone-300 bg-[#f5efe4] px-4 py-3 text-sm leading-6 text-[#1a1a1a]">
+                {t('delivery.notice')}
+              </p>
+
               {/* Trust badges - Mensajes de confianza */}
               <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="flex items-center gap-2 text-sm text-gray-600">
