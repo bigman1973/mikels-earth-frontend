@@ -26,20 +26,18 @@ test('routes both confirmation paths to the real confirmation component', async 
 });
 
 test('confirmation page renders persisted order details and confirmation notice', async () => {
-  const page = await read('src/pages/OrderSuccess.jsx');
-  for (const requiredDetail of [
-    'order.order_number',
-    'order.items',
-    'order.total',
-    'shipping_address',
-    'confirmation_sent',
-  ]) {
-    assert.match(page, new RegExp(requiredDetail.replace('.', '\\.')));
+  const [page, receipt] = await Promise.all([
+    read('src/pages/OrderSuccess.jsx'),
+    read('src/components/orders/OrderReceipt.jsx'),
+  ]);
+  assert.match(page, /sessionData\?\.order\?\.receipt/);
+  assert.match(page, /<OrderReceipt receipt=\{receipt\}>/);
+  assert.doesNotMatch(page, /formatEuro|toFixed\(/);
+  for (const detail of ['receipt.order_number', 'receipt.lines', 'total_display', 'shipping.lines', 'confirmation.sent']) {
+    assert.match(receipt, new RegExp(detail.replace('.', '\\.')));
   }
-  assert.match(page, /formatEuro/);
   assert.match(page, /order_pending/);
   assert.match(page, /Estamos comprobando tu pedido/);
-  assert.match(page, /sessionData\.confirmation_sent/);
 });
 
 test('stock controls retain a backend-enforced checkout boundary', async () => {
