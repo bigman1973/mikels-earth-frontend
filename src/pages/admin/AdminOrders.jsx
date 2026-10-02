@@ -184,6 +184,12 @@ export default function AdminOrders() {
     orange: 'bg-orange-500/10 text-orange-400 border-orange-500/20',
   };
 
+  const confirmationConfig = {
+    accepted: { label: 'Confirmación enviada', className: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' },
+    failed: { label: 'Confirmación no enviada', className: 'bg-red-500/10 text-red-400 border-red-500/20' },
+    pending: { label: 'Confirmación pendiente', className: 'bg-amber-500/10 text-amber-400 border-amber-500/20' },
+  };
+
   // Generar opciones de meses disponibles a partir de los pedidos
   const monthOptions = (() => {
     const months = new Set();
@@ -372,6 +378,8 @@ export default function AdminOrders() {
               const orderNum = orders.length - orders.indexOf(order);
               const isExpanded = expandedOrder === order.id;
               const willBeInvoice = order.needs_invoice && order.fiscal_nif;
+              const confirmation = confirmationConfig[order.confirmation_delivery?.status] || confirmationConfig.pending;
+              const confirmationError = order.confirmation_delivery?.error;
               
               return (
                 <div key={order.id} className="bg-white/[0.02] rounded-xl border border-white/5 hover:border-white/10 transition-colors overflow-hidden">
@@ -384,6 +392,12 @@ export default function AdminOrders() {
                           <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-semibold rounded-lg border ${colorMap[status.color]}`}>
                             <span className="w-1.5 h-1.5 rounded-full bg-current"></span>
                             {status.label}
+                          </span>
+                          <span
+                            title={confirmationError || 'Estado de aceptación del evento de confirmación por Klaviyo'}
+                            className={`inline-flex items-center gap-1 px-2 py-0.5 text-[10px] rounded-md border font-medium ${confirmation.className}`}
+                          >
+                            {confirmation.label}
                           </span>
                           {order.holded_id && (
                             <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-500/10 text-emerald-400 text-[10px] rounded-md border border-emerald-500/20 font-medium">
@@ -555,6 +569,20 @@ export default function AdminOrders() {
                             </div>
                           )}
                         </div>
+                      </div>
+
+                      <div className="mt-4 pt-4 border-t border-white/5">
+                        <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Confirmación de pedido</h4>
+                        <p className={`text-sm ${confirmation.className.includes('red-') ? 'text-red-400' : confirmation.className.includes('emerald-') ? 'text-emerald-400' : 'text-amber-400'}`}>
+                          {confirmation.label}
+                        </p>
+                        {order.confirmation_delivery?.attempted_at && (
+                          <p className="text-xs text-gray-500 mt-1">Intento: {new Date(order.confirmation_delivery.attempted_at).toLocaleString('es-ES')}</p>
+                        )}
+                        {confirmationError && <p className="text-xs text-red-300 mt-2 break-words">Error: {confirmationError}</p>}
+                        {order.confirmation_delivery?.status === 'failed' && (
+                          <p className="text-xs text-gray-500 mt-2">Alarma interna: {order.confirmation_delivery.alert_sent ? 'enviada a info@mikels.es' : 'no enviada'}</p>
+                        )}
                       </div>
 
                       {/* Holded info */}

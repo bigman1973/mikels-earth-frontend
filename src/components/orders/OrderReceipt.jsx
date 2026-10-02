@@ -60,6 +60,12 @@ const OrderReceipt = ({ receipt, children }) => {
           {shipping.phone && <p>Teléfono: {shipping.phone}</p>}
         </DetailBlock>
 
+        {receipt.notes && (
+          <DetailBlock title="Notas del pedido">
+            <p className="whitespace-pre-line">{receipt.notes}</p>
+          </DetailBlock>
+        )}
+
         {billing.requested && (
           <DetailBlock title="Datos de factura">
             {(billing.lines || []).map((line) => <p key={line}>{line}</p>)}
