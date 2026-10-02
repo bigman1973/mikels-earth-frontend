@@ -1,3 +1,5 @@
+import logoMikelsFruit from '../../assets/mikels-fruit-logo-bn-1600.png';
+
 const DetailBlock = ({ title, children }) => (
   <section className="border-t border-stone-200 pt-5">
     <h2 className="mb-2 font-serif text-lg font-semibold text-[#1a1a1a]">{title}</h2>
@@ -17,7 +19,7 @@ const OrderReceipt = ({ receipt, children }) => {
       <header className="border-b border-stone-200 bg-[#f5efe4] px-6 py-7 text-center sm:px-10">
         <img
           className="mx-auto h-auto w-36"
-          src={receipt.brand?.logo_url || '/logo-mikels-fruit.png'}
+          src={logoMikelsFruit}
           alt={receipt.brand?.name || "Mikel's Fruit"}
         />
       </header>
