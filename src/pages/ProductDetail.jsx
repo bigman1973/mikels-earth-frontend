@@ -353,7 +353,11 @@ const ProductDetail = () => {
                 )}
                 {product.tieredDiscount && !hasDiscount && (
                   <div className="space-y-2 text-sm text-[#1a1a1a]">
-                    <p className="text-base font-semibold">{t('product_detail.volume_discounts')}</p>
+                    <p className="text-base font-semibold">
+                      {product.tieredDiscount.some((tier) => Number(tier.bundleQuantity) === 12 && Number(tier.paidQuantity) === 11)
+                        ? t('product_detail.complete_box')
+                        : t('product_detail.volume_discounts')}
+                    </p>
                     {product.tieredDiscount.map((tier, index) => {
                       const isReservationBox = Number(tier.bundleQuantity) === 12 && Number(tier.paidQuantity) === 11;
                       const isBestValue = tier.minQuantity === 36; // Destacar la opción 3+1
@@ -371,7 +375,7 @@ const ProductDetail = () => {
                         >
                           <div className="mb-1 flex items-center justify-between">
                             <span className="font-semibold">
-                              {actualQuantity} {t('product_detail.units')} ({tier.label})
+                              {isReservationBox ? tier.label : `${actualQuantity} ${t('product_detail.units')} (${tier.label})`}
                             </span>
                           </div>
                           {tier.description && (
@@ -380,10 +384,10 @@ const ProductDetail = () => {
                           <div className="text-xs space-y-0.5 mb-2">
                             {isReservationBox && <p className="font-semibold">Caja de 12: pagas 11 y recibes 12</p>}
                             {tier.discount > 0 && <p className="font-semibold">{t('product_detail.discount_percent', { percent: tier.discount })}</p>}
-                            <p>{formatEuro(pricePerUnit)} / {t('product_detail.units')}</p>
+                            <p>{formatEuro(pricePerUnit)} / {isReservationBox ? t('product_detail.unit') : t('product_detail.units')}</p>
                             <p className="font-bold text-price">
                               {t('product_detail.total_price', { price: formatEuro(totalPrice) })}
-                              {savings > 0 && <span className="ml-1 text-[#1a1a1a]">({t('product_detail.you_save', { amount: formatEuro(savings) })})</span>}
+                              {savings > 0 && <span className="text-[#1a1a1a]"> {' '}({t('product_detail.you_save', { amount: formatEuro(savings) })})</span>}
                             </p>
                           </div>
                           <button

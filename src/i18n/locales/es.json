@@ -217,6 +217,8 @@
     "total_price": "Total: {{price}}",
     "you_save": "ahorras {{amount}}",
     "volume_discounts": "Descuentos por volumen:",
+    "complete_box": "Caja completa",
+    "unit": "unidad",
     "units": "unidades",
     "best_value": "MEJOR VALOR",
     "free_shipping_badge": "ENVÍO GRATIS",
