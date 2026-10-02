@@ -44,10 +44,6 @@ export const products = [
       { value: "quarterly", label: "Trimestral", discount: 8 },
       { value: "biannual", label: "Semestral", discount: 7 }
     ],
-    volumeDiscount: {
-      minQuantity: 3,
-      discount: 9.09
-    },
     freeShipping: true,
     claims: ["Envío gratis", "Formato ahorro", "De nuestros olivares de Córdoba y Lleida"],
     badges: [
@@ -88,10 +84,6 @@ export const products = [
       { value: "quarterly", label: "Trimestral", discount: 8 },
       { value: "biannual", label: "Semestral", discount: 7 }
     ],
-    volumeDiscount: {
-      minQuantity: 12,
-      discount: 8
-    },
     badges: [
       { text: "ÚNICO EN EL MUNDO", textKey: "unique_world", color: "bg-gradient-to-r from-blue-600 to-purple-600" }
     ]
@@ -193,10 +185,6 @@ export const products = [
       { value: "quarterly", label: "Trimestral", discount: 8 },
       { value: "biannual", label: "Semestral", discount: 7 }
     ],
-    volumeDiscount: {
-      minQuantity: 12,
-      discount: 8
-    }
   },
   {
 
@@ -242,10 +230,6 @@ export const products = [
       { value: "quarterly", label: "Trimestral", discount: 8 },
       { value: "biannual", label: "Semestral", discount: 7 }
     ],
-    volumeDiscount: {
-      minQuantity: 12,
-      discount: 10
-    },
     addons: [
       {
         productSlug: "estuche-regalo-virgen-extra",
@@ -299,10 +283,6 @@ export const products = [
       { value: "quarterly", label: "Trimestral", discount: 8 },
       { value: "biannual", label: "Semestral", discount: 7 }
     ],
-    volumeDiscount: {
-      minQuantity: 12,
-      discount: 10
-    },
     addons: [
       {
         productSlug: "estuche-regalo-ecologico",
@@ -350,10 +330,6 @@ export const products = [
       { value: 'quarterly', label: 'Trimestral', discount: 8 },
       { value: 'semiannual', label: 'Semestral', discount: 7 }
     ],
-    volumeDiscount: {
-      minQuantity: 12,
-      discount: 10
-    },
     subscriptionTerms: {
       duration: 12,
       renewalPolicy: "Los precios se revisan anualmente. Al finalizar el periodo, podrás cancelar o renovar tu suscripción."
@@ -392,10 +368,6 @@ export const products = [
       { value: "quarterly", label: "Trimestral", discount: 8 },
       { value: "biannual", label: "Semestral", discount: 7 }
     ],
-    volumeDiscount: {
-      minQuantity: 12,
-      discount: 8
-    },
     claims: ["4 ingredientes naturales", "60% de fruta", "3 veces más fruta que la industria", "Sin conservantes", "Sin colorantes", "Sin espesantes"]
   },
   {
