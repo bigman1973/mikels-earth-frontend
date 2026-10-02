@@ -20,18 +20,26 @@ test('new route navigation starts at the top while browser history restores its 
   assert.equal(scrollTargetForNavigation(true, 'initial-entry'), null);
 });
 
-test('global scroll restoration records each location and uses manual browser restoration', () => {
+test('global scroll restoration resets new routes and preserves native browser history', () => {
   const component = source('src/components/ScrollRestoration.jsx');
   const app = source('src/App.jsx');
 
   assert.match(component, /useLocation\(\)/);
   assert.match(component, /useNavigationType\(\)/);
-  assert.match(component, /window\.history\.scrollRestoration = 'manual'/);
+  assert.doesNotMatch(component, /window\.history\.scrollRestoration = 'manual'/);
+  assert.match(component, /window\.history\.pushState = wrapHistoryWrite/);
+  assert.match(component, /window\.history\.replaceState = wrapHistoryWrite/);
+  assert.match(component, /document\.addEventListener\('click', resetForInternalLink, true\)/);
+  assert.match(component, /event\.target\.closest\('a\[href\]'\)/);
+  assert.match(component, /rememberScrollPosition\(currentLocationKey\.current/);
+  assert.match(component, /mikelsScrollPosition: \{ left: savedPosition\.left, top: savedPosition\.top \}/);
+  assert.match(component, /routeTransitioning\.current = true/);
   assert.match(component, /root\.style\.scrollBehavior = 'auto'/);
   assert.match(component, /window\.scrollTo\(\{ left: target\.left, top: target\.top, behavior: 'auto' \}\)/);
   assert.match(component, /rememberScrollPosition\(location\.key/);
   assert.match(component, /window\.addEventListener\('popstate'/);
   assert.match(component, /navigationType === 'POP'/);
+  assert.match(component, /if \(isHistoryNavigation\) return undefined/);
   assert.match(component, /returnedWithBrowserHistory\.current/);
   assert.match(app, /<ScrollRestoration\s*\/>/);
 });

@@ -6,22 +6,30 @@ const ScrollRestoration = () => {
   const location = useLocation();
   const navigationType = useNavigationType();
   const returnedWithBrowserHistory = useRef(false);
+  const routeTransitioning = useRef(false);
+  const currentLocationKey = useRef(location.key);
+  const pointerStartScroll = useRef(null);
+  currentLocationKey.current = location.key;
+
+  const scrollImmediately = (target) => {
+    const root = document.documentElement;
+    const originalInlineBehavior = root.style.scrollBehavior;
+    root.style.scrollBehavior = 'auto';
+    window.scrollTo({ left: target.left, top: target.top, behavior: 'auto' });
+    root.style.scrollBehavior = originalInlineBehavior;
+  };
 
   useEffect(() => {
-    if (!('scrollRestoration' in window.history)) return undefined;
-
-    const previousMode = window.history.scrollRestoration;
-    window.history.scrollRestoration = 'manual';
-
-    return () => {
-      window.history.scrollRestoration = previousMode;
-    };
-  }, []);
-
-  useEffect(() => {
+    // The previous location's persistence cleanup has now run. The new route
+    // can resume recording its own position normally.
+    routeTransitioning.current = false;
     const isHistoryNavigation = navigationType === 'POP' || returnedWithBrowserHistory.current;
     returnedWithBrowserHistory.current = false;
-    const target = scrollTargetForNavigation(isHistoryNavigation, location.key);
+    // Back/Forward is deliberately left to the browser. It owns the history
+    // entry and restores the exact reading position more reliably than a SPA
+    // can while lazy content and responsive images are still loading.
+    if (isHistoryNavigation) return undefined;
+    const target = scrollTargetForNavigation(false, location.key);
     if (!target) return undefined;
 
     let frameId;
@@ -34,11 +42,7 @@ const ScrollRestoration = () => {
       // The site intentionally uses smooth scrolling for in-page reading.
       // A route transition must not inherit that animation, otherwise a user
       // briefly remains halfway down the next page on a phone.
-      const root = document.documentElement;
-      const originalInlineBehavior = root.style.scrollBehavior;
-      root.style.scrollBehavior = 'auto';
-      window.scrollTo({ left: target.left, top: target.top, behavior: 'auto' });
-      root.style.scrollBehavior = originalInlineBehavior;
+      scrollImmediately(target);
       const maximumTop = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
 
       // A back navigation can initially render the lazy-route fallback. Retry
@@ -65,6 +69,86 @@ const ScrollRestoration = () => {
   }, [location.key, navigationType]);
 
   useEffect(() => {
+    const originalPushState = window.history.pushState;
+    const originalReplaceState = window.history.replaceState;
+
+    const wrapHistoryWrite = (originalWrite) => function writeRouteState(...args) {
+      const result = originalWrite.apply(window.history, args);
+      // BrowserRouter updates the URL before a lazy route is ready. Reset here
+      // rather than waiting for the route component so navigation is immediate.
+      scrollImmediately({ left: 0, top: 0 });
+      return result;
+    };
+
+    window.history.pushState = wrapHistoryWrite(originalPushState);
+    window.history.replaceState = wrapHistoryWrite(originalReplaceState);
+
+    return () => {
+      window.history.pushState = originalPushState;
+      window.history.replaceState = originalReplaceState;
+    };
+  }, []);
+
+  useEffect(() => {
+    const internalAnchorForEvent = (event) => {
+      if (
+        event.defaultPrevented
+        || event.button !== 0
+        || event.metaKey
+        || event.ctrlKey
+        || event.shiftKey
+        || event.altKey
+        || !(event.target instanceof Element)
+      ) return null;
+
+      const anchor = event.target.closest('a[href]');
+      const href = anchor?.getAttribute('href');
+      return href && href.startsWith('/') && !href.startsWith('//') && !anchor.target && !anchor.hasAttribute('download')
+        ? anchor
+        : null;
+    };
+
+    const rememberPointerStart = (event) => {
+      if (!internalAnchorForEvent(event)) return;
+      pointerStartScroll.current = {
+        key: currentLocationKey.current,
+        left: window.scrollX,
+        top: window.scrollY,
+      };
+    };
+
+    const resetForInternalLink = (event) => {
+      if (!internalAnchorForEvent(event)) return;
+
+      // Capture the click before React Router waits for a lazy page module.
+      // Back/Forward never raises a click, so their saved position is intact.
+      const savedPosition = pointerStartScroll.current?.key === currentLocationKey.current
+        ? pointerStartScroll.current
+        : { left: window.scrollX, top: window.scrollY };
+      rememberScrollPosition(currentLocationKey.current, {
+        left: savedPosition.left,
+        top: savedPosition.top,
+      });
+      routeTransitioning.current = true;
+      window.history.replaceState({
+        ...(window.history.state || {}),
+        mikelsScrollPosition: { left: savedPosition.left, top: savedPosition.top },
+      }, document.title);
+      pointerStartScroll.current = null;
+      scrollImmediately({ left: 0, top: 0 });
+    };
+
+    document.addEventListener('pointerdown', rememberPointerStart, true);
+    document.addEventListener('mousedown', rememberPointerStart, true);
+    document.addEventListener('click', resetForInternalLink, true);
+    return () => {
+      document.removeEventListener('pointerdown', rememberPointerStart, true);
+      document.removeEventListener('mousedown', rememberPointerStart, true);
+      document.removeEventListener('click', resetForInternalLink, true);
+    };
+  }, []);
+
+  useEffect(() => {
     const markBrowserHistoryNavigation = () => {
       returnedWithBrowserHistory.current = true;
     };
@@ -75,6 +159,7 @@ const ScrollRestoration = () => {
 
   useEffect(() => {
     const remember = () => {
+      if (routeTransitioning.current) return;
       rememberScrollPosition(location.key, {
         left: window.scrollX,
         top: window.scrollY,
@@ -85,7 +170,7 @@ const ScrollRestoration = () => {
     window.addEventListener('scroll', remember, { passive: true });
 
     return () => {
-      remember();
+      if (!routeTransitioning.current) remember();
       window.removeEventListener('scroll', remember);
     };
   }, [location.key]);
