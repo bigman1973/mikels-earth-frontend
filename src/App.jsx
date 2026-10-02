@@ -20,7 +20,6 @@ const NuestrasJoyas = lazy(() => import('./pages/NuestrasJoyas'));
 const Recetario = lazy(() => import('./pages/Recetario'));
 const Products = lazy(() => import('./pages/Products'));
 const ProductDetail = lazy(() => import('./pages/ProductDetail'));
-const CartRoute = lazy(() => import('./pages/CartRoute'));
 const Checkout = lazy(() => import('./pages/Checkout'));
 const OrderSuccess = lazy(() => import('./pages/OrderSuccess'));
 const SubscriptionSuccess = lazy(() => import('./pages/SubscriptionSuccess'));

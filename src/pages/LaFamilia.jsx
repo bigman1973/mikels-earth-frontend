@@ -249,9 +249,6 @@ const LaFamilia = () => {
                 <p className="text-2xl font-script mb-6 text-white">
                   {t('family.seventh_gen', { defaultValue: 'Séptima Generación' })}
                 </p>
-                <blockquote className="mb-6 text-2xl leading-tight text-white md:text-3xl">
-                  {t('family.jordi_quote')}
-                </blockquote>
                 <p className="text-lg text-white/90 leading-relaxed">
                   {t('family.jordi_text')}
                 </p>

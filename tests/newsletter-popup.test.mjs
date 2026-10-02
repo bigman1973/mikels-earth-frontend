@@ -32,20 +32,20 @@ test('only unblocks explicitly configured Previews when Cookiebot cannot show an
 
 test('newsletter popup persists dismissal for thirty days and excludes checkout and cart contexts', () => {
   assert.match(popup, /30 \* 24 \* 60 \* 60 \* 1000/);
-  assert.match(popup, /new Set\(\['\/carrito', '\/checkout'\]\)/);
+  assert.match(popup, /isNewsletterPopupAllowedPath\(location\.pathname\)/);
   assert.match(popup, /const \{ isCartOpen \} = useCart\(\)/);
-  assert.match(popup, /const excludedContext = excludedPath \|\| isCartOpen/);
+  assert.match(popup, /const allowedContext = isNewsletterPopupAllowedPath\(location\.pathname\) && !isCartOpen/);
   assert.match(popup, /localStorage\.setItem\(POPUP_STORAGE_KEY/);
   assert.doesNotMatch(popup, /fixed inset-0 bg-black/);
   assert.match(popup, /sm:max-w-\[360px\]/);
 });
 
-test('newsletter popup requires privacy consent and submits separate consent choices', () => {
+test('newsletter popup requires privacy consent and submits only the approved email consent', () => {
   assert.match(popup, /name="privacyPolicyAccepted"/);
   assert.match(popup, /required/);
-  assert.match(popup, /name="whatsappMarketingAccepted"/);
-  assert.match(popup, /privacy_policy_accepted: formData\.privacyPolicyAccepted/);
-  assert.match(popup, /whatsapp_marketing_accepted: formData\.whatsappMarketingAccepted/);
+  assert.doesNotMatch(popup, /name="whatsappMarketingAccepted"/);
+  assert.match(popup, /privacy_policy_accepted: true/);
+  assert.match(popup, /whatsapp_marketing_accepted: false/);
   assert.match(popup, /source: 'popup'/);
   assert.match(popup, /to="\/politica-privacidad"/);
 });
