@@ -170,6 +170,7 @@ const Home = () => {
                 {
                   name: t('home.product_temprano'),
                   tagline: t('home.product_temprano_tagline'),
+                  badge: t('home.product_temprano_reservation_badge'),
                   description: t('home.product_temprano_desc'),
                   image: "/images/aceite-temprano.jpg"
                 },
@@ -182,8 +183,13 @@ const Home = () => {
               ].map((product, index) => (
                 <div
                   key={index}
-                  className="bg-gradient-to-b from-accent/20 to-white rounded-xl shadow-lg hover:shadow-2xl transition-shadow overflow-hidden group"
+                  className="group relative overflow-hidden rounded-xl bg-gradient-to-b from-accent/20 to-white shadow-lg transition-shadow hover:shadow-2xl"
                 >
+                  {product.badge && (
+                    <span className="absolute left-4 top-4 z-10 rounded-full bg-primary px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white shadow-lg">
+                      {product.badge}
+                    </span>
+                  )}
                   <div className="h-64 overflow-hidden flex items-center justify-center">
                     <img
                       src={product.image}

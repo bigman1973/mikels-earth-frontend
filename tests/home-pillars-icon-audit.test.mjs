@@ -17,6 +17,19 @@ const approvedPillars = {
   pillar_ingredients_text: 'Paraguayo, agua, azúcar y zumo de limón. Nada más.',
 };
 
+const approvedFeaturedProducts = {
+  product_paraguayo: 'Paraguayo en Almíbar',
+  product_paraguayo_tagline: 'Pelado a mano, pieza a pieza',
+  product_paraguayo_desc: 'Paraguayo entero en almíbar ligero. Cuatro ingredientes: fruta, agua, azúcar y zumo de limón.',
+  product_temprano: 'Aceite Temprano',
+  product_temprano_tagline: 'Cosecha verde, sin filtrar',
+  product_temprano_reservation_badge: 'RESERVA · COSECHA 2026/27',
+  product_temprano_desc: 'Aceituna recogida antes de tiempo. Menos aceite por kilo y más carácter: verde, con cuerpo y ligeramente picante.',
+  product_pack: 'Pack Degustación',
+  product_pack_tagline: 'Mermelada y cuatro aceites',
+  product_pack_desc: 'Una mermelada de paraguayo y cuatro miniaturas de aceite. Para probarlo todo, o para regalar.',
+};
+
 test('home pillars retain only their approved title and copy', () => {
   const home = source('src/pages/Home.jsx');
   const pillars = home.slice(home.indexOf('{/* Pilares */}'), home.indexOf('{/* Productos Destacados */}'));
@@ -32,6 +45,21 @@ test('home pillar copy is the approved Spanish text in both language resources p
     const home = JSON.parse(source(path)).home;
     for (const [key, value] of Object.entries(approvedPillars)) {
       assert.equal(home[key], value, `${path}: ${key}`);
+    }
+  }
+});
+
+test('featured home products use the approved text and highlight Temprano reservation', () => {
+  const home = source('src/pages/Home.jsx');
+  const featured = home.slice(home.indexOf('{/* Productos Destacados */}'), home.indexOf('{/* Compromiso Social */}'));
+
+  assert.match(featured, /home\.product_temprano_reservation_badge/);
+  assert.match(featured, /absolute left-4 top-4 z-10 rounded-full bg-primary/);
+
+  for (const path of ['src/i18n/locales/es.json', 'src/i18n/locales/en.json']) {
+    const values = JSON.parse(source(path)).home;
+    for (const [key, value] of Object.entries(approvedFeaturedProducts)) {
+      assert.equal(values[key], value, `${path}: ${key}`);
     }
   }
 });
