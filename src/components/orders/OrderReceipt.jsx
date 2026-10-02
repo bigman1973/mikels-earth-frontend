@@ -48,6 +48,9 @@ const OrderReceipt = ({ receipt, children }) => {
 
         <section className="space-y-2 border-t border-stone-200 pt-5 text-sm">
           <div className="flex justify-between text-stone-700"><span>Subtotal</span><span>{totals.subtotal_display}</span></div>
+          {Number(totals.discount || 0) > 0 && (
+            <div className="flex justify-between text-stone-700"><span>{totals.discount_label || 'Descuento'}</span><span>-{totals.discount_display}</span></div>
+          )}
           <div className="flex justify-between text-stone-700"><span>Envío</span><span>{totals.shipping_display || 'GRATIS'}</span></div>
           <div className="flex justify-between border-t border-stone-300 pt-3 font-semibold text-[#1a1a1a]"><span>Total</span><span><span className="text-price">{totals.total_display}</span><span className="ml-2 text-xs font-normal text-stone-600">· IVA incluido</span></span></div>
         </section>

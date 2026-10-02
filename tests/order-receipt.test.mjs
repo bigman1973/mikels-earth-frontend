@@ -26,3 +26,11 @@ test('order confirmation renders the saved receipt rather than recalculating it'
   assert.match(receipt, /Recibirás la factura con el desglose de IVA en un correo aparte/);
   assert.match(receipt, /Te hemos enviado la confirmación/);
 });
+
+test('order confirmation shows a saved coupon reduction before shipping', async () => {
+  const receipt = await source('src/components/orders/OrderReceipt.jsx');
+
+  assert.match(receipt, /totals\.discount/);
+  assert.match(receipt, /totals\.discount_label/);
+  assert.match(receipt, /-\{totals\.discount_display\}/);
+});
