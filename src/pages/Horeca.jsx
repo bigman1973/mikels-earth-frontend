@@ -193,7 +193,7 @@ const Horeca = () => {
               <Building2 className="w-5 h-5" />
               <span className="font-semibold">{t('horeca.badge_b2b')}</span>
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: '#ffffff' }}>
               {t('horeca.hero_title', { defaultValue: 'Aceite de oliva para hostelería y profesionales Horeca' })}
             </h1>
             <p className="text-xl md:text-2xl mb-4 text-green-100">

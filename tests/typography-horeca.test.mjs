@@ -17,6 +17,7 @@ test('the shared heading scale is light, upright, and spaced', () => {
 test('Horeca uses the brand accent for badges and checklist markers', () => {
   const horeca = readSource('src/pages/Horeca.jsx');
 
+  assert.match(horeca, /<h1 className="text-4xl md:text-5xl font-bold mb-4" style=\{\{ color: '#ffffff' \}\}>/);
   assert.match(horeca, /bg-primary text-white text-xs px-3 py-1 rounded-full mb-3/);
   assert.match(horeca, /RESERVA · COSECHA 2026\/27/);
   assert.doesNotMatch(horeca, /bg-red-600|from-orange-600|to-amber-600|text-green-600/);
