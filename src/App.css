@@ -208,12 +208,18 @@
     font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
   
-  /* Tipografía para títulos - Georgia Bold Italic como alternativa web a Bookmania */
+  /* Escala editorial: serif serena para titulares, sin negrita ni cursiva
+     impuestas. Las cursivas quedan reservadas a citas o decisiones explícitas. */
   h1, h2, h3, h4, h5, h6 {
     font-family: Georgia, 'Times New Roman', serif;
-    font-weight: 700;
-    font-style: italic;
+    font-weight: 500 !important;
+    font-style: normal;
     color: #1a1a1a;
+    letter-spacing: 0.012em;
+  }
+
+  h1, h2 {
+    letter-spacing: 0.02em;
   }
   
   /* Montserrat para textos de cuerpo */
@@ -290,8 +296,8 @@
 
 .font-bookmania {
   font-family: Georgia, 'Times New Roman', serif;
-  font-weight: 700;
-  font-style: italic;
+  font-weight: 500;
+  font-style: normal;
 }
 
 .font-montserrat {

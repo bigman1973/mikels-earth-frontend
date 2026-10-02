@@ -265,7 +265,7 @@ const ProductDetail = () => {
               </p>
 
               {/* Product name */}
-              <h1 className="text-3xl md:text-4xl font-bold text-primary mb-2">
+              <h1 className="text-3xl md:text-4xl font-medium text-primary mb-2">
                 {product.name}
               </h1>
 
@@ -809,7 +809,7 @@ const ProductDetail = () => {
                     </div>
                   </div>
                   <div className="p-4">
-                    <h3 className="font-semibold text-primary mb-2 line-clamp-2">{relatedProduct.name}</h3>
+                    <h3 className="font-medium text-primary mb-2 line-clamp-2">{relatedProduct.name}</h3>
                     <p className="text-lg font-bold text-price">{formatEuro(relatedProduct.price)}</p>
                   </div>
                 </Link>

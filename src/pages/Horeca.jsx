@@ -250,7 +250,7 @@ const Horeca = () => {
               />
             </div>
             <div className="p-6">
-              <div className="inline-block bg-red-600 text-white text-xs px-3 py-1 rounded-full mb-3">
+              <div className="inline-block bg-primary text-white text-xs px-3 py-1 rounded-full mb-3">
                 {t('horeca.best_seller')}
               </div>
               <h3 className="text-2xl font-bold text-primary mb-2">
@@ -261,19 +261,19 @@ const Horeca = () => {
               </p>
               <ul className="space-y-2 text-sm text-gray-700">
                 <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-600 flex-shrink-0" />
+                  <Check className="w-5 h-5 text-primary flex-shrink-0" />
                   <span>{t('horeca.oil_5l_f1')}</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-600 flex-shrink-0" />
+                  <Check className="w-5 h-5 text-primary flex-shrink-0" />
                   <span>{t('horeca.oil_5l_f2')}</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-600 flex-shrink-0" />
+                  <Check className="w-5 h-5 text-primary flex-shrink-0" />
                   <span>{t('horeca.oil_5l_f3')}</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-600 flex-shrink-0" />
+                  <Check className="w-5 h-5 text-primary flex-shrink-0" />
                   <span>{t('horeca.oil_5l_f4')}</span>
                 </li>
               </ul>
@@ -295,8 +295,8 @@ const Horeca = () => {
               />
             </div>
             <div className="p-6">
-              <div className="inline-block bg-gradient-to-r from-orange-600 to-amber-600 text-white text-xs px-3 py-1 rounded-full mb-3">
-                {t('horeca.limited_edition')}
+              <div className="inline-block bg-primary text-white text-xs px-3 py-1 rounded-full mb-3">
+                RESERVA · COSECHA 2026/27
               </div>
               <h3 className="text-2xl font-bold text-primary mb-2">
                 {t('horeca.temprano_name')}
@@ -306,19 +306,19 @@ const Horeca = () => {
               </p>
               <ul className="space-y-2 text-sm text-gray-700">
                 <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-600 flex-shrink-0" />
+                  <Check className="w-5 h-5 text-primary flex-shrink-0" />
                   <span>{t('horeca.temprano_f1')}</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-600 flex-shrink-0" />
+                  <Check className="w-5 h-5 text-primary flex-shrink-0" />
                   <span>{t('horeca.temprano_f2')}</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-600 flex-shrink-0" />
+                  <Check className="w-5 h-5 text-primary flex-shrink-0" />
                   <span>{t('horeca.temprano_f3')}</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-600 flex-shrink-0" />
+                  <Check className="w-5 h-5 text-primary flex-shrink-0" />
                   <span>{t('horeca.temprano_f4')}</span>
                 </li>
               </ul>

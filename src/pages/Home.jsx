@@ -208,7 +208,7 @@ const Home = () => {
                     />
                   </div>
                   <div className="p-8">
-                  <h3 className="text-2xl font-bold text-primary mb-2 text-center">
+                  <h3 className="text-2xl font-medium text-primary mb-2 text-center">
                     {product.name}
                   </h3>
                   <p className="text-secondary font-semibold text-center mb-4">
