@@ -14,10 +14,10 @@ test('new route navigation starts at the top while browser history restores its 
   resetScrollPositions();
   rememberScrollPosition('shop-entry', { left: 0, top: 1840 });
 
-  assert.deepEqual(scrollTargetForNavigation('PUSH', 'product-entry'), { left: 0, top: 0 });
-  assert.deepEqual(scrollTargetForNavigation('REPLACE', 'checkout-entry'), { left: 0, top: 0 });
-  assert.deepEqual(scrollTargetForNavigation('POP', 'shop-entry'), { left: 0, top: 1840 });
-  assert.equal(scrollTargetForNavigation('POP', 'initial-entry'), null);
+  assert.deepEqual(scrollTargetForNavigation(false, 'product-entry'), { left: 0, top: 0 });
+  assert.deepEqual(scrollTargetForNavigation(false, 'checkout-entry'), { left: 0, top: 0 });
+  assert.deepEqual(scrollTargetForNavigation(true, 'shop-entry'), { left: 0, top: 1840 });
+  assert.equal(scrollTargetForNavigation(true, 'initial-entry'), null);
 });
 
 test('global scroll restoration records each location and uses manual browser restoration', () => {
@@ -27,8 +27,12 @@ test('global scroll restoration records each location and uses manual browser re
   assert.match(component, /useLocation\(\)/);
   assert.match(component, /useNavigationType\(\)/);
   assert.match(component, /window\.history\.scrollRestoration = 'manual'/);
-  assert.match(component, /window\.scrollTo\(target\.left, target\.top\)/);
+  assert.match(component, /root\.style\.scrollBehavior = 'auto'/);
+  assert.match(component, /window\.scrollTo\(\{ left: target\.left, top: target\.top, behavior: 'auto' \}\)/);
   assert.match(component, /rememberScrollPosition\(location\.key/);
+  assert.match(component, /window\.addEventListener\('popstate'/);
+  assert.match(component, /navigationType === 'POP'/);
+  assert.match(component, /returnedWithBrowserHistory\.current/);
   assert.match(app, /<ScrollRestoration\s*\/>/);
 });
 

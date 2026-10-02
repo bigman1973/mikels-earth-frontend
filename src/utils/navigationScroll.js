@@ -9,8 +9,8 @@ export const rememberScrollPosition = (key, position) => {
   });
 };
 
-export const scrollTargetForNavigation = (navigationType, key) => {
-  if (navigationType === 'POP') {
+export const scrollTargetForNavigation = (isHistoryNavigation, key) => {
+  if (isHistoryNavigation) {
     return scrollPositions.get(key) ?? null;
   }
 
