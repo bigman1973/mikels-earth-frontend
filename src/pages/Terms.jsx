@@ -23,7 +23,7 @@ const Terms = () => {
             </p>
           )}
 
-          <p className="mb-6 text-gray-600">Última actualización: 28 de septiembre de 2026</p>
+          <p className="mb-6 text-gray-600">Última actualización: 3 de octubre de 2026</p>
 
           <section className="mb-8">
             <h2 className="mb-4 text-2xl font-bold text-primary">1. Información general</h2>
@@ -70,9 +70,18 @@ const Terms = () => {
 
           <section className="mb-8">
             <h2 className="mb-4 text-2xl font-bold text-primary">7. Envíos</h2>
-            <p className="text-gray-700">Enviamos a España peninsular y Baleares.</p>
-            <p className="mt-4 text-gray-700"><strong>Plazo de entrega:</strong> máximo 72 horas laborables desde la confirmación del pedido. Recibirá un número de seguimiento.</p>
-            <p className="mt-4 text-gray-700">Los gastos de envío se calculan según el peso y el destino, y se muestran antes de pagar.</p>
+            <p className="text-gray-700">Enviamos a España peninsular, Baleares y Portugal. No realizamos envíos a Canarias, Ceuta ni Melilla.</p>
+
+            <h3 className="mt-6 text-xl font-bold text-primary">Gastos de envío</h3>
+            <p className="mt-2 text-gray-700">El envío es gratuito en España peninsular, Baleares y Portugal.</p>
+            <p className="mt-4 text-gray-700">En los envíos a Baleares, el importe mínimo del pedido es de 59 €.</p>
+
+            <h3 className="mt-6 text-xl font-bold text-primary">Plazo de entrega</h3>
+            <p className="mt-2 text-gray-700">Preparamos su pedido en 1-2 días laborables. El transporte tarda entre 24 y 72 horas en España peninsular y Portugal, y puede ser superior en Baleares.</p>
+            <p className="mt-4 text-gray-700">Recibirá un correo con el número de seguimiento cuando su pedido salga de nuestro almacén.</p>
+
+            <h3 className="mt-6 text-xl font-bold text-primary">Productos por reserva</h3>
+            <p className="mt-2 text-gray-700">Algunos productos de temporada se ofrecen por reserva: se abonan en el momento de la compra y se envían en la fecha indicada en la ficha del producto, que se muestra siempre antes de finalizar la compra.</p>
           </section>
 
           <section className="mb-8">
