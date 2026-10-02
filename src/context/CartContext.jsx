@@ -76,6 +76,8 @@ export const CartProvider = ({ children }) => {
           selectedVariant: product.selectedVariant || null,
           variantName: product.variantName || null,
           weight: product.weight,
+          reservationOnly: product.reservationOnly === true,
+          reservationMessage: product.reservationMessage || '',
           volumeDiscountConfig: product.volumeDiscount || null,
           tieredDiscountConfig: product.tieredDiscount || null
         }];

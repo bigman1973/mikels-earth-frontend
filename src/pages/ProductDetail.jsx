@@ -16,6 +16,7 @@ const REDIRECTED_PRODUCT_SLUGS = new Set([
 ]);
 import ProductSeo from '../components/ProductSeo';
 import { formatEuro } from '../utils/formatMoney';
+import { getApplicableVolumeTier, getVolumeDiscountedLineTotal, getVolumeDiscountedUnitPrice } from '../utils/volumePricing';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://mikels-earth-backend-production.up.railway.app';
 
@@ -100,32 +101,19 @@ const ProductDetail = () => {
     );
   }
 
-  // Calculate price with tiered or volume discount
-  let discountPercent = 0;
-  let discountLabel = '';
-  
-  if (product.tieredDiscount) {
-    // Encontrar el descuento escalonado que aplica
-    for (const tier of product.tieredDiscount) {
-      if (quantity >= tier.minQuantity) {
-        discountPercent = tier.discount;
-        discountLabel = tier.label;
-      }
-    }
-  } else if (product.volumeDiscount && quantity >= product.volumeDiscount.minQuantity) {
-    discountPercent = product.volumeDiscount.discount;
-    discountLabel = 'volumen';
-  }
-  
-  const hasDiscount = discountPercent > 0;
-  const discountedPrice = hasDiscount 
-    ? product.price * (1 - discountPercent / 100)
-    : product.price;
-  
-  // Mantener compatibilidad con el cálculo existente
-  const volumeDiscountedPrice = discountedPrice;
-  
-  const currentPrice = volumeDiscountedPrice;
+  const volumePricingItem = {
+    price: product.price,
+    volumeDiscountConfig: product.volumeDiscount,
+    tieredDiscountConfig: product.tieredDiscount,
+  };
+  const applicableTier = getApplicableVolumeTier(volumePricingItem, quantity);
+  const currentPrice = getVolumeDiscountedUnitPrice(volumePricingItem, quantity);
+  const currentLineTotal = getVolumeDiscountedLineTotal(volumePricingItem, quantity);
+  const originalLineTotal = Number(product.price) * quantity;
+  const hasDiscount = currentLineTotal < originalLineTotal - 0.001;
+  const discountPercent = applicableTier?.discount || 0;
+  const discountLabel = applicableTier?.label || '';
+  const isReservation = product.reservationOnly === true;
   const availableStock = Math.max(0, Number(product.stock) || 0);
 
   // El backend solo adjunta complementos activos y vendibles. Esta segunda
@@ -281,6 +269,13 @@ const ProductDetail = () => {
                 {product.name}
               </h1>
 
+              {isReservation && (
+                <div className="mb-5 rounded-lg border border-stone-300 bg-[#f5efe4] px-4 py-3 text-sm leading-6 text-[#1a1a1a]">
+                  <p>{product.reservationMessage || 'La cosecha 2026/27 se sirve por reserva. Se embotella a finales de octubre y te llega en cuanto salga.'}</p>
+                  <p className="mt-2 font-semibold">Quedan {availableStock} de {product.reservationStockTotal || 1080}</p>
+                </div>
+              )}
+
               {/* Star Rating */}
               <StarRating rating={reviewStats.average} count={reviewStats.count} />
 
@@ -350,9 +345,9 @@ const ProductDetail = () => {
                       {t('product_detail.price_per_unit', { price: formatEuro(currentPrice), original: formatEuro(product.price) })}
                     </div>
                     <div className="text-lg font-semibold">
-                      {t('product_detail.total_price', { price: formatEuro(currentPrice * quantity) })}
+                      {t('product_detail.total_price', { price: formatEuro(currentLineTotal) })}
                       <span className="ml-2 text-sm font-normal">
-                        ({t('product_detail.you_save', { amount: formatEuro((product.price - currentPrice) * quantity) })})
+                        ({t('product_detail.you_save', { amount: formatEuro(originalLineTotal - currentLineTotal) })})
                       </span>
                     </div>
                   </div>
@@ -361,11 +356,13 @@ const ProductDetail = () => {
                   <div className="space-y-2 text-sm text-[#1a1a1a]">
                     <p className="text-base font-semibold">{t('product_detail.volume_discounts')}</p>
                     {product.tieredDiscount.map((tier, index) => {
+                      const isReservationBox = Number(tier.bundleQuantity) === 12 && Number(tier.paidQuantity) === 11;
                       const isBestValue = tier.minQuantity === 36; // Destacar la opción 3+1
                       const isFreeShipping = tier.freeShipping === true; // Pack Duo con envío gratis
-                      const pricePerUnit = product.price * (1 - tier.discount / 100);
                       const actualQuantity = tier.actualQuantity || tier.minQuantity;
-                      const totalPrice = pricePerUnit * actualQuantity;
+                      const tierPricingItem = { ...volumePricingItem, tieredDiscountConfig: [tier] };
+                      const pricePerUnit = getVolumeDiscountedUnitPrice(tierPricingItem, actualQuantity);
+                      const totalPrice = getVolumeDiscountedLineTotal(tierPricingItem, actualQuantity);
                       const savings = (product.price * actualQuantity) - totalPrice;
                       
                       return (
@@ -382,6 +379,7 @@ const ProductDetail = () => {
                             <p className="text-xs text-gray-600 mb-1 italic">{tier.description}</p>
                           )}
                           <div className="text-xs space-y-0.5 mb-2">
+                            {isReservationBox && <p className="font-semibold">Caja de 12: pagas 11 y recibes 12</p>}
                             {tier.discount > 0 && <p className="font-semibold">{t('product_detail.discount_percent', { percent: tier.discount })}</p>}
                             <p>{formatEuro(pricePerUnit)} / {t('product_detail.units')}</p>
                             <p className="font-bold text-price">
@@ -396,7 +394,7 @@ const ProductDetail = () => {
                             }}
                             className="w-full rounded-lg bg-primary px-4 py-2 font-semibold text-white transition-colors hover:bg-primary/90"
                           >
-                            {isBestValue ? t('product_detail.want_free_box') : isFreeShipping ? t('product_detail.add_pack_duo') : t('product_detail.add_units_to_cart', { count: tier.actualQuantity || tier.minQuantity })}
+                            {isReservationBox ? 'Reservar una caja de 12' : isBestValue ? t('product_detail.want_free_box') : isFreeShipping ? t('product_detail.add_pack_duo') : t('product_detail.add_units_to_cart', { count: tier.actualQuantity || tier.minQuantity })}
                           </button>
                         </div>
                       );
@@ -668,7 +666,7 @@ const ProductDetail = () => {
                   className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary py-4 text-lg font-semibold text-white transition-colors hover:bg-primary/90"
                 >
                   <ShoppingCart className="h-5 w-5" />
-                  {t('product_detail.add_to_cart')}
+                  {isReservation ? 'Reservar' : t('product_detail.add_to_cart')}
                 </button>
               )}
 

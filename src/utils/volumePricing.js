@@ -42,8 +42,25 @@ export const getVolumeDiscountPercent = (item, quantity = item?.quantity) => (
   getApplicableVolumeTier(item, quantity)?.discount || 0
 );
 
+const getBundlePayableUnits = (tier, quantity) => {
+  const bundleQuantity = Math.trunc(toFiniteNumber(tier?.bundleQuantity));
+  const paidQuantity = Math.trunc(toFiniteNumber(tier?.paidQuantity));
+  if (bundleQuantity < 2 || paidQuantity < 1 || paidQuantity >= bundleQuantity) return null;
+  const bundles = Math.floor(quantity / bundleQuantity);
+  return bundles * paidQuantity + (quantity % bundleQuantity);
+};
+
 export const getVolumeDiscountedUnitPrice = (item, quantity = item?.quantity) => {
   const basePrice = toFiniteNumber(item?.price);
+  const normalizedQuantity = Math.max(1, Math.trunc(toFiniteNumber(quantity, 1)));
+  const tier = getApplicableVolumeTier(item, normalizedQuantity);
+  const payableUnits = getBundlePayableUnits(tier, normalizedQuantity);
+  if (payableUnits !== null) {
+    // A reservation box pays 11 exact bottles for every 12 received. Keep
+    // sufficient unit precision for the checkout line to round to the exact
+    // total used by the backend and Stripe.
+    return Number(((basePrice * payableUnits) / normalizedQuantity).toFixed(4));
+  }
   const discount = getVolumeDiscountPercent(item, quantity);
   // A percentage over a cent price can need four decimal places per unit.
   // Normalize that decimal representation before it is serialized to the API
@@ -52,5 +69,15 @@ export const getVolumeDiscountedUnitPrice = (item, quantity = item?.quantity) =>
 };
 
 export const getVolumeDiscountedLineTotal = (item, quantity = item?.quantity) => (
-  getVolumeDiscountedUnitPrice(item, quantity) * Math.max(1, Math.trunc(toFiniteNumber(quantity, 1)))
+  (() => {
+    const normalizedQuantity = Math.max(1, Math.trunc(toFiniteNumber(quantity, 1)));
+    const basePrice = toFiniteNumber(item?.price);
+    const payableUnits = getBundlePayableUnits(
+      getApplicableVolumeTier(item, normalizedQuantity),
+      normalizedQuantity,
+    );
+    return payableUnits !== null
+      ? basePrice * payableUnits
+      : getVolumeDiscountedUnitPrice(item, normalizedQuantity) * normalizedQuantity;
+  })()
 );

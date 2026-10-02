@@ -103,7 +103,7 @@ export const products = [
     slug: "aceite-temprano-sin-filtrar",
     description: "Aceitunas recolectadas en su momento verde. Sin filtrar. Verde intenso, ligeramente picante, con ese amargor noble que indica frescura y calidad.",
     longDescription: "Aceite de oliva virgen extra de primera cosecha, sin filtrar. De perfil verde, fresco y ligeramente picante, prensado en frío e ideal para ensaladas, tostadas y carpaccios.",
-    price: 14.90,
+    price: 19.90,
     currency: "EUR",
     image: "/images/aceite-temprano-principal.jpeg",
     images: [
@@ -113,7 +113,10 @@ export const products = [
     ],
     category: "Aceites",
     tags: ["Vegano", "Sin Gluten", "Prensado en Frío", "Sin Filtrar", "Edición Limitada", "Premium", "Regalo"],
-    stock: 15,
+    stock: 1080,
+    reservationOnly: true,
+    reservationStockTotal: 1080,
+    reservationMessage: "La cosecha 2026/27 se sirve por reserva. Se embotella a finales de octubre y te llega en cuanto salga.",
     weight: "500ml",
     ingredients: "Aceite de oliva virgen extra 100% sin filtrar",
     nutritionalInfo: {
@@ -140,10 +143,7 @@ export const products = [
       { value: "biannual", label: "Semestral", discount: 7 }
     ],
     tieredDiscount: [
-      { minQuantity: 2, discount: 0, label: "Pack Duo", actualQuantity: 2, freeShipping: true },
-      { minQuantity: 12, discount: 15, label: "1 caja", actualQuantity: 12 },
-      { minQuantity: 24, discount: 20, label: "2 cajas", actualQuantity: 24 },
-      { minQuantity: 36, discount: 25, label: "4 CAJAS (Pagas 3 + 1 GRATIS)", actualQuantity: 48 }
+      { minQuantity: 12, label: "Caja de 12", actualQuantity: 12, bundleQuantity: 12, paidQuantity: 11 }
     ],
     addons: [
       {

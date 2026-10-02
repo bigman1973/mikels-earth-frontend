@@ -98,11 +98,19 @@ export const applyEditorialOverrides = (product, language = 'es') => {
         text: 'Medalla de Plata · OLIVE JAPAN 2026',
         detailOnly: true,
       }],
-      tieredDiscount: (normalizedProduct.tieredDiscount || []).map((tier) => {
-        const sanitizedTier = { ...tier };
-        delete sanitizedTier.description;
-        return sanitizedTier;
-      }),
+      price: 19.90,
+      stock: Number(normalizedProduct.stock) || 1080,
+      reservationOnly: true,
+      reservationStockTotal: Number(normalizedProduct.reservationStockTotal) || 1080,
+      reservationMessage: normalizedProduct.reservationMessage || 'La cosecha 2026/27 se sirve por reserva. Se embotella a finales de octubre y te llega en cuanto salga.',
+      tieredDiscount: [{
+        minQuantity: 12,
+        label: 'Caja de 12',
+        actualQuantity: 12,
+        bundleQuantity: 12,
+        paidQuantity: 11,
+      }],
+      volumeDiscount: null,
     };
   }
 

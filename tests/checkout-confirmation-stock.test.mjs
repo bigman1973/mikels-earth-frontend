@@ -65,3 +65,19 @@ test('stock controls retain a backend-enforced checkout boundary', async () => {
   assert.match(detail, /product\.soldOut \|\| availableStock < 1/);
   assert.match(card, /const isSoldOut = product\.soldOut \|\| Number\(product\.stock \|\| 0\) < 1/);
 });
+
+test('reservation purchase surfaces use the saved reservation contract', async () => {
+  const [detail, card, cart, emailTemplate] = await Promise.all([
+    read('src/pages/ProductDetail.jsx'),
+    read('src/components/products/ProductCard.jsx'),
+    read('src/components/cart/CartDrawer.jsx'),
+    read('../..//plantilla_ficha_pedido_klaviyo_2026-10-02.html'),
+  ]);
+
+  assert.match(detail, /product\.reservationOnly === true/);
+  assert.match(detail, /Quedan \{availableStock\} de \{product\.reservationStockTotal \|\| 1080\}/);
+  assert.match(detail, /isReservation \? 'Reservar'/);
+  assert.match(card, /product\.reservationOnly \? 'Reservar'/);
+  assert.match(cart, /Caja de 12: pagas 11 y recibes 12/);
+  assert.match(emailTemplate, /event\.Receipt\.heading/);
+});

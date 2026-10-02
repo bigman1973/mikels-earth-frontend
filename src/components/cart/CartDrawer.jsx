@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatEuro } from '../../utils/formatMoney';
+import { getApplicableVolumeTier } from '../../utils/volumePricing';
 
 const CartDrawer = () => {
   const {
@@ -85,6 +86,8 @@ const CartDrawer = () => {
                   {cart.map((item, index) => {
                     const unitPrice = getItemPrice(item);
                     const itemTotal = unitPrice * item.quantity;
+                    const tier = getApplicableVolumeTier(item, item.quantity);
+                    const isReservationBox = Number(tier?.bundleQuantity) === 12 && Number(tier?.paidQuantity) === 11;
                     return (
                       <motion.div
                         key={`${item.id || item.slug || item.name}-${index}`}
@@ -112,6 +115,8 @@ const CartDrawer = () => {
                           <div className="min-w-0 flex-1 pr-6">
                             <h3 className="line-clamp-2 text-sm font-semibold text-[#1a1a1a]">{item.name}</h3>
                             <p className="mt-1 text-sm font-semibold text-price">{formatEuro(unitPrice)}</p>
+                            {item.reservationOnly && <p className="mt-1 text-xs text-stone-600">Reserva · cosecha 2026/27</p>}
+                            {isReservationBox && <p className="mt-1 text-xs text-stone-600">Caja de 12: pagas 11 y recibes 12</p>}
                           </div>
                         </div>
                         <div className="flex items-center justify-between">

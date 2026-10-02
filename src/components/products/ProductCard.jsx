@@ -97,7 +97,7 @@ const ProductCard = ({ product }) => {
             onClick={addProduct}
           >
             <ShoppingCart className="h-4 w-4" aria-hidden="true" />
-            {t('product_detail.add_to_cart')}
+            {product.reservationOnly ? 'Reservar' : t('product_detail.add_to_cart')}
           </button>
         )}
       </div>

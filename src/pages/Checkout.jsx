@@ -487,7 +487,7 @@ const Checkout = () => {
                         {item.name}
                       </h3>
                       <p className="text-xs text-gray-600">
-                        {item.purchaseType === 'subscription' ? t('product_detail.subscription') : t('product_detail.one_time')}
+                        {item.reservationOnly ? 'Reserva · cosecha 2026/27' : item.purchaseType === 'subscription' ? t('product_detail.subscription') : t('product_detail.one_time')}
                       </p>
                       <p className="text-xs text-gray-500">
                         {t('cart.quantity')}: {item.quantity}

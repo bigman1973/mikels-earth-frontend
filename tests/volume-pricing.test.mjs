@@ -7,30 +7,28 @@ import {
 } from '../src/utils/volumePricing.js';
 
 const temprano = {
-  price: 17.15,
+  price: 19.90,
   tieredDiscountConfig: [
-    { minQuantity: 2, discount: 0, label: 'Pack Dúo' },
-    { minQuantity: 12, discount: 15, label: '1 caja' },
-    { minQuantity: 24, discount: 20, label: '2 cajas' },
-    { minQuantity: 36, discount: 25, label: '4 cajas' },
+    { minQuantity: 12, label: 'Caja de 12', bundleQuantity: 12, paidQuantity: 11 },
   ],
 };
 
 const cents = (value) => Math.round(value * 100);
 
-test('uses the configured quantity tiers for the same totals checkout validates', () => {
-  for (const [quantity, expectedDiscount, expectedTotalCents] of [
-    [2, 0, 3430],
-    [12, 15, 17493],
-    [24, 20, 32928],
-    [36, 25, 46305],
+test('uses the exact reservation-box totals checkout validates', () => {
+  for (const [quantity, expectedTotalCents] of [
+    [2, 3980],
+    [12, 21890],
+    [24, 43780],
+    [36, 65670],
   ]) {
-    assert.equal(getVolumeDiscountPercent(temprano, quantity), expectedDiscount);
+    assert.equal(getVolumeDiscountPercent(temprano, quantity), 0);
     assert.equal(cents(getVolumeDiscountedLineTotal(temprano, quantity)), expectedTotalCents);
   }
 });
 
-test('retains fractional-cent precision before a line total is rounded to cents', () => {
-  assert.equal(getVolumeDiscountedUnitPrice(temprano, 12), 14.5775);
-  assert.equal(cents(getVolumeDiscountedLineTotal(temprano, 12)), 17493);
+test('charges eleven exact bottles for every full reservation case', () => {
+  assert.equal(getVolumeDiscountedUnitPrice(temprano, 12), 18.2417);
+  assert.equal(cents(getVolumeDiscountedLineTotal(temprano, 12)), 21890);
+  assert.equal(cents(getVolumeDiscountedLineTotal(temprano, 13)), 23880);
 });
