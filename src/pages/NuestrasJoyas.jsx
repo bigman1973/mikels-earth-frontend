@@ -8,6 +8,7 @@ const NuestrasJoyas = () => {
   const collections = [
     {
       id: 'paraguayo',
+      productPath: '/producto/paraguayo-almibar',
       name: t('jewels.paraguayo_name'),
       tagline: t('jewels.paraguayo_tagline'),
       image: '/images/paraguayo-principal.webp',
@@ -25,6 +26,7 @@ const NuestrasJoyas = () => {
     },
     {
       id: 'aceites',
+      productPath: '/producto/aceite-5l-caja-3',
       name: t('jewels.oils_name'),
       tagline: t('jewels.oils_tagline'),
       image: '/images/aceite-5l-portada.jpg',
@@ -41,6 +43,7 @@ const NuestrasJoyas = () => {
     },
     {
       id: 'temprano',
+      productPath: '/producto/aceite-temprano-sin-filtrar',
       name: t('jewels.temprano_name'),
       tagline: t('jewels.temprano_tagline'),
       badge: t('jewels.temprano_reservation_badge'),
@@ -58,6 +61,7 @@ const NuestrasJoyas = () => {
     },
     {
       id: 'packs',
+      productPath: '/producto/pack-mermelada-aceites',
       name: t('jewels.packs_name'),
       tagline: t('jewels.packs_tagline'),
       image: '/images/pack-degustacion-principal.jpeg',
@@ -185,7 +189,7 @@ const NuestrasJoyas = () => {
                   </div>
 
                   <Link
-                    to="/tienda"
+                    to={collection.productPath}
                     className="inline-block bg-primary text-white px-8 py-3 rounded-lg font-bold hover:bg-primary/90 transition-colors"
                   >
                     {t('jewels.view_shop')} →

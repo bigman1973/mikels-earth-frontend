@@ -34,3 +34,18 @@ test('approved jewels copy remains Spanish in both locales pending translation r
     }
   }
 });
+
+test('each jewel routes directly to its approved product detail', () => {
+  const page = readFileSync(resolve(process.cwd(), 'src/pages/NuestrasJoyas.jsx'), 'utf8');
+  const expectedRoutes = [
+    '/producto/paraguayo-almibar',
+    '/producto/aceite-5l-caja-3',
+    '/producto/aceite-temprano-sin-filtrar',
+    '/producto/pack-mermelada-aceites',
+  ];
+
+  for (const route of expectedRoutes) {
+    assert.match(page, new RegExp(`productPath: '${route}'`));
+  }
+  assert.match(page, /to=\{collection\.productPath\}/);
+});
