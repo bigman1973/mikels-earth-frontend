@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 
-const API_URL = 'https://mikels-earth-backend-production.up.railway.app/api/blog';
+const API_URL = 'https://api.mikels.es/api/blog';
 
 const BlogAdmin = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loginData, setLoginData] = useState({ username: '', password: '' });
-  const [token, setToken] = useState(localStorage.getItem('blog_admin_token') || '');
+  const navigate = useNavigate();
+  const [token] = useState(localStorage.getItem('admin_token') || '');
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -23,15 +23,15 @@ const BlogAdmin = () => {
 
   useEffect(() => {
     if (token) {
-      setIsLoggedIn(true);
       fetchPosts();
     } else {
       setLoading(false);
+      navigate('/admin/login', { replace: true });
     }
   }, [token]);
 
   const fetchPosts = async () => {
-    const currentToken = localStorage.getItem('blog_admin_token') || token;
+    const currentToken = localStorage.getItem('admin_token') || token;
     if (!currentToken) {
       setLoading(false);
       return;
@@ -47,8 +47,7 @@ const BlogAdmin = () => {
         mode: 'cors'
       });
       if (response.status === 401) {
-        console.log('Token inválido o expirado, cerrando sesión...');
-        handleLogout();
+        navigate('/admin/login', { replace: true });
         return;
       }
       const data = await response.json();
@@ -72,44 +71,6 @@ const BlogAdmin = () => {
     setStats({ total: postsList.length, published, drafts: postsList.length - published });
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setError(null);
-    setLoading(true);
-    try {
-      const response = await fetch(`${API_URL}/admin/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(loginData),
-        mode: 'cors'
-      });
-      const data = await response.json();
-      if (response.ok && data.token) {
-        // Guardar el token primero
-        localStorage.setItem('blog_admin_token', data.token);
-        setToken(data.token);
-        setIsLoggedIn(true);
-        // Esperar un momento antes de cargar los posts
-        setTimeout(() => {
-          fetchPosts();
-        }, 100);
-      } else {
-        setError(data.error || 'Credenciales incorrectas');
-        setLoading(false);
-      }
-    } catch (err) {
-      console.error('Error de login:', err);
-      setError('Error de conexión. Verifica tu conexión a internet.');
-      setLoading(false);
-    }
-  };
-
-  const handleLogout = () => {
-    setToken('');
-    localStorage.removeItem('blog_admin_token');
-    setIsLoggedIn(false);
-    setPosts([]);
-  };
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
@@ -198,29 +159,6 @@ const BlogAdmin = () => {
     setShowForm(true);
   };
 
-  if (!isLoggedIn) {
-    return (
-      <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
-        <div style={{ backgroundColor: 'white', width: '100%', maxWidth: '400px', borderRadius: '1rem', boxShadow: '0 10px 25px rgba(0,0,0,0.1)', padding: '2rem', border: '1px solid #f3f4f6' }}>
-          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-            <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#111827', marginBottom: '0.5rem' }}>Mikel's Fruit</h1>
-            <p style={{ color: '#6b7280' }}>Panel de Administración</p>
-          </div>
-          {error && (
-            <div style={{ marginBottom: '1.5rem', padding: '1rem', backgroundColor: '#fef2f2', border: '1px solid #fee2e2', borderRadius: '0.75rem', color: '#b91c1c', fontSize: '0.875rem' }}>
-              {error}
-            </div>
-          )}
-          <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            <input type="text" style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '0.75rem', border: '1px solid #d1d5db', outline: 'none' }} placeholder="Usuario" value={loginData.username} onChange={(e) => setLoginData({...loginData, username: e.target.value})} required />
-            <input type="password" style={{ width: '100%', padding: '0.75rem 1rem', borderRadius: '0.75rem', border: '1px solid #d1d5db', outline: 'none' }} placeholder="Contraseña" value={loginData.password} onChange={(e) => setLoginData({...loginData, password: e.target.value})} required />
-            <button type="submit" style={{ width: '100%', backgroundColor: '#CD545B', color: 'white', padding: '0.75rem', borderRadius: '0.75rem', fontWeight: '500', border: 'none', cursor: 'pointer' }}>Iniciar Sesión</button>
-          </form>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb', paddingBottom: '5rem' }}>
       <header style={{ backgroundColor: 'white', borderBottom: '1px solid #e5e7eb', position: 'sticky', top: 0, zIndex: 30 }}>
@@ -228,7 +166,7 @@ const BlogAdmin = () => {
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <span style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>Mikel's Blog Admin</span>
           </div>
-          <button onClick={handleLogout} style={{ background: 'none', border: 'none', color: '#6b7280', cursor: 'pointer' }}>Cerrar Sesión</button>
+          <button onClick={() => navigate('/admin/dashboard')} style={{ background: 'none', border: 'none', color: '#6b7280', cursor: 'pointer' }}>Volver al panel</button>
         </div>
       </header>
       <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem 1rem' }}>
