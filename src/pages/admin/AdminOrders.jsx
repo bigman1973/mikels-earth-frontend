@@ -190,6 +190,12 @@ export default function AdminOrders() {
     pending: { label: 'Confirmación pendiente', className: 'bg-amber-500/10 text-amber-400 border-amber-500/20' },
   };
 
+  const cancellationConfig = {
+    accepted: { label: 'Aviso de anulación enviado', className: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' },
+    failed: { label: 'Aviso de anulación no enviado', className: 'bg-red-500/10 text-red-400 border-red-500/20' },
+    pending: { label: 'Aviso de anulación pendiente', className: 'bg-amber-500/10 text-amber-400 border-amber-500/20' },
+  };
+
   // Generar opciones de meses disponibles a partir de los pedidos
   const monthOptions = (() => {
     const months = new Set();
@@ -380,6 +386,9 @@ export default function AdminOrders() {
               const willBeInvoice = order.needs_invoice && order.fiscal_nif;
               const confirmation = confirmationConfig[order.confirmation_delivery?.status] || confirmationConfig.pending;
               const confirmationError = order.confirmation_delivery?.error;
+              const cancellation = cancellationConfig[order.cancellation_delivery?.status] || cancellationConfig.pending;
+              const cancellationError = order.cancellation_delivery?.error;
+              const isCancelled = ['cancelled', 'refunded'].includes(order.status) || ['cancelled', 'refunded'].includes(order.payment_status);
               
               return (
                 <div key={order.id} className="bg-white/[0.02] rounded-xl border border-white/5 hover:border-white/10 transition-colors overflow-hidden">
@@ -584,6 +593,23 @@ export default function AdminOrders() {
                           <p className="text-xs text-gray-500 mt-2">Alarma interna: {order.confirmation_delivery.alert_sent ? 'enviada a info@mikels.es' : 'no enviada'}</p>
                         )}
                       </div>
+
+                      {isCancelled && (
+                        <div className="mt-4 pt-4 border-t border-white/5">
+                          <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Aviso de anulación</h4>
+                          <p className={`text-sm ${cancellation.className.includes('red-') ? 'text-red-400' : cancellation.className.includes('emerald-') ? 'text-emerald-400' : 'text-amber-400'}`}>
+                            {cancellation.label}
+                            {order.cancellation_delivery?.refund_amount != null && ` · ${Number(order.cancellation_delivery.refund_amount).toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}`}
+                          </p>
+                          {order.cancellation_delivery?.attempted_at && (
+                            <p className="text-xs text-gray-500 mt-1">Intento: {new Date(order.cancellation_delivery.attempted_at).toLocaleString('es-ES')}</p>
+                          )}
+                          {cancellationError && <p className="text-xs text-red-300 mt-2 break-words">Error: {cancellationError}</p>}
+                          {order.cancellation_delivery?.status === 'failed' && (
+                            <p className="text-xs text-gray-500 mt-2">Alarma interna: {order.cancellation_delivery.alert_sent ? 'enviada a info@mikels.es' : 'no enviada'}</p>
+                          )}
+                        </div>
+                      )}
 
                       {/* Holded info */}
                       {(order.holded_id || order.holded_invoice_id) && (
