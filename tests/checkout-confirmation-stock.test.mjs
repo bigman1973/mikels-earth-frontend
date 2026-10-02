@@ -77,6 +77,7 @@ test('reservation purchase surfaces use the saved reservation contract', async (
   assert.match(detail, /product\.reservationOnly === true/);
   assert.match(detail, /Quedan \{availableStock\} de \{product\.reservationStockTotal \|\| 1080\}/);
   assert.match(detail, /isReservation \? 'Reservar'/);
+  assert.match(detail, /Envío al embotellar, a finales de octubre/);
   assert.match(card, /product\.reservationOnly \? 'Reservar'/);
   assert.match(cart, /Caja de 12: pagas 11 y recibes 12/);
   assert.match(emailTemplate, /event\.Receipt\.heading/);
