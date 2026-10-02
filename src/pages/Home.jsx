@@ -165,20 +165,23 @@ const Home = () => {
                   name: t('home.product_paraguayo'),
                   tagline: t('home.product_paraguayo_tagline'),
                   description: t('home.product_paraguayo_desc'),
-                  image: "/images/products/paraguayo-almibar-hero.jpg"
+                  image: "/images/products/paraguayo-almibar-hero.jpg",
+                  link: '/producto/paraguayo-almibar',
                 },
                 {
                   name: t('home.product_temprano'),
                   tagline: t('home.product_temprano_tagline'),
                   badge: t('home.product_temprano_reservation_badge'),
                   description: t('home.product_temprano_desc'),
-                  image: "/images/aceite-temprano.jpg"
+                  image: "/images/aceite-temprano.jpg",
+                  link: '/producto/aceite-temprano-sin-filtrar',
                 },
                 {
                   name: t('home.product_pack'),
                   tagline: t('home.product_pack_tagline'),
                   description: t('home.product_pack_desc'),
-                  image: "/images/pack-degustacion.jpg"
+                  image: "/images/pack-degustacion.jpg",
+                  link: '/producto/pack-mermelada-aceites',
                 }
               ].map((product, index) => (
                 <div
@@ -212,7 +215,7 @@ const Home = () => {
                     {product.description}
                   </p>
                   <Link
-                    to="/nuestras-joyas"
+                    to={product.link}
                     className="block text-center text-primary font-bold hover:text-secondary transition-colors"
                   >
                     {t('home.discover_more')}

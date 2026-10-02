@@ -55,6 +55,9 @@ test('featured home products use the approved text and highlight Temprano reserv
 
   assert.match(featured, /home\.product_temprano_reservation_badge/);
   assert.match(featured, /absolute left-4 top-4 z-10 rounded-full bg-primary/);
+  assert.match(featured, /link: '\/producto\/paraguayo-almibar'/);
+  assert.match(featured, /link: '\/producto\/aceite-temprano-sin-filtrar'/);
+  assert.match(featured, /link: '\/producto\/pack-mermelada-aceites'/);
 
   for (const path of ['src/i18n/locales/es.json', 'src/i18n/locales/en.json']) {
     const values = JSON.parse(source(path)).home;
