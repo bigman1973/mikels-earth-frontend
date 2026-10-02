@@ -49,8 +49,7 @@ const OrderReceipt = ({ receipt, children }) => {
         <section className="space-y-2 border-t border-stone-200 pt-5 text-sm">
           <div className="flex justify-between text-stone-700"><span>Subtotal</span><span>{totals.subtotal_display}</span></div>
           <div className="flex justify-between text-stone-700"><span>Envío</span><span>{totals.shipping_display || 'GRATIS'}</span></div>
-          <div className="flex justify-between text-stone-700"><span>IVA</span><span>{totals.tax_display}</span></div>
-          <div className="flex justify-between border-t border-stone-300 pt-3 font-semibold text-[#1a1a1a]"><span>Total</span><span className="text-price">{totals.total_display}</span></div>
+          <div className="flex justify-between border-t border-stone-300 pt-3 font-semibold text-[#1a1a1a]"><span>Total</span><span><span className="text-price">{totals.total_display}</span><span className="ml-2 text-xs font-normal text-stone-600">· IVA incluido</span></span></div>
         </section>
 
         <DetailBlock title="Dirección de envío">
@@ -61,6 +60,7 @@ const OrderReceipt = ({ receipt, children }) => {
         {billing.requested && (
           <DetailBlock title="Datos de factura">
             {(billing.lines || []).map((line) => <p key={line}>{line}</p>)}
+            <p>Recibirás la factura con el desglose de IVA en un correo aparte.</p>
           </DetailBlock>
         )}
 

@@ -17,10 +17,12 @@ test('order confirmation renders the saved receipt rather than recalculating it'
   assert.doesNotMatch(page, /toFixed\(/);
   assert.match(receipt, /subtotal_display/);
   assert.match(receipt, /shipping_display/);
-  assert.match(receipt, /tax_display/);
   assert.match(receipt, /total_display/);
+  assert.match(receipt, /IVA incluido/);
+  assert.doesNotMatch(receipt, /tax_display/);
   assert.match(receipt, /GRATIS/);
   assert.match(receipt, /Teléfono:/);
   assert.match(receipt, /Datos de factura/);
+  assert.match(receipt, /Recibirás la factura con el desglose de IVA en un correo aparte/);
   assert.match(receipt, /Te hemos enviado la confirmación/);
 });
