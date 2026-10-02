@@ -1,15 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 // eslint-disable-next-line no-unused-vars -- JSX uses the `motion.*` namespace.
 import { motion } from 'framer-motion';
 import { getSessionStatus } from '../services/stripeService';
 import OrderReceipt from '../components/orders/OrderReceipt';
+import { useCart } from '../context/CartContext';
 
 const OrderSuccess = () => {
   const [searchParams] = useSearchParams();
   const sessionId = searchParams.get('session_id');
   const [sessionData, setSessionData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { clearPaidOrderCart } = useCart();
+  const clearedSessionRef = useRef(null);
 
   useEffect(() => {
     if (!sessionId) {
@@ -45,6 +48,16 @@ const OrderSuccess = () => {
     };
   }, [sessionId]);
 
+  const receipt = sessionData?.order?.receipt;
+  useEffect(() => {
+    // Stripe's redirect is not a payment confirmation. Clear only after the
+    // API returns the persisted Receipt for a paid order; on a page reload the
+    // same check removes any stale stored cart before it can be repurchased.
+    if (!sessionId || !receipt || clearedSessionRef.current === sessionId) return;
+    clearPaidOrderCart();
+    clearedSessionRef.current = sessionId;
+  }, [receipt, sessionId, clearPaidOrderCart]);
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#f5efe4]">
@@ -53,7 +66,6 @@ const OrderSuccess = () => {
     );
   }
 
-  const receipt = sessionData?.order?.receipt;
   if (!receipt) {
     return (
       <main className="min-h-screen bg-[#f5efe4] py-16">

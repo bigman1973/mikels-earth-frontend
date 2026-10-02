@@ -11,3 +11,13 @@ export const loadStoredCart = (storage) => {
     return [];
   }
 };
+
+// Clearing storage synchronously is important on the Stripe success route:
+// the customer can reload before React has completed its next effect.
+export const clearStoredCart = (storage) => {
+  try {
+    storage?.removeItem(CART_STORAGE_KEY);
+  } catch {
+    // Cart state still clears in memory if a browser blocks localStorage.
+  }
+};

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { CART_STORAGE_KEY, loadStoredCart } from '../src/utils/cartStorage.js';
+import { CART_STORAGE_KEY, clearStoredCart, loadStoredCart } from '../src/utils/cartStorage.js';
 
 const createStorage = (initialValue) => ({
   getItem: (key) => (key === CART_STORAGE_KEY ? initialValue : null),
@@ -19,4 +19,12 @@ test('returns an empty cart for absent, malformed, or non-array data', () => {
   assert.deepEqual(loadStoredCart(createStorage(null)), []);
   assert.deepEqual(loadStoredCart(createStorage('{invalid json')), []);
   assert.deepEqual(loadStoredCart(createStorage('{"id": 6}')), []);
+});
+
+test('removes the persisted cart after a confirmed payment', () => {
+  const removed = [];
+  clearStoredCart({
+    removeItem: (key) => removed.push(key),
+  });
+  assert.deepEqual(removed, [CART_STORAGE_KEY]);
 });

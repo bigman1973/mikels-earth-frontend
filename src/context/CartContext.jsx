@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { CART_STORAGE_KEY, loadStoredCart } from '../utils/cartStorage';
+import { CART_STORAGE_KEY, clearStoredCart, loadStoredCart } from '../utils/cartStorage';
+import { getVolumeDiscountedUnitPrice } from '../utils/volumePricing';
 
 const CartContext = createContext();
 
@@ -104,6 +105,17 @@ export const CartProvider = ({ children }) => {
   const clearCart = () => {
     setCart([]);
   };
+
+  // This is deliberately separate from a normal cart edit. It is called only
+  // after the success route has received a saved paid Receipt from the API.
+  const clearPaidOrderCart = () => {
+    if (typeof window !== 'undefined') clearStoredCart(window.localStorage);
+    setCart([]);
+    setDiscountCode('');
+    setAppliedDiscount(null);
+    setIsCartOpen(false);
+  };
+
   const applyDiscountCode = async (code) => {
     // Validar código de descuento contra el backend (todos los cupones centralizados)
     const normalizedCode = code.trim();
@@ -150,29 +162,8 @@ export const CartProvider = ({ children }) => {
 
   // Calcular precio de un item con descuento por volumen si aplica
   const getItemPrice = (item) => {
-    let price = item.price;
-    
-    // Aplicar descuento escalonado (tieredDiscount) si existe
-    if (item.tieredDiscountConfig && item.purchaseType === 'one-time') {
-      // Encontrar el descuento más alto que aplique
-      let applicableDiscount = 0;
-      for (const tier of item.tieredDiscountConfig) {
-        if (item.quantity >= tier.minQuantity) {
-          applicableDiscount = tier.discount;
-        }
-      }
-      if (applicableDiscount > 0) {
-        price = item.price * (1 - applicableDiscount / 100);
-      }
-    }
-    // Si no hay tieredDiscount, aplicar volumeDiscount simple
-    else if (item.volumeDiscountConfig && 
-        item.quantity >= item.volumeDiscountConfig.minQuantity && 
-        item.purchaseType === 'one-time') {
-      price = item.price * (1 - item.volumeDiscountConfig.discount / 100);
-    }
-    
-    return price;
+    if (item.purchaseType !== 'one-time') return item.price;
+    return getVolumeDiscountedUnitPrice(item, item.quantity);
   };
   
   const getCartTotal = () => {
@@ -238,6 +229,7 @@ export const CartProvider = ({ children }) => {
     removeFromCart,
     updateQuantity,
     clearCart,
+    clearPaidOrderCart,
     getCartTotal,
     getCartCount,
     getItemPrice,

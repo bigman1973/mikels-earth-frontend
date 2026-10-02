@@ -40,6 +40,18 @@ test('confirmation page renders persisted order details and confirmation notice'
   assert.match(page, /Estamos comprobando tu pedido/);
 });
 
+test('confirmation clears the cart only after a saved paid receipt is available', async () => {
+  const [page, cart] = await Promise.all([
+    read('src/pages/OrderSuccess.jsx'),
+    read('src/context/CartContext.jsx'),
+  ]);
+  assert.match(page, /const receipt = sessionData\?\.order\?\.receipt/);
+  assert.match(page, /if \(!sessionId \|\| !receipt \|\| clearedSessionRef\.current === sessionId\) return/);
+  assert.match(page, /clearPaidOrderCart\(\)/);
+  assert.match(cart, /const clearPaidOrderCart = \(\) =>/);
+  assert.match(cart, /clearStoredCart\(window\.localStorage\)/);
+});
+
 test('stock controls retain a backend-enforced checkout boundary', async () => {
   const [cart, detail, card] = await Promise.all([
     read('src/context/CartContext.jsx'),
