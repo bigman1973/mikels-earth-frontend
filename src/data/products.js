@@ -595,10 +595,6 @@ export const products = [
       { value: 'quarterly', label: 'Trimestral', discount: 8 },
       { value: 'semiannual', label: 'Semestral', discount: 7 }
     ],
-    volumeDiscount: {
-      minQuantity: 12,
-      discount: 15
-    },
     subscriptionTerms: {
       duration: 12,
       renewalPolicy: "Los precios se revisan anualmente. Al finalizar el periodo, podrás cancelar o renovar tu suscripción."
