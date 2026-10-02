@@ -255,9 +255,15 @@ export const buildOrganizationStructuredData = (logoUrl) => ({
   },
 });
 
-export const buildBlogMetadata = (post) => ({
-  title: `${normalizeText(post?.title) || 'Artículo'} | Blog Mikel's Fruit`,
-  // The editor's excerpt is the deliberate meta description. The body is a
-  // fallback for historical posts that do not have an excerpt.
-  description: truncate(post?.excerpt || post?.content || post?.title || 'Historias y recetas de Mikel\'s Fruit.', 155),
-});
+export const buildBlogMetadata = (post) => {
+  const articleTitle = normalizeText(post?.title) || 'Artículo';
+
+  return {
+    title: /Mikel's Fruit/i.test(articleTitle)
+      ? articleTitle
+      : `${articleTitle} | Blog Mikel's Fruit`,
+    // The editor's excerpt is the deliberate meta description. The body is a
+    // fallback for historical posts that do not have an excerpt.
+    description: truncate(post?.excerpt || post?.content || post?.title || 'Historias y recetas de Mikel\'s Fruit.', 155),
+  };
+};

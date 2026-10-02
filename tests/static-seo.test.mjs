@@ -158,6 +158,11 @@ test('uses the edited excerpt before article body for blog metadata', () => {
 
   assert.equal(metadata.title, "Artículo actualizado | Blog Mikel's Fruit");
   assert.equal(metadata.description, 'Descripción editorial aprobada para buscadores y redes.');
+
+  assert.equal(
+    buildBlogMetadata({ title: "Artículo actualizado | Mikel's Fruit" }).title,
+    "Artículo actualizado | Mikel's Fruit",
+  );
 });
 
 test('removes generic heritage claims outside the documented family history', async () => {
