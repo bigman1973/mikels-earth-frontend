@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { useProducts } from '../hooks/useProducts';
 import ProductCard from '../components/products/ProductCard';
 import { Filter } from 'lucide-react';
@@ -15,6 +16,9 @@ const Products = () => {
   const { products, categories } = useProducts();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('default');
+  const reservationProduct = products.find((product) => (
+    product.reservationOnly && product.visibleInStore !== false && !product.soldOut
+  ));
 
   const filteredProducts = products.filter(product => {
     if (product.visibleInStore === false) return false;
@@ -57,6 +61,17 @@ const Products = () => {
             {t('products.page_subtitle')}
           </p>
         </div>
+
+        {reservationProduct && (
+          <p className="mb-8 text-center text-sm leading-6 text-[#1a1a1a]">
+            <Link
+              to={`/producto/${reservationProduct.slug}`}
+              className="underline decoration-[#8c2337] decoration-1 underline-offset-4 transition-colors hover:text-[#8c2337]"
+            >
+              Ya puedes reservar el Temprano de la cosecha 2026/27. Se embotella a finales de octubre.
+            </Link>
+          </p>
+        )}
 
         {/* Filters */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">

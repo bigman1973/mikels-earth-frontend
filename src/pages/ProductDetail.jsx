@@ -272,7 +272,6 @@ const ProductDetail = () => {
               {isReservation && (
                 <div className="mb-5 rounded-lg border border-stone-300 bg-[#f5efe4] px-4 py-3 text-sm leading-6 text-[#1a1a1a]">
                   <p>{product.reservationMessage || 'La cosecha 2026/27 se sirve por reserva. Se embotella a finales de octubre y te llega en cuanto salga.'}</p>
-                  <p className="mt-2 font-semibold">Quedan {availableStock} de {product.reservationStockTotal || 1080}</p>
                 </div>
               )}
 

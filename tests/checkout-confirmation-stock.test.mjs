@@ -67,18 +67,30 @@ test('stock controls retain a backend-enforced checkout boundary', async () => {
 });
 
 test('reservation purchase surfaces use the saved reservation contract', async () => {
-  const [detail, card, cart, emailTemplate] = await Promise.all([
+  const [detail, card, cart, emailTemplate, products, footer, es, en] = await Promise.all([
     read('src/pages/ProductDetail.jsx'),
     read('src/components/products/ProductCard.jsx'),
     read('src/components/cart/CartDrawer.jsx'),
     read('../..//plantilla_ficha_pedido_klaviyo_2026-10-02.html'),
+    read('src/pages/Products.jsx'),
+    read('src/components/layout/Footer.jsx'),
+    read('src/i18n/locales/es.json'),
+    read('src/i18n/locales/en.json'),
   ]);
 
   assert.match(detail, /product\.reservationOnly === true/);
-  assert.match(detail, /Quedan \{availableStock\} de \{product\.reservationStockTotal \|\| 1080\}/);
+  assert.doesNotMatch(detail, /Quedan \{availableStock\} de \{product\.reservationStockTotal \|\| 1080\}/);
   assert.match(detail, /isReservation \? 'Reservar'/);
   assert.match(detail, /Envío al embotellar, a finales de octubre/);
+  assert.match(card, /RESERVA · COSECHA 2026\/27/);
+  assert.match(card, /product\.reservationOnly \? 'bg-primary text-white'/);
   assert.match(card, /product\.reservationOnly \? 'Reservar'/);
   assert.match(cart, /Caja de 12: pagas 11 y recibes 12/);
   assert.match(emailTemplate, /event\.Receipt\.heading/);
+  assert.match(products, /Ya puedes reservar el Temprano de la cosecha 2026\/27\. Se embotella a finales de octubre\./);
+  assert.match(products, /to=\{`\/producto\/\$\{reservationProduct\.slug\}`\}/);
+  assert.match(footer, /new Date\(\)\.getFullYear\(\)/);
+  assert.match(footer, /t\('footer\.copyright', \{ year: currentYear \}\)/);
+  assert.match(es, /Copyright © \{\{year\}\} Mikel's Fruit/);
+  assert.match(en, /Copyright © \{\{year\}\} Mikel's Fruit/);
 });

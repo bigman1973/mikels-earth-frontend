@@ -25,6 +25,9 @@ const ProductCard = ({ product }) => {
   const badgeText = displayBadge
     ? (displayBadge.textKey ? t(`badges.${displayBadge.textKey}`, displayBadge.text) : displayBadge.text)
     : null;
+  const cardBadgeText = product.reservationOnly
+    ? 'RESERVA · COSECHA 2026/27'
+    : badgeText;
   const isSoldOut = product.soldOut || Number(product.stock || 0) < 1;
 
   const addProduct = () => {
@@ -40,9 +43,11 @@ const ProductCard = ({ product }) => {
       transition={{ duration: 0.4 }}
       className="group relative overflow-hidden rounded-lg bg-white shadow-sm transition-shadow duration-300 hover:shadow-lg"
     >
-      {badgeText && !isSoldOut && (
-        <span className="absolute left-3 top-3 z-10 rounded-full bg-[#f5efe4] px-3 py-1 text-xs font-semibold uppercase tracking-wide text-[#1a1a1a]">
-          {badgeText}
+      {cardBadgeText && !isSoldOut && (
+        <span className={`absolute left-3 top-3 z-10 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide ${
+          product.reservationOnly ? 'bg-primary text-white' : 'bg-[#f5efe4] text-[#1a1a1a]'
+        }`}>
+          {cardBadgeText}
         </span>
       )}
       {isSoldOut && (

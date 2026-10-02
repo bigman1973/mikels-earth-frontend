@@ -5,6 +5,7 @@ import CompanyLegalBlock from '../CompanyLegalBlock';
 
 const Footer = () => {
   const { t } = useTranslation();
+  const currentYear = new Date().getFullYear();
 
   return (
     <footer className="bg-white border-t border-gray-200">
@@ -128,7 +129,7 @@ const Footer = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-600">
             <p>
-              {t('footer.copyright')}
+              {t('footer.copyright', { year: currentYear })}
             </p>
             <div className="flex gap-4">
               <Link to="/politica-privacidad" className="hover:text-primary transition-colors">

@@ -74,7 +74,7 @@
     "company_desc": "Tradición familiar desde 1819. Productos naturales, artesanales y veganos de Lleida.",
     "contact_title": "Contacto",
     "follow_us": "Síguenos",
-    "copyright": "Copyright © 2025 Mikel's Fruit - Todos los derechos reservados",
+    "copyright": "Copyright © {{year}} Mikel's Fruit - Todos los derechos reservados",
     "privacy": "Política de privacidad",
     "terms": "Términos y condiciones"
   },
