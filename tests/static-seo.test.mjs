@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
-import { GTIN13_BY_SKU, buildProductStructuredData } from '../src/seo/metadata.js';
+import { GTIN13_BY_SKU, buildBlogMetadata, buildProductStructuredData } from '../src/seo/metadata.js';
 
 const ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const DIST = join(ROOT, 'dist');
@@ -147,6 +147,17 @@ test('uses the approved Tienda title and description', async () => {
   assert.equal(tagContent(shop, /<meta name="description" content="([^"]+)"/i), expected);
   assert.equal(tagContent(shop, /<meta property="og:description" content="([^"]+)"/i), expected);
   assert.doesNotMatch(shop, /desde 1819|more than 200|over 200/i);
+});
+
+test('uses the edited excerpt before article body for blog metadata', () => {
+  const metadata = buildBlogMetadata({
+    title: 'Artículo actualizado',
+    excerpt: 'Descripción editorial aprobada para buscadores y redes.',
+    content: 'Texto histórico que no debe sustituir la descripción editorial.',
+  });
+
+  assert.equal(metadata.title, "Artículo actualizado | Blog Mikel's Fruit");
+  assert.equal(metadata.description, 'Descripción editorial aprobada para buscadores y redes.');
 });
 
 test('removes generic heritage claims outside the documented family history', async () => {

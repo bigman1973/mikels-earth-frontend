@@ -257,5 +257,7 @@ export const buildOrganizationStructuredData = (logoUrl) => ({
 
 export const buildBlogMetadata = (post) => ({
   title: `${normalizeText(post?.title) || 'Artículo'} | Blog Mikel's Fruit`,
-  description: truncate(post?.content || post?.excerpt || post?.title || 'Historias y recetas de Mikel\'s Fruit.', 155),
+  // The editor's excerpt is the deliberate meta description. The body is a
+  // fallback for historical posts that do not have an excerpt.
+  description: truncate(post?.excerpt || post?.content || post?.title || 'Historias y recetas de Mikel\'s Fruit.', 155),
 });
