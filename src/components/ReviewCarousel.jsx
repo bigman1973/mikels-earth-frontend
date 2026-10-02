@@ -64,7 +64,7 @@ const ReviewCarousel = () => {
             Lo Que Dicen Nuestros Clientes
           </h2>
           <p className="text-xl text-gray-600">
-            Más de 200 años de tradición, avalados por quienes nos eligen cada día
+            Opiniones de quienes ya han probado nuestros productos
           </p>
         </div>
 

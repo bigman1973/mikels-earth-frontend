@@ -20,6 +20,7 @@ const FAMILY = join(ROOT, 'src', 'pages', 'LaFamilia.jsx');
 const LAND = join(ROOT, 'src', 'pages', 'NuestraTierra.jsx');
 const TREASURES = join(ROOT, 'src', 'pages', 'NuestrasJoyas.jsx');
 const RECIPES = join(ROOT, 'src', 'pages', 'Recetario.jsx');
+const REVIEW_CAROUSEL = join(ROOT, 'src', 'components', 'ReviewCarousel.jsx');
 const SPANISH_LOCALE = join(ROOT, 'src', 'i18n', 'locales', 'es.json');
 const ENGLISH_LOCALE = join(ROOT, 'src', 'i18n', 'locales', 'en.json');
 
@@ -139,12 +140,23 @@ test('uses Segrià in the homepage description', async () => {
 
 test('uses the approved Tienda title and description', async () => {
   const shop = await htmlFor('/tienda');
+  const expected = 'Conservas de fruta del Segrià y aceite de oliva virgen extra de nuestros olivos en Córdoba. Paraguayo y nectarina en almíbar, AOVE y packs.';
+
   assert.match(shop, /<title>Tienda online \| Mikel's Fruit<\/title>/);
   assert.equal(decodeApostrophes(tagContent(shop, /<title>([^<]+)<\/title>/i)), "Tienda online | Mikel's Fruit");
-  assert.equal(
-    tagContent(shop, /<meta name="description" content="([^"]+)"/i),
-    'Conservas de fruta y aceite de oliva virgen extra de la familia Giró, en Alcarràs desde 1819. Paraguayo y nectarina en almíbar, AOVE y packs.'
-  );
+  assert.equal(tagContent(shop, /<meta name="description" content="([^"]+)"/i), expected);
+  assert.equal(tagContent(shop, /<meta property="og:description" content="([^"]+)"/i), expected);
+  assert.doesNotMatch(shop, /desde 1819|more than 200|over 200/i);
+});
+
+test('removes generic heritage claims outside the documented family history', async () => {
+  const [home, reviewCarousel] = await Promise.all([
+    htmlFor('/'),
+    readFile(REVIEW_CAROUSEL, 'utf8'),
+  ]);
+
+  assert.doesNotMatch(home, /Productos Naturales y Aceite de Oliva Gourmet desde 1819|Más de 200 Años|Over 200 Years/i);
+  assert.doesNotMatch(reviewCarousel, /Más de 200 años de tradición/i);
 });
 
 test('publishes Product JSON-LD with validated EANs and no invented rating data', async () => {

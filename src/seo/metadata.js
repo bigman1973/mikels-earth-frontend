@@ -3,8 +3,8 @@ export const DEFAULT_SOCIAL_IMAGE = `${SITE_ORIGIN}/images/hero-olivos-backgroun
 
 export const STATIC_ROUTE_SEO = {
   '/': {
-    title: "Mikel's Fruit | Productos Naturales y Aceite de Oliva Gourmet desde 1819",
-    description: 'Conservas de fruta y aceite de oliva virgen extra cultivados por la familia Giró en el Segrià desde 1819. Del campo al tarro, sin aditivos.',
+    title: "Mikel's Fruit | Conservas de fruta y aceite de oliva",
+    description: 'Conservas de fruta del Segrià y aceite de oliva virgen extra de nuestros olivos en Córdoba. Del campo al tarro, sin aditivos.',
   },
   '/la-familia': {
     title: "La familia Giró: siete generaciones desde 1819 | Mikel's",
@@ -28,11 +28,11 @@ export const STATIC_ROUTE_SEO = {
   },
   '/tienda': {
     title: "Tienda online | Mikel's Fruit",
-    description: 'Conservas de fruta y aceite de oliva virgen extra de la familia Giró, en Alcarràs desde 1819. Paraguayo y nectarina en almíbar, AOVE y packs.',
+    description: 'Conservas de fruta del Segrià y aceite de oliva virgen extra de nuestros olivos en Córdoba. Paraguayo y nectarina en almíbar, AOVE y packs.',
   },
   '/blog': {
     title: "Blog: historias, recetas y tradición | Mikel's",
-    description: 'Recetas, historias del campo y todo lo que aprendemos cultivando fruta y aceite desde 1819.',
+    description: 'Recetas, historias del Segrià y de nuestros olivos en Córdoba.',
   },
   '/contacto': {
     title: "Contacto | Mikel's",

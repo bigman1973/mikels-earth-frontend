@@ -27,7 +27,7 @@ const Hero = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-4xl md:text-5xl font-bold text-primary mb-6"
           >
-            Productos naturales desde 1819
+            Fruta del Segrià y aceite de Córdoba
           </motion.h2>
           
           <motion.p
@@ -36,7 +36,7 @@ const Hero = () => {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="text-primary/80 text-lg mb-8"
           >
-            Tradición familiar y agricultura sostenible
+            Conservas de fruta y aceite de oliva virgen extra
           </motion.p>
 
           <motion.div
@@ -61,4 +61,3 @@ const Hero = () => {
 };
 
 export default Hero;
-
