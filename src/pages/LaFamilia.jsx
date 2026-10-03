@@ -176,8 +176,8 @@ const LaFamilia = () => {
                 text: 'Paraguayo, agua, azúcar y zumo de limón. Eso es todo. El limón es lo que hace que la conserva aguante: no hacen falta conservantes ni colorantes.',
               },
               {
-                title: 'Quién lo hace',
-                text: 'El aceite es nuestro, de principio a fin. La conserva la hace un productor que la elabora igual que se hace en casa: pelada a mano, pieza a pieza. Lo buscamos durante mucho tiempo, porque a máquina la fruta se deshace y casi nadie la envasa entera.',
+                title: 'Cómo se hace',
+                text: 'Se pela a mano, pieza a pieza. A máquina la fruta se rompe y casi nadie la envasa entera. La receta es la de casa: la de hacer conserva cada verano para el invierno. El aceite sale de nuestro olivar en la campiña cordobesa, de una sola pasada y recogido verde.',
               },
               {
                 title: 'Lo que está certificado',
