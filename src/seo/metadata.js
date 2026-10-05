@@ -58,8 +58,8 @@ const PRODUCT_SEO = {
     description: 'Paraguayo pelado a mano, pieza a pieza, en almíbar de agua, azúcar y zumo de limón. Sin conservantes ni colorantes. Tarro de 720 g.',
   },
   'nectarina-almibar': {
-    title: "Nectarina en Almíbar Artesanal 720 g | Mikel's Fruit",
-    description: 'Nectarina cultivada en Alcarràs y envasada en almíbar suave. Sin conservantes ni colorantes. El verano en un tarro, todo el año.',
+    title: "Nectarina en Almíbar 720 g, de Alcarràs | Mikel's Fruit",
+    description: 'Nectarina cultivada en Alcarràs, en almíbar de agua y azúcar. Sin conservantes ni colorantes. Tarro de 720 g.',
   },
   'aceite-oliva-ecologico': {
     title: "AOVE Ecológico 500ml | Oro OLIVE JAPAN 2025 | Mikel's",
@@ -70,8 +70,8 @@ const PRODUCT_SEO = {
     description: 'Medalla de Plata en OLIVE JAPAN 2026, el concurso internacional de aceite de oliva de Tokio, en su primera participación.',
   },
   'aceite-5l-caja-3': {
-    title: 'Aceite de Oliva Virgen Extra 5L | Garrafa hostelería',
-    description: 'Garrafa de 5 litros de AOVE de baja acidez, Picual, Hojiblanca y Arbequina. El formato de los que cocinan cada día: restaurantes, obradores y casas con consumo alto.',
+    title: "AOVE 5 L para hostelería y granel | Mikel's Fruit",
+    description: 'Garrafa de 5 L de aceite de oliva virgen extra para hostelería, restauración y cocinas de alto consumo. Picual, hojiblanca y arbequina.',
   },
   'pack-mermelada-aceites': {
     title: 'Pack Degustación Premium | Mermelada y 4 aceites',

@@ -105,12 +105,10 @@ function App() {
                       <Route path="/la-familia" element={<LaFamilia />} />
                       <Route path="/nuestra-tierra" element={<NuestraTierra />} />
                       <Route path="/como-se-hace" element={<ComoSeHace />} />
-                      <Route path="/el-obrador" element={<Navigate to="/como-se-hace" replace />} />
                       <Route path="/nuestras-joyas" element={<NuestrasJoyas />} />
                       <Route path="/recetario" element={<Recetario />} />
                       <Route path="/tienda" element={<Products />} />
                       <Route path="/productos" element={<Navigate to="/tienda" replace />} />
-                      <Route path="/familia" element={<Navigate to="/la-familia" replace />} />
                       <Route path="/producto/pack-aceite-ecologico-premium-estuche-regalo" element={<Navigate to="/producto/aceite-oliva-ecologico" replace />} />
                       <Route path="/producto/pack-temprano-premium" element={<Navigate to="/producto/aceite-temprano-sin-filtrar" replace />} />
                       <Route path="/producto/:slug" element={<ProductDetail />} />

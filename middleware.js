@@ -9,7 +9,6 @@ const STATIC_ROUTES = new Set([
   '/la-familia',
   '/nuestra-tierra',
   '/como-se-hace',
-  '/el-obrador',
   '/nuestras-joyas',
   '/recetario',
   '/tienda',
@@ -31,6 +30,7 @@ const STATIC_ROUTES = new Set([
 ]);
 
 const PERMANENT_REDIRECTS = new Map([
+  ['/el-obrador', '/como-se-hace'],
   ['/familia', '/la-familia'],
   ['/productos', '/tienda'],
   ['/pedido-confirmado', '/order-success'],

@@ -103,8 +103,8 @@ test('replaces the retired workshop page with Cómo se hace', async () => {
   const sitemap = await readFile(SITEMAP, 'utf8');
   const config = JSON.parse(await readFile(VERCEL_CONFIG, 'utf8'));
   const middleware = await readFile(MIDDLEWARE, 'utf8');
+  const app = await readFile(APP, 'utf8');
   const howItsMade = await htmlFor('/como-se-hace');
-  const redirect = config.redirects?.find(({ source }) => source === '/el-obrador');
 
   assert.match(sitemap, /https:\/\/www\.mikels\.es\/como-se-hace/);
   assert.doesNotMatch(sitemap, /https:\/\/www\.mikels\.es\/el-obrador/);
@@ -113,12 +113,11 @@ test('replaces the retired workshop page with Cómo se hace', async () => {
     "Cómo se hace el paraguayo en almíbar | Mikel's Fruit"
   );
   assert.equal(tagContent(howItsMade, /<link rel="canonical" href="([^"]+)"/i), 'https://www.mikels.es/como-se-hace');
-  assert.deepEqual(redirect, {
-    source: '/el-obrador',
-    destination: '/como-se-hace',
-    permanent: true,
-  });
-  assert.match(middleware, /['"]\/como-se-hace['"]/);
+  assert.doesNotMatch(JSON.stringify(config.redirects || []), /el-obrador/);
+  assert.match(middleware, /\['\/el-obrador', '\/como-se-hace'\]/);
+  assert.match(middleware, /status:\s*301/);
+  assert.doesNotMatch(app, /path="\/el-obrador"/);
+  assert.doesNotMatch(app, /path="\/familia"/);
 });
 
 test('writes the approved jam description into static and social metadata', async () => {
@@ -147,6 +146,30 @@ test('uses the approved Tienda title and description', async () => {
   assert.equal(tagContent(shop, /<meta name="description" content="([^"]+)"/i), expected);
   assert.equal(tagContent(shop, /<meta property="og:description" content="([^"]+)"/i), expected);
   assert.doesNotMatch(shop, /desde 1819|more than 200|over 200/i);
+});
+
+test('uses intent-led metadata for the five litre horeca format and nectarine', async () => {
+  const [garrafa, nectarina] = await Promise.all([
+    htmlFor('/producto/aceite-5l-caja-3'),
+    htmlFor('/producto/nectarina-almibar'),
+  ]);
+
+  assert.equal(
+    decodeApostrophes(tagContent(garrafa, /<title>([^<]+)<\/title>/i)),
+    "AOVE 5 L para hostelería y granel | Mikel's Fruit",
+  );
+  assert.equal(
+    tagContent(garrafa, /<meta name="description" content="([^"]+)"/i),
+    'Garrafa de 5 L de aceite de oliva virgen extra para hostelería, restauración y cocinas de alto consumo. Picual, hojiblanca y arbequina.',
+  );
+  assert.equal(
+    decodeApostrophes(tagContent(nectarina, /<title>([^<]+)<\/title>/i)),
+    "Nectarina en Almíbar 720 g, de Alcarràs | Mikel's Fruit",
+  );
+  assert.equal(
+    tagContent(nectarina, /<meta name="description" content="([^"]+)"/i),
+    'Nectarina cultivada en Alcarràs, en almíbar de agua y azúcar. Sin conservantes ni colorantes. Tarro de 720 g.',
+  );
 });
 
 test('uses the edited excerpt before article body for blog metadata', () => {

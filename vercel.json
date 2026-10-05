@@ -1,12 +1,5 @@
 {
   "cleanUrls": true,
-  "redirects": [
-    {
-      "source": "/el-obrador",
-      "destination": "/como-se-hace",
-      "permanent": true
-    }
-  ],
   "rewrites": [
     {
       "source": "/(.*)",
