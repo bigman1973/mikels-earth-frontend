@@ -67,6 +67,27 @@ test('shows the Olive Japan 2026 silver medal only on early unfiltered oil', () 
     earlyOil.longDescription,
     /\*\*Medalla de Plata en OLIVE JAPAN 2026\*\*, el concurso internacional de aceite de oliva de Tokio, en su primera participación\./,
   );
+  assert.match(
+    earlyOil.longDescription,
+    /La aceituna se recoge verde, antes de que madure, porque es el momento en que más polifenoles tiene — los antioxidantes naturales del aceite\./,
+  );
+  assert.match(
+    earlyOil.longDescription,
+    /Da bastante menos aceite por kilo, y por eso casi nadie lo hace así\./,
+  );
+  assert.match(
+    earlyOil.longDescription,
+    /No se filtra\. Si lo ves turbio, es eso: no le hemos quitado nada\./,
+  );
+  assert.match(
+    earlyOil.longDescription,
+    /solo se envasa lo que esté reservado\. Lo que no se reserva, no se hace\./,
+  );
+  assert.equal(
+    earlyOil.reservationMessage,
+    'La cosecha 2026/27 se sirve por reserva. Se embotella a finales de octubre y se envía la última semana de octubre.',
+  );
+  assert.doesNotMatch(earlyOil.longDescription, /[Cc]antidad|[Úú]ltimas unidades|[Qq]uedan \d/);
 });
 
 test('removes decorative emoji and incomplete awards from other product metadata', () => {
