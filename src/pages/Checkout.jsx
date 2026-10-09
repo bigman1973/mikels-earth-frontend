@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { createCheckoutSession, createSubscriptionCheckout } from '../services/stripeService';
 import { formatEuro } from '../utils/formatMoney';
 import { deliveryEligibility } from '../utils/deliveryPolicy';
+import { hasMarketingConsent, trackMetaInitiateCheckout } from '../utils/metaPixel';
 
 const Checkout = () => {
   const { cart, getCartTotal, getItemPrice, appliedDiscount, getDiscountAmount, updateItemPrices } = useCart();
@@ -102,10 +103,13 @@ const Checkout = () => {
     setPriceMismatchWarning(null);
     
     try {
+      trackMetaInitiateCheckout(cart, getCartTotal(), getItemPrice);
+
       // Enviar evento de Started Checkout para carrito abandonado
       try {
         const cartItems = cart.map(item => ({
           id: item.id,
+          sku: item.sku || '',
           name: item.name,
           image: item.image,
           price: getItemPrice(item),
@@ -144,6 +148,7 @@ const Checkout = () => {
         notes: formData.notes,
         discountCode: appliedDiscount?.code || null,
         discountAmount: appliedDiscount ? getDiscountAmount() : 0,
+        metaMarketingConsent: hasMarketingConsent(),
         needsInvoice: needsInvoice,
         invoiceData: needsInvoice ? invoiceData : null,
         locale: i18n.language?.substring(0, 2) || 'es'

@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { getSessionStatus } from '../services/stripeService';
 import OrderReceipt from '../components/orders/OrderReceipt';
 import { useCart } from '../context/CartContext';
+import { trackMetaPurchase } from '../utils/metaPixel';
 
 const OrderSuccess = () => {
   const [searchParams] = useSearchParams();
@@ -57,6 +58,19 @@ const OrderSuccess = () => {
     clearPaidOrderCart();
     clearedSessionRef.current = sessionId;
   }, [receipt, sessionId, clearPaidOrderCart]);
+
+  useEffect(() => {
+    if (!receipt?.order_number) return undefined;
+
+    const trackPurchase = () => trackMetaPurchase(receipt);
+    trackPurchase();
+    window.addEventListener('CookiebotOnConsentReady', trackPurchase);
+    window.addEventListener('CookiebotOnAccept', trackPurchase);
+    return () => {
+      window.removeEventListener('CookiebotOnConsentReady', trackPurchase);
+      window.removeEventListener('CookiebotOnAccept', trackPurchase);
+    };
+  }, [receipt]);
 
   if (loading) {
     return (

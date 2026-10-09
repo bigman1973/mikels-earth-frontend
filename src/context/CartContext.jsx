@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { CART_STORAGE_KEY, clearStoredCart, loadStoredCart } from '../utils/cartStorage';
 import { getVolumeDiscountedUnitPrice } from '../utils/volumePricing';
+import { trackMetaAddToCart } from '../utils/metaPixel';
 
 const CartContext = createContext();
 
@@ -27,9 +28,21 @@ export const CartProvider = ({ children }) => {
   }, [cart]);
 
   const addToCart = (product, quantity = 1, purchaseType = 'one-time', subscriptionFrequency = null) => {
+    const sellableStock = Math.max(0, Number(product.stock) || 0);
+    const requestedQuantity = Math.max(1, Number(quantity) || 1);
+    const existingItem = cart.find((item) => (
+      item.id === product.id
+      && item.purchaseType === purchaseType
+      && item.subscriptionFrequency === subscriptionFrequency
+      && (item.selectedVariant || null) === (product.selectedVariant || null)
+    ));
+    const eventQuantity = Math.max(
+      0,
+      Math.min(sellableStock, (existingItem?.quantity || 0) + requestedQuantity) - (existingItem?.quantity || 0),
+    );
+    if (eventQuantity > 0) trackMetaAddToCart(product, eventQuantity);
+
     setCart(prevCart => {
-      const sellableStock = Math.max(0, Number(product.stock) || 0);
-      const requestedQuantity = Math.max(1, Number(quantity) || 1);
       const existingItemIndex = prevCart.findIndex(
         item => 
           item.id === product.id && 
@@ -67,6 +80,7 @@ export const CartProvider = ({ children }) => {
           name: product.name,
           slug: product.slug,
           image: product.image,
+          sku: product.sku || '',
           price: price,
           originalPrice: product.price,
           quantity: Math.min(sellableStock, requestedQuantity),

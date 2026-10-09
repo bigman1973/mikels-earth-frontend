@@ -1,5 +1,5 @@
 import { useParams, Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useProducts } from '../hooks/useProducts';
 import { useCart } from '../context/CartContext';
 import { ShoppingCart, ArrowLeft, Check, Tag, Package } from 'lucide-react';
@@ -17,6 +17,7 @@ const REDIRECTED_PRODUCT_SLUGS = new Set([
 import ProductSeo from '../components/ProductSeo';
 import { formatEuro } from '../utils/formatMoney';
 import { getApplicableVolumeTier, getVolumeDiscountedLineTotal, getVolumeDiscountedUnitPrice } from '../utils/volumePricing';
+import { trackMetaViewContent } from '../utils/metaPixel';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://mikels-earth-backend-production.up.railway.app';
 
@@ -64,6 +65,24 @@ const ProductDetail = () => {
   const { t } = useTranslation();
   
   const product = products.find(p => p.slug === slug && p.visibleInStore !== false);
+  const trackedProductRef = useRef(null);
+
+  useEffect(() => {
+    if (!product?.sku) return undefined;
+
+    const trackProductView = () => {
+      if (trackedProductRef.current === product.sku) return;
+      if (trackMetaViewContent(product)) trackedProductRef.current = product.sku;
+    };
+
+    trackProductView();
+    window.addEventListener('CookiebotOnConsentReady', trackProductView);
+    window.addEventListener('CookiebotOnAccept', trackProductView);
+    return () => {
+      window.removeEventListener('CookiebotOnConsentReady', trackProductView);
+      window.removeEventListener('CookiebotOnAccept', trackProductView);
+    };
+  }, [product?.sku, product?.price]);
 
   // Fetch rating stats para mostrar estrellas debajo del título
   const [reviewStats, setReviewStats] = useState({ average: 0, count: 0 });

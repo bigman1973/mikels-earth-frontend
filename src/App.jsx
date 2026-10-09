@@ -7,6 +7,7 @@ import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import SeoManager from './components/SeoManager';
 import ScrollRestoration from './components/ScrollRestoration';
+import MetaPixel from './components/MetaPixel';
 import './App.css';
 
 const CartDrawer = lazy(() => import('./components/cart/CartDrawer'));
@@ -80,6 +81,7 @@ function App() {
   return (
     <Router>
       <ScrollRestoration />
+      <MetaPixel />
       <CartProvider>
         <AdminAuthProvider>
           <Suspense fallback={<RouteFallback />}>
