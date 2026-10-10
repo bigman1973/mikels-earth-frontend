@@ -116,6 +116,52 @@ export const toAbsoluteUrl = (url) => {
   return new URL(url, SITE_ORIGIN).toString();
 };
 
+const BUSINESS_DAYS = [
+  'https://schema.org/Monday',
+  'https://schema.org/Tuesday',
+  'https://schema.org/Wednesday',
+  'https://schema.org/Thursday',
+  'https://schema.org/Friday',
+];
+
+const FREE_SHIPPING_RATE = {
+  '@type': 'MonetaryAmount',
+  value: 0,
+  currency: 'EUR',
+};
+
+const standardDeliveryTime = () => ({
+  '@type': 'ShippingDeliveryTime',
+  handlingTime: {
+    '@type': 'QuantitativeValue',
+    minValue: 1,
+    maxValue: 2,
+    unitCode: 'DAY',
+  },
+  transitTime: {
+    '@type': 'QuantitativeValue',
+    minValue: 1,
+    maxValue: 3,
+    unitCode: 'DAY',
+  },
+});
+
+const shippingDestination = (countryCode) => ({
+  '@type': 'DefinedRegion',
+  addressCountry: countryCode,
+});
+
+// La exclusión por códigos postales españoles (35, 38, 51 y 52) se aplica en
+// el checkout y se explica en /terminos. Google solo admite divisiones postales
+// de EE. UU., Canadá y Australia para este formato, por lo que no se inventa una
+// región española más precisa de la que el formato puede expresar.
+export const buildProductShippingDetails = () => ['ES', 'PT'].map((countryCode) => ({
+  '@type': 'OfferShippingDetails',
+  shippingRate: { ...FREE_SHIPPING_RATE },
+  shippingDestination: shippingDestination(countryCode),
+  deliveryTime: standardDeliveryTime(),
+}));
+
 // Fuente: maestro de artículos validado por Jordi (29/09/2026).
 // Solo se emite gtin13 cuando el artículo vendido en la web coincide con este SKU.
 export const GTIN13_BY_SKU = Object.freeze({
@@ -228,6 +274,7 @@ export const buildProductStructuredData = (product, slug = product?.slug) => {
         ? 'https://schema.org/OutOfStock'
         : 'https://schema.org/InStock',
       itemCondition: 'https://schema.org/NewCondition',
+      shippingDetails: buildProductShippingDetails(),
     },
   };
 };
@@ -252,6 +299,51 @@ export const buildOrganizationStructuredData = (logoUrl) => ({
     telephone: '+34 621 144 701',
     contactType: 'customer service',
     availableLanguage: ['Spanish', 'English'],
+  },
+  hasMerchantReturnPolicy: {
+    '@type': 'MerchantReturnPolicy',
+    applicableCountry: ['ES', 'PT'],
+    merchantReturnLink: `${SITE_ORIGIN}/terminos`,
+    returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+    merchantReturnDays: 14,
+    itemCondition: 'https://schema.org/NewCondition',
+    returnMethod: 'https://schema.org/ReturnByMail',
+    returnFees: 'https://schema.org/ReturnFeesCustomerResponsibility',
+    refundType: 'https://schema.org/FullRefund',
+    returnLabelSource: 'https://schema.org/ReturnLabelCustomerResponsibility',
+    itemDefectReturnFees: 'https://schema.org/FreeReturn',
+    itemDefectReturnLabelSource: 'https://schema.org/ReturnLabelCustomerResponsibility',
+  },
+  hasShippingService: {
+    '@type': 'ShippingService',
+    name: 'Envío estándar de Mikel\'s Fruit',
+    description: 'Envío gratuito en España peninsular, Baleares y Portugal. En Baleares, el pedido mínimo es de 59 €. No enviamos a Canarias, Ceuta ni Melilla.',
+    fulfillmentType: 'https://schema.org/FulfillmentTypeDelivery',
+    handlingTime: {
+      '@type': 'ServicePeriod',
+      duration: {
+        '@type': 'QuantitativeValue',
+        minValue: 1,
+        maxValue: 2,
+        unitCode: 'DAY',
+      },
+      businessDays: BUSINESS_DAYS,
+    },
+    shippingConditions: ['ES', 'PT'].map((countryCode) => ({
+      '@type': 'ShippingConditions',
+      shippingDestination: shippingDestination(countryCode),
+      shippingRate: { ...FREE_SHIPPING_RATE },
+      transitTime: {
+        '@type': 'ServicePeriod',
+        duration: {
+          '@type': 'QuantitativeValue',
+          minValue: 1,
+          maxValue: 3,
+          unitCode: 'DAY',
+        },
+        businessDays: BUSINESS_DAYS,
+      },
+    })),
   },
 });
 

@@ -3,7 +3,12 @@ import { readFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import test from 'node:test';
-import { GTIN13_BY_SKU, buildBlogMetadata, buildProductStructuredData } from '../src/seo/metadata.js';
+import {
+  GTIN13_BY_SKU,
+  buildBlogMetadata,
+  buildOrganizationStructuredData,
+  buildProductStructuredData,
+} from '../src/seo/metadata.js';
 
 const ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const DIST = join(ROOT, 'dist');
@@ -198,7 +203,7 @@ test('removes generic heritage claims outside the documented family history', as
   assert.doesNotMatch(reviewCarousel, /Más de 200 años de tradición/i);
 });
 
-test('publishes Product JSON-LD with validated EANs and no invented rating data', async () => {
+test('publishes Product JSON-LD with validated EANs, real shipping details, and no invented rating data', async () => {
   const paraguayo = await htmlFor('/producto/paraguayo-almibar');
   const nectarina = await htmlFor('/producto/nectarina-almibar');
   const ecologico = await htmlFor('/producto/aceite-oliva-ecologico');
@@ -216,6 +221,31 @@ test('publishes Product JSON-LD with validated EANs and no invented rating data'
   assert.equal(paraguayoData.offers.priceCurrency, 'EUR');
   assert.equal(paraguayoData.offers.price, '17.15');
   assert.equal(paraguayoData.offers.availability, 'https://schema.org/InStock');
+  assert.deepEqual(
+    paraguayoData.offers.shippingDetails.map((detail) => ({
+      country: detail.shippingDestination.addressCountry,
+      rate: detail.shippingRate.value,
+      currency: detail.shippingRate.currency,
+      handling: detail.deliveryTime.handlingTime,
+      transit: detail.deliveryTime.transitTime,
+    })),
+    [
+      {
+        country: 'ES',
+        rate: 0,
+        currency: 'EUR',
+        handling: { '@type': 'QuantitativeValue', minValue: 1, maxValue: 2, unitCode: 'DAY' },
+        transit: { '@type': 'QuantitativeValue', minValue: 1, maxValue: 3, unitCode: 'DAY' },
+      },
+      {
+        country: 'PT',
+        rate: 0,
+        currency: 'EUR',
+        handling: { '@type': 'QuantitativeValue', minValue: 1, maxValue: 2, unitCode: 'DAY' },
+        transit: { '@type': 'QuantitativeValue', minValue: 1, maxValue: 3, unitCode: 'DAY' },
+      },
+    ],
+  );
   assert.equal(nectarinaData.name, 'Nectarina en Almíbar 720 g');
   assert.equal(nectarinaData.gtin13, '8437022141138');
   assert.equal(nectarinaData.sku, 'MIKNECT450');
@@ -269,7 +299,7 @@ test('loads Klaviyo only after Cookiebot marketing consent', async () => {
   assert.match(indexHtml, /<script type="text\/plain" data-cookieconsent="marketing">[\s\S]*tracker\.metricool\.com/i);
 });
 
-test('publishes Organization JSON-LD on the homepage with verified corporate data', async () => {
+test('publishes Organization JSON-LD on the homepage with verified corporate and commercial policies', async () => {
   const home = await htmlFor('/');
   const organization = jsonLdEntries(home).find((entry) => entry['@type'] === 'Organization');
 
@@ -282,6 +312,46 @@ test('publishes Organization JSON-LD on the homepage with verified corporate dat
   assert.equal(organization.contactPoint.email, 'info@mikels.es');
   assert.equal(organization.contactPoint.telephone, '+34 621 144 701');
   assert.match(organization.logo, /^https:\/\/www\.mikels\.es\/assets\/mikels-fruit-logo-bn-1600-/);
+  assert.deepEqual(organization.hasMerchantReturnPolicy, {
+    '@type': 'MerchantReturnPolicy',
+    applicableCountry: ['ES', 'PT'],
+    merchantReturnLink: 'https://www.mikels.es/terminos',
+    returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+    merchantReturnDays: 14,
+    itemCondition: 'https://schema.org/NewCondition',
+    returnMethod: 'https://schema.org/ReturnByMail',
+    returnFees: 'https://schema.org/ReturnFeesCustomerResponsibility',
+    refundType: 'https://schema.org/FullRefund',
+    returnLabelSource: 'https://schema.org/ReturnLabelCustomerResponsibility',
+    itemDefectReturnFees: 'https://schema.org/FreeReturn',
+    itemDefectReturnLabelSource: 'https://schema.org/ReturnLabelCustomerResponsibility',
+  });
+  assert.deepEqual(
+    organization.hasShippingService.shippingConditions.map((condition) => ({
+      country: condition.shippingDestination.addressCountry,
+      rate: condition.shippingRate.value,
+      currency: condition.shippingRate.currency,
+    })),
+    [
+      { country: 'ES', rate: 0, currency: 'EUR' },
+      { country: 'PT', rate: 0, currency: 'EUR' },
+    ],
+  );
+});
+
+test('does not invent reviews or aggregate ratings to silence Search Console warnings', () => {
+  const product = buildProductStructuredData({
+    slug: 'paraguayo-almibar',
+    price: 17.15,
+    currency: 'EUR',
+    stock: 1,
+  });
+  const organization = buildOrganizationStructuredData('https://www.mikels.es/logo.png');
+
+  assert.equal(product.aggregateRating, undefined);
+  assert.equal(product.review, undefined);
+  assert.equal(organization.aggregateRating, undefined);
+  assert.equal(organization.review, undefined);
 });
 
 test('removes the non-existent experiences destination from public navigation and routes', async () => {
