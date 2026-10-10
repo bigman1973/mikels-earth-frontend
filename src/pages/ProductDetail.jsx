@@ -18,6 +18,7 @@ import ProductSeo from '../components/ProductSeo';
 import { formatEuro } from '../utils/formatMoney';
 import { getApplicableVolumeTier, getVolumeDiscountedLineTotal, getVolumeDiscountedUnitPrice } from '../utils/volumePricing';
 import { trackMetaViewContent } from '../utils/metaPixel';
+import { trackGA4ViewItem } from '../utils/googleAnalytics';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://mikels-earth-backend-production.up.railway.app';
 
@@ -72,7 +73,9 @@ const ProductDetail = () => {
 
     const trackProductView = () => {
       if (trackedProductRef.current === product.sku) return;
-      if (trackMetaViewContent(product)) trackedProductRef.current = product.sku;
+      const metaTracked = trackMetaViewContent(product);
+      const analyticsTracked = trackGA4ViewItem(product);
+      if (metaTracked || analyticsTracked) trackedProductRef.current = product.sku;
     };
 
     trackProductView();

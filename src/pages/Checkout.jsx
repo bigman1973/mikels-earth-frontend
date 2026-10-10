@@ -9,6 +9,7 @@ import { createCheckoutSession, createSubscriptionCheckout } from '../services/s
 import { formatEuro } from '../utils/formatMoney';
 import { deliveryEligibility } from '../utils/deliveryPolicy';
 import { hasMarketingConsent, trackMetaInitiateCheckout } from '../utils/metaPixel';
+import { trackGA4BeginCheckout } from '../utils/googleAnalytics';
 
 const Checkout = () => {
   const { cart, getCartTotal, getItemPrice, appliedDiscount, getDiscountAmount, updateItemPrices } = useCart();
@@ -104,6 +105,7 @@ const Checkout = () => {
     
     try {
       trackMetaInitiateCheckout(cart, getCartTotal(), getItemPrice);
+      trackGA4BeginCheckout(cart, getCartTotal(), getItemPrice);
 
       // Enviar evento de Started Checkout para carrito abandonado
       try {

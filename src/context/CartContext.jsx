@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect } from 'react';
 import { CART_STORAGE_KEY, clearStoredCart, loadStoredCart } from '../utils/cartStorage';
 import { getVolumeDiscountedUnitPrice } from '../utils/volumePricing';
 import { trackMetaAddToCart } from '../utils/metaPixel';
+import { trackGA4AddToCart } from '../utils/googleAnalytics';
 
 const CartContext = createContext();
 
@@ -40,7 +41,10 @@ export const CartProvider = ({ children }) => {
       0,
       Math.min(sellableStock, (existingItem?.quantity || 0) + requestedQuantity) - (existingItem?.quantity || 0),
     );
-    if (eventQuantity > 0) trackMetaAddToCart(product, eventQuantity);
+    if (eventQuantity > 0) {
+      trackMetaAddToCart(product, eventQuantity);
+      trackGA4AddToCart(product, eventQuantity);
+    }
 
     setCart(prevCart => {
       const existingItemIndex = prevCart.findIndex(
