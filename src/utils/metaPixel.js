@@ -1,4 +1,8 @@
-const PIXEL_ID = String(import.meta.env.VITE_META_PIXEL_ID || '').trim();
+// A Meta Pixel ID is public by design: it is present in every visitor's
+// browser request. The Vercel variable can override this documented data-set
+// ID, while the fallback prevents a configuration UI issue from silently
+// disabling consented measurement in production.
+const PIXEL_ID = String(import.meta.env.VITE_META_PIXEL_ID || '25782978224669556').trim();
 
 const COOKIEBOT_EVENTS = [
   'CookiebotOnConsentReady',

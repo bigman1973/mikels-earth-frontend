@@ -35,7 +35,10 @@ export const createCheckoutSession = async (cartItems, customerInfo) => {
           city: customerInfo.city,
           postal_code: customerInfo.postalCode,
           country: customerInfo.country || 'España',
-          notes: customerInfo.notes
+          notes: customerInfo.notes,
+          // Persisted in Stripe session metadata so the server-side Purchase
+          // is only sent to Meta after affirmative Cookiebot marketing consent.
+          metaMarketingConsent: customerInfo.metaMarketingConsent === true
         },
         discount_code: customerInfo.discountCode,
         discount_amount: customerInfo.discountAmount,

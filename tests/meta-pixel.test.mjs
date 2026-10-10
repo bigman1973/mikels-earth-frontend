@@ -10,6 +10,7 @@ const read = (relativePath) => readFile(join(root, relativePath), 'utf8');
 test('Meta Pixel remains disabled without consent or a configured data set', async () => {
   const pixel = await read('src/utils/metaPixel.js');
   assert.match(pixel, /VITE_META_PIXEL_ID/);
+  assert.match(pixel, /25782978224669556/);
   assert.match(pixel, /window\.Cookiebot\?\.consent\?\.marketing === true/);
   assert.match(pixel, /fbq\('consent', 'revoke'\)/);
   assert.match(pixel, /fbq\('consent', 'grant'\)/);
@@ -50,4 +51,14 @@ test('Purchase is emitted from the persisted receipt with the order number as ev
   assert.match(pixel, /eventID: orderNumber/);
   assert.match(pixel, /mikels:meta-purchase:\$\{orderNumber\}/);
   assert.match(receipt, /"sku": str\(item\.get\("sku"\) or ""\)/);
+});
+
+test('Meta server Purchase receives only the current Cookiebot marketing consent', async () => {
+  const [checkout, stripeService] = await Promise.all([
+    read('src/pages/Checkout.jsx'),
+    read('src/services/stripeService.js'),
+  ]);
+
+  assert.match(checkout, /metaMarketingConsent: hasMarketingConsent\(\)/);
+  assert.match(stripeService, /metaMarketingConsent: customerInfo\.metaMarketingConsent === true/);
 });
