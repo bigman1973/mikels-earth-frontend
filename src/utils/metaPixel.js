@@ -12,8 +12,13 @@ const COOKIEBOT_EVENTS = [
 
 const hasWindow = () => typeof window !== 'undefined';
 
+// Cookiebot can be configured in an implied-consent mode for some regions.
+// Meta must never be activated in that mode: this storefront requires the
+// visitor's affirmative, explicit marketing choice before any Meta request.
 export const hasMarketingConsent = () => Boolean(
-  hasWindow() && window.Cookiebot?.consent?.marketing === true,
+  hasWindow()
+  && window.Cookiebot?.consent?.method === 'explicit'
+  && window.Cookiebot?.consent?.marketing === true,
 );
 
 export const isMetaPixelConfigured = () => Boolean(PIXEL_ID);

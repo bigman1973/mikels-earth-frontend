@@ -11,6 +11,7 @@ test('Meta Pixel remains disabled without consent or a configured data set', asy
   const pixel = await read('src/utils/metaPixel.js');
   assert.match(pixel, /VITE_META_PIXEL_ID/);
   assert.match(pixel, /25782978224669556/);
+  assert.match(pixel, /consent\?\.method === 'explicit'/);
   assert.match(pixel, /window\.Cookiebot\?\.consent\?\.marketing === true/);
   assert.match(pixel, /fbq\('consent', 'revoke'\)/);
   assert.match(pixel, /fbq\('consent', 'grant'\)/);
