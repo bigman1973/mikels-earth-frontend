@@ -221,6 +221,9 @@ test('publishes Product JSON-LD with validated EANs, real shipping details, and 
   assert.equal(paraguayoData.offers.priceCurrency, 'EUR');
   assert.equal(paraguayoData.offers.price, '17.15');
   assert.equal(paraguayoData.offers.availability, 'https://schema.org/InStock');
+  assert.deepEqual(paraguayoData.offers.hasMerchantReturnPolicy, {
+    '@id': 'https://www.mikels.es/terminos#merchant-return-policy',
+  });
   assert.deepEqual(
     paraguayoData.offers.shippingDetails.map((detail) => ({
       country: detail.shippingDestination.addressCountry,
@@ -313,6 +316,7 @@ test('publishes Organization JSON-LD on the homepage with verified corporate and
   assert.equal(organization.contactPoint.telephone, '+34 621 144 701');
   assert.match(organization.logo, /^https:\/\/www\.mikels\.es\/assets\/mikels-fruit-logo-bn-1600-/);
   assert.deepEqual(organization.hasMerchantReturnPolicy, {
+    '@id': 'https://www.mikels.es/terminos#merchant-return-policy',
     '@type': 'MerchantReturnPolicy',
     applicableCountry: ['ES', 'PT'],
     merchantReturnLink: 'https://www.mikels.es/terminos',

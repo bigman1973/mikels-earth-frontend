@@ -130,6 +130,8 @@ const FREE_SHIPPING_RATE = {
   currency: 'EUR',
 };
 
+const MERCHANT_RETURN_POLICY_ID = `${SITE_ORIGIN}/terminos#merchant-return-policy`;
+
 const standardDeliveryTime = () => ({
   '@type': 'ShippingDeliveryTime',
   handlingTime: {
@@ -274,6 +276,7 @@ export const buildProductStructuredData = (product, slug = product?.slug) => {
         ? 'https://schema.org/OutOfStock'
         : 'https://schema.org/InStock',
       itemCondition: 'https://schema.org/NewCondition',
+      hasMerchantReturnPolicy: { '@id': MERCHANT_RETURN_POLICY_ID },
       shippingDetails: buildProductShippingDetails(),
     },
   };
@@ -301,6 +304,7 @@ export const buildOrganizationStructuredData = (logoUrl) => ({
     availableLanguage: ['Spanish', 'English'],
   },
   hasMerchantReturnPolicy: {
+    '@id': MERCHANT_RETURN_POLICY_ID,
     '@type': 'MerchantReturnPolicy',
     applicableCountry: ['ES', 'PT'],
     merchantReturnLink: `${SITE_ORIGIN}/terminos`,
