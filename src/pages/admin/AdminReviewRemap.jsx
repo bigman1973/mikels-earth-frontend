@@ -20,12 +20,14 @@ export default function AdminReviewRemap() {
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
   const [changes, setChanges] = useState([]);
+  const [preparedMappings, setPreparedMappings] = useState([]);
   const selectRefs = useRef({});
 
   const load = async () => {
     setLoading(true);
     setError('');
     setNotice('');
+    setPreparedMappings([]);
     try {
       const [reviewsResponse, productsResponse] = await Promise.all([
         authFetch(`${API_URL}/api/admin/reviews/verified`),
@@ -59,7 +61,7 @@ export default function AdminReviewRemap() {
     [reviews, selection],
   );
 
-  const submit = async () => {
+  const prepare = () => {
     if (saving) return;
     // Some remote-browser controllers modify a native <select> without emitting React's
     // synthetic change event. The DOM remains authoritative at the point of confirmation.
@@ -72,9 +74,16 @@ export default function AdminReviewRemap() {
       setError('No hay ningún producto canónico distinto seleccionado para guardar.');
       return;
     }
-    const summary = pendingNow.map((review) => `#${review.id}: ${review.product_slug} → ${selectedNow[review.id]}`).join('\n');
-    if (!window.confirm(`Se cambiará solo el producto de ${pendingNow.length} reseña(s) verificada(s):\n\n${summary}\n\nNo se cambiarán texto, puntuación, estado ni verificación.`)) return;
+    setError('');
+    setPreparedMappings(pendingNow.map((review) => ({
+      review_id: review.id,
+      expected_slug: review.product_slug,
+      target_slug: selectedNow[review.id],
+    })));
+  };
 
+  const submit = async () => {
+    if (!preparedMappings.length || saving) return;
     setSaving(true);
     setError('');
     setNotice('');
@@ -82,17 +91,14 @@ export default function AdminReviewRemap() {
       const response = await authFetch(`${API_URL}/api/admin/reviews/remap-products`, {
         method: 'PUT',
         body: JSON.stringify({
-          mappings: pendingNow.map((review) => ({
-            review_id: review.id,
-            expected_slug: review.product_slug,
-            target_slug: selectedNow[review.id],
-          })),
+          mappings: preparedMappings,
         }),
       });
       const payload = await response?.json();
       if (!response?.ok) throw new Error(payload?.details?.join(' · ') || payload?.error || 'No se ha podido guardar el remapeo.');
       setChanges(payload.changes || []);
       setNotice(`${payload.changed} reseña(s) verificada(s) reasignada(s).`);
+      setPreparedMappings([]);
       await load();
     } catch (saveError) {
       setError(saveError.message || 'Error al guardar el remapeo.');
@@ -194,14 +200,31 @@ export default function AdminReviewRemap() {
             <p className="text-xs text-gray-500">El servidor rechaza slugs obsoletos, reseñas no verificadas, productos inexistentes y cambios parciales.</p>
             <button
               type="button"
-              disabled={!reviews.length || saving}
-              onClick={submit}
+              disabled={(!reviews.length && !preparedMappings.length) || saving}
+              onClick={preparedMappings.length ? submit : prepare}
               className="shrink-0 rounded-xl bg-emerald-500 px-4 py-2.5 text-sm font-semibold text-[#08211c] hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-40 transition-colors"
             >
-              {saving ? 'Guardando…' : 'Revisar y aplicar cambios'}
+              {saving ? 'Guardando…' : preparedMappings.length ? `Confirmar ${preparedMappings.length} cambio(s)` : 'Revisar y aplicar cambios'}
             </button>
           </div>
         </div>
+
+        {preparedMappings.length > 0 && (
+          <div className="mt-6 rounded-2xl border border-amber-400/25 bg-amber-400/[0.06] p-5">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h2 className="text-sm font-semibold text-amber-200">Confirmación pendiente</h2>
+                <p className="mt-1 text-xs text-amber-100/70">Se cambiará únicamente la asociación de producto; texto, puntuación, estado y verificación permanecen intactos.</p>
+              </div>
+              <button type="button" onClick={() => setPreparedMappings([])} className="text-xs text-amber-100/70 hover:text-amber-100 underline underline-offset-4">Cancelar revisión</button>
+            </div>
+            <ul className="mt-4 space-y-2 text-sm text-gray-200">
+              {preparedMappings.map((mapping) => (
+                <li key={mapping.review_id}>#{mapping.review_id}: <span className="font-mono text-gray-400">{mapping.expected_slug}</span> → <span className="font-mono text-emerald-300">{mapping.target_slug}</span></li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {changes.length > 0 && (
           <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.02] p-5">

@@ -13,7 +13,9 @@ test('admin review remap reads and writes only the protected remap endpoints', a
   assert.match(page, /expected_slug/);
   assert.match(page, /target_slug/);
   assert.match(page, /selectRefs\.current\[review\.id\]\?\.value/);
-  assert.match(page, /No se cambiarán texto, puntuación, estado ni verificación/);
+  assert.match(page, /Confirmación pendiente/);
+  assert.doesNotMatch(page, /window\.confirm/);
+  assert.match(page, /texto, puntuación, estado y verificación permanecen intactos/);
   assert.doesNotMatch(page, /customer_email|review\.comment/);
 });
 
