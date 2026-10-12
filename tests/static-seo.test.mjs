@@ -221,6 +221,11 @@ test('publishes Product JSON-LD with validated EANs, real shipping details, and 
   assert.equal(paraguayoData.offers.priceCurrency, 'EUR');
   assert.equal(paraguayoData.offers.price, '17.15');
   assert.equal(paraguayoData.offers.availability, 'https://schema.org/InStock');
+  assert.equal(
+    findProduct(temprano).offers.availability,
+    'https://schema.org/PreOrder',
+    'Las reservas vendibles deben declararse como preventa',
+  );
   assert.deepEqual(paraguayoData.offers.hasMerchantReturnPolicy, {
     '@id': 'https://www.mikels.es/terminos#merchant-return-policy',
   });
@@ -283,6 +288,19 @@ test('keeps all confirmed EANs tied to their verified master SKU', () => {
     MIKVE5LP: '8437022141169',
     MIKVET500: '8437022141220',
   });
+});
+
+test('keeps OutOfStock ahead of PreOrder when a reservation is no longer sellable', () => {
+  const unavailableReservation = buildProductStructuredData({
+    slug: 'aceite-temprano-sin-filtrar',
+    name: 'Temprano',
+    price: 19.9,
+    currency: 'EUR',
+    stock: 0,
+    reservationOnly: true,
+  });
+
+  assert.equal(unavailableReservation.offers.availability, 'https://schema.org/OutOfStock');
 });
 
 test('identifies packs with SKU and MPN but never borrows a component EAN', async () => {

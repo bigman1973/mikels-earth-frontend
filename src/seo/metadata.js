@@ -271,6 +271,8 @@ export const buildProductStructuredData = (product, slug = product?.slug) => {
     .filter(Boolean)
     .map(toAbsoluteUrl);
   const stock = Number(product.stock);
+  const isReservationOnly = product.reservationOnly === true || product.reservation_only === true;
+  const isUnavailable = product.soldOut || product.sold_out || !Number.isFinite(stock) || stock <= 0;
 
   return {
     '@context': 'https://schema.org',
@@ -286,8 +288,10 @@ export const buildProductStructuredData = (product, slug = product?.slug) => {
       url: canonical,
       priceCurrency: product.currency || 'EUR',
       price: Number(product.price).toFixed(2),
-      availability: product.soldOut || !Number.isFinite(stock) || stock <= 0
+      availability: isUnavailable
         ? 'https://schema.org/OutOfStock'
+        : isReservationOnly
+          ? 'https://schema.org/PreOrder'
         : 'https://schema.org/InStock',
       itemCondition: 'https://schema.org/NewCondition',
       hasMerchantReturnPolicy: { '@id': MERCHANT_RETURN_POLICY_ID },
