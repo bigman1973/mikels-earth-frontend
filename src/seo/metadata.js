@@ -153,16 +153,30 @@ const shippingDestination = (countryCode) => ({
   addressCountry: countryCode,
 });
 
-// La exclusión por códigos postales españoles (35, 38, 51 y 52) se aplica en
-// el checkout y se explica en /terminos. Google solo admite divisiones postales
-// de EE. UU., Canadá y Australia para este formato, por lo que no se inventa una
-// región española más precisa de la que el formato puede expresar.
-export const buildProductShippingDetails = () => ['ES', 'PT'].map((countryCode) => ({
+const NON_DELIVERABLE_SPANISH_POSTAL_PREFIXES = ['35', '38', '51', '52'];
+
+// Schema.org permite expresar la exclusión por prefijo postal. Google Search
+// todavía no documenta que procese prefijos españoles en rich results, pero se
+// publica el dato semántico correcto además de aplicarlo en checkout y términos.
+const excludedSpanishShippingDetails = () => ({
   '@type': 'OfferShippingDetails',
-  shippingRate: { ...FREE_SHIPPING_RATE },
-  shippingDestination: shippingDestination(countryCode),
-  deliveryTime: standardDeliveryTime(),
-}));
+  doesNotShip: true,
+  shippingDestination: {
+    '@type': 'DefinedRegion',
+    addressCountry: 'ES',
+    postalCodePrefix: NON_DELIVERABLE_SPANISH_POSTAL_PREFIXES,
+  },
+});
+
+export const buildProductShippingDetails = () => [
+  ...['ES', 'PT'].map((countryCode) => ({
+    '@type': 'OfferShippingDetails',
+    shippingRate: { ...FREE_SHIPPING_RATE },
+    shippingDestination: shippingDestination(countryCode),
+    deliveryTime: standardDeliveryTime(),
+  })),
+  excludedSpanishShippingDetails(),
+];
 
 // Fuente: maestro de artículos validado por Jordi (29/09/2026).
 // Solo se emite gtin13 cuando el artículo vendido en la web coincide con este SKU.

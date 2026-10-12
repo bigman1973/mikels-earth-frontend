@@ -225,7 +225,7 @@ test('publishes Product JSON-LD with validated EANs, real shipping details, and 
     '@id': 'https://www.mikels.es/terminos#merchant-return-policy',
   });
   assert.deepEqual(
-    paraguayoData.offers.shippingDetails.map((detail) => ({
+    paraguayoData.offers.shippingDetails.filter((detail) => detail.doesNotShip !== true).map((detail) => ({
       country: detail.shippingDestination.addressCountry,
       rate: detail.shippingRate.value,
       currency: detail.shippingRate.currency,
@@ -248,6 +248,18 @@ test('publishes Product JSON-LD with validated EANs, real shipping details, and 
         transit: { '@type': 'QuantitativeValue', minValue: 1, maxValue: 3, unitCode: 'DAY' },
       },
     ],
+  );
+  assert.deepEqual(
+    paraguayoData.offers.shippingDetails.find((detail) => detail.doesNotShip === true),
+    {
+      '@type': 'OfferShippingDetails',
+      doesNotShip: true,
+      shippingDestination: {
+        '@type': 'DefinedRegion',
+        addressCountry: 'ES',
+        postalCodePrefix: ['35', '38', '51', '52'],
+      },
+    },
   );
   assert.equal(nectarinaData.name, 'Nectarina en Almíbar 720 g');
   assert.equal(nectarinaData.gtin13, '8437022141138');
