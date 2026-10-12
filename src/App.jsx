@@ -46,6 +46,7 @@ const AdminClients = lazy(() => import('./pages/admin/AdminClients'));
 const AdminClientDetail = lazy(() => import('./pages/admin/AdminClientDetail'));
 const AdminUsers = lazy(() => import('./pages/admin/AdminUsers'));
 const AdminCoupons = lazy(() => import('./pages/admin/AdminCoupons'));
+const AdminReviewRemap = lazy(() => import('./pages/admin/AdminReviewRemap'));
 
 const RouteFallback = () => (
   <div className="min-h-[45vh]" role="status" aria-live="polite">
@@ -98,6 +99,7 @@ function App() {
               <Route path="/admin/clientes/:clientId" element={<AdminClientDetail />} />
               <Route path="/admin/usuarios" element={<AdminUsers />} />
               <Route path="/admin/cupones" element={<AdminCoupons />} />
+              <Route path="/admin/resenas" element={<AdminReviewRemap />} />
 
               {/* ====== TIENDA PÚBLICA (con Header/Footer) ====== */}
               <Route path="/*" element={
