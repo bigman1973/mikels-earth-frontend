@@ -495,7 +495,7 @@ test('shows verified purchases and the approved review publication policy', asyn
   assert.match(reviews, /t\('reviews\.publication_policy'\)/);
   assert.equal(
     reviewCopy.publication_policy,
-    'Publicamos todas las opiniones que recibimos, sin filtrar por puntuación. Las marcadas como compra verificada corresponden a pedidos realizados en esta tienda.',
+    'En esta web mostramos opiniones de compras verificadas. Conservamos el resto de opiniones en nuestro historial de revisión.',
   );
 });
 
