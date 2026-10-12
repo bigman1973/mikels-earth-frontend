@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { API_URL } from '../../config/api';
 import { useAdminAuth } from '../../context/AdminAuthContext';
 import AdminLayout from '../../components/admin/AdminLayout';
@@ -20,12 +20,12 @@ export default function AdminReviewRemap() {
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
   const [changes, setChanges] = useState([]);
+  const selectRefs = useRef({});
 
   const load = async () => {
     setLoading(true);
     setError('');
     setNotice('');
-    setChanges([]);
     try {
       const [reviewsResponse, productsResponse] = await Promise.all([
         authFetch(`${API_URL}/api/admin/reviews/verified`),
@@ -60,9 +60,20 @@ export default function AdminReviewRemap() {
   );
 
   const submit = async () => {
-    if (!pending.length || saving) return;
-    const summary = pending.map((review) => `#${review.id}: ${review.product_slug} → ${selection[review.id]}`).join('\n');
-    if (!window.confirm(`Se cambiará solo el producto de ${pending.length} reseña(s) verificada(s):\n\n${summary}\n\nNo se cambiarán texto, puntuación, estado ni verificación.`)) return;
+    if (saving) return;
+    // Some remote-browser controllers modify a native <select> without emitting React's
+    // synthetic change event. The DOM remains authoritative at the point of confirmation.
+    const selectedNow = Object.fromEntries(reviews.map((review) => [
+      review.id,
+      selectRefs.current[review.id]?.value || selection[review.id],
+    ]));
+    const pendingNow = reviews.filter((review) => selectedNow[review.id] && selectedNow[review.id] !== review.product_slug);
+    if (!pendingNow.length) {
+      setError('No hay ningún producto canónico distinto seleccionado para guardar.');
+      return;
+    }
+    const summary = pendingNow.map((review) => `#${review.id}: ${review.product_slug} → ${selectedNow[review.id]}`).join('\n');
+    if (!window.confirm(`Se cambiará solo el producto de ${pendingNow.length} reseña(s) verificada(s):\n\n${summary}\n\nNo se cambiarán texto, puntuación, estado ni verificación.`)) return;
 
     setSaving(true);
     setError('');
@@ -71,10 +82,10 @@ export default function AdminReviewRemap() {
       const response = await authFetch(`${API_URL}/api/admin/reviews/remap-products`, {
         method: 'PUT',
         body: JSON.stringify({
-          mappings: pending.map((review) => ({
+          mappings: pendingNow.map((review) => ({
             review_id: review.id,
             expected_slug: review.product_slug,
-            target_slug: selection[review.id],
+            target_slug: selectedNow[review.id],
           })),
         }),
       });
@@ -154,6 +165,7 @@ export default function AdminReviewRemap() {
                         <td className="px-5 py-4 min-w-[280px]">
                           <select
                             value={selection[review.id] || ''}
+                            ref={(element) => { selectRefs.current[review.id] = element; }}
                             onChange={(event) => setSelection((previous) => ({ ...previous, [review.id]: event.target.value }))}
                             className="w-full rounded-lg border border-white/10 bg-[#12121b] px-3 py-2 text-sm text-white focus:border-emerald-400 focus:outline-none"
                             aria-label={`Producto canónico para reseña ${review.id}`}
@@ -182,11 +194,11 @@ export default function AdminReviewRemap() {
             <p className="text-xs text-gray-500">El servidor rechaza slugs obsoletos, reseñas no verificadas, productos inexistentes y cambios parciales.</p>
             <button
               type="button"
-              disabled={!pending.length || saving}
+              disabled={!reviews.length || saving}
               onClick={submit}
               className="shrink-0 rounded-xl bg-emerald-500 px-4 py-2.5 text-sm font-semibold text-[#08211c] hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-40 transition-colors"
             >
-              {saving ? 'Guardando…' : `Aplicar ${pending.length} cambio(s)`}
+              {saving ? 'Guardando…' : 'Revisar y aplicar cambios'}
             </button>
           </div>
         </div>
