@@ -94,7 +94,7 @@ export const products = [
     name: "Aceite de oliva virgen extra Temprano 2026/27 sin filtrar — Reserva",
     slug: "aceite-temprano-sin-filtrar",
     description: "Reserva de la cosecha 2026/27. AOVE sin filtrar de aceituna verde.",
-    longDescription: "Reserva de la cosecha 2026/27.\n\nElaborado con aceituna verde, recolectada al principio de campaña y sin filtrar. Perfil verde, con amargor y picor.\n\nPlata en OLIVE JAPAN 2026, Tokio.\n\nSe envasa el 16 de octubre.",
+    longDescription: "Reserva de la cosecha 2026/27.\n\nCosecha 2026/27 · analítica en curso.\n\nElaborado con aceituna verde, recogida antes de madurar, en una sola pasada y sin filtrar. Da menos aceite por kilo; de ahí su perfil verde, con amargor y picor. Procede de nuestro olivar en la campiña cordobesa.\n\nSe envasa el 16 de octubre.",
     price: 19.90,
     currency: "EUR",
     image: "/images/aceite-temprano-principal.jpeg",
@@ -146,10 +146,7 @@ export const products = [
     featured: true,
     freeShipping: true,
     limitedEdition: true,
-    award: "Medalla de Plata · OLIVE JAPAN 2026",
-    badges: [
-      { text: "Medalla de Plata · OLIVE JAPAN 2026", detailOnly: true }
-    ]
+    badges: []
   },
   {
 

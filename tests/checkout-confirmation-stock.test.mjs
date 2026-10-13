@@ -82,6 +82,7 @@ test('reservation purchase surfaces use the saved reservation contract', async (
   assert.doesNotMatch(detail, /Quedan \{availableStock\} de \{product\.reservationStockTotal \|\| 1080\}/);
   assert.match(detail, /isReservation \? 'Reservar'/);
   assert.match(detail, /Envío la última semana de octubre/);
+  assert.match(detail, /Cosecha 2026\/27 · analítica en curso/);
   assert.match(card, /RESERVA · COSECHA 2026\/27/);
   assert.match(card, /product\.reservationOnly \? 'bg-primary text-white'/);
   assert.match(card, /product\.reservationOnly \? 'Reservar'/);

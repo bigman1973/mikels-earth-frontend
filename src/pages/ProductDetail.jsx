@@ -136,6 +136,9 @@ const ProductDetail = () => {
   const discountPercent = applicableTier?.discount || 0;
   const discountLabel = applicableTier?.label || '';
   const isReservation = product.reservationOnly === true;
+  const reservationBatchNotice = product.slug === 'aceite-temprano-sin-filtrar'
+    ? 'Cosecha 2026/27 · analítica en curso'
+    : null;
   const availableStock = Math.max(0, Number(product.stock) || 0);
 
   // El backend solo adjunta complementos activos y vendibles. Esta segunda
@@ -294,6 +297,9 @@ const ProductDetail = () => {
               {isReservation && (
                 <div className="mb-5 rounded-lg border border-stone-300 bg-[#f5efe4] px-4 py-3 text-sm leading-6 text-[#1a1a1a]">
                   <p>{product.reservationMessage || 'La cosecha 2026/27 se sirve por reserva. Se envasa el 16 de octubre y se envía la última semana de octubre.'}</p>
+                  {reservationBatchNotice && (
+                    <p className="mt-2 font-medium">{reservationBatchNotice}</p>
+                  )}
                 </div>
               )}
 

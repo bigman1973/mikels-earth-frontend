@@ -89,9 +89,9 @@ export const applyEditorialOverrides = (product, language = 'es') => {
     const reservationCopy = 'La cosecha 2026/27 se sirve por reserva. Se envasa el 16 de octubre y se envía la última semana de octubre.';
     const approvedDescription = `Reserva de la cosecha 2026/27.
 
-Elaborado con aceituna verde, recolectada al principio de campaña y sin filtrar. Perfil verde, con amargor y picor.
+Cosecha 2026/27 · analítica en curso.
 
-Plata en OLIVE JAPAN 2026, Tokio.
+Elaborado con aceituna verde, recogida antes de madurar, en una sola pasada y sin filtrar. Da menos aceite por kilo; de ahí su perfil verde, con amargor y picor. Procede de nuestro olivar en la campiña cordobesa.
 
 Se envasa el 16 de octubre.`;
 
@@ -102,11 +102,8 @@ Se envasa el 16 de octubre.`;
       longDescription: approvedDescription,
       tags: ['Prensado en Frío', 'Sin Filtrar'],
       claims: [],
-      award: 'Medalla de Plata · OLIVE JAPAN 2026',
-      badges: [{
-        text: 'Medalla de Plata · OLIVE JAPAN 2026',
-        detailOnly: true,
-      }],
+      award: null,
+      badges: [],
       price: 19.90,
       stock: Number(normalizedProduct.stock) || 1080,
       reservationOnly: true,

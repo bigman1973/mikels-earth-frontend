@@ -83,7 +83,7 @@ const PRODUCT_SEO = {
   },
   'aceite-temprano-sin-filtrar': {
     title: "AOVE Temprano 2026/27 sin filtrar 500 ml — Reserva | Mikel's Fruit",
-    description: 'Reserva de la cosecha 2026/27. AOVE sin filtrar de aceituna verde. Plata en OLIVE JAPAN 2026, Tokio. Se envasa el 16 de octubre.',
+    description: 'Reserva de la cosecha 2026/27. AOVE sin filtrar de aceituna verde. Analítica en curso. Se envasa el 16 de octubre.',
   },
   'aceite-5l-caja-3': {
     title: "AOVE 5 L para hostelería y granel | Mikel's Fruit",
@@ -237,7 +237,7 @@ const EDITORIAL_PRODUCT_CONTENT = {
   'aceite-temprano-sin-filtrar': {
     name: 'Aceite de oliva virgen extra Temprano 2026/27 sin filtrar — Reserva',
     description: 'Reserva de la cosecha 2026/27. AOVE sin filtrar de aceituna verde.',
-    longDescription: 'Reserva de la cosecha 2026/27. Elaborado con aceituna verde, recolectada al principio de campaña y sin filtrar. Perfil verde, con amargor y picor. Plata en OLIVE JAPAN 2026, Tokio. Se envasa el 16 de octubre.',
+    longDescription: 'Reserva de la cosecha 2026/27. Cosecha 2026/27 · analítica en curso. Elaborado con aceituna verde, recogida antes de madurar, en una sola pasada y sin filtrar. Da menos aceite por kilo; de ahí su perfil verde, con amargor y picor. Procede de nuestro olivar en la campiña cordobesa. Se envasa el 16 de octubre.',
   },
   'pack-temprano-premium': {
     longDescription: 'Un estuche de regalo con una botella de 500 ml de aceite de oliva virgen extra de primera cosecha, sin filtrar, y su estuche premium. De perfil verde, fresco y ligeramente picante; prensado en frío e ideal para ensaladas, tostadas y carpaccios.',

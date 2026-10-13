@@ -50,7 +50,7 @@ test('removes obsolete awards from the ecological gift pack', () => {
   assert.deepEqual(pack.badges, []);
 });
 
-test('shows the 2026/27 reservation copy and the identified 2026 silver medal only on early unfiltered oil', () => {
+test('keeps the 2026/27 reservation separate from prior-lot awards and analysis', () => {
   const earlyOil = applyEditorialOverrides({
     slug: 'aceite-temprano-sin-filtrar',
     name: 'Aceite temprano sin filtrar',
@@ -59,10 +59,7 @@ test('shows the 2026/27 reservation copy and the identified 2026 silver medal on
     badges: [{ text: 'PREMIADO' }],
   });
 
-  assert.deepEqual(earlyOil.badges, [{
-    text: 'Medalla de Plata · OLIVE JAPAN 2026',
-    detailOnly: true,
-  }]);
+  assert.deepEqual(earlyOil.badges, []);
   assert.equal(
     earlyOil.name,
     'Aceite de oliva virgen extra Temprano 2026/27 sin filtrar — Reserva',
@@ -73,15 +70,16 @@ test('shows the 2026/27 reservation copy and the identified 2026 silver medal on
   );
   assert.equal(
     earlyOil.longDescription,
-    'Reserva de la cosecha 2026/27.\n\nElaborado con aceituna verde, recolectada al principio de campaña y sin filtrar. Perfil verde, con amargor y picor.\n\nPlata en OLIVE JAPAN 2026, Tokio.\n\nSe envasa el 16 de octubre.',
+    'Reserva de la cosecha 2026/27.\n\nCosecha 2026/27 · analítica en curso.\n\nElaborado con aceituna verde, recogida antes de madurar, en una sola pasada y sin filtrar. Da menos aceite por kilo; de ahí su perfil verde, con amargor y picor. Procede de nuestro olivar en la campiña cordobesa.\n\nSe envasa el 16 de octubre.',
   );
-  assert.equal(earlyOil.award, 'Medalla de Plata · OLIVE JAPAN 2026');
+  assert.equal(earlyOil.award, null);
   assert.deepEqual(earlyOil.tags, ['Prensado en Frío', 'Sin Filtrar']);
   assert.equal(
     earlyOil.reservationMessage,
     'La cosecha 2026/27 se sirve por reserva. Se envasa el 16 de octubre y se envía la última semana de octubre.',
   );
-  assert.doesNotMatch(earlyOil.longDescription, /polifenol|antioxid|vitamina|oro|galardon/i);
+  assert.match(earlyOil.longDescription, /Cosecha 2026\/27 · analítica en curso/);
+  assert.doesNotMatch(earlyOil.longDescription, /olive japan|medalla|polifenol|antioxid|vitamina|oro|galardon|oleocanthal|per[oó]xido|acidez|569/i);
   assert.doesNotMatch(earlyOil.longDescription, /[Cc]antidad|[Úú]ltimas unidades|[Qq]uedan \d/);
 });
 
