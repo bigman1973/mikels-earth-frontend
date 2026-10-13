@@ -12,14 +12,21 @@ const temprano = {
   price: 19.90,
   tieredDiscount: [
     { actualQuantity: 1, label: '1 botella 500 ml', reservationPrice: 17.50, regularPrice: 19.90, priceEndsAt: '2026-10-25T22:59:59Z' },
-    { actualQuantity: 3, label: 'Pack de 3', reservationPrice: 49.90, regularPrice: 56.70, priceEndsAt: '2026-10-25T22:59:59Z' },
-    { actualQuantity: 6, label: 'Pack de 6', reservationPrice: 94.50, regularPrice: 107.40, priceEndsAt: '2026-10-25T22:59:59Z', featured: true },
+    { actualQuantity: 3, label: 'Pack de 3', reservationPrice: 49.90, regularPrice: 56.70, priceEndsAt: '2026-10-25T22:59:59Z', featured: true },
+    { actualQuantity: 6, label: 'Pack de 6', reservationPrice: 94.50, regularPrice: 107.40, priceEndsAt: '2026-10-25T22:59:59Z' },
     { actualQuantity: 12, label: 'Caja de 12', reservationPrice: 178.50, regularPrice: 202.80, priceEndsAt: '2026-10-25T22:59:59Z' },
   ],
 };
 
 test('shows the four reservation packs in ascending quantity', () => {
   assert.deepEqual(getFixedPackOptions(temprano).map((tier) => tier.actualQuantity), [1, 3, 6, 12]);
+});
+
+test('marks only the pack of three as recommended', () => {
+  assert.deepEqual(
+    getFixedPackOptions(temprano).filter((tier) => tier.featured).map((tier) => tier.actualQuantity),
+    [3],
+  );
 });
 
 test('switches every pack automatically to its regular price after 25 October', () => {
