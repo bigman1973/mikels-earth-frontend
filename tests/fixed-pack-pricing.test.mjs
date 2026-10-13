@@ -1,0 +1,45 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+import {
+  getFixedPackForQuantity,
+  getFixedPackOptions,
+  getFixedPackPrice,
+  getFixedPackUnitPrice,
+  resolveScheduledSinglePrice,
+} from '../src/utils/fixedPackPricing.js';
+
+const temprano = {
+  price: 19.90,
+  tieredDiscount: [
+    { actualQuantity: 1, label: '1 botella 500 ml', reservationPrice: 17.50, regularPrice: 19.90, priceEndsAt: '2026-10-25T22:59:59Z' },
+    { actualQuantity: 3, label: 'Pack de 3', reservationPrice: 49.90, regularPrice: 56.70, priceEndsAt: '2026-10-25T22:59:59Z' },
+    { actualQuantity: 6, label: 'Pack de 6', reservationPrice: 94.50, regularPrice: 107.40, priceEndsAt: '2026-10-25T22:59:59Z', featured: true },
+    { actualQuantity: 12, label: 'Caja de 12', reservationPrice: 178.50, regularPrice: 202.80, priceEndsAt: '2026-10-25T22:59:59Z' },
+  ],
+};
+
+test('shows the four reservation packs in ascending quantity', () => {
+  assert.deepEqual(getFixedPackOptions(temprano).map((tier) => tier.actualQuantity), [1, 3, 6, 12]);
+});
+
+test('switches every pack automatically to its regular price after 25 October', () => {
+  const reservationNow = Date.parse('2026-10-14T10:00:00Z');
+  const regularNow = Date.parse('2026-10-25T23:00:00Z');
+  assert.deepEqual(
+    getFixedPackOptions(temprano).map((tier) => getFixedPackPrice(tier, reservationNow)),
+    [17.50, 49.90, 94.50, 178.50],
+  );
+  assert.deepEqual(
+    getFixedPackOptions(temprano).map((tier) => getFixedPackPrice(tier, regularNow)),
+    [19.90, 56.70, 107.40, 202.80],
+  );
+  assert.equal(resolveScheduledSinglePrice(temprano, regularNow), 19.90);
+});
+
+test('pack price per bottle never rises with a larger reservation pack', () => {
+  const now = Date.parse('2026-10-14T10:00:00Z');
+  const unitPrices = getFixedPackOptions(temprano).map((tier) => getFixedPackUnitPrice(tier, now));
+  assert.deepEqual(unitPrices.map((value) => Math.round(value * 10000)), [175000, 166333, 157500, 148750]);
+  assert.ok(unitPrices.every((value, index) => index === 0 || value < unitPrices[index - 1]));
+  assert.equal(getFixedPackForQuantity(temprano, 4), null);
+});

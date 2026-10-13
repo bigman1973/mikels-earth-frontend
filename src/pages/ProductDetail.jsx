@@ -17,6 +17,7 @@ const REDIRECTED_PRODUCT_SLUGS = new Set([
 import ProductSeo from '../components/ProductSeo';
 import { formatEuro } from '../utils/formatMoney';
 import { getApplicableVolumeTier, getVolumeDiscountedLineTotal, getVolumeDiscountedUnitPrice } from '../utils/volumePricing';
+import { getFixedPackOptions, getFixedPackPrice, getFixedPackUnitPrice } from '../utils/fixedPackPricing';
 import { trackMetaViewContent } from '../utils/metaPixel';
 import { trackGA4ViewItem } from '../utils/googleAnalytics';
 
@@ -67,6 +68,15 @@ const ProductDetail = () => {
   
   const product = products.find(p => p.slug === slug && p.visibleInStore !== false);
   const trackedProductRef = useRef(null);
+
+  useEffect(() => {
+    const packs = getFixedPackOptions({
+      price: product?.price,
+      tieredDiscountConfig: product?.tieredDiscount,
+    });
+    const defaultPack = packs.find((pack) => pack.featured) || packs[0];
+    setQuantity(defaultPack?.actualQuantity || 1);
+  }, [product?.slug]);
 
   useEffect(() => {
     if (!product?.sku) return undefined;
@@ -129,10 +139,12 @@ const ProductDetail = () => {
     tieredDiscountConfig: product.tieredDiscount,
   };
   const applicableTier = getApplicableVolumeTier(volumePricingItem, quantity);
+  const fixedPacks = getFixedPackOptions(volumePricingItem);
+  const hasFixedPackPricing = fixedPacks.length > 0;
   const currentPrice = getVolumeDiscountedUnitPrice(volumePricingItem, quantity);
   const currentLineTotal = getVolumeDiscountedLineTotal(volumePricingItem, quantity);
   const originalLineTotal = Number(product.price) * quantity;
-  const hasDiscount = currentLineTotal < originalLineTotal - 0.001;
+  const hasDiscount = !hasFixedPackPricing && currentLineTotal < originalLineTotal - 0.001;
   const discountPercent = applicableTier?.discount || 0;
   const discountLabel = applicableTier?.label || '';
   const isReservation = product.reservationOnly === true;
@@ -168,7 +180,7 @@ const ProductDetail = () => {
       const productWithVariant = selectedVariant 
         ? { ...product, selectedVariant, variantName: product.variants.find(v => v.id === selectedVariant)?.name }
         : product;
-      addToCart(productWithVariant, quantity, 'one-time', null);
+      addToCart({ ...productWithVariant, selectedPackQuantity: hasFixedPackPricing ? quantity : null }, quantity, 'one-time', null);
     }
     
     // Add selected addons to cart
@@ -379,7 +391,48 @@ const ProductDetail = () => {
                     </div>
                   </div>
                 )}
-                {product.tieredDiscount && !hasDiscount && (
+                {hasFixedPackPricing && (
+                  <div className="mt-5 space-y-3 border-t border-stone-300 pt-5 text-[#1a1a1a]">
+                    <div>
+                      <p className="text-base font-semibold">Elige tu reserva</p>
+                      <p className="mt-1 text-sm leading-6">Precio de reserva hasta el 25 de octubre. A partir del 26 de octubre se aplicará el precio normal.</p>
+                    </div>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      {fixedPacks.map((tier) => {
+                        const packPrice = getFixedPackPrice(tier);
+                        const regularPrice = Number(tier.regularPrice);
+                        const selected = quantity === tier.actualQuantity;
+                        return (
+                          <button
+                            type="button"
+                            key={tier.actualQuantity}
+                            onClick={() => setQuantity(tier.actualQuantity)}
+                            className={`rounded-lg border p-4 text-left transition-colors ${selected ? 'border-primary bg-white ring-1 ring-primary' : 'border-stone-300 bg-white hover:border-primary/60'} ${tier.featured ? 'sm:col-span-2' : ''}`}
+                          >
+                            <div className="flex items-start justify-between gap-3">
+                              <span className="font-semibold">{tier.label}</span>
+                              {tier.featured && <span className="rounded-full bg-[#f5efe4] px-2 py-1 text-xs font-semibold">Recomendado</span>}
+                            </div>
+                            <p className="mt-2 text-xl font-bold text-price">{formatEuro(packPrice)}</p>
+                            <p className="mt-1 text-xs text-gray-600">{formatEuro(getFixedPackUnitPrice(tier))} por botella</p>
+                            {Number.isFinite(regularPrice) && regularPrice > packPrice && (
+                              <p className="mt-2 text-xs text-gray-600">Después: <span className="line-through">{formatEuro(regularPrice)}</span></p>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+                    <p className="text-xs leading-5 text-gray-600">Los packs tienen precio cerrado y no se combinan con códigos de descuento.</p>
+                  </div>
+                )}
+                {isReservation && (
+                  <div className="mt-5 rounded-lg border border-stone-300 bg-white p-4 text-[#1a1a1a]">
+                    <p className="text-base font-semibold">Pruébalo. Si no te gusta, te devolvemos el dinero.</p>
+                    <p className="mt-2 text-sm leading-6">Tienes 30 días desde que lo recibes. Escríbenos y te devolvemos el importe íntegro, portes incluidos. <strong>No hace falta que nos devuelvas la botella.</strong> Sin preguntas.</p>
+                    <Link to="/garantia-satisfaccion" className="mt-3 inline-block text-sm font-medium text-primary underline underline-offset-4">Ver garantía de satisfacción</Link>
+                  </div>
+                )}
+                {product.tieredDiscount && !hasFixedPackPricing && !hasDiscount && (
                   <div className="space-y-2 text-sm text-[#1a1a1a]">
                     <p className="text-base font-semibold">
                       {product.tieredDiscount.some((tier) => Number(tier.bundleQuantity) === 12 && Number(tier.paidQuantity) === 11)
@@ -543,7 +596,7 @@ const ProductDetail = () => {
               ) : null}
 
               {/* Quantity selector */}
-              {product.slug !== 'estuche-regalo' && availableStock > 0 && (
+              {!hasFixedPackPricing && product.slug !== 'estuche-regalo' && availableStock > 0 && (
               <div className="mb-6">
                 <label className="block text-sm font-semibold text-primary mb-3">
                   {t('product_detail.quantity')}

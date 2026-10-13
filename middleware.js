@@ -20,6 +20,7 @@ const STATIC_ROUTES = new Set([
   '/vip/gracias',
   '/politica-privacidad',
   '/terminos',
+  '/garantia-satisfaccion',
   '/admin/login',
   '/admin/dashboard',
   '/admin/productos',

@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { CART_STORAGE_KEY, clearStoredCart, loadStoredCart } from '../utils/cartStorage';
 import { getVolumeDiscountedUnitPrice } from '../utils/volumePricing';
+import { getFixedPackForQuantity } from '../utils/fixedPackPricing';
 import { trackMetaAddToCart } from '../utils/metaPixel';
 import { trackGA4AddToCart } from '../utils/googleAnalytics';
 
@@ -31,11 +32,14 @@ export const CartProvider = ({ children }) => {
   const addToCart = (product, quantity = 1, purchaseType = 'one-time', subscriptionFrequency = null) => {
     const sellableStock = Math.max(0, Number(product.stock) || 0);
     const requestedQuantity = Math.max(1, Number(quantity) || 1);
+    const isClosedPackSelection = Boolean(getFixedPackForQuantity(product, requestedQuantity));
     const existingItem = cart.find((item) => (
       item.id === product.id
       && item.purchaseType === purchaseType
       && item.subscriptionFrequency === subscriptionFrequency
+      && (item.selectedPackQuantity || null) === (product.selectedPackQuantity || null)
       && (item.selectedVariant || null) === (product.selectedVariant || null)
+      && !isClosedPackSelection
     ));
     const eventQuantity = Math.max(
       0,
@@ -52,7 +56,9 @@ export const CartProvider = ({ children }) => {
           item.id === product.id && 
           item.purchaseType === purchaseType &&
           item.subscriptionFrequency === subscriptionFrequency &&
-          (item.selectedVariant || null) === (product.selectedVariant || null)
+          (item.selectedPackQuantity || null) === (product.selectedPackQuantity || null) &&
+          (item.selectedVariant || null) === (product.selectedVariant || null) &&
+          !isClosedPackSelection
       );
 
       if (existingItemIndex > -1) {
@@ -92,6 +98,7 @@ export const CartProvider = ({ children }) => {
           purchaseType: purchaseType,
           subscriptionFrequency: subscriptionFrequency,
           selectedVariant: product.selectedVariant || null,
+          selectedPackQuantity: product.selectedPackQuantity || null,
           variantName: product.variantName || null,
           weight: product.weight,
           reservationOnly: product.reservationOnly === true,
@@ -116,6 +123,11 @@ export const CartProvider = ({ children }) => {
     
     setCart(prevCart => {
       const newCart = [...prevCart];
+      // Los packs cerrados se seleccionan de nuevo desde su ficha; no se
+      // convierten en una cantidad intermedia sin precio publicado.
+      if (getFixedPackForQuantity(newCart[itemIndex], newCart[itemIndex].quantity)) {
+        return newCart;
+      }
       const limit = Math.max(0, Number(newCart[itemIndex].stock) || 0);
       newCart[itemIndex].quantity = Math.min(limit, newQuantity);
       return newCart;
@@ -139,6 +151,9 @@ export const CartProvider = ({ children }) => {
   const applyDiscountCode = async (code) => {
     // Validar código de descuento contra el backend (todos los cupones centralizados)
     const normalizedCode = code.trim();
+    if (cart.some((item) => getFixedPackForQuantity(item, item.quantity))) {
+      return { success: false, message: 'Los packs del Temprano tienen un precio cerrado y no se combinan con códigos de descuento.' };
+    }
     
     if (!normalizedCode) {
       return { success: false, message: 'Introduce un código de descuento' };
@@ -190,7 +205,8 @@ export const CartProvider = ({ children }) => {
     let total = cart.reduce((sum, item) => sum + (getItemPrice(item) * item.quantity), 0);
     
     // Aplicar descuento adicional si hay código
-    if (appliedDiscount) {
+    const hasNonDiscountablePack = cart.some((item) => getFixedPackForQuantity(item, item.quantity));
+    if (appliedDiscount && !hasNonDiscountablePack) {
       cart.forEach(item => {
         const itemTotal = getItemPrice(item) * item.quantity;
         const discount = item.purchaseType === 'subscription' 
@@ -204,7 +220,7 @@ export const CartProvider = ({ children }) => {
   };
   
   const getDiscountAmount = () => {
-    if (!appliedDiscount) return 0;
+    if (!appliedDiscount || cart.some((item) => getFixedPackForQuantity(item, item.quantity))) return 0;
     
     let discountAmount = 0;
     cart.forEach(item => {
@@ -239,6 +255,8 @@ export const CartProvider = ({ children }) => {
     return cart.reduce((count, item) => count + item.quantity, 0);
   };
 
+  const hasNonDiscountablePack = cart.some((item) => getFixedPackForQuantity(item, item.quantity));
+
   const toggleCart = () => {
     setIsCartOpen(prev => !prev);
   };
@@ -261,7 +279,8 @@ export const CartProvider = ({ children }) => {
     appliedDiscount,
     applyDiscountCode,
     removeDiscountCode,
-    getDiscountAmount
+    getDiscountAmount,
+    hasNonDiscountablePack
   };
 
   return (

@@ -206,7 +206,7 @@ const main = async () => {
   const startedAt = performance.now();
   const sitemap = await readFile(SITEMAP, 'utf8');
   const sitemapPaths = parseSitemapPaths(sitemap);
-  if (sitemapPaths.length !== 24) throw new Error(`Expected 24 indexable routes from sitemap, got ${sitemapPaths.length}`);
+  if (sitemapPaths.length !== 25) throw new Error(`Expected 25 indexable routes from sitemap, got ${sitemapPaths.length}`);
   const paths = [...new Set([...sitemapPaths, ...Object.keys(NONINDEX_STATIC_ROUTE_SEO)])];
 
   const baseHtml = await readFile(join(DIST, 'index.html'), 'utf8');

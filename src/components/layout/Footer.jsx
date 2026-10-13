@@ -138,6 +138,9 @@ const Footer = () => {
               <Link to="/terminos" className="hover:text-primary transition-colors">
                 {t('footer.terms')}
               </Link>
+              <Link to="/garantia-satisfaccion" className="hover:text-primary transition-colors">
+                Garantía de satisfacción
+              </Link>
             </div>
           </div>
         </div>

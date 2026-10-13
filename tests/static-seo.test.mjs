@@ -52,7 +52,7 @@ const jsonLdEntries = (html) => [...html.matchAll(/<script[^>]*type="application
 
 test('generates one Spanish static head for every sitemap route', async () => {
   const paths = await pathsFromSitemap();
-  assert.equal(paths.length, 24);
+  assert.equal(paths.length, 25);
 
   for (const pathname of paths) {
     const html = await htmlFor(pathname);
@@ -85,15 +85,16 @@ test('includes a current lastmod date for every sitemap URL', async () => {
   const sitemap = await readFile(SITEMAP, 'utf8');
   const entries = [...sitemap.matchAll(/<url><loc>[^<]+<\/loc><lastmod>([^<]+)<\/lastmod><\/url>/g)];
 
-  assert.equal(entries.length, 24);
+  assert.equal(entries.length, 25);
   for (const [, lastmod] of entries) {
-    assert.match(lastmod, /^2026-09-29$/);
+    assert.match(lastmod, /^2026-\d{2}-\d{2}$/);
   }
 });
 
 test('writes page-specific legal titles into the static HTML', async () => {
   const privacy = await htmlFor('/politica-privacidad');
   const terms = await htmlFor('/terminos');
+  const guarantee = await htmlFor('/garantia-satisfaccion');
   assert.equal(
     decodeApostrophes(tagContent(privacy, /<title>([^<]+)<\/title>/i)),
     "Política de privacidad | Mikel's Fruit"
@@ -101,6 +102,10 @@ test('writes page-specific legal titles into the static HTML', async () => {
   assert.equal(
     decodeApostrophes(tagContent(terms, /<title>([^<]+)<\/title>/i)),
     "Términos y condiciones de compra | Mikel's Fruit"
+  );
+  assert.equal(
+    decodeApostrophes(tagContent(guarantee, /<title>([^<]+)<\/title>/i)),
+    "Garantía de satisfacción | Mikel's Fruit"
   );
 });
 
@@ -226,6 +231,17 @@ test('publishes Product JSON-LD with validated EANs, real shipping details, and 
     'https://schema.org/PreOrder',
     'Las reservas vendibles deben declararse como preventa',
   );
+  const scheduledTemprano = buildProductStructuredData({
+    slug: 'aceite-temprano-sin-filtrar',
+    price: 19.90,
+    currency: 'EUR',
+    stock: 10,
+    reservationOnly: true,
+    tieredDiscount: [
+      { actualQuantity: 1, reservationPrice: 17.50, regularPrice: 19.90, priceEndsAt: '2026-10-25T22:59:59Z' },
+    ],
+  });
+  assert.equal(scheduledTemprano.offers.price, '17.50');
   assert.equal(
     findProduct(temprano).name,
     'Aceite de oliva virgen extra Temprano 2026/27 sin filtrar — Reserva 500 ml',

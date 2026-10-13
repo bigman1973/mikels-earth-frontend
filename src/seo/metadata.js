@@ -1,3 +1,5 @@
+import { resolveScheduledSinglePrice } from '../utils/fixedPackPricing.js';
+
 export const SITE_ORIGIN = 'https://www.mikels.es';
 export const DEFAULT_SOCIAL_IMAGE = `${SITE_ORIGIN}/images/hero-olivos-background.jpeg`;
 
@@ -48,7 +50,11 @@ export const STATIC_ROUTE_SEO = {
   },
   '/terminos': {
     title: "Términos y condiciones de compra | Mikel's Fruit",
-    description: "Condiciones de compra, envíos, devoluciones y garantías de la tienda online de Mikel's.",
+    description: 'Condiciones de compra, pagos, envíos y devoluciones de Mikel’s Fruit.',
+  },
+  '/garantia-satisfaccion': {
+    title: "Garantía de satisfacción | Mikel's Fruit",
+    description: 'Cómo resolvemos incidencias y devoluciones en Mikel’s Fruit.',
   },
 };
 
@@ -305,7 +311,7 @@ export const buildProductStructuredData = (product, slug = product?.slug) => {
       '@type': 'Offer',
       url: canonical,
       priceCurrency: product.currency || 'EUR',
-      price: Number(product.price).toFixed(2),
+      price: Number(resolveScheduledSinglePrice(product)).toFixed(2),
       availability: isUnavailable
         ? 'https://schema.org/OutOfStock'
         : isReservationOnly

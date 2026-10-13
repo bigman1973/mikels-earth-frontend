@@ -104,18 +104,17 @@ Se envasa el 16 de octubre.`;
       claims: [],
       award: null,
       badges: [],
-      price: 19.90,
+      price: resolveScheduledSinglePrice(normalizedProduct),
       stock: Number(normalizedProduct.stock) || 1080,
       reservationOnly: true,
       reservationStockTotal: Number(normalizedProduct.reservationStockTotal) || 1080,
       reservationMessage: reservationCopy,
-      tieredDiscount: [{
-        minQuantity: 12,
-        label: 'Caja de 12',
-        actualQuantity: 12,
-        bundleQuantity: 12,
-        paidQuantity: 11,
-      }],
+      tieredDiscount: normalizedProduct.tieredDiscount || [
+        { minQuantity: 1, label: '1 botella 500 ml', actualQuantity: 1, reservationPrice: 17.50, regularPrice: 19.90, priceEndsAt: '2026-10-25T22:59:59Z', fixedPack: true },
+        { minQuantity: 3, label: 'Pack de 3', actualQuantity: 3, reservationPrice: 49.90, regularPrice: 56.70, priceEndsAt: '2026-10-25T22:59:59Z', fixedPack: true },
+        { minQuantity: 6, label: 'Pack de 6', actualQuantity: 6, reservationPrice: 94.50, regularPrice: 107.40, priceEndsAt: '2026-10-25T22:59:59Z', featured: true, fixedPack: true },
+        { minQuantity: 12, label: 'Caja de 12', actualQuantity: 12, reservationPrice: 178.50, regularPrice: 202.80, priceEndsAt: '2026-10-25T22:59:59Z', fixedPack: true },
+      ],
       volumeDiscount: null,
     };
   }
@@ -174,3 +173,4 @@ Se envasa el 16 de octubre.`;
     ),
   };
 };
+import { resolveScheduledSinglePrice } from './fixedPackPricing.js';

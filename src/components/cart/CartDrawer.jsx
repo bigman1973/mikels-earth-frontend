@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatEuro } from '../../utils/formatMoney';
 import { getApplicableVolumeTier } from '../../utils/volumePricing';
+import { getFixedPackForQuantity } from '../../utils/fixedPackPricing';
 
 const CartDrawer = () => {
   const {
@@ -21,14 +22,15 @@ const CartDrawer = () => {
     appliedDiscount,
     applyDiscountCode,
     removeDiscountCode,
+    hasNonDiscountablePack,
   } = useCart();
   const { t } = useTranslation();
   const [codeInput, setCodeInput] = useState('');
   const [codeMessage, setCodeMessage] = useState({ text: '', type: '' });
   const [showDiscount, setShowDiscount] = useState(false);
 
-  const applyCode = () => {
-    const result = applyDiscountCode(codeInput);
+  const applyCode = async () => {
+    const result = await applyDiscountCode(codeInput);
     setCodeMessage({ text: result.message, type: result.success ? 'success' : 'error' });
     if (result.success) {
       setCodeInput('');
@@ -87,7 +89,7 @@ const CartDrawer = () => {
                     const unitPrice = getItemPrice(item);
                     const itemTotal = unitPrice * item.quantity;
                     const tier = getApplicableVolumeTier(item, item.quantity);
-                    const isReservationBox = Number(tier?.bundleQuantity) === 12 && Number(tier?.paidQuantity) === 11;
+                    const fixedPack = getFixedPackForQuantity(item, item.quantity);
                     return (
                       <motion.div
                         key={`${item.id || item.slug || item.name}-${index}`}
@@ -116,19 +118,23 @@ const CartDrawer = () => {
                             <h3 className="line-clamp-2 text-sm font-semibold text-[#1a1a1a]">{item.name}</h3>
                             <p className="mt-1 text-sm font-semibold text-price">{formatEuro(unitPrice)}</p>
                             {item.reservationOnly && <p className="mt-1 text-xs text-stone-600">Reserva · cosecha 2026/27</p>}
-                            {isReservationBox && <p className="mt-1 text-xs text-stone-600">Caja de 12: pagas 11 y recibes 12</p>}
+                            {fixedPack && <p className="mt-1 text-xs text-stone-600">{fixedPack.label} · precio cerrado</p>}
                           </div>
                         </div>
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center rounded-lg border border-stone-200">
-                            <button type="button" onClick={() => updateQuantity(index, item.quantity - 1)} className="rounded-l-lg p-2 hover:bg-stone-50" aria-label="Disminuir cantidad">
-                              <Minus className="h-4 w-4" />
-                            </button>
-                            <span className="px-3 font-semibold">{item.quantity}</span>
-                            <button type="button" onClick={() => updateQuantity(index, item.quantity + 1)} className="rounded-r-lg p-2 hover:bg-stone-50" aria-label="Aumentar cantidad">
-                              <Plus className="h-4 w-4" />
-                            </button>
-                          </div>
+                          {fixedPack ? (
+                            <span className="text-sm font-semibold text-[#1a1a1a]">{item.quantity} botellas</span>
+                          ) : (
+                            <div className="flex items-center rounded-lg border border-stone-200">
+                              <button type="button" onClick={() => updateQuantity(index, item.quantity - 1)} className="rounded-l-lg p-2 hover:bg-stone-50" aria-label="Disminuir cantidad">
+                                <Minus className="h-4 w-4" />
+                              </button>
+                              <span className="px-3 font-semibold">{item.quantity}</span>
+                              <button type="button" onClick={() => updateQuantity(index, item.quantity + 1)} className="rounded-r-lg p-2 hover:bg-stone-50" aria-label="Aumentar cantidad">
+                                <Plus className="h-4 w-4" />
+                              </button>
+                            </div>
+                          )}
                           <p className="text-sm font-bold text-price">{formatEuro(itemTotal)}</p>
                         </div>
                       </motion.div>
@@ -157,7 +163,7 @@ const CartDrawer = () => {
                   {t('delivery.notice')}
                 </p>
 
-                {!appliedDiscount && (
+                {!appliedDiscount && !hasNonDiscountablePack && (
                   <div className="mt-3">
                     <button
                       type="button"
@@ -183,6 +189,9 @@ const CartDrawer = () => {
                     )}
                     {codeMessage.text && <p className="mt-2 text-xs text-[#1a1a1a]">{codeMessage.text}</p>}
                   </div>
+                )}
+                {hasNonDiscountablePack && (
+                  <p className="mt-3 text-xs leading-5 text-[#1a1a1a]">Los packs del Temprano tienen precio cerrado y no se combinan con códigos de descuento.</p>
                 )}
 
                 <Link to="/checkout" onClick={() => setIsCartOpen(false)} className="mt-5 block w-full rounded-lg bg-primary py-4 text-center font-semibold text-white transition-colors hover:bg-primary/90">

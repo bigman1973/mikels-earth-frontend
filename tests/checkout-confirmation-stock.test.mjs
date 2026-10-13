@@ -86,7 +86,9 @@ test('reservation purchase surfaces use the saved reservation contract', async (
   assert.match(card, /RESERVA · COSECHA 2026\/27/);
   assert.match(card, /product\.reservationOnly \? 'bg-primary text-white'/);
   assert.match(card, /product\.reservationOnly \? 'Reservar'/);
-  assert.match(cart, /Caja de 12: pagas 11 y recibes 12/);
+  assert.match(detail, /Elige tu reserva/);
+  assert.match(detail, /Precio de reserva hasta el 25 de octubre/);
+  assert.match(cart, /precio cerrado/);
   assert.match(emailTemplate, /event\.Receipt\.heading/);
   assert.match(products, /Ya puedes reservar el Temprano de la cosecha 2026\/27\. Se envasa el 16 de octubre\./);
   assert.match(products, /to=\{`\/producto\/\$\{reservationProduct\.slug\}`\}/);
@@ -94,4 +96,19 @@ test('reservation purchase surfaces use the saved reservation contract', async (
   assert.match(footer, /t\('footer\.copyright', \{ year: currentYear \}\)/);
   assert.match(es, /© \{\{year\}\} Farms Planet SL · Mikel's Fruit es una marca registrada/);
   assert.match(en, /© \{\{year\}\} Farms Planet SL · Mikel's Fruit es una marca registrada/);
+});
+
+test('Temprano guarantee is published in the product, legal terms and its own route', async () => {
+  const [detail, terms, guarantee] = await Promise.all([
+    read('src/pages/ProductDetail.jsx'),
+    read('src/pages/Terms.jsx'),
+    read('src/pages/SatisfactionGuarantee.jsx'),
+  ]);
+  const required = /Pruébalo\. Si no te gusta, te devolvemos el dinero\./;
+  for (const source of [detail, terms, guarantee]) {
+    assert.match(source, required);
+    assert.match(source, /30 días/);
+    assert.match(source, /No hace falta que nos devuelvas la botella/);
+  }
+  assert.match(terms, /Esta garantía comercial es adicional y no afecta a tu derecho legal de desistimiento de 14 días\./);
 });

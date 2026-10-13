@@ -1,3 +1,9 @@
+import {
+  getFixedPackForQuantity,
+  getFixedPackOptions,
+  getFixedPackPrice,
+} from './fixedPackPricing.js';
+
 // The backend repeats this calculation from WebProduct at checkout.  Keep this
 // small browser helper deterministic so the displayed cart amount and the
 // server-validated amount use the same persisted tier configuration.
@@ -9,6 +15,8 @@ const toFiniteNumber = (value, fallback = 0) => {
 
 export const getApplicableVolumeTier = (item, quantity = item?.quantity) => {
   const normalizedQuantity = Math.max(1, Math.trunc(toFiniteNumber(quantity, 1)));
+  const fixedPacks = getFixedPackOptions(item);
+  if (fixedPacks.length > 0) return getFixedPackForQuantity(item, normalizedQuantity);
   const tiers = Array.isArray(item?.tieredDiscountConfig)
     ? item.tieredDiscountConfig
     : [];
@@ -53,6 +61,10 @@ const getBundlePayableUnits = (tier, quantity) => {
 export const getVolumeDiscountedUnitPrice = (item, quantity = item?.quantity) => {
   const basePrice = toFiniteNumber(item?.price);
   const normalizedQuantity = Math.max(1, Math.trunc(toFiniteNumber(quantity, 1)));
+  const fixedPack = getFixedPackForQuantity(item, normalizedQuantity);
+  if (fixedPack) {
+    return Number((getFixedPackPrice(fixedPack) / normalizedQuantity).toFixed(4));
+  }
   const tier = getApplicableVolumeTier(item, normalizedQuantity);
   const payableUnits = getBundlePayableUnits(tier, normalizedQuantity);
   if (payableUnits !== null) {
@@ -71,6 +83,8 @@ export const getVolumeDiscountedUnitPrice = (item, quantity = item?.quantity) =>
 export const getVolumeDiscountedLineTotal = (item, quantity = item?.quantity) => (
   (() => {
     const normalizedQuantity = Math.max(1, Math.trunc(toFiniteNumber(quantity, 1)));
+    const fixedPack = getFixedPackForQuantity(item, normalizedQuantity);
+    if (fixedPack) return getFixedPackPrice(fixedPack);
     const basePrice = toFiniteNumber(item?.price);
     const payableUnits = getBundlePayableUnits(
       getApplicableVolumeTier(item, normalizedQuantity),

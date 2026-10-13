@@ -93,10 +93,11 @@ const Terms = () => {
           </section>
 
           <section className="mb-8">
-            <h2 className="mb-4 text-2xl font-bold text-primary">9. Garantías</h2>
-            <p className="text-gray-700">Todos nuestros productos cumplen la normativa de seguridad alimentaria.</p>
-            <p className="mt-4 text-gray-700">Si recibe un producto defectuoso, roto o en mal estado, le rogamos que nos lo comunique cuanto antes en <a href="mailto:info@mikels.es">info@mikels.es</a>, con una fotografía si es posible: así podemos resolverlo con rapidez. Esto no limita en modo alguno la garantía legal de conformidad que le corresponde.</p>
-            <p className="mt-4 text-gray-700">Gestionaremos la sustitución o el reembolso sin coste para usted.</p>
+            <h2 className="mb-4 text-2xl font-bold text-primary">9. Garantía comercial de satisfacción</h2>
+            <p className="text-gray-700"><strong>Pruébalo. Si no te gusta, te devolvemos el dinero.</strong></p>
+            <p className="mt-4 text-gray-700">Tienes 30 días desde que lo recibes. Escríbenos a <a href="mailto:info@mikels.es">info@mikels.es</a> y te devolvemos el importe íntegro, portes incluidos. <strong>No hace falta que nos devuelvas la botella.</strong> Sin preguntas.</p>
+            <p className="mt-4 text-gray-700">Esta garantía comercial es adicional y no afecta a tu derecho legal de desistimiento de 14 días.</p>
+            <p className="mt-4 text-gray-700">Todos nuestros productos cumplen la normativa de seguridad alimentaria. Si recibe un producto defectuoso, roto o en mal estado, lo solucionaremos sin coste para usted.</p>
           </section>
 
           <section className="mb-8">

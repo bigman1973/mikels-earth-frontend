@@ -37,6 +37,7 @@ const Opiniones = lazy(() => import('./pages/Opiniones'));
 const RecoverCart = lazy(() => import('./pages/RecoverCart'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const Terms = lazy(() => import('./pages/Terms'));
+const SatisfactionGuarantee = lazy(() => import('./pages/SatisfactionGuarantee'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 const AdminLogin = lazy(() => import('./pages/admin/AdminLogin'));
@@ -137,6 +138,7 @@ function App() {
                       <Route path="/recuperar-carrito/:token" element={<RecoverCart />} />
                       <Route path="/politica-privacidad" element={<PrivacyPolicy />} />
                       <Route path="/terminos" element={<Terms />} />
+                      <Route path="/garantia-satisfaccion" element={<SatisfactionGuarantee />} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </main>
