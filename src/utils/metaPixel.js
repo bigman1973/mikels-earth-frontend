@@ -113,7 +113,10 @@ export const cartToMetaContents = (items = [], priceForItem = (item) => item?.pr
 );
 
 const track = (eventName, parameters, options) => {
-  if (!isMetaTrackingEnabled()) return false;
+  // A visitor can accept Cookiebot and click a commerce control before React's
+  // consent listener has run. Synchronise again at the interaction boundary so
+  // an explicitly consented event is queued instead of silently discarded.
+  if (!syncMetaPixelConsent() || !isMetaTrackingEnabled()) return false;
   window.fbq('track', eventName, parameters, options);
   return true;
 };
@@ -133,8 +136,8 @@ export const trackMetaViewContent = (product) => {
   });
 };
 
-export const trackMetaAddToCart = (product, quantity) => {
-  const content = productToMetaContent(product, quantity, product?.price);
+export const trackMetaAddToCart = (product, quantity, unitPrice = product?.price) => {
+  const content = productToMetaContent(product, quantity, unitPrice);
   if (!content) return false;
 
   return track('AddToCart', {

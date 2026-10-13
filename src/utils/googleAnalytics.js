@@ -103,7 +103,10 @@ export const cartToGA4Items = (items = [], priceForItem = (item) => item?.price)
 );
 
 const track = (eventName, parameters) => {
-  if (!isGA4TrackingEnabled()) return false;
+  // A consent click and a commerce click can occur in the same React turn.
+  // Re-synchronise at the event boundary so an explicit statistics choice is
+  // honoured even before the registered listener has observed it.
+  if (!syncGA4Consent() || !isGA4TrackingEnabled()) return false;
   window.gtag('event', eventName, parameters);
   return true;
 };
@@ -119,8 +122,8 @@ export const trackGA4ViewItem = (product) => {
   });
 };
 
-export const trackGA4AddToCart = (product, quantity) => {
-  const item = productToGA4Item(product, quantity);
+export const trackGA4AddToCart = (product, quantity, unitPrice = product?.price) => {
+  const item = productToGA4Item(product, quantity, unitPrice);
   if (!item) return false;
 
   return track('add_to_cart', {

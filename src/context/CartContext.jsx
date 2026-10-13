@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect } from 'react';
 import { CART_STORAGE_KEY, clearStoredCart, loadStoredCart } from '../utils/cartStorage';
 import { getVolumeDiscountedUnitPrice } from '../utils/volumePricing';
 import { getFixedPackForQuantity } from '../utils/fixedPackPricing';
+import { getCartEventUnitPrice } from '../utils/cartTracking';
 import { trackMetaAddToCart } from '../utils/metaPixel';
 import { trackGA4AddToCart } from '../utils/googleAnalytics';
 
@@ -46,8 +47,12 @@ export const CartProvider = ({ children }) => {
       Math.min(sellableStock, (existingItem?.quantity || 0) + requestedQuantity) - (existingItem?.quantity || 0),
     );
     if (eventQuantity > 0) {
-      trackMetaAddToCart(product, eventQuantity);
-      trackGA4AddToCart(product, eventQuantity);
+      // Packs use a fixed line price (for example, 94,50 € for six bottles),
+      // so the event must use its derived unit amount rather than the base SKU
+      // price. This keeps contents × quantity equal to the event value.
+      const eventUnitPrice = getCartEventUnitPrice(product, eventQuantity);
+      trackMetaAddToCart(product, eventQuantity, eventUnitPrice);
+      trackGA4AddToCart(product, eventQuantity, eventUnitPrice);
     }
 
     setCart(prevCart => {
