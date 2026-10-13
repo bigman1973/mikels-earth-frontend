@@ -57,6 +57,10 @@ test('keeps the 2026/27 reservation separate from prior-lot awards and analysis'
     description: 'Aceite temprano',
     longDescription: 'Texto anterior',
     badges: [{ text: 'PREMIADO' }],
+    tieredDiscount: [
+      { actualQuantity: 3, label: 'Pack de 3' },
+      { actualQuantity: 6, label: 'Pack de 6', featured: true },
+    ],
   });
 
   assert.deepEqual(earlyOil.badges, []);
@@ -81,6 +85,10 @@ test('keeps the 2026/27 reservation separate from prior-lot awards and analysis'
   assert.match(earlyOil.longDescription, /Cosecha 2026\/27 · analítica en curso/);
   assert.doesNotMatch(earlyOil.longDescription, /olive japan|medalla|polifenol|antioxid|vitamina|oro|galardon|oleocanthal|per[oó]xido|acidez|569/i);
   assert.doesNotMatch(earlyOil.longDescription, /[Cc]antidad|[Úú]ltimas unidades|[Qq]uedan \d/);
+  assert.deepEqual(
+    earlyOil.tieredDiscount.filter((tier) => tier.featured).map((tier) => tier.actualQuantity),
+    [3],
+  );
 });
 
 test('removes decorative emoji and incomplete awards from other product metadata', () => {
