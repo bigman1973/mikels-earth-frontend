@@ -4,6 +4,7 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   DEFAULT_SOCIAL_IMAGE,
+  NONINDEX_STATIC_ROUTE_SEO,
   SITE_ORIGIN,
   STATIC_ROUTE_SEO,
   buildBlogMetadata,
@@ -83,7 +84,7 @@ const cleanHead = (html) => html
   .replace(/\s*<meta\s+name=(['"])(?:twitter:[^'"]+)\1[^>]*>/gi, '')
   .replace(/\s*<script\s+type=(['"])application\/ld\+json\1[^>]*>[\s\S]*?<\/script>/gi, '');
 
-const buildHead = ({ pathname, title, description, image, type, structuredData = [] }) => {
+const buildHead = ({ pathname, title, description, image, type, robots, structuredData = [] }) => {
   const canonical = pathname === '/' ? `${SITE_ORIGIN}/` : `${SITE_ORIGIN}${pathname}`;
   const absoluteImage = toAbsoluteUrl(image || DEFAULT_SOCIAL_IMAGE);
   const escapedTitle = escapeHtml(title);
@@ -104,6 +105,7 @@ const buildHead = ({ pathname, title, description, image, type, structuredData =
   return `
     <title>${escapedTitle}</title>
     <meta name="description" content="${escapedDescription}" />
+    ${robots ? `<meta name="robots" content="${escapeHtml(robots)}" />` : ''}
     <link rel="canonical" href="${escapedCanonical}" />
     <meta property="og:site_name" content="Mikel's Fruit" />
     <meta property="og:locale" content="es_ES" />
@@ -156,6 +158,16 @@ const loadMetadata = async (paths, logoUrl) => {
       continue;
     }
 
+    if (NONINDEX_STATIC_ROUTE_SEO[pathname]) {
+      metadata.set(pathname, {
+        pathname,
+        ...NONINDEX_STATIC_ROUTE_SEO[pathname],
+        image: DEFAULT_SOCIAL_IMAGE,
+        type: 'website',
+      });
+      continue;
+    }
+
     if (pathname.startsWith('/producto/')) {
       const slug = decodeURIComponent(pathname.slice('/producto/'.length));
       const product = products.get(slug);
@@ -193,8 +205,9 @@ const loadMetadata = async (paths, logoUrl) => {
 const main = async () => {
   const startedAt = performance.now();
   const sitemap = await readFile(SITEMAP, 'utf8');
-  const paths = parseSitemapPaths(sitemap);
-  if (paths.length !== 24) throw new Error(`Expected 24 indexable routes from sitemap, got ${paths.length}`);
+  const sitemapPaths = parseSitemapPaths(sitemap);
+  if (sitemapPaths.length !== 24) throw new Error(`Expected 24 indexable routes from sitemap, got ${sitemapPaths.length}`);
+  const paths = [...new Set([...sitemapPaths, ...Object.keys(NONINDEX_STATIC_ROUTE_SEO)])];
 
   const baseHtml = await readFile(join(DIST, 'index.html'), 'utf8');
   const logoUrl = await resolveLogoUrl();

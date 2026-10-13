@@ -52,6 +52,22 @@ export const STATIC_ROUTE_SEO = {
   },
 };
 
+// Estas rutas reciben tráfico de campañas, pero no deben indexarse ni entrar
+// en el sitemap. Se generan como HTML estático para que funcionen con una
+// carga directa antes de que el router de React se inicialice.
+export const NONINDEX_STATIC_ROUTE_SEO = {
+  '/vip': {
+    title: "Lista VIP Black Friday | Mikel's Fruit",
+    description: "Acceso anticipado al Black Friday de Mikel's Fruit, solo para la lista VIP.",
+    robots: 'noindex, nofollow',
+  },
+  '/vip/gracias': {
+    title: "Lista VIP confirmada | Mikel's Fruit",
+    description: 'Confirmación de alta en la lista VIP de Mikel\'s Fruit.',
+    robots: 'noindex, nofollow',
+  },
+};
+
 const PRODUCT_SEO = {
   'paraguayo-almibar': {
     title: "Paraguayo en Almíbar 720g, del Segrià | Mikel's",

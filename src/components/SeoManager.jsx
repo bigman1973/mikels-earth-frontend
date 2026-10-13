@@ -17,6 +17,8 @@ const CANONICAL_STATIC_ROUTES = new Set([
   '/contacto',
   '/horeca',
   '/opiniones',
+  '/vip',
+  '/vip/gracias',
   '/blog',
   '/politica-privacidad',
   '/terminos',

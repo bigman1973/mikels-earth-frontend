@@ -16,6 +16,8 @@ const STATIC_ROUTES = new Set([
   '/contacto',
   '/horeca',
   '/opiniones',
+  '/vip',
+  '/vip/gracias',
   '/politica-privacidad',
   '/terminos',
   '/admin/login',
