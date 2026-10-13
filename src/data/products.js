@@ -91,10 +91,10 @@ export const products = [
   {
 
     id: 6,
-    name: "Aceite de Oliva Virgen Extra Temprano 500ml sin filtrar",
+    name: "Aceite de oliva virgen extra Temprano 2026/27 sin filtrar — Reserva",
     slug: "aceite-temprano-sin-filtrar",
-    description: "Aceitunas recolectadas en su momento verde. Sin filtrar. Verde intenso, ligeramente picante, con ese amargor noble que indica frescura y calidad.",
-    longDescription: "Aceite de oliva virgen extra de primera cosecha, sin filtrar. De perfil verde, fresco y ligeramente picante, prensado en frío e ideal para ensaladas, tostadas y carpaccios.",
+    description: "Reserva de la cosecha 2026/27. AOVE sin filtrar de aceituna verde.",
+    longDescription: "Reserva de la cosecha 2026/27.\n\nElaborado con aceituna verde, recolectada al principio de campaña y sin filtrar. Perfil verde, con amargor y picor.\n\nPlata en OLIVE JAPAN 2026, Tokio.\n\nSe envasa el 16 de octubre.",
     price: 19.90,
     currency: "EUR",
     image: "/images/aceite-temprano-principal.jpeg",
@@ -104,11 +104,11 @@ export const products = [
       "/images/aceite-temprano-lifestyle-ceo.webp"
     ],
     category: "Aceites",
-    tags: ["Vegano", "Sin Gluten", "Prensado en Frío", "Sin Filtrar", "Edición Limitada", "Premium", "Regalo"],
+    tags: ["Prensado en Frío", "Sin Filtrar"],
     stock: 1080,
     reservationOnly: true,
     reservationStockTotal: 1080,
-    reservationMessage: "La cosecha 2026/27 se sirve por reserva. Se embotella a finales de octubre y te llega en cuanto salga.",
+    reservationMessage: "La cosecha 2026/27 se sirve por reserva. Se envasa el 16 de octubre y se envía la última semana de octubre.",
     weight: "500ml",
     ingredients: "Aceite de oliva virgen extra 100% sin filtrar",
     nutritionalInfo: {
@@ -146,9 +146,9 @@ export const products = [
     featured: true,
     freeShipping: true,
     limitedEdition: true,
+    award: "Medalla de Plata · OLIVE JAPAN 2026",
     badges: [
-      { text: "PACK DÚO", textKey: "pack_duo", color: "bg-gradient-to-r from-green-600 to-emerald-600", action: "addPackDuo" },
-      { text: "PROMOCIÓN: Hasta 25% dto", textKey: "promo_25", color: "bg-gradient-to-r from-red-600 to-pink-600" }
+      { text: "Medalla de Plata · OLIVE JAPAN 2026", detailOnly: true }
     ]
   },
   {

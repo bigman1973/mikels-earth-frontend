@@ -293,7 +293,7 @@ const ProductDetail = () => {
 
               {isReservation && (
                 <div className="mb-5 rounded-lg border border-stone-300 bg-[#f5efe4] px-4 py-3 text-sm leading-6 text-[#1a1a1a]">
-                  <p>{product.reservationMessage || 'La cosecha 2026/27 se sirve por reserva. Se embotella a finales de octubre y te llega en cuanto salga.'}</p>
+                  <p>{product.reservationMessage || 'La cosecha 2026/27 se sirve por reserva. Se envasa el 16 de octubre y se envía la última semana de octubre.'}</p>
                 </div>
               )}
 
@@ -705,7 +705,7 @@ const ProductDetail = () => {
                   <svg className="h-5 w-5 flex-shrink-0 text-[#1a1a1a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  <span>{isReservation ? 'Envío al embotellar, a finales de octubre' : t('product_detail.shipping_time')}</span>
+                  <span>{isReservation ? 'Envío la última semana de octubre' : t('product_detail.shipping_time')}</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-gray-600">
                   <svg className="h-5 w-5 flex-shrink-0 text-[#1a1a1a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">

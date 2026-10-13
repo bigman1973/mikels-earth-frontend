@@ -50,7 +50,7 @@ test('removes obsolete awards from the ecological gift pack', () => {
   assert.deepEqual(pack.badges, []);
 });
 
-test('shows the Olive Japan 2026 silver medal only on early unfiltered oil', () => {
+test('shows the 2026/27 reservation copy and the identified 2026 silver medal only on early unfiltered oil', () => {
   const earlyOil = applyEditorialOverrides({
     slug: 'aceite-temprano-sin-filtrar',
     name: 'Aceite temprano sin filtrar',
@@ -63,30 +63,25 @@ test('shows the Olive Japan 2026 silver medal only on early unfiltered oil', () 
     text: 'Medalla de Plata · OLIVE JAPAN 2026',
     detailOnly: true,
   }]);
-  assert.match(
-    earlyOil.longDescription,
-    /\*\*Medalla de Plata en OLIVE JAPAN 2026\*\*, el concurso internacional de aceite de oliva de Tokio, en su primera participación\./,
-  );
-  assert.match(
-    earlyOil.longDescription,
-    /La aceituna se recoge verde, antes de que madure, porque es el momento en que más polifenoles tiene — los antioxidantes naturales del aceite\./,
-  );
-  assert.match(
-    earlyOil.longDescription,
-    /Da bastante menos aceite por kilo, y por eso casi nadie lo hace así\./,
-  );
-  assert.match(
-    earlyOil.longDescription,
-    /No se filtra\. Si lo ves turbio, es eso: no le hemos quitado nada\./,
-  );
-  assert.match(
-    earlyOil.longDescription,
-    /solo se envasa lo que esté reservado\. Lo que no se reserva, no se hace\./,
+  assert.equal(
+    earlyOil.name,
+    'Aceite de oliva virgen extra Temprano 2026/27 sin filtrar — Reserva',
   );
   assert.equal(
-    earlyOil.reservationMessage,
-    'La cosecha 2026/27 se sirve por reserva. Se embotella a finales de octubre y se envía la última semana de octubre.',
+    earlyOil.description,
+    'Reserva de la cosecha 2026/27. AOVE sin filtrar de aceituna verde.',
   );
+  assert.equal(
+    earlyOil.longDescription,
+    'Reserva de la cosecha 2026/27.\n\nElaborado con aceituna verde, recolectada al principio de campaña y sin filtrar. Perfil verde, con amargor y picor.\n\nPlata en OLIVE JAPAN 2026, Tokio.\n\nSe envasa el 16 de octubre.',
+  );
+  assert.equal(earlyOil.award, 'Medalla de Plata · OLIVE JAPAN 2026');
+  assert.deepEqual(earlyOil.tags, ['Prensado en Frío', 'Sin Filtrar']);
+  assert.equal(
+    earlyOil.reservationMessage,
+    'La cosecha 2026/27 se sirve por reserva. Se envasa el 16 de octubre y se envía la última semana de octubre.',
+  );
+  assert.doesNotMatch(earlyOil.longDescription, /polifenol|antioxid|vitamina|oro|galardon/i);
   assert.doesNotMatch(earlyOil.longDescription, /[Cc]antidad|[Úú]ltimas unidades|[Qq]uedan \d/);
 });
 

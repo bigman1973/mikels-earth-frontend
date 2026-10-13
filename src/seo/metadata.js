@@ -82,8 +82,8 @@ const PRODUCT_SEO = {
     description: 'Aceite de oliva virgen extra ecológico. Seis medallas en cinco años seguidos: oro en NYIOOC 2022 y 2024, y en OLIVE JAPAN 2025. Botella de 500 ml.',
   },
   'aceite-temprano-sin-filtrar': {
-    title: "AOVE Temprano sin Filtrar 500ml | Plata OLIVE JAPAN 2026 | Mikel's",
-    description: 'Medalla de Plata en OLIVE JAPAN 2026, el concurso internacional de aceite de oliva de Tokio, en su primera participación.',
+    title: "AOVE Temprano 2026/27 sin filtrar 500 ml — Reserva | Mikel's Fruit",
+    description: 'Reserva de la cosecha 2026/27. AOVE sin filtrar de aceituna verde. Plata en OLIVE JAPAN 2026, Tokio. Se envasa el 16 de octubre.',
   },
   'aceite-5l-caja-3': {
     title: "AOVE 5 L para hostelería y granel | Mikel's Fruit",
@@ -235,7 +235,9 @@ const EDITORIAL_PRODUCT_CONTENT = {
     longDescription: 'Paraguayo, agua, azúcar y zumo de limón natural. 60 % de fruta. Solo cuatro ingredientes. Sin conservantes ni colorantes. Pack de tres tarros de 250 g, en estuche de cartón.',
   },
   'aceite-temprano-sin-filtrar': {
-    longDescription: 'Aceite de oliva virgen extra de primera cosecha, sin filtrar. De perfil verde, fresco y ligeramente picante, prensado en frío e ideal para ensaladas, tostadas y carpaccios.',
+    name: 'Aceite de oliva virgen extra Temprano 2026/27 sin filtrar — Reserva',
+    description: 'Reserva de la cosecha 2026/27. AOVE sin filtrar de aceituna verde.',
+    longDescription: 'Reserva de la cosecha 2026/27. Elaborado con aceituna verde, recolectada al principio de campaña y sin filtrar. Perfil verde, con amargor y picor. Plata en OLIVE JAPAN 2026, Tokio. Se envasa el 16 de octubre.',
   },
   'pack-temprano-premium': {
     longDescription: 'Un estuche de regalo con una botella de 500 ml de aceite de oliva virgen extra de primera cosecha, sin filtrar, y su estuche premium. De perfil verde, fresco y ligeramente picante; prensado en frío e ideal para ensaladas, tostadas y carpaccios.',

@@ -86,19 +86,23 @@ export const applyEditorialOverrides = (product, language = 'es') => {
   }
 
   if (product.slug === 'aceite-temprano-sin-filtrar') {
-    const approvedAwardLine = '**Medalla de Plata en OLIVE JAPAN 2026**, el concurso internacional de aceite de oliva de Tokio, en su primera participación.';
-    const reservationCopy = 'La cosecha 2026/27 se sirve por reserva. Se embotella a finales de octubre y se envía la última semana de octubre.';
-    const approvedDescription = `La aceituna se recoge verde, antes de que madure, porque es el momento en que más polifenoles tiene — los antioxidantes naturales del aceite. Da bastante menos aceite por kilo, y por eso casi nadie lo hace así. Ese amargor y ese picor al final son justo eso.
+    const reservationCopy = 'La cosecha 2026/27 se sirve por reserva. Se envasa el 16 de octubre y se envía la última semana de octubre.';
+    const approvedDescription = `Reserva de la cosecha 2026/27.
 
-No lo elegimos por el sabor: elegimos el momento de recoger por los polifenoles, y el sabor viene detrás.
+Elaborado con aceituna verde, recolectada al principio de campaña y sin filtrar. Perfil verde, con amargor y picor.
 
-No se filtra. Si lo ves turbio, es eso: no le hemos quitado nada.
+Plata en OLIVE JAPAN 2026, Tokio.
 
-Se embotella a finales de octubre y solo se envasa lo que esté reservado. Lo que no se reserva, no se hace.`;
+Se envasa el 16 de octubre.`;
 
     return {
       ...normalizedProduct,
-      longDescription: `${approvedDescription}\n\n${approvedAwardLine}`,
+      name: 'Aceite de oliva virgen extra Temprano 2026/27 sin filtrar — Reserva',
+      description: 'Reserva de la cosecha 2026/27. AOVE sin filtrar de aceituna verde.',
+      longDescription: approvedDescription,
+      tags: ['Prensado en Frío', 'Sin Filtrar'],
+      claims: [],
+      award: 'Medalla de Plata · OLIVE JAPAN 2026',
       badges: [{
         text: 'Medalla de Plata · OLIVE JAPAN 2026',
         detailOnly: true,
