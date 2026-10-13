@@ -28,7 +28,7 @@ const ProductCard = ({ product }) => {
   const cardBadgeText = product.reservationOnly
     ? 'RESERVA · COSECHA 2026/27'
     : badgeText;
-  const isSoldOut = product.soldOut || Number(product.stock || 0) < 1;
+  const isSoldOut = product.soldOut || product.available === false;
 
   const addProduct = () => {
     if (isSoldOut) return;

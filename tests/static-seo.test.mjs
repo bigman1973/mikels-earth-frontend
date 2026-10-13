@@ -324,6 +324,7 @@ test('keeps OutOfStock ahead of PreOrder when a reservation is no longer sellabl
   });
 
   assert.equal(unavailableReservation.offers.availability, 'https://schema.org/OutOfStock');
+  assert.doesNotMatch(JSON.stringify(unavailableReservation), /inventoryLevel/i);
 });
 
 test('identifies packs with SKU and MPN but never borrows a component EAN', async () => {

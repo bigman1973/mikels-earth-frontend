@@ -52,18 +52,18 @@ test('confirmation clears the cart only after a saved paid receipt is available'
   assert.match(cart, /clearStoredCart\(window\.localStorage\)/);
 });
 
-test('stock controls retain a backend-enforced checkout boundary', async () => {
+test('availability controls retain a backend-enforced checkout boundary without quantities', async () => {
   const [cart, detail, card] = await Promise.all([
     read('src/context/CartContext.jsx'),
     read('src/pages/ProductDetail.jsx'),
     read('src/components/products/ProductCard.jsx'),
   ]);
 
-  assert.match(cart, /Math\.min\(\s*sellableStock/);
-  assert.match(cart, /stock: sellableStock/);
-  assert.match(detail, /max=\{availableStock\}/);
-  assert.match(detail, /product\.soldOut \|\| availableStock < 1/);
-  assert.match(card, /const isSoldOut = product\.soldOut \|\| Number\(product\.stock \|\| 0\) < 1/);
+  assert.match(cart, /const isAvailable = product\.available !== false && !product\.soldOut/);
+  assert.doesNotMatch(cart, /sellableStock|stock:/);
+  assert.match(detail, /const isAvailable = product\.available !== false && !product\.soldOut/);
+  assert.doesNotMatch(detail, /availableStock|max=\{availableStock\}/);
+  assert.match(card, /const isSoldOut = product\.soldOut \|\| product\.available === false/);
 });
 
 test('reservation purchase surfaces use the saved reservation contract', async () => {
@@ -79,14 +79,21 @@ test('reservation purchase surfaces use the saved reservation contract', async (
   ]);
 
   assert.match(detail, /product\.reservationOnly === true/);
-  assert.doesNotMatch(detail, /Quedan \{availableStock\} de \{product\.reservationStockTotal \|\| 1080\}/);
+  assert.doesNotMatch(detail, /Quedan \{availableStock\} de \{product\.reservationStockTotal/);
   assert.match(detail, /isReservation \? 'Reservar'/);
   assert.match(detail, /Envío la última semana de octubre/);
   assert.match(detail, /Cosecha 2026\/27 · analítica en curso/);
   assert.match(card, /RESERVA · COSECHA 2026\/27/);
   assert.match(card, /product\.reservationOnly \? 'bg-primary text-white'/);
   assert.match(card, /product\.reservationOnly \? 'Reservar'/);
+  assert.match(detail, /packs\.find\(\(pack\) => pack\.actualQuantity === 3\)/);
   assert.match(detail, /Elige tu reserva/);
+  assert.doesNotMatch(detail, /formatEuro\(hasFixedPackPricing \? currentLineTotal/);
+  assert.ok(
+    detail.indexOf('Pruébalo. Si no te gusta, te devolvemos el dinero.')
+      < detail.indexOf('{hasFixedPackPricing && ('),
+    'la garantía debe aparecer antes del selector de packs',
+  );
   assert.match(detail, /Precio de reserva hasta el 25 de octubre/);
   assert.match(cart, /precio cerrado/);
   assert.match(emailTemplate, /event\.Receipt\.heading/);

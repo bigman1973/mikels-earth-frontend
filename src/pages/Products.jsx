@@ -17,7 +17,10 @@ const Products = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('default');
   const reservationProduct = products.find((product) => (
-    product.reservationOnly && product.visibleInStore !== false && !product.soldOut
+    product.reservationOnly
+      && product.visibleInStore !== false
+      && !product.soldOut
+      && product.available !== false
   ));
 
   const filteredProducts = products.filter(product => {

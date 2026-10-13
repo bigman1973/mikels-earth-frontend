@@ -31,7 +31,7 @@ export const CartProvider = ({ children }) => {
   }, [cart]);
 
   const addToCart = (product, quantity = 1, purchaseType = 'one-time', subscriptionFrequency = null) => {
-    const sellableStock = Math.max(0, Number(product.stock) || 0);
+    const isAvailable = product.available !== false && !product.soldOut;
     const requestedQuantity = Math.max(1, Number(quantity) || 1);
     const isClosedPackSelection = Boolean(getFixedPackForQuantity(product, requestedQuantity));
     const existingItem = cart.find((item) => (
@@ -42,10 +42,7 @@ export const CartProvider = ({ children }) => {
       && (item.selectedVariant || null) === (product.selectedVariant || null)
       && !isClosedPackSelection
     ));
-    const eventQuantity = Math.max(
-      0,
-      Math.min(sellableStock, (existingItem?.quantity || 0) + requestedQuantity) - (existingItem?.quantity || 0),
-    );
+    const eventQuantity = isAvailable ? requestedQuantity : 0;
     if (eventQuantity > 0) {
       // Packs use a fixed line price (for example, 94,50 € for six bottles),
       // so the event must use its derived unit amount rather than the base SKU
@@ -69,13 +66,10 @@ export const CartProvider = ({ children }) => {
       if (existingItemIndex > -1) {
         // Si el producto ya existe con las mismas opciones, incrementar cantidad
         const newCart = [...prevCart];
-        newCart[existingItemIndex].quantity = Math.min(
-          sellableStock,
-          newCart[existingItemIndex].quantity + requestedQuantity,
-        );
+        newCart[existingItemIndex].quantity += requestedQuantity;
         return newCart;
       } else {
-        if (sellableStock < 1) return prevCart;
+        if (!isAvailable) return prevCart;
         // Si es nuevo, añadirlo al carrito
         let price = product.price;
         
@@ -98,8 +92,7 @@ export const CartProvider = ({ children }) => {
           sku: product.sku || '',
           price: price,
           originalPrice: product.price,
-          quantity: Math.min(sellableStock, requestedQuantity),
-          stock: sellableStock,
+          quantity: requestedQuantity,
           purchaseType: purchaseType,
           subscriptionFrequency: subscriptionFrequency,
           selectedVariant: product.selectedVariant || null,
@@ -133,8 +126,7 @@ export const CartProvider = ({ children }) => {
       if (getFixedPackForQuantity(newCart[itemIndex], newCart[itemIndex].quantity)) {
         return newCart;
       }
-      const limit = Math.max(0, Number(newCart[itemIndex].stock) || 0);
-      newCart[itemIndex].quantity = Math.min(limit, newQuantity);
+      newCart[itemIndex].quantity = Math.max(1, Number(newQuantity) || 1);
       return newCart;
     });
   };

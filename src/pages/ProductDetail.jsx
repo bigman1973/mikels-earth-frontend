@@ -74,7 +74,9 @@ const ProductDetail = () => {
       price: product?.price,
       tieredDiscountConfig: product?.tieredDiscount,
     });
-    const defaultPack = packs.find((pack) => pack.featured) || packs[0];
+    const defaultPack = packs.find((pack) => pack.actualQuantity === 3)
+      || packs.find((pack) => pack.featured)
+      || packs[0];
     setQuantity(defaultPack?.actualQuantity || 1);
   }, [product?.slug]);
 
@@ -151,7 +153,7 @@ const ProductDetail = () => {
   const reservationBatchNotice = product.slug === 'aceite-temprano-sin-filtrar'
     ? 'Cosecha 2026/27 · analítica en curso'
     : null;
-  const availableStock = Math.max(0, Number(product.stock) || 0);
+  const isAvailable = product.available !== false && !product.soldOut;
 
   // El backend solo adjunta complementos activos y vendibles. Esta segunda
   // comprobación defensiva evita mostrar una fila incompleta ante cualquier
@@ -372,27 +374,38 @@ const ProductDetail = () => {
 
               {/* Price */}
               <div className="mb-6 rounded-lg bg-[#f5efe4] p-6">
-                <div className="mb-2 text-4xl font-bold text-price">
-                  {formatEuro(hasFixedPackPricing ? currentLineTotal : (currentPrice || product.price))}
-                </div>
-                {hasDiscount && (
-                  <div className="space-y-1 rounded-lg border border-stone-300 bg-white p-3 text-[#1a1a1a]">
-                    <div className="text-sm font-semibold">
-                      {t('product_detail.discount_applied', { percent: discountPercent, label: discountLabel })}
+                {!hasFixedPackPricing && (
+                  <>
+                    <div className="mb-2 text-4xl font-bold text-price">
+                      {formatEuro(currentPrice || product.price)}
                     </div>
-                    <div className="text-xs">
-                      {t('product_detail.price_per_unit', { price: formatEuro(currentPrice), original: formatEuro(product.price) })}
-                    </div>
-                    <div className="text-lg font-semibold">
-                      {t('product_detail.total_price', { price: formatEuro(currentLineTotal) })}
-                      <span className="ml-2 text-sm font-normal">
-                        ({t('product_detail.you_save', { amount: formatEuro(originalLineTotal - currentLineTotal) })})
-                      </span>
-                    </div>
+                    {hasDiscount && (
+                      <div className="space-y-1 rounded-lg border border-stone-300 bg-white p-3 text-[#1a1a1a]">
+                        <div className="text-sm font-semibold">
+                          {t('product_detail.discount_applied', { percent: discountPercent, label: discountLabel })}
+                        </div>
+                        <div className="text-xs">
+                          {t('product_detail.price_per_unit', { price: formatEuro(currentPrice), original: formatEuro(product.price) })}
+                        </div>
+                        <div className="text-lg font-semibold">
+                          {t('product_detail.total_price', { price: formatEuro(currentLineTotal) })}
+                          <span className="ml-2 text-sm font-normal">
+                            ({t('product_detail.you_save', { amount: formatEuro(originalLineTotal - currentLineTotal) })})
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                  </>
+                )}
+                {isReservation && (
+                  <div className="mb-5 rounded-lg border border-stone-300 bg-white p-4 text-[#1a1a1a]">
+                    <p className="text-base font-semibold">Pruébalo. Si no te gusta, te devolvemos el dinero.</p>
+                    <p className="mt-2 text-sm leading-6">Tienes 30 días desde que lo recibes. Escríbenos y te devolvemos el importe íntegro, portes incluidos. <strong>No hace falta que nos devuelvas la botella.</strong> Sin preguntas.</p>
+                    <Link to="/garantia-satisfaccion" className="mt-3 inline-block text-sm font-medium text-primary underline underline-offset-4">Ver garantía de satisfacción</Link>
                   </div>
                 )}
                 {hasFixedPackPricing && (
-                  <div className="mt-5 space-y-3 border-t border-stone-300 pt-5 text-[#1a1a1a]">
+                  <div className="space-y-3 text-[#1a1a1a]">
                     <div>
                       <p className="text-base font-semibold">Elige tu reserva</p>
                       <p className="mt-1 text-sm leading-6">Precio de reserva hasta el 25 de octubre. A partir del 26 de octubre se aplicará el precio normal.</p>
@@ -423,13 +436,6 @@ const ProductDetail = () => {
                       })}
                     </div>
                     <p className="text-xs leading-5 text-gray-600">Los packs tienen precio cerrado y no se combinan con códigos de descuento.</p>
-                  </div>
-                )}
-                {isReservation && (
-                  <div className="mt-5 rounded-lg border border-stone-300 bg-white p-4 text-[#1a1a1a]">
-                    <p className="text-base font-semibold">Pruébalo. Si no te gusta, te devolvemos el dinero.</p>
-                    <p className="mt-2 text-sm leading-6">Tienes 30 días desde que lo recibes. Escríbenos y te devolvemos el importe íntegro, portes incluidos. <strong>No hace falta que nos devuelvas la botella.</strong> Sin preguntas.</p>
-                    <Link to="/garantia-satisfaccion" className="mt-3 inline-block text-sm font-medium text-primary underline underline-offset-4">Ver garantía de satisfacción</Link>
                   </div>
                 )}
                 {product.tieredDiscount && !hasFixedPackPricing && !hasDiscount && (
@@ -596,7 +602,7 @@ const ProductDetail = () => {
               ) : null}
 
               {/* Quantity selector */}
-              {!hasFixedPackPricing && product.slug !== 'estuche-regalo' && availableStock > 0 && (
+              {!hasFixedPackPricing && product.slug !== 'estuche-regalo' && isAvailable && (
               <div className="mb-6">
                 <label className="block text-sm font-semibold text-primary mb-3">
                   {t('product_detail.quantity')}
@@ -614,16 +620,14 @@ const ProductDetail = () => {
                     type="number"
                     value={quantity}
                     onChange={(e) => {
-                      setQuantity(Math.min(availableStock, Math.max(1, parseInt(e.target.value) || 1)));
+                      setQuantity(Math.max(1, parseInt(e.target.value) || 1));
                     }}
                     className="w-20 h-12 text-center border-2 border-gray-200 rounded-lg font-semibold text-lg focus:outline-none focus:border-primary"
                     min={1}
-                    max={availableStock}
                   />
                   <button
-                    onClick={() => setQuantity(Math.min(availableStock, quantity + 1))}
-                    disabled={quantity >= availableStock}
-                    className="w-12 h-12 bg-gray-100 hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50 rounded-lg font-bold text-xl transition-colors"
+                    onClick={() => setQuantity(quantity + 1)}
+                    className="w-12 h-12 bg-gray-100 hover:bg-gray-200 rounded-lg font-bold text-xl transition-colors"
                   >
                     +
                   </button>
@@ -742,7 +746,7 @@ const ProductDetail = () => {
               )}
 
               {/* Action buttons or Sold Out Notification */}
-              {product.soldOut || availableStock < 1 ? (
+              {!isAvailable ? (
                 <SoldOutNotification productName={product.name} productSlug={product.slug} />
               ) : (
                 <button

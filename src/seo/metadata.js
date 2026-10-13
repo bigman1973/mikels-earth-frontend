@@ -294,9 +294,14 @@ export const buildProductStructuredData = (product, slug = product?.slug) => {
   const imageList = (product.images?.length ? product.images : [product.image])
     .filter(Boolean)
     .map(toAbsoluteUrl);
-  const stock = Number(product.stock);
   const isReservationOnly = product.reservationOnly === true || product.reservation_only === true;
-  const isUnavailable = product.soldOut || product.sold_out || !Number.isFinite(stock) || stock <= 0;
+  const stock = Number(product.stock);
+  const hasLegacyStock = Number.isFinite(stock);
+  const isUnavailable = product.available === false
+    || product.soldOut
+    || product.sold_out
+    || (!hasLegacyStock && product.available !== true)
+    || (hasLegacyStock && stock <= 0);
 
   return {
     '@context': 'https://schema.org',

@@ -105,9 +105,8 @@ Se envasa el 16 de octubre.`;
       award: null,
       badges: [],
       price: resolveScheduledSinglePrice(normalizedProduct),
-      stock: Number(normalizedProduct.stock) || 1080,
+      available: normalizedProduct.available !== false,
       reservationOnly: true,
-      reservationStockTotal: Number(normalizedProduct.reservationStockTotal) || 1080,
       reservationMessage: reservationCopy,
       tieredDiscount: normalizedProduct.tieredDiscount || [
         { minQuantity: 1, label: '1 botella 500 ml', actualQuantity: 1, reservationPrice: 17.50, regularPrice: 19.90, priceEndsAt: '2026-10-25T22:59:59Z', fixedPack: true },
