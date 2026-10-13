@@ -373,7 +373,7 @@ const ProductDetail = () => {
               {/* Price */}
               <div className="mb-6 rounded-lg bg-[#f5efe4] p-6">
                 <div className="mb-2 text-4xl font-bold text-price">
-                  {formatEuro(currentPrice || product.price)}
+                  {formatEuro(hasFixedPackPricing ? currentLineTotal : (currentPrice || product.price))}
                 </div>
                 {hasDiscount && (
                   <div className="space-y-1 rounded-lg border border-stone-300 bg-white p-3 text-[#1a1a1a]">
