@@ -159,6 +159,11 @@ export const trackMetaInitiateCheckout = (items, value, priceForItem) => {
   });
 };
 
+export const trackMetaLead = (eventId) => {
+  if (!eventId) return false;
+  return track('Lead', { content_name: 'Black Friday VIP 2026' }, { eventID: eventId });
+};
+
 export const trackMetaPurchase = (receipt) => {
   const orderNumber = String(receipt?.order_number || '').trim();
   if (!orderNumber) return false;

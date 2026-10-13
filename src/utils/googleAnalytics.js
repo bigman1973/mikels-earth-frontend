@@ -141,6 +141,10 @@ export const trackGA4BeginCheckout = (items, value, priceForItem) => {
   });
 };
 
+export const trackGA4GenerateLead = () => track('generate_lead', {
+  lead_source: 'vip_black_friday_2026',
+});
+
 export const trackGA4Purchase = (receipt) => {
   const transactionId = String(receipt?.order_number || '').trim();
   if (!transactionId) return false;

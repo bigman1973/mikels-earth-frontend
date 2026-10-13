@@ -14,6 +14,8 @@ import './App.css';
 const CartDrawer = lazy(() => import('./components/cart/CartDrawer'));
 const CartRoute = lazy(() => import('./pages/CartRoute'));
 const NewsletterPopup = lazy(() => import('./components/NewsletterPopup'));
+const VipLanding = lazy(() => import('./pages/VipLanding'));
+const VipThanks = lazy(() => import('./pages/VipThanks'));
 
 const Home = lazy(() => import('./pages/Home'));
 const LaFamilia = lazy(() => import('./pages/LaFamilia'));
@@ -122,6 +124,8 @@ function App() {
                       <Route path="/checkout" element={<Checkout />} />
                       <Route path="/order-success" element={<OrderSuccess />} />
                       <Route path="/pedido-confirmado" element={<OrderSuccess />} />
+                      <Route path="/vip" element={<VipLanding />} />
+                      <Route path="/vip/gracias" element={<VipThanks />} />
                       <Route path="/subscription-success" element={<SubscriptionSuccess />} />
                       <Route path="/suscripcion-exitosa" element={<SubscriptionSuccess />} />
                       <Route path="/blog" element={<Blog />} />

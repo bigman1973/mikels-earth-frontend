@@ -45,3 +45,10 @@ test('GA4 ecommerce events use the web SKU and the saved receipt', async () => {
   assert.match(success, /trackGA4Purchase\(receipt\)/);
   assert.match(app, /<GoogleAnalytics\s*\/>/);
 });
+
+test('Metricool is held behind Cookiebot statistics consent', async () => {
+  const indexHtml = await read('index.html');
+  assert.match(indexHtml, /Metricool Tracking - Solo se carga con consentimiento estadístico/);
+  assert.match(indexHtml, /data-cookieconsent="statistics"/);
+  assert.match(indexHtml, /tracker\.metricool\.com/);
+});

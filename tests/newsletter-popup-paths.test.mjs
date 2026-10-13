@@ -6,7 +6,7 @@ test('newsletter popup is limited to editorial and brand pages', () => {
   for (const path of ['/blog', '/blog/aceite-temprano', '/la-familia', '/nuestra-tierra', '/recetario']) {
     assert.equal(isNewsletterPopupAllowedPath(path), true, `${path} should be eligible`);
   }
-  for (const path of ['/', '/tienda', '/producto/paraguayo-almibar', '/carrito', '/checkout', '/opiniones']) {
+  for (const path of ['/', '/tienda', '/producto/paraguayo-almibar', '/carrito', '/checkout', '/opiniones', '/vip', '/vip/gracias']) {
     assert.equal(isNewsletterPopupAllowedPath(path), false, `${path} should be excluded`);
   }
 });
