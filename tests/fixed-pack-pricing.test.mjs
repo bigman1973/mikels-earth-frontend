@@ -11,10 +11,10 @@ import {
 const temprano = {
   price: 19.90,
   tieredDiscount: [
-    { actualQuantity: 1, label: '1 botella 500 ml', reservationPrice: 17.50, regularPrice: 19.90, priceEndsAt: '2026-10-25T22:59:59Z' },
-    { actualQuantity: 3, label: 'Pack de 3', reservationPrice: 49.90, regularPrice: 56.70, priceEndsAt: '2026-10-25T22:59:59Z', featured: true },
-    { actualQuantity: 6, label: 'Pack de 6', reservationPrice: 94.50, regularPrice: 107.40, priceEndsAt: '2026-10-25T22:59:59Z' },
-    { actualQuantity: 12, label: 'Caja de 12', reservationPrice: 178.50, regularPrice: 202.80, priceEndsAt: '2026-10-25T22:59:59Z' },
+    { actualQuantity: 1, label: '1 botella 500 ml', reservationPrice: 17.50, regularPrice: 19.90, priceEndsAt: '2026-10-26T22:59:59Z' },
+    { actualQuantity: 3, label: 'Pack de 3', reservationPrice: 49.90, regularPrice: 56.70, priceEndsAt: '2026-10-26T22:59:59Z', featured: true },
+    { actualQuantity: 6, label: 'Pack de 6', reservationPrice: 94.50, regularPrice: 107.40, priceEndsAt: '2026-10-26T22:59:59Z' },
+    { actualQuantity: 12, label: 'Caja de 12', reservationPrice: 178.50, regularPrice: 202.80, priceEndsAt: '2026-10-26T22:59:59Z' },
   ],
 };
 
@@ -29,9 +29,9 @@ test('marks only the pack of three as recommended', () => {
   );
 });
 
-test('switches every pack automatically to its regular price after 25 October', () => {
-  const reservationNow = Date.parse('2026-10-14T10:00:00Z');
-  const regularNow = Date.parse('2026-10-25T23:00:00Z');
+test('keeps the reservation price through 26 October Madrid and switches after the UTC deadline', () => {
+  const reservationNow = Date.parse('2026-10-26T22:59:59Z');
+  const regularNow = Date.parse('2026-10-26T23:00:00Z');
   assert.deepEqual(
     getFixedPackOptions(temprano).map((tier) => getFixedPackPrice(tier, reservationNow)),
     [17.50, 49.90, 94.50, 178.50],

@@ -94,7 +94,7 @@ test('reservation purchase surfaces use the saved reservation contract', async (
       < detail.indexOf('{hasFixedPackPricing && ('),
     'la garantía debe aparecer antes del selector de packs',
   );
-  assert.match(detail, /Precio de reserva hasta el 25 de octubre/);
+  assert.match(detail, /Precio de reserva hasta el 26 de octubre\. A partir del 27 de octubre se aplicará el precio normal/);
   assert.match(cart, /precio cerrado/);
   assert.match(emailTemplate, /event\.Receipt\.heading/);
   assert.match(products, /Ya puedes reservar el Temprano de la cosecha 2026\/27\. Se envasa el 16 de octubre\./);

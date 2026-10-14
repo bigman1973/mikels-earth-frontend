@@ -408,7 +408,7 @@ const ProductDetail = () => {
                   <div className="space-y-3 text-[#1a1a1a]">
                     <div>
                       <p className="text-base font-semibold">Elige tu reserva</p>
-                      <p className="mt-1 text-sm leading-6">Precio de reserva hasta el 25 de octubre. A partir del 26 de octubre se aplicará el precio normal.</p>
+                      <p className="mt-1 text-sm leading-6">Precio de reserva hasta el 26 de octubre. A partir del 27 de octubre se aplicará el precio normal.</p>
                     </div>
                     <div className="grid gap-3 sm:grid-cols-2">
                       {fixedPacks.map((tier) => {

@@ -10,10 +10,10 @@ import {
 const temprano = {
   price: 17.50,
   tieredDiscountConfig: [
-    { minQuantity: 1, actualQuantity: 1, label: '1 botella 500 ml', reservationPrice: 17.50, regularPrice: 19.90, priceEndsAt: '2026-10-25T22:59:59Z' },
-    { minQuantity: 3, actualQuantity: 3, label: 'Pack de 3', reservationPrice: 49.90, regularPrice: 56.70, priceEndsAt: '2026-10-25T22:59:59Z' },
-    { minQuantity: 6, actualQuantity: 6, label: 'Pack de 6', reservationPrice: 94.50, regularPrice: 107.40, priceEndsAt: '2026-10-25T22:59:59Z' },
-    { minQuantity: 12, actualQuantity: 12, label: 'Caja de 12', reservationPrice: 178.50, regularPrice: 202.80, priceEndsAt: '2026-10-25T22:59:59Z' },
+    { minQuantity: 1, actualQuantity: 1, label: '1 botella 500 ml', reservationPrice: 17.50, regularPrice: 19.90, priceEndsAt: '2026-10-26T22:59:59Z' },
+    { minQuantity: 3, actualQuantity: 3, label: 'Pack de 3', reservationPrice: 49.90, regularPrice: 56.70, priceEndsAt: '2026-10-26T22:59:59Z' },
+    { minQuantity: 6, actualQuantity: 6, label: 'Pack de 6', reservationPrice: 94.50, regularPrice: 107.40, priceEndsAt: '2026-10-26T22:59:59Z' },
+    { minQuantity: 12, actualQuantity: 12, label: 'Caja de 12', reservationPrice: 178.50, regularPrice: 202.80, priceEndsAt: '2026-10-26T22:59:59Z' },
   ],
 };
 

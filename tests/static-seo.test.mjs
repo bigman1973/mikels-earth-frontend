@@ -238,7 +238,7 @@ test('publishes Product JSON-LD with validated EANs, real shipping details, and 
     stock: 10,
     reservationOnly: true,
     tieredDiscount: [
-      { actualQuantity: 1, reservationPrice: 17.50, regularPrice: 19.90, priceEndsAt: '2026-10-25T22:59:59Z' },
+      { actualQuantity: 1, reservationPrice: 17.50, regularPrice: 19.90, priceEndsAt: '2026-10-26T22:59:59Z' },
     ],
   });
   assert.equal(scheduledTemprano.offers.price, '17.50');
