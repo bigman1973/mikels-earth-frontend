@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect } from 'react';
 import { CART_STORAGE_KEY, clearStoredCart, loadStoredCart } from '../utils/cartStorage';
 import { getVolumeDiscountedUnitPrice } from '../utils/volumePricing';
 import { getFixedPackForQuantity } from '../utils/fixedPackPricing';
-import { getCartEventUnitPrice } from '../utils/cartTracking';
+import { getCartEventPricing } from '../utils/cartTracking';
 import { trackMetaAddToCart } from '../utils/metaPixel';
 import { trackGA4AddToCart } from '../utils/googleAnalytics';
 
@@ -44,12 +44,21 @@ export const CartProvider = ({ children }) => {
     ));
     const eventQuantity = isAvailable ? requestedQuantity : 0;
     if (eventQuantity > 0) {
-      // Packs use a fixed line price (for example, 94,50 € for six bottles),
-      // so the event must use its derived unit amount rather than the base SKU
-      // price. This keeps contents × quantity equal to the event value.
-      const eventUnitPrice = getCartEventUnitPrice(product, eventQuantity);
-      trackMetaAddToCart(product, eventQuantity, eventUnitPrice);
-      trackGA4AddToCart(product, eventQuantity, eventUnitPrice);
+      // This is the only point at which an item joins the persisted cart. It
+      // precedes the optional journey to /checkout, so it captures abandonments.
+      const eventPricing = getCartEventPricing(product, eventQuantity);
+      trackMetaAddToCart(
+        product,
+        eventPricing.quantity,
+        eventPricing.unitPrice,
+        eventPricing.value,
+      );
+      trackGA4AddToCart(
+        product,
+        eventPricing.quantity,
+        eventPricing.unitPrice,
+        eventPricing.value,
+      );
     }
 
     setCart(prevCart => {

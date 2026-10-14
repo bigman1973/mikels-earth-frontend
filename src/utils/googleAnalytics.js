@@ -82,6 +82,11 @@ const numericValue = (value) => {
   return Number.isFinite(parsed) ? Number(parsed.toFixed(2)) : 0;
 };
 
+const preciseItemValue = (value) => {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? Number(parsed.toFixed(6)) : 0;
+};
+
 export const productToGA4Item = (product, quantity = 1, price = product?.price) => {
   const itemId = String(product?.sku || '').trim();
   if (!itemId) return null;
@@ -91,7 +96,7 @@ export const productToGA4Item = (product, quantity = 1, price = product?.price) 
     item_name: String(product?.name || 'Producto'),
     item_brand: "Mikel's Fruit",
     item_category: String(product?.category || ''),
-    price: numericValue(price),
+    price: preciseItemValue(price),
     quantity: Math.max(1, Number(quantity) || 1),
   };
 };
@@ -122,13 +127,18 @@ export const trackGA4ViewItem = (product) => {
   });
 };
 
-export const trackGA4AddToCart = (product, quantity, unitPrice = product?.price) => {
+export const trackGA4AddToCart = (
+  product,
+  quantity,
+  unitPrice = product?.price,
+  lineValue = null,
+) => {
   const item = productToGA4Item(product, quantity, unitPrice);
   if (!item) return false;
 
   return track('add_to_cart', {
     currency: 'EUR',
-    value: numericValue(item.price * item.quantity),
+    value: numericValue(lineValue ?? (item.price * item.quantity)),
     items: [item],
   });
 };

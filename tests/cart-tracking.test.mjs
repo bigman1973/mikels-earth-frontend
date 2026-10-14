@@ -1,6 +1,9 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { getCartEventUnitPrice } from '../src/utils/cartTracking.js';
+import {
+  getCartEventPricing,
+  getCartEventUnitPrice,
+} from '../src/utils/cartTracking.js';
 
 const temprano = {
   price: 17.50,
@@ -13,9 +16,11 @@ const temprano = {
 };
 
 test('cart events report the effective closed-pack value', () => {
-  const quantity = 6;
-  const unitPrice = getCartEventUnitPrice(temprano, quantity);
+  const pricing = getCartEventPricing(temprano, 3);
 
-  assert.equal(unitPrice, 15.75);
-  assert.equal(Number((unitPrice * quantity).toFixed(2)), 94.50);
+  assert.equal(pricing.quantity, 3);
+  assert.equal(pricing.unitPrice, 16.633333);
+  assert.equal(pricing.value, 49.90);
+  assert.equal(Number((pricing.unitPrice * pricing.quantity).toFixed(2)), pricing.value);
+  assert.equal(getCartEventUnitPrice(temprano, 6), 15.75);
 });

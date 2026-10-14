@@ -37,8 +37,9 @@ test('Meta browser events use SKU catalog identity and euro values', async () =>
   assert.match(pixel, /content_type: 'product'/);
   assert.match(pixel, /currency: 'EUR'/);
   assert.match(cart, /sku: product\.sku \|\| ''/);
-  assert.match(cart, /getCartEventUnitPrice\(product, eventQuantity\)/);
-  assert.match(cart, /trackMetaAddToCart\(product, eventQuantity, eventUnitPrice\)/);
+  assert.match(cart, /getCartEventPricing\(product, eventQuantity\)/);
+  assert.match(cart, /trackMetaAddToCart\(/);
+  assert.match(cart, /eventPricing\.value/);
   assert.match(checkout, /trackMetaInitiateCheckout\(cart, getCartTotal\(\), getItemPrice\)/);
   assert.match(product, /trackMetaViewContent\(product\)/);
 });
@@ -47,7 +48,8 @@ test('Meta rechecks explicit consent at the commerce-event boundary', async () =
   const pixel = await read('src/utils/metaPixel.js');
 
   assert.match(pixel, /if \(!syncMetaPixelConsent\(\) \|\| !isMetaTrackingEnabled\(\)\) return false/);
-  assert.match(pixel, /trackMetaAddToCart = \(product, quantity, unitPrice = product\?\.price\)/);
+  assert.match(pixel, /trackMetaAddToCart = \(/);
+  assert.match(pixel, /lineValue \?\? \(content\.item_price \* content\.quantity\)/);
 });
 
 test('Purchase is emitted from the persisted receipt with the order number as event ID', async () => {

@@ -95,6 +95,11 @@ const numericValue = (value) => {
   return Number.isFinite(parsed) ? Number(parsed.toFixed(2)) : 0;
 };
 
+const preciseItemValue = (value) => {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? Number(parsed.toFixed(6)) : 0;
+};
+
 export const productToMetaContent = (product, quantity = 1, price = product?.price) => {
   const sku = String(product?.sku || '').trim();
   if (!sku) return null;
@@ -102,7 +107,7 @@ export const productToMetaContent = (product, quantity = 1, price = product?.pri
   return {
     id: sku,
     quantity: Math.max(1, Number(quantity) || 1),
-    item_price: numericValue(price),
+    item_price: preciseItemValue(price),
   };
 };
 
@@ -136,7 +141,12 @@ export const trackMetaViewContent = (product) => {
   });
 };
 
-export const trackMetaAddToCart = (product, quantity, unitPrice = product?.price) => {
+export const trackMetaAddToCart = (
+  product,
+  quantity,
+  unitPrice = product?.price,
+  lineValue = null,
+) => {
   const content = productToMetaContent(product, quantity, unitPrice);
   if (!content) return false;
 
@@ -144,7 +154,7 @@ export const trackMetaAddToCart = (product, quantity, unitPrice = product?.price
     content_ids: [content.id],
     content_type: 'product',
     contents: [content],
-    value: numericValue(content.item_price * content.quantity),
+    value: numericValue(lineValue ?? (content.item_price * content.quantity)),
     currency: 'EUR',
   });
 };

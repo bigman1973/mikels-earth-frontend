@@ -39,7 +39,9 @@ test('GA4 ecommerce events use the web SKU and the saved receipt', async () => {
   }
   assert.match(analytics, /item_id: itemId/);
   assert.match(analytics, /transaction_id: transactionId/);
-  assert.match(cart, /trackGA4AddToCart\(product, eventQuantity, eventUnitPrice\)/);
+  assert.match(cart, /getCartEventPricing\(product, eventQuantity\)/);
+  assert.match(cart, /trackGA4AddToCart\(/);
+  assert.match(cart, /eventPricing\.value/);
   assert.match(checkout, /trackGA4BeginCheckout\(cart, getCartTotal\(\), getItemPrice\)/);
   assert.match(product, /trackGA4ViewItem\(product\)/);
   assert.match(success, /trackGA4Purchase\(receipt\)/);
@@ -50,7 +52,8 @@ test('GA4 rechecks explicit statistics consent at the commerce-event boundary', 
   const analytics = await read('src/utils/googleAnalytics.js');
 
   assert.match(analytics, /if \(!syncGA4Consent\(\) \|\| !isGA4TrackingEnabled\(\)\) return false/);
-  assert.match(analytics, /trackGA4AddToCart = \(product, quantity, unitPrice = product\?\.price\)/);
+  assert.match(analytics, /trackGA4AddToCart = \(/);
+  assert.match(analytics, /lineValue \?\? \(item\.price \* item\.quantity\)/);
 });
 
 test('Metricool is held behind Cookiebot statistics consent', async () => {
