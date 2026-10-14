@@ -74,17 +74,18 @@ test('keeps the 2026/27 reservation separate from prior-lot awards and analysis'
   );
   assert.equal(
     earlyOil.longDescription,
-    'Reserva de la cosecha 2026/27.\n\nCosecha 2026/27 · analítica en curso.\n\nElaborado con aceituna verde, recogida antes de madurar, en una sola pasada y sin filtrar. Da menos aceite por kilo; de ahí su perfil verde, con amargor y picor. Procede de nuestro olivar en la campiña cordobesa.\n\nSe envasa el 16 de octubre.',
+    'Reserva de la cosecha 2026/27.\n\nCosecha 2026/27 · analítica en curso.\n\nElaborado con aceituna verde, recogida antes de madurar, en una sola pasada y sin filtrar. Da menos aceite por kilo; de ahí su perfil verde, con amargor y picor. Procede de nuestro olivar en la campiña cordobesa.\n\nEmpezamos a envasar en cuanto tengamos el análisis del lote elegido y las primeras reservas salen la última semana de octubre.',
   );
   assert.equal(earlyOil.award, null);
   assert.deepEqual(earlyOil.tags, ['Prensado en Frío', 'Sin Filtrar']);
   assert.equal(
     earlyOil.reservationMessage,
-    'La cosecha 2026/27 se sirve por reserva. Se envasa el 16 de octubre y se envía la última semana de octubre.',
+    'La cosecha 2026/27 se sirve por reserva. Empezamos a envasar en cuanto tengamos el análisis del lote elegido y las primeras reservas salen la última semana de octubre.',
   );
   assert.match(earlyOil.longDescription, /Cosecha 2026\/27 · analítica en curso/);
   assert.doesNotMatch(earlyOil.longDescription, /olive japan|medalla|polifenol|antioxid|vitamina|oro|galardon|oleocanthal|per[oó]xido|acidez|569/i);
   assert.doesNotMatch(earlyOil.longDescription, /[Cc]antidad|[Úú]ltimas unidades|[Qq]uedan \d/);
+  assert.doesNotMatch(earlyOil.longDescription, new RegExp(['16', ' de octubre'].join(''), 'i'));
   assert.deepEqual(
     earlyOil.tieredDiscount.filter((tier) => tier.featured).map((tier) => tier.actualQuantity),
     [3],

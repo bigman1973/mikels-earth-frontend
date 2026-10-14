@@ -86,14 +86,14 @@ export const applyEditorialOverrides = (product, language = 'es') => {
   }
 
   if (product.slug === 'aceite-temprano-sin-filtrar') {
-    const reservationCopy = 'La cosecha 2026/27 se sirve por reserva. Se envasa el 16 de octubre y se envía la última semana de octubre.';
+    const reservationCopy = 'La cosecha 2026/27 se sirve por reserva. Empezamos a envasar en cuanto tengamos el análisis del lote elegido y las primeras reservas salen la última semana de octubre.';
     const approvedDescription = `Reserva de la cosecha 2026/27.
 
 Cosecha 2026/27 · analítica en curso.
 
 Elaborado con aceituna verde, recogida antes de madurar, en una sola pasada y sin filtrar. Da menos aceite por kilo; de ahí su perfil verde, con amargor y picor. Procede de nuestro olivar en la campiña cordobesa.
 
-Se envasa el 16 de octubre.`;
+Empezamos a envasar en cuanto tengamos el análisis del lote elegido y las primeras reservas salen la última semana de octubre.`;
 
     return {
       ...normalizedProduct,

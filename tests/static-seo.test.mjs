@@ -246,8 +246,13 @@ test('publishes Product JSON-LD with validated EANs, real shipping details, and 
     findProduct(temprano).name,
     'Aceite de oliva virgen extra Temprano 2026/27 sin filtrar — Reserva 500 ml',
   );
+  const reservationCopy = 'La cosecha 2026/27 se sirve por reserva. Empezamos a envasar en cuanto tengamos el análisis del lote elegido y las primeras reservas salen la última semana de octubre.';
+  assert.equal(tagContent(temprano, /<meta name="description" content="([^"]+)"/i), reservationCopy);
+  assert.equal(tagContent(temprano, /<meta property="og:description" content="([^"]+)"/i), reservationCopy);
+  assert.equal(tagContent(temprano, /<meta name="twitter:description" content="([^"]+)"/i), reservationCopy);
   assert.match(findProduct(temprano).description, /Cosecha 2026\/27 · analítica en curso\./);
-  assert.match(findProduct(temprano).description, /Se envasa el 16 de octubre\./);
+  assert.match(findProduct(temprano).description, /Empezamos a envasar en cuanto tengamos el análisis del lote elegido/);
+  assert.doesNotMatch(findProduct(temprano).description, new RegExp(['16', ' de octubre'].join(''), 'i'));
   assert.doesNotMatch(findProduct(temprano).description, /olive japan|medalla|polifenol|antioxid|vitamina|oro|galardon|oleocanthal|per[oó]xido|acidez|569/i);
   assert.deepEqual(paraguayoData.offers.hasMerchantReturnPolicy, {
     '@id': 'https://www.mikels.es/terminos#merchant-return-policy',

@@ -71,7 +71,7 @@ const Products = () => {
               to={`/producto/${reservationProduct.slug}`}
               className="underline decoration-[#8c2337] decoration-1 underline-offset-4 transition-colors hover:text-[#8c2337]"
             >
-              Ya puedes reservar el Temprano de la cosecha 2026/27. Se envasa el 16 de octubre.
+              Ya puedes reservar el Temprano de la cosecha 2026/27. Las primeras reservas salen la última semana de octubre.
             </Link>
           </p>
         )}
