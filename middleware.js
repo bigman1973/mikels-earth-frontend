@@ -98,7 +98,7 @@ const renderSpaNotFound = (request) => renderSpaHtml(request, 404);
 const renderSpaShell = (request) => renderSpaHtml(request, 200);
 
 export const config = {
-  matcher: '/((?!assets/|fonts/|images/|index\\.html|favicon\\.ico|robots\\.txt|sitemap\\.xml).*)',
+  matcher: '/((?!assets/|fonts/|images/|media/|index\.html|favicon\.ico|robots\.txt|sitemap\.xml).*)',
 };
 
 export default async function middleware(request) {

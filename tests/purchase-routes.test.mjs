@@ -30,6 +30,13 @@ test('the cart URL opens the existing side-panel without redirecting the custome
     readFile(new URL('../src/pages/CartRoute.jsx', import.meta.url), 'utf8'),
     readFile(new URL('../src/App.jsx', import.meta.url), 'utf8'),
   ]);
+
   assert.match(cartRoute, /useEffect\(\(\) => \{\s*setIsCartOpen\(true\);/);
   assert.match(app, /<Route path="\/carrito" element=\{<CartRoute \/>\}/);
+});
+
+test('static media bypasses the SPA middleware and remains directly accessible', async () => {
+  const middleware = await readFile(new URL('../middleware.js', import.meta.url), 'utf8');
+
+  assert.match(middleware, /assets\/\|fonts\/\|images\/\|media\//);
 });
