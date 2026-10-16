@@ -32,7 +32,12 @@ const installGoogleTag = () => {
   if (!hasWindow() || typeof window.gtag === 'function') return;
 
   window.dataLayer = window.dataLayer || [];
-  window.gtag = (...args) => window.dataLayer.push(args);
+  // gtag.js consumes each command as its native Arguments object. An arrow
+  // function would enqueue plain arrays, which look valid in DevTools but are
+  // ignored by Google Tag and never result in a collect request.
+  window.gtag = function googleTag() {
+    window.dataLayer.push(arguments);
+  };
 
   const script = window.document.createElement('script');
   script.async = true;

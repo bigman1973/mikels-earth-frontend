@@ -20,6 +20,8 @@ test('GA4 requires explicit Cookiebot statistics consent and an environment ID',
   assert.match(analytics, /googletagmanager\.com\/gtag\/js/);
   assert.match(analytics, /analytics_storage: 'denied'/);
   assert.match(analytics, /analytics_storage: 'granted'/);
+  assert.match(analytics, /function googleTag\(\) \{\s*window\.dataLayer\.push\(arguments\);\s*\}/);
+  assert.doesNotMatch(analytics, /\(\.\.\.args\) => window\.dataLayer\.push\(args\)/);
   assert.match(component, /registerGA4ConsentListeners/);
   assert.match(env, /^VITE_GA_MEASUREMENT_ID=$/m);
 });
