@@ -52,7 +52,7 @@ const jsonLdEntries = (html) => [...html.matchAll(/<script[^>]*type="application
 
 test('generates one Spanish static head for every sitemap route', async () => {
   const paths = await pathsFromSitemap();
-  assert.equal(paths.length, 25);
+  assert.equal(paths.length, 23);
 
   for (const pathname of paths) {
     const html = await htmlFor(pathname);
@@ -85,10 +85,16 @@ test('includes a current lastmod date for every sitemap URL', async () => {
   const sitemap = await readFile(SITEMAP, 'utf8');
   const entries = [...sitemap.matchAll(/<url><loc>[^<]+<\/loc><lastmod>([^<]+)<\/lastmod><\/url>/g)];
 
-  assert.equal(entries.length, 25);
+  assert.equal(entries.length, 23);
   for (const [, lastmod] of entries) {
     assert.match(lastmod, /^2026-\d{2}-\d{2}$/);
   }
+});
+
+test('excludes retired Mikel\'s Earth URLs from the sitemap', async () => {
+  const sitemap = await readFile(SITEMAP, 'utf8');
+  assert.doesNotMatch(sitemap, /mikel-s-earth/i);
+  assert.doesNotMatch(sitemap, /mikels-earth/i);
 });
 
 test('writes page-specific legal titles into the static HTML', async () => {
