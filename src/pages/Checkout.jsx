@@ -14,7 +14,7 @@ import { trackGA4BeginCheckout } from '../utils/googleAnalytics';
 const Checkout = () => {
   const {
     cart, getCartTotal, getItemPrice, appliedDiscount, getDiscountAmount,
-    updateItemPrices, hasFixedPack,
+    updateItemPrices, hasNonDiscountablePack,
   } = useCart();
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
@@ -151,8 +151,8 @@ const Checkout = () => {
         postalCode: formData.postal_code,
         country: formData.country,
         notes: formData.notes,
-        discountCode: appliedDiscount?.code || null,
-        discountAmount: appliedDiscount ? getDiscountAmount() : 0,
+        discountCode: hasNonDiscountablePack ? null : appliedDiscount?.code || null,
+        discountAmount: hasNonDiscountablePack ? 0 : appliedDiscount ? getDiscountAmount() : 0,
         metaMarketingConsent: hasMarketingConsent(),
         needsInvoice: needsInvoice,
         invoiceData: needsInvoice ? invoiceData : null,
@@ -529,16 +529,16 @@ const Checkout = () => {
               <div className="space-y-2 mb-6 pt-4 border-t-2 border-gray-200">
                 <div className="flex justify-between text-gray-700">
                   <span>{t('cart.subtotal')}</span>
-                  <span>{formatEuro(appliedDiscount ? getCartTotal() + getDiscountAmount() : getCartTotal())}</span>
+                  <span>{formatEuro(appliedDiscount && !hasNonDiscountablePack ? getCartTotal() + getDiscountAmount() : getCartTotal())}</span>
                 </div>
-                {appliedDiscount && (
+                {appliedDiscount && !hasNonDiscountablePack && (
                   <div className="flex justify-between font-medium text-[#1a1a1a]">
                     <span>{t('checkout.discount_code')} {appliedDiscount.code}</span>
                     <span>-{formatEuro(getDiscountAmount())}</span>
                   </div>
                 )}
-                {hasFixedPack && (
-                  <p className="text-xs leading-5 text-gray-600">Los packs del Temprano tienen precio cerrado. Puedes usar tu cupón personal activo de suscriptor.</p>
+                {hasNonDiscountablePack && (
+                  <p className="text-xs leading-5 text-gray-600">Los packs del Temprano tienen precio cerrado y no se combinan con códigos de descuento.</p>
                 )}
                 <div className="flex justify-between text-gray-700">
                   <span>{t('cart.shipping')}</span>

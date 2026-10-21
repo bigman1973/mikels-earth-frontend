@@ -435,7 +435,7 @@ const ProductDetail = () => {
                         );
                       })}
                     </div>
-                    <p className="text-xs leading-5 text-gray-600">Los packs tienen precio cerrado. Si tienes un cupón personal activo de suscriptor, podrás aplicarlo en el carrito.</p>
+                    <p className="text-xs leading-5 text-gray-600">Los packs tienen precio cerrado y no se combinan con códigos de descuento.</p>
                   </div>
                 )}
                 {product.tieredDiscount && !hasFixedPackPricing && !hasDiscount && (
