@@ -155,12 +155,10 @@ export const CartProvider = ({ children }) => {
   };
 
   const applyDiscountCode = async (code) => {
-    // Validar código de descuento contra el backend (todos los cupones centralizados)
+    // The cart has no delivery email yet. The backend validates at checkout
+    // that a personal newsletter coupon belongs to that exact purchaser.
     const normalizedCode = code.trim();
-    if (cart.some((item) => getFixedPackForQuantity(item, item.quantity))) {
-      return { success: false, message: 'Los packs del Temprano tienen un precio cerrado y no se combinan con códigos de descuento.' };
-    }
-    
+
     if (!normalizedCode) {
       return { success: false, message: 'Introduce un código de descuento' };
     }
@@ -179,12 +177,18 @@ export const CartProvider = ({ children }) => {
       const data = await response.json();
       
       if (data.valid) {
+        const includesFixedPack = cart.some((item) => getFixedPackForQuantity(item, item.quantity));
+        if (includesFixedPack && !data.coupon.eligible_for_temprano_reservation) {
+          return {
+            success: false,
+            message: 'En la reserva del Temprano solo puedes usar tu cupón personal activo de suscriptor.',
+          };
+        }
         setDiscountCode(data.coupon.code);
         setAppliedDiscount({
           code: data.coupon.code,
           oneTimeDiscount: data.coupon.discount_percentage,
           subscriptionDiscount: 0,
-          email: data.coupon.email
         });
         return { success: true, message: 'Cupón aplicado correctamente' };
       } else {
@@ -210,9 +214,9 @@ export const CartProvider = ({ children }) => {
   const getCartTotal = () => {
     let total = cart.reduce((sum, item) => sum + (getItemPrice(item) * item.quantity), 0);
     
-    // Aplicar descuento adicional si hay código
-    const hasNonDiscountablePack = cart.some((item) => getFixedPackForQuantity(item, item.quantity));
-    if (appliedDiscount && !hasNonDiscountablePack) {
+    // The backend revalidates the coupon, its owner and its final amount
+    // before Stripe Checkout. The cart only previews that same percentage.
+    if (appliedDiscount) {
       cart.forEach(item => {
         const itemTotal = getItemPrice(item) * item.quantity;
         const discount = item.purchaseType === 'subscription' 
@@ -226,7 +230,7 @@ export const CartProvider = ({ children }) => {
   };
   
   const getDiscountAmount = () => {
-    if (!appliedDiscount || cart.some((item) => getFixedPackForQuantity(item, item.quantity))) return 0;
+    if (!appliedDiscount) return 0;
     
     let discountAmount = 0;
     cart.forEach(item => {
@@ -261,7 +265,7 @@ export const CartProvider = ({ children }) => {
     return cart.reduce((count, item) => count + item.quantity, 0);
   };
 
-  const hasNonDiscountablePack = cart.some((item) => getFixedPackForQuantity(item, item.quantity));
+  const hasFixedPack = cart.some((item) => getFixedPackForQuantity(item, item.quantity));
 
   const toggleCart = () => {
     setIsCartOpen(prev => !prev);
@@ -286,7 +290,7 @@ export const CartProvider = ({ children }) => {
     applyDiscountCode,
     removeDiscountCode,
     getDiscountAmount,
-    hasNonDiscountablePack
+    hasFixedPack
   };
 
   return (

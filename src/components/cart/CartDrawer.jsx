@@ -22,7 +22,7 @@ const CartDrawer = () => {
     appliedDiscount,
     applyDiscountCode,
     removeDiscountCode,
-    hasNonDiscountablePack,
+    hasFixedPack,
   } = useCart();
   const { t } = useTranslation();
   const [codeInput, setCodeInput] = useState('');
@@ -163,7 +163,7 @@ const CartDrawer = () => {
                   {t('delivery.notice')}
                 </p>
 
-                {!appliedDiscount && !hasNonDiscountablePack && (
+                {!appliedDiscount && (
                   <div className="mt-3">
                     <button
                       type="button"
@@ -190,8 +190,8 @@ const CartDrawer = () => {
                     {codeMessage.text && <p className="mt-2 text-xs text-[#1a1a1a]">{codeMessage.text}</p>}
                   </div>
                 )}
-                {hasNonDiscountablePack && (
-                  <p className="mt-3 text-xs leading-5 text-[#1a1a1a]">Los packs del Temprano tienen precio cerrado y no se combinan con códigos de descuento.</p>
+                {hasFixedPack && (
+                  <p className="mt-3 text-xs leading-5 text-[#1a1a1a]">Los packs del Temprano tienen precio cerrado. Puedes usar tu cupón personal activo de suscriptor.</p>
                 )}
 
                 <Link to="/checkout" onClick={() => setIsCartOpen(false)} className="mt-5 block w-full rounded-lg bg-primary py-4 text-center font-semibold text-white transition-colors hover:bg-primary/90">
