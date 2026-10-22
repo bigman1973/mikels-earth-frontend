@@ -157,10 +157,6 @@ export const CartProvider = ({ children }) => {
   const applyDiscountCode = async (code) => {
     // Validar código de descuento contra el backend (todos los cupones centralizados)
     const normalizedCode = code.trim();
-    if (cart.some((item) => getFixedPackForQuantity(item, item.quantity))) {
-      return { success: false, message: 'Los packs del Temprano tienen un precio cerrado y no se combinan con códigos de descuento.' };
-    }
-    
     if (!normalizedCode) {
       return { success: false, message: 'Introduce un código de descuento' };
     }
