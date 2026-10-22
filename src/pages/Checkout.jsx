@@ -537,9 +537,6 @@ const Checkout = () => {
                     <span>-{formatEuro(getDiscountAmount())}</span>
                   </div>
                 )}
-                {hasNonDiscountablePack && (
-                  <p className="text-xs leading-5 text-gray-600">Los packs del Temprano tienen precio cerrado y no se combinan con códigos de descuento.</p>
-                )}
                 <div className="flex justify-between text-gray-700">
                   <span>{t('cart.shipping')}</span>
                   <span className="font-semibold text-[#1a1a1a]">{t('cart.shipping_free').toUpperCase()}</span>

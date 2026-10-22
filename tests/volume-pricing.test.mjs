@@ -43,7 +43,7 @@ test('labels the reservation choices as fixed packs, not a volume discount', () 
   const spanish = readFileSync(new URL('../src/i18n/locales/es.json', import.meta.url), 'utf8');
 
   assert.match(detail, /Elige tu reserva/);
-  assert.match(detail, /Los packs tienen precio cerrado/);
+  assert.doesNotMatch(detail, /no se combinan con códigos de descuento/);
   assert.match(detail, /getFixedPackOptions/);
   assert.match(spanish, /"unit": "unidad"/);
 });

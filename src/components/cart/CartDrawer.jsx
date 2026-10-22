@@ -190,9 +190,6 @@ const CartDrawer = () => {
                     {codeMessage.text && <p className="mt-2 text-xs text-[#1a1a1a]">{codeMessage.text}</p>}
                   </div>
                 )}
-                {hasNonDiscountablePack && (
-                  <p className="mt-3 text-xs leading-5 text-[#1a1a1a]">Los packs del Temprano tienen precio cerrado y no se combinan con códigos de descuento.</p>
-                )}
 
                 <Link to="/checkout" onClick={() => setIsCartOpen(false)} className="mt-5 block w-full rounded-lg bg-primary py-4 text-center font-semibold text-white transition-colors hover:bg-primary/90">
                   {t('cart.checkout')}
