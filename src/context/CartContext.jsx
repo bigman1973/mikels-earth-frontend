@@ -206,9 +206,10 @@ export const CartProvider = ({ children }) => {
   const getCartTotal = () => {
     let total = cart.reduce((sum, item) => sum + (getItemPrice(item) * item.quantity), 0);
     
-    // Aplicar descuento adicional si hay código
-    const hasNonDiscountablePack = cart.some((item) => getFixedPackForQuantity(item, item.quantity));
-    if (appliedDiscount && !hasNonDiscountablePack) {
+    // La vigencia, uso único y vinculación personal se confirman de nuevo en
+    // el servidor antes de crear el pago. El carrito refleja ese descuento
+    // sobre los packs cerrados y el resto del catálogo.
+    if (appliedDiscount) {
       cart.forEach(item => {
         const itemTotal = getItemPrice(item) * item.quantity;
         const discount = item.purchaseType === 'subscription' 
@@ -222,7 +223,7 @@ export const CartProvider = ({ children }) => {
   };
   
   const getDiscountAmount = () => {
-    if (!appliedDiscount || cart.some((item) => getFixedPackForQuantity(item, item.quantity))) return 0;
+    if (!appliedDiscount) return 0;
     
     let discountAmount = 0;
     cart.forEach(item => {
@@ -282,7 +283,6 @@ export const CartProvider = ({ children }) => {
     applyDiscountCode,
     removeDiscountCode,
     getDiscountAmount,
-    hasNonDiscountablePack
   };
 
   return (

@@ -97,6 +97,8 @@ test('reservation purchase surfaces use the saved reservation contract', async (
   assert.match(detail, /Precio de reserva hasta el 26 de octubre\. A partir del 27 de octubre se aplicará el precio normal/);
   assert.doesNotMatch(cart, /no se combinan con códigos de descuento/);
   assert.doesNotMatch(detail, /no se combinan con códigos de descuento/);
+  assert.match(cart, /¿Tienes un código\?/);
+  assert.doesNotMatch(cart, /hasNonDiscountablePack/);
   assert.match(emailTemplate, /event\.Receipt\.heading/);
   assert.match(products, /Ya puedes reservar el Temprano de la cosecha 2026\/27\. Las primeras reservas salen la última semana de octubre\./);
   assert.match(products, /to=\{`\/producto\/\$\{reservationProduct\.slug\}`\}/);

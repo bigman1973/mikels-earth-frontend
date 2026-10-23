@@ -22,7 +22,6 @@ const CartDrawer = () => {
     appliedDiscount,
     applyDiscountCode,
     removeDiscountCode,
-    hasNonDiscountablePack,
   } = useCart();
   const { t } = useTranslation();
   const [codeInput, setCodeInput] = useState('');
@@ -163,7 +162,7 @@ const CartDrawer = () => {
                   {t('delivery.notice')}
                 </p>
 
-                {!appliedDiscount && !hasNonDiscountablePack && (
+                {!appliedDiscount && (
                   <div className="mt-3">
                     <button
                       type="button"
