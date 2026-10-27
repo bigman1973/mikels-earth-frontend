@@ -1,6 +1,6 @@
-// Fixed packs are commercial options, not stackable discounts.  The API sends
-// their active `price` and their dated reference price.  This fallback resolver
-// keeps the local/static catalogue aligned with the same 26 October 2026 switch.
+// Fixed packs are commercial options, not stackable discounts. The API sends
+// their active `price`; legacy date-bounded packs retain their reservation and
+// regular prices until their catalogue data is migrated.
 
 const toFiniteNumber = (value, fallback = 0) => {
   const parsed = Number(value);
@@ -15,7 +15,7 @@ const parseEnd = (value) => {
 export const isFixedPack = (tier) => (
   Boolean(tier?.fixedPack)
   || (Number.isFinite(Number(tier?.actualQuantity || tier?.minQuantity))
-    && (tier?.reservationPrice != null || tier?.regularPrice != null))
+    && (tier?.price != null || tier?.reservationPrice != null || tier?.regularPrice != null))
 );
 
 export const getFixedPackOptions = (item) => (
@@ -40,7 +40,7 @@ export const getFixedPackForQuantity = (item, quantity) => {
 export const getFixedPackPrice = (tier, now = Date.now()) => {
   if (!tier) return null;
   const suppliedActivePrice = toFiniteNumber(tier.price, NaN);
-  if (Number.isFinite(suppliedActivePrice) && tier.reservationPriceActive !== undefined) {
+  if (Number.isFinite(suppliedActivePrice)) {
     return suppliedActivePrice;
   }
   const reservationPrice = toFiniteNumber(tier.reservationPrice, NaN);

@@ -43,6 +43,24 @@ test('uses the scheduled active price through 26 October Madrid and switches aft
   assert.equal(resolveScheduledSinglePrice(temprano, regularNow), 19.90);
 });
 
+test('uses a published normal fixed-pack price without a reservation marker', () => {
+  const normalSale = {
+    price: 19.90,
+    tieredDiscount: [
+      { actualQuantity: 1, price: 19.90, fixedPack: true },
+      { actualQuantity: 3, price: 56.70, fixedPack: true },
+      { actualQuantity: 6, price: 107.40, fixedPack: true },
+      { actualQuantity: 12, price: 202.80, fixedPack: true },
+    ],
+  };
+
+  assert.deepEqual(
+    getFixedPackOptions(normalSale).map((tier) => getFixedPackPrice(tier)),
+    [19.90, 56.70, 107.40, 202.80],
+  );
+  assert.equal(resolveScheduledSinglePrice(normalSale), 19.90);
+});
+
 test('pack price per bottle never rises with a larger fixed pack', () => {
   const now = Date.parse('2026-10-14T10:00:00Z');
   const unitPrices = getFixedPackOptions(temprano).map((tier) => getFixedPackUnitPrice(tier, now));
