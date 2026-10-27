@@ -46,7 +46,6 @@ const NuestrasJoyas = () => {
       productPath: '/producto/aceite-temprano-sin-filtrar',
       name: t('jewels.temprano_name'),
       tagline: t('jewels.temprano_tagline'),
-      badge: t('jewels.temprano_reservation_badge'),
       image: '/images/aceite-temprano-principal.jpeg',
       description: t('jewels.temprano_description'),
       features: [

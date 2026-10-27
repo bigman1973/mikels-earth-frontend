@@ -9,7 +9,6 @@ const expected = {
   paraguayo_description: 'Paraguayo entero en almíbar ligero. Cuatro ingredientes: fruta, agua, azúcar y zumo de limón.',
   temprano_name: 'Aceite Temprano',
   temprano_tagline: 'Cosecha verde, sin filtrar',
-  temprano_reservation_badge: 'RESERVA · COSECHA 2026/27',
   temprano_description: 'Aceituna recogida antes de tiempo. Menos aceite por kilo y más carácter: verde, con cuerpo y ligeramente picante.',
   packs_name: 'Pack Degustación',
   packs_tagline: 'Mermelada y cuatro aceites',

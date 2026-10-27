@@ -10,6 +10,7 @@ import { formatEuro } from '../utils/formatMoney';
 import { deliveryEligibility } from '../utils/deliveryPolicy';
 import { hasMarketingConsent, trackMetaInitiateCheckout } from '../utils/metaPixel';
 import { trackGA4BeginCheckout } from '../utils/googleAnalytics';
+import { isReservationSale } from '../utils/reservationSale';
 
 const Checkout = () => {
   const {
@@ -511,7 +512,7 @@ const Checkout = () => {
                         {item.name}
                       </h3>
                       <p className="text-xs text-gray-600">
-                        {item.reservationOnly ? 'Reserva · cosecha 2026/27' : item.purchaseType === 'subscription' ? t('product_detail.subscription') : t('product_detail.one_time')}
+                        {isReservationSale(item) ? 'Reserva · cosecha 2026/27' : item.purchaseType === 'subscription' ? t('product_detail.subscription') : t('product_detail.one_time')}
                       </p>
                       <p className="text-xs text-gray-500">
                         {t('cart.quantity')}: {item.quantity}

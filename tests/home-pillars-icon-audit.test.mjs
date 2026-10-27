@@ -23,7 +23,6 @@ const approvedFeaturedProducts = {
   product_paraguayo_desc: 'Paraguayo entero en almíbar ligero. Cuatro ingredientes: fruta, agua, azúcar y zumo de limón.',
   product_temprano: 'Aceite Temprano',
   product_temprano_tagline: 'Cosecha verde, sin filtrar',
-  product_temprano_reservation_badge: 'RESERVA · COSECHA 2026/27',
   product_temprano_desc: 'Aceituna recogida antes de tiempo. Menos aceite por kilo y más carácter: verde, con cuerpo y ligeramente picante.',
   product_pack: 'Pack Degustación',
   product_pack_tagline: 'Mermelada y cuatro aceites',
@@ -49,12 +48,11 @@ test('home pillar copy is the approved Spanish text in both language resources p
   }
 });
 
-test('featured home products use the approved text and highlight Temprano reservation', () => {
+test('featured home products use the approved text without a Temprano reservation badge', () => {
   const home = source('src/pages/Home.jsx');
   const featured = home.slice(home.indexOf('{/* Productos Destacados */}'), home.indexOf('{/* Compromiso Social */}'));
 
-  assert.match(featured, /home\.product_temprano_reservation_badge/);
-  assert.match(featured, /absolute left-4 top-4 z-10 rounded-full bg-primary/);
+  assert.doesNotMatch(featured, /reservation_badge|RESERVA|Reserva/);
   assert.match(featured, /link: '\/producto\/paraguayo-almibar'/);
   assert.match(featured, /link: '\/producto\/aceite-temprano-sin-filtrar'/);
   assert.match(featured, /link: '\/producto\/pack-mermelada-aceites'/);

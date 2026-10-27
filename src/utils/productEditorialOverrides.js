@@ -86,19 +86,14 @@ export const applyEditorialOverrides = (product, language = 'es') => {
   }
 
   if (product.slug === 'aceite-temprano-sin-filtrar') {
-    const reservationCopy = 'La cosecha 2026/27 se sirve por reserva. Empezamos a envasar en cuanto tengamos el análisis del lote elegido y las primeras reservas salen la última semana de octubre.';
-    const approvedDescription = `Reserva de la cosecha 2026/27.
+    const approvedDescription = `Cosecha 2026/27.
 
-Cosecha 2026/27 · analítica en curso.
-
-Elaborado con aceituna verde, recogida antes de madurar, en una sola pasada y sin filtrar. Da menos aceite por kilo; de ahí su perfil verde, con amargor y picor. Procede de nuestro olivar en la campiña cordobesa.
-
-Empezamos a envasar en cuanto tengamos el análisis del lote elegido y las primeras reservas salen la última semana de octubre.`;
+Elaborado con aceituna verde, recogida antes de madurar, en una sola pasada y sin filtrar. Da menos aceite por kilo; de ahí su perfil verde, con amargor y picor. Procede de nuestro olivar en la campiña cordobesa.`;
 
     return {
       ...normalizedProduct,
-      name: 'Aceite de oliva virgen extra Temprano 2026/27 sin filtrar — Reserva',
-      description: 'Reserva de la cosecha 2026/27. AOVE sin filtrar de aceituna verde.',
+      name: 'Aceite de oliva virgen extra Temprano 2026/27 sin filtrar',
+      description: 'AOVE Temprano 2026/27 sin filtrar, elaborado con aceituna verde.',
       longDescription: approvedDescription,
       tags: ['Prensado en Frío', 'Sin Filtrar'],
       claims: [],
@@ -106,13 +101,13 @@ Empezamos a envasar en cuanto tengamos el análisis del lote elegido y las prime
       badges: [],
       price: resolveScheduledSinglePrice(normalizedProduct),
       available: normalizedProduct.available !== false,
-      reservationOnly: true,
-      reservationMessage: reservationCopy,
+      reservationOnly: false,
+      reservationMessage: '',
       tieredDiscount: (normalizedProduct.tieredDiscount || [
-        { minQuantity: 1, label: '1 botella 500 ml', actualQuantity: 1, reservationPrice: 17.50, regularPrice: 19.90, priceEndsAt: '2026-10-26T22:59:59Z', fixedPack: true },
-        { minQuantity: 3, label: 'Pack de 3', actualQuantity: 3, reservationPrice: 49.90, regularPrice: 56.70, priceEndsAt: '2026-10-26T22:59:59Z', featured: true, fixedPack: true },
-        { minQuantity: 6, label: 'Pack de 6', actualQuantity: 6, reservationPrice: 94.50, regularPrice: 107.40, priceEndsAt: '2026-10-26T22:59:59Z', fixedPack: true },
-        { minQuantity: 12, label: 'Caja de 12', actualQuantity: 12, reservationPrice: 178.50, regularPrice: 202.80, priceEndsAt: '2026-10-26T22:59:59Z', fixedPack: true },
+        { minQuantity: 1, label: '1 botella 500 ml', actualQuantity: 1, price: 19.90, fixedPack: true },
+        { minQuantity: 3, label: 'Pack de 3', actualQuantity: 3, price: 56.70, featured: true, fixedPack: true },
+        { minQuantity: 6, label: 'Pack de 6', actualQuantity: 6, price: 107.40, fixedPack: true },
+        { minQuantity: 12, label: 'Caja de 12', actualQuantity: 12, price: 202.80, fixedPack: true },
       ]).map((tier) => ({
         ...tier,
         featured: Number(tier.actualQuantity) === 3,

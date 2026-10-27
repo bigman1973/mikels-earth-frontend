@@ -14,12 +14,11 @@ test('the shared heading scale is light, upright, and spaced', () => {
   assert.doesNotMatch(css, /h1, h2, h3, h4, h5, h6\s*\{[\s\S]*font-style:\s*italic;/);
 });
 
-test('Horeca uses the brand accent for badges and checklist markers', () => {
+test('Horeca uses the brand accent for checklist markers without a Temprano reservation badge', () => {
   const horeca = readSource('src/pages/Horeca.jsx');
 
   assert.match(horeca, /<h1 className="text-4xl md:text-5xl font-bold mb-4" style=\{\{ color: '#ffffff' \}\}>/);
-  assert.match(horeca, /bg-primary text-white text-xs px-3 py-1 rounded-full mb-3/);
-  assert.match(horeca, /RESERVA · COSECHA 2026\/27/);
+  assert.doesNotMatch(horeca, /RESERVA · COSECHA 2026\/27/);
   assert.doesNotMatch(horeca, /bg-red-600|from-orange-600|to-amber-600|text-green-600/);
   assert.equal((horeca.match(/text-primary flex-shrink-0/g) || []).length, 8);
 });

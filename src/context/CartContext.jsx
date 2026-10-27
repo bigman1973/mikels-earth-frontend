@@ -5,6 +5,7 @@ import { getFixedPackForQuantity } from '../utils/fixedPackPricing';
 import { getCartEventPricing } from '../utils/cartTracking';
 import { trackMetaAddToCart } from '../utils/metaPixel';
 import { trackGA4AddToCart } from '../utils/googleAnalytics';
+import { isReservationSale, normalizeReservationSaleProduct } from '../utils/reservationSale';
 
 const CartContext = createContext();
 
@@ -18,7 +19,9 @@ export const useCart = () => {
 
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState(() => (
-    typeof window === 'undefined' ? [] : loadStoredCart(window.localStorage)
+    typeof window === 'undefined'
+      ? []
+      : loadStoredCart(window.localStorage).map(normalizeReservationSaleProduct)
   ));
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [discountCode, setDiscountCode] = useState('');
@@ -33,6 +36,7 @@ export const CartProvider = ({ children }) => {
   const addToCart = (product, quantity = 1, purchaseType = 'one-time', subscriptionFrequency = null) => {
     const isAvailable = product.available !== false && !product.soldOut;
     const requestedQuantity = Math.max(1, Number(quantity) || 1);
+    const cartProduct = normalizeReservationSaleProduct(product);
     const isClosedPackSelection = Boolean(getFixedPackForQuantity(product, requestedQuantity));
     const existingItem = cart.find((item) => (
       item.id === product.id
@@ -80,13 +84,13 @@ export const CartProvider = ({ children }) => {
       } else {
         if (!isAvailable) return prevCart;
         // Si es nuevo, añadirlo al carrito
-        let price = product.price;
+        let price = cartProduct.price;
         
         // Apply subscription discount based on frequency
         if (purchaseType === 'subscription' && subscriptionFrequency) {
-          const frequency = product.subscriptionFrequencies?.find(f => f.value === subscriptionFrequency);
+          const frequency = cartProduct.subscriptionFrequencies?.find(f => f.value === subscriptionFrequency);
           if (frequency) {
-            price = product.price * (1 - frequency.discount / 100);
+            price = cartProduct.price * (1 - frequency.discount / 100);
           }
         }
         
@@ -94,24 +98,24 @@ export const CartProvider = ({ children }) => {
         // Se calculará dinámicamente en getItemPrice()
         
         return [...prevCart, {
-          id: product.id,
-          name: product.name,
-          slug: product.slug,
-          image: product.image,
+          id: cartProduct.id,
+          name: cartProduct.name,
+          slug: cartProduct.slug,
+          image: cartProduct.image,
           sku: product.sku || '',
           price: price,
-          originalPrice: product.price,
+          originalPrice: cartProduct.price,
           quantity: requestedQuantity,
           purchaseType: purchaseType,
           subscriptionFrequency: subscriptionFrequency,
-          selectedVariant: product.selectedVariant || null,
-          selectedPackQuantity: product.selectedPackQuantity || null,
-          variantName: product.variantName || null,
-          weight: product.weight,
-          reservationOnly: product.reservationOnly === true,
-          reservationMessage: product.reservationMessage || '',
-          volumeDiscountConfig: product.volumeDiscount || null,
-          tieredDiscountConfig: product.tieredDiscount || null
+          selectedVariant: cartProduct.selectedVariant || null,
+          selectedPackQuantity: cartProduct.selectedPackQuantity || null,
+          variantName: cartProduct.variantName || null,
+          weight: cartProduct.weight,
+          reservationOnly: isReservationSale(cartProduct),
+          reservationMessage: cartProduct.reservationMessage || '',
+          volumeDiscountConfig: cartProduct.volumeDiscount || null,
+          tieredDiscountConfig: cartProduct.tieredDiscount || null
         }];
       }
     });

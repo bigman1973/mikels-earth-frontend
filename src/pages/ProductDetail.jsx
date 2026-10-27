@@ -20,6 +20,7 @@ import { getApplicableVolumeTier, getVolumeDiscountedLineTotal, getVolumeDiscoun
 import { getFixedPackOptions, getFixedPackPrice, getFixedPackUnitPrice } from '../utils/fixedPackPricing';
 import { trackMetaViewContent } from '../utils/metaPixel';
 import { trackGA4ViewItem } from '../utils/googleAnalytics';
+import { isReservationSale } from '../utils/reservationSale';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://mikels-earth-backend-production.up.railway.app';
 
@@ -149,10 +150,7 @@ const ProductDetail = () => {
   const hasDiscount = !hasFixedPackPricing && currentLineTotal < originalLineTotal - 0.001;
   const discountPercent = applicableTier?.discount || 0;
   const discountLabel = applicableTier?.label || '';
-  const isReservation = product.reservationOnly === true;
-  const reservationBatchNotice = product.slug === 'aceite-temprano-sin-filtrar'
-    ? 'Cosecha 2026/27 · analítica en curso'
-    : null;
+  const isReservation = isReservationSale(product);
   const isAvailable = product.available !== false && !product.soldOut;
 
   // El backend solo adjunta complementos activos y vendibles. Esta segunda
@@ -310,10 +308,7 @@ const ProductDetail = () => {
 
               {isReservation && (
                 <div className="mb-5 rounded-lg border border-stone-300 bg-[#f5efe4] px-4 py-3 text-sm leading-6 text-[#1a1a1a]">
-                  <p>{product.reservationMessage || 'La cosecha 2026/27 se sirve por reserva. Empezamos a envasar en cuanto tengamos el análisis del lote elegido y las primeras reservas salen la última semana de octubre.'}</p>
-                  {reservationBatchNotice && (
-                    <p className="mt-2 font-medium">{reservationBatchNotice}</p>
-                  )}
+                  <p>{product.reservationMessage}</p>
                 </div>
               )}
 
@@ -397,7 +392,7 @@ const ProductDetail = () => {
                     )}
                   </>
                 )}
-                {isReservation && (
+                {product.slug === 'aceite-temprano-sin-filtrar' && (
                   <div className="mb-5 rounded-lg border border-stone-300 bg-white p-4 text-[#1a1a1a]">
                     <p className="text-base font-semibold">Pruébalo. Si no te gusta, te devolvemos el dinero.</p>
                     <p className="mt-2 text-sm leading-6">Tienes 30 días desde que lo recibes. Escríbenos y te devolvemos el importe íntegro, portes incluidos. <strong>No hace falta que nos devuelvas la botella.</strong> Sin preguntas.</p>
@@ -407,13 +402,11 @@ const ProductDetail = () => {
                 {hasFixedPackPricing && (
                   <div className="space-y-3 text-[#1a1a1a]">
                     <div>
-                      <p className="text-base font-semibold">Elige tu reserva</p>
-                      <p className="mt-1 text-sm leading-6">Precio de reserva hasta el 26 de octubre. A partir del 27 de octubre se aplicará el precio normal.</p>
+                      <p className="text-base font-semibold">Elige tu pack</p>
                     </div>
                     <div className="grid gap-3 sm:grid-cols-2">
                       {fixedPacks.map((tier) => {
                         const packPrice = getFixedPackPrice(tier);
-                        const regularPrice = Number(tier.regularPrice);
                         const selected = quantity === tier.actualQuantity;
                         return (
                           <button
@@ -428,9 +421,6 @@ const ProductDetail = () => {
                             </div>
                             <p className="mt-2 text-xl font-bold text-price">{formatEuro(packPrice)}</p>
                             <p className="mt-1 text-xs text-gray-600">{formatEuro(getFixedPackUnitPrice(tier))} por botella</p>
-                            {Number.isFinite(regularPrice) && regularPrice > packPrice && (
-                              <p className="mt-2 text-xs text-gray-600">Después: <span className="line-through">{formatEuro(regularPrice)}</span></p>
-                            )}
                           </button>
                         );
                       })}

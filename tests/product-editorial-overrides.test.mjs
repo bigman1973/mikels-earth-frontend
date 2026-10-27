@@ -50,7 +50,7 @@ test('removes obsolete awards from the ecological gift pack', () => {
   assert.deepEqual(pack.badges, []);
 });
 
-test('keeps the 2026/27 reservation separate from prior-lot awards and analysis', () => {
+test('publishes the 2026/27 Temprano harvest as a normal sale without prior-lot claims', () => {
   const earlyOil = applyEditorialOverrides({
     slug: 'aceite-temprano-sin-filtrar',
     name: 'Aceite temprano sin filtrar',
@@ -66,29 +66,46 @@ test('keeps the 2026/27 reservation separate from prior-lot awards and analysis'
   assert.deepEqual(earlyOil.badges, []);
   assert.equal(
     earlyOil.name,
-    'Aceite de oliva virgen extra Temprano 2026/27 sin filtrar — Reserva',
+    'Aceite de oliva virgen extra Temprano 2026/27 sin filtrar',
   );
   assert.equal(
     earlyOil.description,
-    'Reserva de la cosecha 2026/27. AOVE sin filtrar de aceituna verde.',
+    'AOVE Temprano 2026/27 sin filtrar, elaborado con aceituna verde.',
   );
   assert.equal(
     earlyOil.longDescription,
-    'Reserva de la cosecha 2026/27.\n\nCosecha 2026/27 · analítica en curso.\n\nElaborado con aceituna verde, recogida antes de madurar, en una sola pasada y sin filtrar. Da menos aceite por kilo; de ahí su perfil verde, con amargor y picor. Procede de nuestro olivar en la campiña cordobesa.\n\nEmpezamos a envasar en cuanto tengamos el análisis del lote elegido y las primeras reservas salen la última semana de octubre.',
+    'Cosecha 2026/27.\n\nElaborado con aceituna verde, recogida antes de madurar, en una sola pasada y sin filtrar. Da menos aceite por kilo; de ahí su perfil verde, con amargor y picor. Procede de nuestro olivar en la campiña cordobesa.',
   );
   assert.equal(earlyOil.award, null);
   assert.deepEqual(earlyOil.tags, ['Prensado en Frío', 'Sin Filtrar']);
-  assert.equal(
-    earlyOil.reservationMessage,
-    'La cosecha 2026/27 se sirve por reserva. Empezamos a envasar en cuanto tengamos el análisis del lote elegido y las primeras reservas salen la última semana de octubre.',
-  );
-  assert.match(earlyOil.longDescription, /Cosecha 2026\/27 · analítica en curso/);
+  assert.equal(earlyOil.reservationOnly, false);
+  assert.equal(earlyOil.reservationMessage, '');
+  assert.match(earlyOil.longDescription, /Cosecha 2026\/27\./);
+  assert.doesNotMatch(earlyOil.longDescription, /reserva|analítica en curso|última semana de octubre/i);
   assert.doesNotMatch(earlyOil.longDescription, /olive japan|medalla|polifenol|antioxid|vitamina|oro|galardon|oleocanthal|per[oó]xido|acidez|569/i);
   assert.doesNotMatch(earlyOil.longDescription, /[Cc]antidad|[Úú]ltimas unidades|[Qq]uedan \d/);
   assert.doesNotMatch(earlyOil.longDescription, new RegExp(['16', ' de octubre'].join(''), 'i'));
   assert.deepEqual(
     earlyOil.tieredDiscount.filter((tier) => tier.featured).map((tier) => tier.actualQuantity),
     [3],
+  );
+});
+
+test('uses normal fixed pack prices when Temprano needs editorial fallback data', () => {
+  const earlyOil = applyEditorialOverrides({
+    slug: 'aceite-temprano-sin-filtrar',
+    name: 'Aceite temprano sin filtrar',
+    description: 'Aceite temprano',
+    longDescription: 'Texto anterior',
+  });
+
+  assert.deepEqual(
+    earlyOil.tieredDiscount.map((tier) => tier.price),
+    [19.90, 56.70, 107.40, 202.80],
+  );
+  assert.equal(
+    earlyOil.tieredDiscount.some((tier) => 'reservationPrice' in tier || 'regularPrice' in tier || 'priceEndsAt' in tier),
+    false,
   );
 });
 

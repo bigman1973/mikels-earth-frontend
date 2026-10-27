@@ -21,28 +21,28 @@ const cents = (value) => Math.round(value * 100);
 
 test('uses the exact closed-pack totals checkout validates', () => {
   for (const [quantity, expectedTotalCents] of [
-    [1, 1750],
-    [3, 4990],
-    [6, 9450],
-    [12, 17850],
+    [1, 1990],
+    [3, 5670],
+    [6, 10740],
+    [12, 20280],
   ]) {
     assert.equal(getVolumeDiscountPercent(temprano, quantity), 0);
     assert.equal(cents(getVolumeDiscountedLineTotal(temprano, quantity)), expectedTotalCents);
   }
 });
 
-test('makes a larger reservation pack progressively cheaper per bottle', () => {
-  assert.equal(getVolumeDiscountedUnitPrice(temprano, 3), 16.6333);
-  assert.equal(getVolumeDiscountedUnitPrice(temprano, 6), 15.75);
-  assert.equal(getVolumeDiscountedUnitPrice(temprano, 12), 14.875);
-  assert.equal(cents(getVolumeDiscountedLineTotal(temprano, 12)), 17850);
+test('uses the normal price per bottle for each fixed pack after the reservation period', () => {
+  assert.equal(getVolumeDiscountedUnitPrice(temprano, 3), 18.9);
+  assert.equal(getVolumeDiscountedUnitPrice(temprano, 6), 17.9);
+  assert.equal(getVolumeDiscountedUnitPrice(temprano, 12), 16.9);
+  assert.equal(cents(getVolumeDiscountedLineTotal(temprano, 12)), 20280);
 });
 
-test('labels the reservation choices as fixed packs, not a volume discount', () => {
+test('labels Temprano choices as fixed packs, not a volume discount', () => {
   const detail = readFileSync(new URL('../src/pages/ProductDetail.jsx', import.meta.url), 'utf8');
   const spanish = readFileSync(new URL('../src/i18n/locales/es.json', import.meta.url), 'utf8');
 
-  assert.match(detail, /Elige tu reserva/);
+  assert.match(detail, /Elige tu pack/);
   assert.doesNotMatch(detail, /no se combinan con códigos de descuento/);
   assert.match(detail, /getFixedPackOptions/);
   assert.match(spanish, /"unit": "unidad"/);

@@ -234,8 +234,8 @@ test('publishes Product JSON-LD with validated EANs, real shipping details, and 
   assert.equal(paraguayoData.offers.availability, 'https://schema.org/InStock');
   assert.equal(
     findProduct(temprano).offers.availability,
-    'https://schema.org/PreOrder',
-    'Las reservas vendibles deben declararse como preventa',
+    'https://schema.org/InStock',
+    'Temprano ya está disponible para venta normal',
   );
   const scheduledTemprano = buildProductStructuredData({
     slug: 'aceite-temprano-sin-filtrar',
@@ -247,17 +247,18 @@ test('publishes Product JSON-LD with validated EANs, real shipping details, and 
       { actualQuantity: 1, reservationPrice: 17.50, regularPrice: 19.90, priceEndsAt: '2026-10-26T22:59:59Z' },
     ],
   });
-  assert.equal(scheduledTemprano.offers.price, '17.50');
+  assert.equal(scheduledTemprano.offers.price, '19.90');
   assert.equal(
     findProduct(temprano).name,
-    'Aceite de oliva virgen extra Temprano 2026/27 sin filtrar — Reserva 500 ml',
+    'Aceite de oliva virgen extra Temprano 2026/27 sin filtrar 500 ml',
   );
-  const reservationCopy = 'La cosecha 2026/27 se sirve por reserva. Empezamos a envasar en cuanto tengamos el análisis del lote elegido y las primeras reservas salen la última semana de octubre.';
-  assert.equal(tagContent(temprano, /<meta name="description" content="([^"]+)"/i), reservationCopy);
-  assert.equal(tagContent(temprano, /<meta property="og:description" content="([^"]+)"/i), reservationCopy);
-  assert.equal(tagContent(temprano, /<meta name="twitter:description" content="([^"]+)"/i), reservationCopy);
-  assert.match(findProduct(temprano).description, /Cosecha 2026\/27 · analítica en curso\./);
-  assert.match(findProduct(temprano).description, /Empezamos a envasar en cuanto tengamos el análisis del lote elegido/);
+  const normalSaleCopy = 'AOVE Temprano 2026/27 sin filtrar, elaborado con aceituna verde recogida antes de madurar, en una sola pasada y sin filtrar. Botella de 500 ml.';
+  assert.equal(tagContent(temprano, /<meta name="description" content="([^"]+)"/i), normalSaleCopy);
+  assert.equal(tagContent(temprano, /<meta property="og:description" content="([^"]+)"/i), normalSaleCopy);
+  assert.equal(tagContent(temprano, /<meta name="twitter:description" content="([^"]+)"/i), normalSaleCopy);
+  assert.match(findProduct(temprano).description, /Cosecha 2026\/27\./);
+  assert.match(findProduct(temprano).description, /Elaborado con aceituna verde/);
+  assert.doesNotMatch(findProduct(temprano).description, /reserva|analítica en curso|última semana de octubre/i);
   assert.doesNotMatch(findProduct(temprano).description, new RegExp(['16', ' de octubre'].join(''), 'i'));
   assert.doesNotMatch(findProduct(temprano).description, /olive japan|medalla|polifenol|antioxid|vitamina|oro|galardon|oleocanthal|per[oó]xido|acidez|569/i);
   assert.deepEqual(paraguayoData.offers.hasMerchantReturnPolicy, {
@@ -324,14 +325,13 @@ test('keeps all confirmed EANs tied to their verified master SKU', () => {
   });
 });
 
-test('keeps OutOfStock ahead of PreOrder when a reservation is no longer sellable', () => {
+test('keeps OutOfStock ahead of InStock when a normal-sale product is no longer sellable', () => {
   const unavailableReservation = buildProductStructuredData({
-    slug: 'aceite-temprano-sin-filtrar',
-    name: 'Temprano',
+    slug: 'producto-no-disponible',
+    name: 'Producto',
     price: 19.9,
     currency: 'EUR',
     stock: 0,
-    reservationOnly: true,
   });
 
   assert.equal(unavailableReservation.offers.availability, 'https://schema.org/OutOfStock');

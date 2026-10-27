@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { formatEuro } from '../../utils/formatMoney';
 import { getApplicableVolumeTier } from '../../utils/volumePricing';
 import { getFixedPackForQuantity } from '../../utils/fixedPackPricing';
+import { isReservationSale } from '../../utils/reservationSale';
 
 const CartDrawer = () => {
   const {
@@ -116,7 +117,7 @@ const CartDrawer = () => {
                           <div className="min-w-0 flex-1 pr-6">
                             <h3 className="line-clamp-2 text-sm font-semibold text-[#1a1a1a]">{item.name}</h3>
                             <p className="mt-1 text-sm font-semibold text-price">{formatEuro(unitPrice)}</p>
-                            {item.reservationOnly && <p className="mt-1 text-xs text-stone-600">Reserva · cosecha 2026/27</p>}
+                            {isReservationSale(item) && <p className="mt-1 text-xs text-stone-600">Reserva · cosecha 2026/27</p>}
                             {fixedPack && <p className="mt-1 text-xs text-stone-600">{fixedPack.label} · precio cerrado</p>}
                           </div>
                         </div>

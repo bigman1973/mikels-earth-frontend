@@ -295,9 +295,6 @@ const Horeca = () => {
               />
             </div>
             <div className="p-6">
-              <div className="inline-block bg-primary text-white text-xs px-3 py-1 rounded-full mb-3">
-                RESERVA · COSECHA 2026/27
-              </div>
               <h3 className="text-2xl font-bold text-primary mb-2">
                 {t('horeca.temprano_name')}
               </h3>

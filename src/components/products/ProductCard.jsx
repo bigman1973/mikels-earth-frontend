@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { useCart } from '../../context/CartContext';
 import { formatEuro } from '../../utils/formatMoney';
+import { isReservationSale } from '../../utils/reservationSale';
 
 const getOptimizedProductImage = (url) => {
   if (!url || !url.includes('res.cloudinary.com') || !url.includes('/image/upload/')) {
@@ -25,7 +26,8 @@ const ProductCard = ({ product }) => {
   const badgeText = displayBadge
     ? (displayBadge.textKey ? t(`badges.${displayBadge.textKey}`, displayBadge.text) : displayBadge.text)
     : null;
-  const cardBadgeText = product.reservationOnly
+  const isReservation = isReservationSale(product);
+  const cardBadgeText = isReservation
     ? 'RESERVA · COSECHA 2026/27'
     : badgeText;
   const isSoldOut = product.soldOut || product.available === false;
@@ -45,7 +47,7 @@ const ProductCard = ({ product }) => {
     >
       {cardBadgeText && !isSoldOut && (
         <span className={`absolute left-3 top-3 z-10 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide ${
-          product.reservationOnly ? 'bg-primary text-white' : 'bg-[#f5efe4] text-[#1a1a1a]'
+          isReservation ? 'bg-primary text-white' : 'bg-[#f5efe4] text-[#1a1a1a]'
         }`}>
           {cardBadgeText}
         </span>
@@ -102,7 +104,7 @@ const ProductCard = ({ product }) => {
             onClick={addProduct}
           >
             <ShoppingCart className="h-4 w-4" aria-hidden="true" />
-            {product.reservationOnly ? 'Reservar' : t('product_detail.add_to_cart')}
+            {isReservation ? 'Reservar' : t('product_detail.add_to_cart')}
           </button>
         )}
       </div>

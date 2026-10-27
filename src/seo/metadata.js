@@ -1,4 +1,5 @@
 import { resolveScheduledSinglePrice } from '../utils/fixedPackPricing.js';
+import { isReservationSale } from '../utils/reservationSale.js';
 
 export const SITE_ORIGIN = 'https://www.mikels.es';
 export const DEFAULT_SOCIAL_IMAGE = `${SITE_ORIGIN}/images/hero-olivos-background.jpeg`;
@@ -88,8 +89,8 @@ const PRODUCT_SEO = {
     description: 'Aceite de oliva virgen extra ecológico. Seis medallas en cinco años seguidos: oro en NYIOOC 2022 y 2024, y en OLIVE JAPAN 2025. Botella de 500 ml.',
   },
   'aceite-temprano-sin-filtrar': {
-    title: "AOVE Temprano 2026/27 sin filtrar 500 ml — Reserva | Mikel's Fruit",
-    description: 'La cosecha 2026/27 se sirve por reserva. Empezamos a envasar en cuanto tengamos el análisis del lote elegido y las primeras reservas salen la última semana de octubre.',
+    title: "AOVE Temprano 2026/27 sin filtrar 500 ml | Mikel's Fruit",
+    description: 'AOVE Temprano 2026/27 sin filtrar, elaborado con aceituna verde recogida antes de madurar, en una sola pasada y sin filtrar. Botella de 500 ml.',
   },
   'aceite-5l-caja-3': {
     title: "AOVE 5 L para hostelería y granel | Mikel's Fruit",
@@ -241,9 +242,9 @@ const EDITORIAL_PRODUCT_CONTENT = {
     longDescription: 'Paraguayo, agua, azúcar y zumo de limón natural. 60 % de fruta. Solo cuatro ingredientes. Sin conservantes ni colorantes. Pack de tres tarros de 250 g, en estuche de cartón.',
   },
   'aceite-temprano-sin-filtrar': {
-    name: 'Aceite de oliva virgen extra Temprano 2026/27 sin filtrar — Reserva',
-    description: 'Reserva de la cosecha 2026/27. AOVE sin filtrar de aceituna verde.',
-    longDescription: 'Reserva de la cosecha 2026/27. Cosecha 2026/27 · analítica en curso. Elaborado con aceituna verde, recogida antes de madurar, en una sola pasada y sin filtrar. Da menos aceite por kilo; de ahí su perfil verde, con amargor y picor. Procede de nuestro olivar en la campiña cordobesa. Empezamos a envasar en cuanto tengamos el análisis del lote elegido y las primeras reservas salen la última semana de octubre.',
+    name: 'Aceite de oliva virgen extra Temprano 2026/27 sin filtrar',
+    description: 'AOVE Temprano 2026/27 sin filtrar, elaborado con aceituna verde.',
+    longDescription: 'Cosecha 2026/27. Elaborado con aceituna verde, recogida antes de madurar, en una sola pasada y sin filtrar. Da menos aceite por kilo; de ahí su perfil verde, con amargor y picor. Procede de nuestro olivar en la campiña cordobesa.',
   },
   'pack-temprano-premium': {
     longDescription: 'Un estuche de regalo con una botella de 500 ml de aceite de oliva virgen extra de primera cosecha, sin filtrar, y su estuche premium. De perfil verde, fresco y ligeramente picante; prensado en frío e ideal para ensaladas, tostadas y carpaccios.',
@@ -294,7 +295,7 @@ export const buildProductStructuredData = (product, slug = product?.slug) => {
   const imageList = (product.images?.length ? product.images : [product.image])
     .filter(Boolean)
     .map(toAbsoluteUrl);
-  const isReservationOnly = product.reservationOnly === true || product.reservation_only === true;
+  const isReservationOnly = isReservationSale({ ...product, slug });
   const stock = Number(product.stock);
   const hasLegacyStock = Number.isFinite(stock);
   const isUnavailable = product.available === false

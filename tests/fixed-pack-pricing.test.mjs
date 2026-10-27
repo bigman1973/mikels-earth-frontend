@@ -18,7 +18,7 @@ const temprano = {
   ],
 };
 
-test('shows the four reservation packs in ascending quantity', () => {
+test('shows the four fixed packs in ascending quantity', () => {
   assert.deepEqual(getFixedPackOptions(temprano).map((tier) => tier.actualQuantity), [1, 3, 6, 12]);
 });
 
@@ -29,7 +29,7 @@ test('marks only the pack of three as recommended', () => {
   );
 });
 
-test('keeps the reservation price through 26 October Madrid and switches after the UTC deadline', () => {
+test('uses the scheduled active price through 26 October Madrid and switches after the UTC deadline', () => {
   const reservationNow = Date.parse('2026-10-26T22:59:59Z');
   const regularNow = Date.parse('2026-10-26T23:00:00Z');
   assert.deepEqual(
@@ -43,7 +43,7 @@ test('keeps the reservation price through 26 October Madrid and switches after t
   assert.equal(resolveScheduledSinglePrice(temprano, regularNow), 19.90);
 });
 
-test('pack price per bottle never rises with a larger reservation pack', () => {
+test('pack price per bottle never rises with a larger fixed pack', () => {
   const now = Date.parse('2026-10-14T10:00:00Z');
   const unitPrices = getFixedPackOptions(temprano).map((tier) => getFixedPackUnitPrice(tier, now));
   assert.deepEqual(unitPrices.map((value) => Math.round(value * 10000)), [175000, 166333, 157500, 148750]);

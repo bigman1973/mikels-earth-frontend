@@ -171,7 +171,6 @@ const Home = () => {
                 {
                   name: t('home.product_temprano'),
                   tagline: t('home.product_temprano_tagline'),
-                  badge: t('home.product_temprano_reservation_badge'),
                   description: t('home.product_temprano_desc'),
                   image: "/images/aceite-temprano.jpg",
                   link: '/producto/aceite-temprano-sin-filtrar',

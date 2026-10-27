@@ -66,8 +66,8 @@ test('availability controls retain a backend-enforced checkout boundary without 
   assert.match(card, /const isSoldOut = product\.soldOut \|\| product\.available === false/);
 });
 
-test('reservation purchase surfaces use the saved reservation contract', async () => {
-  const [detail, card, cart, emailTemplate, products, footer, es, en] = await Promise.all([
+test('Temprano purchase surfaces use the normal-sale contract', async () => {
+  const [detail, card, cart, emailTemplate, products, footer, es, en, reservationSale] = await Promise.all([
     read('src/pages/ProductDetail.jsx'),
     read('src/components/products/ProductCard.jsx'),
     read('src/components/cart/CartDrawer.jsx'),
@@ -76,32 +76,32 @@ test('reservation purchase surfaces use the saved reservation contract', async (
     read('src/components/layout/Footer.jsx'),
     read('src/i18n/locales/es.json'),
     read('src/i18n/locales/en.json'),
+    read('src/utils/reservationSale.js'),
   ]);
 
-  assert.match(detail, /product\.reservationOnly === true/);
+  assert.match(detail, /isReservationSale\(product\)/);
   assert.doesNotMatch(detail, /Quedan \{availableStock\} de \{product\.reservationStockTotal/);
-  assert.match(detail, /isReservation \? 'Reservar'/);
-  assert.match(detail, /Envío la última semana de octubre/);
-  assert.match(detail, /Cosecha 2026\/27 · analítica en curso/);
-  assert.match(card, /RESERVA · COSECHA 2026\/27/);
-  assert.match(card, /product\.reservationOnly \? 'bg-primary text-white'/);
-  assert.match(card, /product\.reservationOnly \? 'Reservar'/);
+  assert.match(detail, /isReservation \? 'Reservar' : t\('product_detail\.add_to_cart'\)/);
+  assert.match(reservationSale, /product\.slug !== TEMPRANO_SLUG/);
+  assert.match(detail, /isReservation \? 'Envío la última semana de octubre' : t\('product_detail\.shipping_time'\)/);
+  assert.doesNotMatch(detail, /Cosecha 2026\/27 · analítica en curso/);
+  assert.match(card, /isReservationSale\(product\)/);
+  assert.doesNotMatch(card, /product\.reservationOnly \? 'Reservar'/);
   assert.match(detail, /packs\.find\(\(pack\) => pack\.actualQuantity === 3\)/);
-  assert.match(detail, /Elige tu reserva/);
+  assert.match(detail, /Elige tu pack/);
   assert.doesNotMatch(detail, /formatEuro\(hasFixedPackPricing \? currentLineTotal/);
   assert.ok(
     detail.indexOf('Pruébalo. Si no te gusta, te devolvemos el dinero.')
       < detail.indexOf('{hasFixedPackPricing && ('),
     'la garantía debe aparecer antes del selector de packs',
   );
-  assert.match(detail, /Precio de reserva hasta el 26 de octubre\. A partir del 27 de octubre se aplicará el precio normal/);
+  assert.doesNotMatch(detail, /Precio de reserva hasta el 26 de octubre/);
   assert.doesNotMatch(cart, /no se combinan con códigos de descuento/);
   assert.doesNotMatch(detail, /no se combinan con códigos de descuento/);
   assert.match(cart, /¿Tienes un código\?/);
   assert.doesNotMatch(cart, /hasNonDiscountablePack/);
   assert.match(emailTemplate, /event\.Receipt\.heading/);
-  assert.match(products, /Ya puedes reservar el Temprano de la cosecha 2026\/27\. Las primeras reservas salen la última semana de octubre\./);
-  assert.match(products, /to=\{`\/producto\/\$\{reservationProduct\.slug\}`\}/);
+  assert.doesNotMatch(products, /Ya puedes reservar el Temprano|reservationProduct/);
   assert.match(footer, /new Date\(\)\.getFullYear\(\)/);
   assert.match(footer, /t\('footer\.copyright', \{ year: currentYear \}\)/);
   assert.match(es, /© \{\{year\}\} Farms Planet SL · Mikel's Fruit es una marca registrada/);
