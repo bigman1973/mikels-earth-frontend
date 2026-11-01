@@ -9,6 +9,7 @@ import { formatEuro } from '../../utils/formatMoney';
 import { getApplicableVolumeTier } from '../../utils/volumePricing';
 import { getFixedPackForQuantity } from '../../utils/fixedPackPricing';
 import { isReservationSale } from '../../utils/reservationSale';
+import { hasPromotionProtectedItem } from '../../utils/promotionProtection';
 
 const CartDrawer = () => {
   const {
@@ -28,6 +29,8 @@ const CartDrawer = () => {
   const [codeInput, setCodeInput] = useState('');
   const [codeMessage, setCodeMessage] = useState({ text: '', type: '' });
   const [showDiscount, setShowDiscount] = useState(false);
+  const hasProtectedPromotionLine = hasPromotionProtectedItem(cart);
+  const discountAmount = getDiscountAmount();
 
   const applyCode = async () => {
     const result = await applyDiscountCode(codeInput);
@@ -146,7 +149,7 @@ const CartDrawer = () => {
 
             {cart.length > 0 && (
               <div className="border-t border-stone-200 bg-[#f5efe4] p-6">
-                {appliedDiscount && (
+                {appliedDiscount && discountAmount > 0 && (
                   <div className="mb-3 flex items-center justify-between border-b border-stone-300 pb-3 text-sm text-[#1a1a1a]">
                     <span>{t('checkout.discount_code')} {appliedDiscount.code}</span>
                     <button type="button" onClick={removeDiscountCode} className="underline underline-offset-2">
@@ -163,7 +166,9 @@ const CartDrawer = () => {
                   {t('delivery.notice')}
                 </p>
 
-                {!appliedDiscount && (
+                {hasProtectedPromotionLine ? (
+                  <p className="mt-3 text-sm text-[#1a1a1a]">Este producto no participa en promociones ni cupones.</p>
+                ) : !appliedDiscount && (
                   <div className="mt-3">
                     <button
                       type="button"

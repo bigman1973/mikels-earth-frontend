@@ -80,33 +80,53 @@ test('publishes the 2026/27 Temprano harvest as a normal sale without prior-lot 
   assert.deepEqual(earlyOil.tags, ['Prensado en Frío', 'Sin Filtrar']);
   assert.equal(earlyOil.reservationOnly, false);
   assert.equal(earlyOil.reservationMessage, '');
+  assert.equal(earlyOil.price, 19.90);
+  assert.equal('tieredDiscount' in earlyOil, false);
+  assert.equal('subscriptionDiscount' in earlyOil, false);
+  assert.equal('subscriptionFrequencies' in earlyOil, false);
   assert.match(earlyOil.longDescription, /Cosecha 2026\/27\./);
   assert.doesNotMatch(earlyOil.longDescription, /reserva|analítica en curso|última semana de octubre/i);
   assert.doesNotMatch(earlyOil.longDescription, /olive japan|medalla|polifenol|antioxid|vitamina|oro|galardon|oleocanthal|per[oó]xido|acidez|569/i);
   assert.doesNotMatch(earlyOil.longDescription, /[Cc]antidad|[Úú]ltimas unidades|[Qq]uedan \d/);
   assert.doesNotMatch(earlyOil.longDescription, new RegExp(['16', ' de octubre'].join(''), 'i'));
-  assert.deepEqual(
-    earlyOil.tieredDiscount.filter((tier) => tier.featured).map((tier) => tier.actualQuantity),
-    [3],
-  );
 });
 
-test('uses normal fixed pack prices when Temprano needs editorial fallback data', () => {
+test('normalizes legacy Temprano fallback data to the single 19.90 € bottle', () => {
   const earlyOil = applyEditorialOverrides({
     slug: 'aceite-temprano-sin-filtrar',
     name: 'Aceite temprano sin filtrar',
     description: 'Aceite temprano',
     longDescription: 'Texto anterior',
+    originalPrice: 17.50,
+    subscriptionAvailable: true,
+    subscriptionDiscount: 10,
+    subscriptionFrequencies: [{ value: 'monthly', discount: 10 }],
+    discoveryDiscount: 15,
+    tieredDiscount: [
+      { actualQuantity: 1, price: 17.50, fixedPack: true },
+      { actualQuantity: 3, price: 49.90, fixedPack: true },
+    ],
+    tieredDiscountConfig: [
+      { actualQuantity: 6, price: 94.50, fixedPack: true },
+    ],
+    volumeDiscount: { minQuantity: 3, discount: 10 },
+    volumeDiscountConfig: { minQuantity: 6, discount: 15 },
   });
 
-  assert.deepEqual(
-    earlyOil.tieredDiscount.map((tier) => tier.price),
-    [19.90, 56.70, 107.40, 202.80],
-  );
-  assert.equal(
-    earlyOil.tieredDiscount.some((tier) => 'reservationPrice' in tier || 'regularPrice' in tier || 'priceEndsAt' in tier),
-    false,
-  );
+  assert.equal(earlyOil.price, 19.90);
+  for (const key of [
+    'originalPrice',
+    'subscriptionAvailable',
+    'subscriptionDiscount',
+    'subscriptionFrequencies',
+    'discoveryDiscount',
+    'tieredDiscount',
+    'tieredDiscountConfig',
+    'volumeDiscount',
+    'volumeDiscountConfig',
+  ]) {
+    assert.equal(key in earlyOil, false, `${key} must not survive the Temprano fallback`);
+  }
 });
 
 test('removes decorative emoji and incomplete awards from other product metadata', () => {

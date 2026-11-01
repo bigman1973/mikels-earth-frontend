@@ -532,7 +532,7 @@ const Checkout = () => {
                   <span>{t('cart.subtotal')}</span>
                   <span>{formatEuro(appliedDiscount ? getCartTotal() + getDiscountAmount() : getCartTotal())}</span>
                 </div>
-                {appliedDiscount && (
+                {appliedDiscount && getDiscountAmount() > 0 && (
                   <div className="flex justify-between font-medium text-[#1a1a1a]">
                     <span>{t('checkout.discount_code')} {appliedDiscount.code}</span>
                     <span>-{formatEuro(getDiscountAmount())}</span>

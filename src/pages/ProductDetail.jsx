@@ -152,6 +152,9 @@ const ProductDetail = () => {
   const discountLabel = applicableTier?.label || '';
   const isReservation = isReservationSale(product);
   const isAvailable = product.available !== false && !product.soldOut;
+  const storefrontNotice = typeof product.storefrontNotice === 'string' ? product.storefrontNotice.trim() : '';
+  const storefrontNoticeLinkText = 'aquí';
+  const storefrontNoticeLinkIndex = storefrontNotice.indexOf(storefrontNoticeLinkText);
 
   // El backend solo adjunta complementos activos y vendibles. Esta segunda
   // comprobación defensiva evita mostrar una fila incompleta ante cualquier
@@ -296,6 +299,29 @@ const ProductDetail = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <div className="bg-white rounded-lg shadow-lg p-8">
+              {storefrontNotice && (
+                <aside
+                  role="status"
+                  aria-label="Aviso importante del producto"
+                  className="mb-5 rounded-lg border-2 border-amber-700 bg-amber-50 px-4 py-3 text-base font-medium leading-6 text-amber-950 shadow-sm"
+                >
+                  <p>
+                    {storefrontNoticeLinkIndex >= 0 ? (
+                      <>
+                        {storefrontNotice.slice(0, storefrontNoticeLinkIndex)}
+                        <Link
+                          to="/producto/aceite-temprano-sin-filtrar"
+                          className="font-bold text-primary underline decoration-2 underline-offset-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                        >
+                          {storefrontNoticeLinkText}
+                        </Link>
+                        {storefrontNotice.slice(storefrontNoticeLinkIndex + storefrontNoticeLinkText.length)}
+                      </>
+                    ) : storefrontNotice}
+                  </p>
+                </aside>
+              )}
+
               {/* Category */}
               <p className="text-sm text-[#1a1a1a]/60 uppercase tracking-wide mb-2 font-semibold">
                 {t(`categories.${product.category.toLowerCase()}`, product.category)}

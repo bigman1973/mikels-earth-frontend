@@ -6,6 +6,11 @@ import { getCartEventPricing } from '../utils/cartTracking';
 import { trackMetaAddToCart } from '../utils/metaPixel';
 import { trackGA4AddToCart } from '../utils/googleAnalytics';
 import { isReservationSale, normalizeReservationSaleProduct } from '../utils/reservationSale';
+import {
+  getCouponDiscountAmount,
+  isTempranoPromotionProtectedItem,
+  normalizePromotionProtectedCartItem,
+} from '../utils/promotionProtection';
 
 const CartContext = createContext();
 
@@ -21,7 +26,9 @@ export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState(() => (
     typeof window === 'undefined'
       ? []
-      : loadStoredCart(window.localStorage).map(normalizeReservationSaleProduct)
+      : loadStoredCart(window.localStorage)
+        .map(normalizeReservationSaleProduct)
+        .map(normalizePromotionProtectedCartItem)
   ));
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [discountCode, setDiscountCode] = useState('');
@@ -36,14 +43,20 @@ export const CartProvider = ({ children }) => {
   const addToCart = (product, quantity = 1, purchaseType = 'one-time', subscriptionFrequency = null) => {
     const isAvailable = product.available !== false && !product.soldOut;
     const requestedQuantity = Math.max(1, Number(quantity) || 1);
-    const cartProduct = normalizeReservationSaleProduct(product);
-    const isClosedPackSelection = Boolean(getFixedPackForQuantity(product, requestedQuantity));
+    const cartProduct = normalizePromotionProtectedCartItem(normalizeReservationSaleProduct(product));
+    const effectivePurchaseType = isTempranoPromotionProtectedItem(cartProduct) ? 'one-time' : purchaseType;
+    const effectiveSubscriptionFrequency = effectivePurchaseType === 'subscription'
+      ? subscriptionFrequency
+      : null;
+    const effectiveSelectedPackQuantity = cartProduct.selectedPackQuantity || null;
+    const isClosedPackSelection = !isTempranoPromotionProtectedItem(cartProduct)
+      && Boolean(getFixedPackForQuantity(cartProduct, requestedQuantity));
     const existingItem = cart.find((item) => (
       item.id === product.id
-      && item.purchaseType === purchaseType
-      && item.subscriptionFrequency === subscriptionFrequency
-      && (item.selectedPackQuantity || null) === (product.selectedPackQuantity || null)
-      && (item.selectedVariant || null) === (product.selectedVariant || null)
+      && item.purchaseType === effectivePurchaseType
+      && item.subscriptionFrequency === effectiveSubscriptionFrequency
+      && (item.selectedPackQuantity || null) === effectiveSelectedPackQuantity
+      && (item.selectedVariant || null) === (cartProduct.selectedVariant || null)
       && !isClosedPackSelection
     ));
     const eventQuantity = isAvailable ? requestedQuantity : 0;
@@ -69,10 +82,10 @@ export const CartProvider = ({ children }) => {
       const existingItemIndex = prevCart.findIndex(
         item => 
           item.id === product.id && 
-          item.purchaseType === purchaseType &&
-          item.subscriptionFrequency === subscriptionFrequency &&
-          (item.selectedPackQuantity || null) === (product.selectedPackQuantity || null) &&
-          (item.selectedVariant || null) === (product.selectedVariant || null) &&
+          item.purchaseType === effectivePurchaseType &&
+          item.subscriptionFrequency === effectiveSubscriptionFrequency &&
+          (item.selectedPackQuantity || null) === effectiveSelectedPackQuantity &&
+          (item.selectedVariant || null) === (cartProduct.selectedVariant || null) &&
           !isClosedPackSelection
       );
 
@@ -87,8 +100,8 @@ export const CartProvider = ({ children }) => {
         let price = cartProduct.price;
         
         // Apply subscription discount based on frequency
-        if (purchaseType === 'subscription' && subscriptionFrequency) {
-          const frequency = cartProduct.subscriptionFrequencies?.find(f => f.value === subscriptionFrequency);
+        if (effectivePurchaseType === 'subscription' && effectiveSubscriptionFrequency) {
+          const frequency = cartProduct.subscriptionFrequencies?.find(f => f.value === effectiveSubscriptionFrequency);
           if (frequency) {
             price = cartProduct.price * (1 - frequency.discount / 100);
           }
@@ -106,12 +119,13 @@ export const CartProvider = ({ children }) => {
           price: price,
           originalPrice: cartProduct.price,
           quantity: requestedQuantity,
-          purchaseType: purchaseType,
-          subscriptionFrequency: subscriptionFrequency,
+          purchaseType: effectivePurchaseType,
+          subscriptionFrequency: effectiveSubscriptionFrequency,
           selectedVariant: cartProduct.selectedVariant || null,
           selectedPackQuantity: cartProduct.selectedPackQuantity || null,
           variantName: cartProduct.variantName || null,
           weight: cartProduct.weight,
+          couponProtectedCompositionSkus: cartProduct.couponProtectedCompositionSkus || null,
           reservationOnly: isReservationSale(cartProduct),
           reservationMessage: cartProduct.reservationMessage || '',
           volumeDiscountConfig: cartProduct.volumeDiscount || null,
@@ -214,31 +228,14 @@ export const CartProvider = ({ children }) => {
     // el servidor antes de crear el pago. El carrito refleja ese descuento
     // sobre los packs cerrados y el resto del catálogo.
     if (appliedDiscount) {
-      cart.forEach(item => {
-        const itemTotal = getItemPrice(item) * item.quantity;
-        const discount = item.purchaseType === 'subscription' 
-          ? appliedDiscount.subscriptionDiscount 
-          : appliedDiscount.oneTimeDiscount;
-        total -= itemTotal * (discount / 100);
-      });
+      total -= getCouponDiscountAmount(cart, appliedDiscount, getItemPrice);
     }
     
     return total;
   };
   
   const getDiscountAmount = () => {
-    if (!appliedDiscount) return 0;
-    
-    let discountAmount = 0;
-    cart.forEach(item => {
-      const itemTotal = getItemPrice(item) * item.quantity;
-      const discount = item.purchaseType === 'subscription' 
-        ? appliedDiscount.subscriptionDiscount 
-        : appliedDiscount.oneTimeDiscount;
-      discountAmount += itemTotal * (discount / 100);
-    });
-    
-    return discountAmount;
+    return getCouponDiscountAmount(cart, appliedDiscount, getItemPrice);
   };
 
   // Actualizar precios de items en el carrito (usado por validación PRICE_MISMATCH en checkout)
@@ -251,7 +248,10 @@ export const CartProvider = ({ children }) => {
           (item.slug && item.slug === update.slug)
         );
         if (itemIndex > -1) {
-          newCart[itemIndex] = { ...newCart[itemIndex], price: update.current_price };
+          newCart[itemIndex] = normalizePromotionProtectedCartItem({
+            ...newCart[itemIndex],
+            price: update.current_price,
+          });
         }
       });
       return newCart;
@@ -261,8 +261,6 @@ export const CartProvider = ({ children }) => {
   const getCartCount = () => {
     return cart.reduce((count, item) => count + item.quantity, 0);
   };
-
-  const hasNonDiscountablePack = cart.some((item) => getFixedPackForQuantity(item, item.quantity));
 
   const toggleCart = () => {
     setIsCartOpen(prev => !prev);
