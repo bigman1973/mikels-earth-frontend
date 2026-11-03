@@ -65,12 +65,12 @@ export const STATIC_ROUTE_SEO = {
 export const NONINDEX_STATIC_ROUTE_SEO = {
   '/vip': {
     title: "Lista VIP Black Friday | Mikel's Fruit",
-    description: "Acceso anticipado al Black Friday de Mikel's Fruit, solo para la lista VIP.",
+    description: 'Entras el 26 de noviembre, un día antes que nadie. El Temprano de la cosecha 2025/26 —la botella que ganó la Plata en OLIVE JAPAN 2026, en Tokio— a mitad de precio que la cosecha nueva.',
     robots: 'noindex, nofollow',
   },
   '/vip/gracias': {
     title: "Lista VIP confirmada | Mikel's Fruit",
-    description: 'Confirmación de alta en la lista VIP de Mikel\'s Fruit.',
+    description: 'Ya estás dentro. Revisa tu correo.',
     robots: 'noindex, nofollow',
   },
 };

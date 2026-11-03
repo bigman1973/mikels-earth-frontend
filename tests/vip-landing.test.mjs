@@ -35,7 +35,7 @@ test('VIP landing is a mobile-first, noindex signup without discount percentages
 test('VIP landing uses the exact offer on two lines and the new-harvest price below the form', async () => {
   const landing = await read('src/pages/VipLanding.jsx');
   const access = 'Entras el 26 de noviembre, un día antes que nadie.';
-  const offer = 'El Temprano de la cosecha 2025/26, a mitad de precio que la cosecha nueva.';
+  const offer = 'El Temprano de la cosecha 2025/26 —la botella que ganó la Plata en OLIVE JAPAN 2026, en Tokio— a mitad de precio que la cosecha nueva.';
   const price = 'El Temprano de la cosecha 2026/27 mantiene su precio de 19,90 €.';
   const copyBlock = landing.match(/<p\b[^>]*>\s*(<span className="block">[\s\S]*?<\/span>)\s*<\/p>/)?.[1];
 
@@ -55,9 +55,9 @@ test('VIP confirmation has the exact combined message without a repeated headlin
   const message = thanks.match(/<h1\b[^>]*>([^<]+)<\/h1>\s*<p\b[^>]*>([^<]+)<\/p>/);
 
   assert.ok(message);
-  assert.equal(`${message[1]} ${message[2]}`, 'Ya estás dentro. Te escribiremos el 26 de noviembre con tu acceso.');
+  assert.equal(`${message[1]} ${message[2]}`, 'Ya estás dentro. Revisa tu correo.');
   assert.equal(thanks.split('Ya estás dentro.').length - 1, 1);
-  assert.doesNotMatch(thanks, /Revisa tu correo|Te escribiremos antes de que se abra el Black Friday para el resto/);
+  assert.doesNotMatch(thanks, /Te escribiremos el 26 de noviembre con tu acceso|Te escribiremos antes de que se abra el Black Friday para el resto/);
 });
 
 test('VIP copy has no percentages, struck-through prices or availability counters', async () => {

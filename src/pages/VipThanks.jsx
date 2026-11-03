@@ -39,7 +39,7 @@ const VipThanks = () => {
         <div className="rounded-2xl border border-stone-200 bg-white p-8 shadow-sm sm:p-12">
           <p className="text-xs font-medium uppercase tracking-[0.18em] text-[#7f1d2d]">Lista VIP</p>
           <h1 className="mt-4 font-serif text-3xl font-medium tracking-[0.02em] text-[#1a1a1a] sm:text-4xl">Ya estás dentro.</h1>
-          <p className="mt-5 text-lg leading-8 text-stone-700">Te escribiremos el 26 de noviembre con tu acceso.</p>
+          <p className="mt-5 text-lg leading-8 text-stone-700">Revisa tu correo.</p>
           <Link to="/tienda" className="mt-8 inline-block rounded-lg bg-[#7f1d2d] px-5 py-3 font-semibold text-white transition hover:bg-[#651725]">Ver la tienda</Link>
         </div>
       </section>

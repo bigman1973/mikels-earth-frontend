@@ -36,3 +36,12 @@ test('VIP routes load directly with a static noindex head and self-referencing c
     assert.match(seoManager, new RegExp(`'${pathname.replace('/', '\\/')}'`));
   }
 });
+
+test('VIP direct HTML carries the approved copy before the SPA renders', async () => {
+  const landing = await readRouteHtml('/vip');
+  const thanks = await readRouteHtml('/vip/gracias');
+  const description = tagContent(landing, /<meta name="description" content="([^"]+)"/i);
+  assert.equal(description, 'Entras el 26 de noviembre, un día antes que nadie. El Temprano de la cosecha 2025/26 —la botella que ganó la Plata en OLIVE JAPAN 2026, en Tokio— a mitad de precio que la cosecha nueva.');
+  assert.equal(tagContent(thanks, /<meta name="description" content="([^"]+)"/i), 'Ya estás dentro. Revisa tu correo.');
+  assert.doesNotMatch(description, /código de descuento|\d+(?:[.,]\d+)?\s*%|plazas/i);
+});
