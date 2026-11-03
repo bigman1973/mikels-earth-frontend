@@ -6,7 +6,7 @@ export const products = [
     slug: "aceite-5l-caja-3",
     description: "Garrafa de 5 litros de aceite de oliva virgen extra de baja acidez. Variedades Picual, Hojiblanca y Arbequina, de nuestros olivares de Córdoba y Lleida. Prensado en frío.",
     longDescription: "Garrafa de 5 litros de aceite de oliva virgen extra de baja acidez. Variedades Picual, Hojiblanca y Arbequina, de nuestros olivares de Córdoba y Lleida. Prensado en frío. **8,60 €/litro.** El aceite del día a día: para el sofrito, para la plancha y para aliñar.",
-    price: 33.00,
+    price: 43.00,
     currency: "EUR",
     image: "/images/aceite-5l-portada.jpg",
     images: [
@@ -57,7 +57,7 @@ export const products = [
     slug: "paraguayo-almibar",
     description: "Melocotón plano cultivado en Alcarràs y preparado a mano. Sin aditivos artificiales, 100% natural y vegano.",
     longDescription: "Nuestro paraguayo en almíbar es el producto estrella de Mikel's Fruit. Cultivado en los campos de Alcarràs, cada fruta es seleccionada cuidadosamente y preparada siguiendo métodos artesanales transmitidos de generación en generación. El proceso de elaboración respeta los tiempos naturales de la fruta, conservando su sabor auténtico y propiedades nutritivas. Sin conservantes, sin colorantes, solo fruta de calidad y almíbar natural.",
-    price: 14.90,
+    price: 17.15,
     currency: "EUR",
     image: "/images/paraguayo-principal.webp",
     images: [

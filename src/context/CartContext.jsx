@@ -8,7 +8,8 @@ import { trackGA4AddToCart } from '../utils/googleAnalytics';
 import { isReservationSale, normalizeReservationSaleProduct } from '../utils/reservationSale';
 import {
   getCouponDiscountAmount,
-  isTempranoPromotionProtectedItem,
+  hasCouponEligibleItem,
+  isPromotionProtectedItem,
   normalizePromotionProtectedCartItem,
 } from '../utils/promotionProtection';
 
@@ -44,21 +45,13 @@ export const CartProvider = ({ children }) => {
     const isAvailable = product.available !== false && !product.soldOut;
     const requestedQuantity = Math.max(1, Number(quantity) || 1);
     const cartProduct = normalizePromotionProtectedCartItem(normalizeReservationSaleProduct(product));
-    const effectivePurchaseType = isTempranoPromotionProtectedItem(cartProduct) ? 'one-time' : purchaseType;
+    const effectivePurchaseType = isPromotionProtectedItem(cartProduct) ? 'one-time' : purchaseType;
     const effectiveSubscriptionFrequency = effectivePurchaseType === 'subscription'
       ? subscriptionFrequency
       : null;
     const effectiveSelectedPackQuantity = cartProduct.selectedPackQuantity || null;
-    const isClosedPackSelection = !isTempranoPromotionProtectedItem(cartProduct)
+    const isClosedPackSelection = !isPromotionProtectedItem(cartProduct)
       && Boolean(getFixedPackForQuantity(cartProduct, requestedQuantity));
-    const existingItem = cart.find((item) => (
-      item.id === product.id
-      && item.purchaseType === effectivePurchaseType
-      && item.subscriptionFrequency === effectiveSubscriptionFrequency
-      && (item.selectedPackQuantity || null) === effectiveSelectedPackQuantity
-      && (item.selectedVariant || null) === (cartProduct.selectedVariant || null)
-      && !isClosedPackSelection
-    ));
     const eventQuantity = isAvailable ? requestedQuantity : 0;
     if (eventQuantity > 0) {
       // This is the only point at which an item joins the persisted cart. It
@@ -110,7 +103,7 @@ export const CartProvider = ({ children }) => {
         // NO aplicar descuento por volumen al precio guardado
         // Se calculará dinámicamente en getItemPrice()
         
-        return [...prevCart, {
+        return [...prevCart, normalizePromotionProtectedCartItem({
           id: cartProduct.id,
           name: cartProduct.name,
           slug: cartProduct.slug,
@@ -130,7 +123,7 @@ export const CartProvider = ({ children }) => {
           reservationMessage: cartProduct.reservationMessage || '',
           volumeDiscountConfig: cartProduct.volumeDiscount || null,
           tieredDiscountConfig: cartProduct.tieredDiscount || null
-        }];
+        })];
       }
     });
     setIsCartOpen(true);
@@ -178,6 +171,9 @@ export const CartProvider = ({ children }) => {
     if (!normalizedCode) {
       return { success: false, message: 'Introduce un código de descuento' };
     }
+    if (!hasCouponEligibleItem(cart)) {
+      return { success: false, message: 'Estos productos no participan en promociones ni cupones.' };
+    }
     
     try {
       // Validar TODOS los cupones contra el backend (manuales, newsletter, post-compra, etc.)
@@ -217,6 +213,7 @@ export const CartProvider = ({ children }) => {
 
   // Calcular precio de un item con descuento por volumen si aplica
   const getItemPrice = (item) => {
+    item = normalizePromotionProtectedCartItem(item);
     if (item.purchaseType !== 'one-time') return item.price;
     return getVolumeDiscountedUnitPrice(item, item.quantity);
   };
@@ -251,6 +248,7 @@ export const CartProvider = ({ children }) => {
           newCart[itemIndex] = normalizePromotionProtectedCartItem({
             ...newCart[itemIndex],
             price: update.current_price,
+            ...(isPromotionProtectedItem(newCart[itemIndex]) ? { originalPrice: update.current_price } : {}),
           });
         }
       });

@@ -1,3 +1,8 @@
+import {
+  isTempranoPromotionProtectedItem,
+  normalizePromotionProtectedProduct,
+} from './promotionProtection.js';
+
 const replaceLegacyBrand = (value) => (
   typeof value === 'string'
     ? value.replaceAll("Mikel's Earth", "Mikel's Fruit").replaceAll('Mikels Earth', "Mikel's Fruit")
@@ -19,26 +24,8 @@ const isIncompleteAwardBadge = (text) => (
   && !/\b(?:19|20)\d{2}\b/.test(text || '')
 );
 
-const TEMPRANO_PROMOTION_METADATA = new Set([
-  'originalPrice',
-  'subscriptionAvailable',
-  'subscriptionDiscount',
-  'subscriptionFrequencies',
-  'discoveryDiscount',
-  'discoveryDiscounts',
-  'tieredDiscount',
-  'tieredDiscountConfig',
-  'volumeDiscount',
-  'volumeDiscountConfig',
-]);
-
-const withoutTempranoPromotionMetadata = (product) => (
-  Object.fromEntries(
-    Object.entries(product).filter(([key]) => !TEMPRANO_PROMOTION_METADATA.has(key)),
-  )
-);
-
 export const applyEditorialOverrides = (product, language = 'es') => {
+  product = normalizePromotionProtectedProduct(product);
   const normalizedProduct = {
     ...product,
     name: stripDecorativeEmoji(replaceLegacyBrand(product.name)),
@@ -104,14 +91,13 @@ export const applyEditorialOverrides = (product, language = 'es') => {
     };
   }
 
-  if (product.slug === 'aceite-temprano-sin-filtrar') {
+  if (isTempranoPromotionProtectedItem(product)) {
     const approvedDescription = `Cosecha 2026/27.
 
 Elaborado con aceituna verde, recogida antes de madurar, en una sola pasada y sin filtrar. Da menos aceite por kilo; de ahí su perfil verde, con amargor y picor. Procede de nuestro olivar en la campiña cordobesa.`;
-    const tempranoProduct = withoutTempranoPromotionMetadata(normalizedProduct);
 
     return {
-      ...tempranoProduct,
+      ...normalizedProduct,
       name: 'Aceite de oliva virgen extra Temprano 2026/27 sin filtrar',
       description: 'AOVE Temprano 2026/27 sin filtrar, elaborado con aceituna verde.',
       longDescription: approvedDescription,

@@ -6,10 +6,9 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatEuro } from '../../utils/formatMoney';
-import { getApplicableVolumeTier } from '../../utils/volumePricing';
 import { getFixedPackForQuantity } from '../../utils/fixedPackPricing';
 import { isReservationSale } from '../../utils/reservationSale';
-import { hasPromotionProtectedItem } from '../../utils/promotionProtection';
+import { hasCouponEligibleItem, hasPromotionProtectedItem } from '../../utils/promotionProtection';
 
 const CartDrawer = () => {
   const {
@@ -21,6 +20,7 @@ const CartDrawer = () => {
     getCartTotal,
     getCartCount,
     getItemPrice,
+    getDiscountAmount,
     appliedDiscount,
     applyDiscountCode,
     removeDiscountCode,
@@ -30,6 +30,7 @@ const CartDrawer = () => {
   const [codeMessage, setCodeMessage] = useState({ text: '', type: '' });
   const [showDiscount, setShowDiscount] = useState(false);
   const hasProtectedPromotionLine = hasPromotionProtectedItem(cart);
+  const hasEligiblePromotionLine = hasCouponEligibleItem(cart);
   const discountAmount = getDiscountAmount();
 
   const applyCode = async () => {
@@ -91,7 +92,6 @@ const CartDrawer = () => {
                   {cart.map((item, index) => {
                     const unitPrice = getItemPrice(item);
                     const itemTotal = unitPrice * item.quantity;
-                    const tier = getApplicableVolumeTier(item, item.quantity);
                     const fixedPack = getFixedPackForQuantity(item, item.quantity);
                     return (
                       <motion.div
@@ -166,9 +166,13 @@ const CartDrawer = () => {
                   {t('delivery.notice')}
                 </p>
 
-                {hasProtectedPromotionLine ? (
+                {hasProtectedPromotionLine && !hasEligiblePromotionLine && (
                   <p className="mt-3 text-sm text-[#1a1a1a]">Este producto no participa en promociones ni cupones.</p>
-                ) : !appliedDiscount && (
+                )}
+                {hasProtectedPromotionLine && hasEligiblePromotionLine && (
+                  <p className="mt-3 text-sm text-[#1a1a1a]">Los productos excluidos mantienen su precio. El cupón solo se aplica a los demás productos.</p>
+                )}
+                {hasEligiblePromotionLine && !appliedDiscount && (
                   <div className="mt-3">
                     <button
                       type="button"

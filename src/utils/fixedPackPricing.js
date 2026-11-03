@@ -1,3 +1,5 @@
+import { getPromotionProtectedUnitPrice, isPromotionProtectedItem } from './promotionProtection.js';
+
 // Fixed packs are commercial options, not stackable discounts. The API sends
 // their active `price`; legacy date-bounded packs retain their reservation and
 // regular prices until their catalogue data is migrated.
@@ -19,6 +21,7 @@ export const isFixedPack = (tier) => (
 );
 
 export const getFixedPackOptions = (item) => (
+  isPromotionProtectedItem(item) ? [] :
   (Array.isArray(item?.tieredDiscountConfig)
     ? item.tieredDiscountConfig
     : Array.isArray(item?.tieredDiscount)
@@ -58,6 +61,7 @@ export const getFixedPackUnitPrice = (tier, now = Date.now()) => {
 };
 
 export const resolveScheduledSinglePrice = (product, now = Date.now()) => {
+  if (isPromotionProtectedItem(product)) return getPromotionProtectedUnitPrice(product);
   const single = getFixedPackForQuantity(product, 1);
   return single ? getFixedPackPrice(single, now) : toFiniteNumber(product?.price);
 };

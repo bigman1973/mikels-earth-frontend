@@ -3,6 +3,7 @@ import {
   getFixedPackOptions,
   getFixedPackPrice,
 } from './fixedPackPricing.js';
+import { getPromotionProtectedUnitPrice, isPromotionProtectedItem } from './promotionProtection.js';
 
 // The backend repeats this calculation from WebProduct at checkout.  Keep this
 // small browser helper deterministic so the displayed cart amount and the
@@ -14,6 +15,7 @@ const toFiniteNumber = (value, fallback = 0) => {
 };
 
 export const getApplicableVolumeTier = (item, quantity = item?.quantity) => {
+  if (isPromotionProtectedItem(item)) return null;
   const normalizedQuantity = Math.max(1, Math.trunc(toFiniteNumber(quantity, 1)));
   const fixedPacks = getFixedPackOptions(item);
   if (fixedPacks.length > 0) return getFixedPackForQuantity(item, normalizedQuantity);
@@ -59,6 +61,7 @@ const getBundlePayableUnits = (tier, quantity) => {
 };
 
 export const getVolumeDiscountedUnitPrice = (item, quantity = item?.quantity) => {
+  if (isPromotionProtectedItem(item)) return getPromotionProtectedUnitPrice(item);
   const basePrice = toFiniteNumber(item?.price);
   const normalizedQuantity = Math.max(1, Math.trunc(toFiniteNumber(quantity, 1)));
   const fixedPack = getFixedPackForQuantity(item, normalizedQuantity);
@@ -83,6 +86,7 @@ export const getVolumeDiscountedUnitPrice = (item, quantity = item?.quantity) =>
 export const getVolumeDiscountedLineTotal = (item, quantity = item?.quantity) => (
   (() => {
     const normalizedQuantity = Math.max(1, Math.trunc(toFiniteNumber(quantity, 1)));
+    if (isPromotionProtectedItem(item)) return getPromotionProtectedUnitPrice(item) * normalizedQuantity;
     const fixedPack = getFixedPackForQuantity(item, normalizedQuantity);
     if (fixedPack) return getFixedPackPrice(fixedPack);
     const basePrice = toFiniteNumber(item?.price);
