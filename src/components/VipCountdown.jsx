@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 
-const BLACK_FRIDAY_START = new Date('2026-11-27T00:00:00+01:00').getTime();
+const VIP_ACCESS_START = new Date('2026-11-26T00:00:00+01:00').getTime();
 
 const getTimeLeft = () => {
-  const difference = Math.max(0, BLACK_FRIDAY_START - Date.now());
+  const difference = Math.max(0, VIP_ACCESS_START - Date.now());
   return {
     days: Math.floor(difference / 86_400_000),
     hours: Math.floor((difference % 86_400_000) / 3_600_000),
@@ -30,7 +30,7 @@ const VipCountdown = () => {
   ];
 
   return (
-    <div className="grid grid-cols-4 gap-2 text-center sm:gap-4" aria-label="Cuenta atrás para Black Friday">
+    <div className="grid grid-cols-4 gap-2 text-center sm:gap-4" aria-label="Cuenta atrás para el acceso VIP">
       {units.map(([key, singular, plural]) => (
         <div key={key} className="rounded-xl border border-stone-200 bg-white px-2 py-4 shadow-sm sm:px-4">
           <p className="text-2xl font-semibold tabular-nums text-[#1a1a1a] sm:text-4xl">{String(timeLeft[key]).padStart(2, '0')}</p>

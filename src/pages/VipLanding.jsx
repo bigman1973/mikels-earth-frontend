@@ -58,7 +58,8 @@ const VipLanding = () => {
             Acceso anticipado al Black Friday de Mikel&apos;s, solo para la lista VIP.
           </h1>
           <p className="mx-auto mt-5 max-w-md text-center text-base leading-7 text-stone-700">
-            Recibirás acceso 24 horas antes que el resto y tu código de descuento por correo.
+            <span className="block">Entras el 26 de noviembre, un día antes que nadie.</span>
+            <span className="block">El Temprano de la cosecha 2025/26, a mitad de precio que la cosecha nueva.</span>
           </p>
 
           <div className="mt-8">
@@ -117,6 +118,9 @@ const VipLanding = () => {
               {isSubmitting ? 'Guardando…' : 'Quiero entrar en la lista VIP'}
             </button>
           </form>
+          <p className="mt-3 text-center text-sm leading-6 text-stone-600">
+            El Temprano de la cosecha 2026/27 mantiene su precio de 19,90 €.
+          </p>
         </div>
       </section>
     </main>
