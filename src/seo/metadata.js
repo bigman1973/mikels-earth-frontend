@@ -1,6 +1,7 @@
 import { resolveScheduledSinglePrice } from '../utils/fixedPackPricing.js';
 import { isReservationSale } from '../utils/reservationSale.js';
 import { normalizeTempranoHarvestName } from '../utils/tempranoHarvestIdentity.js';
+import { getIndependentPackIdentity, normalizeIndependentPackName } from '../utils/independentPacks.js';
 
 export const SITE_ORIGIN = 'https://www.mikels.es';
 export const DEFAULT_SOCIAL_IMAGE = `${SITE_ORIGIN}/images/hero-olivos-background.jpeg`;
@@ -263,11 +264,11 @@ const formattedWeight = (weight = '') => String(weight).replace(/(\d)(g|ml|l)$/i
 
 export const getProductSeoContent = (product = {}, slug = product?.slug) => {
   const editorial = EDITORIAL_PRODUCT_CONTENT[slug] || {};
-  const namedProduct = normalizeTempranoHarvestName({
+  const namedProduct = normalizeIndependentPackName(normalizeTempranoHarvestName({
     ...product,
     slug,
     name: editorial.name || product.name || 'Producto artesanal',
-  });
+  }));
   return {
     name: currentBrand(namedProduct.name),
     description: currentBrand(editorial.description || product.description || ''),
@@ -278,6 +279,11 @@ export const getProductSeoContent = (product = {}, slug = product?.slug) => {
 };
 
 export const buildProductMetadata = (product, slug) => {
+  const pack = getIndependentPackIdentity({ ...product, slug });
+  if (pack?.harvest) return {
+    title: `Temprano ${pack.harvest} · ${pack.units === 12 ? 'Caja de 12' : 'Pack de 6'} | Mikel's`,
+    description: `Aceite de oliva virgen extra Temprano sin filtrar · Cosecha ${pack.harvest} · ${pack.units === 12 ? 'Caja de 12' : 'Pack de 6'}. Precio por pack completo.`,
+  };
   const manual = PRODUCT_SEO[slug];
   if (manual) return manual;
 
@@ -314,7 +320,7 @@ export const buildProductStructuredData = (product, slug = product?.slug) => {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name,
-    image: imageList.length ? imageList : [toAbsoluteUrl(DEFAULT_SOCIAL_IMAGE)],
+    ...(imageList.length ? { image: imageList } : getIndependentPackIdentity(product) ? {} : { image: [toAbsoluteUrl(DEFAULT_SOCIAL_IMAGE)] }),
     description: normalizeText(content.longDescription || content.description),
     ...(gtin13 ? { gtin13 } : {}),
     ...(sku ? { sku, mpn: sku } : {}),

@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
-import { useProducts } from '../hooks/useProducts';
+import { useProduct, useProducts } from '../hooks/useProducts';
 import { useCart } from '../context/CartContext';
 import { ShoppingCart, ArrowLeft, Check, Tag, Package } from 'lucide-react';
 // eslint-disable-next-line no-unused-vars -- JSX usa el namespace `<motion.*>`
@@ -22,6 +22,7 @@ import { trackMetaViewContent } from '../utils/metaPixel';
 import { trackGA4ViewItem } from '../utils/googleAnalytics';
 import { isReservationSale } from '../utils/reservationSale';
 import { getTempranoHarvestIdentity } from '../utils/tempranoHarvestIdentity';
+import { getIndependentPackIdentity } from '../utils/independentPacks';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://mikels-earth-backend-production.up.railway.app';
 
@@ -65,10 +66,10 @@ const StarRating = ({ rating, count }) => {
 const ProductDetail = () => {
   const { slug } = useParams();
   const { addToCart } = useCart();
-  const { products, loading } = useProducts();
+  const { products } = useProducts();
+  const { product, loading } = useProduct(slug);
   const { t } = useTranslation();
   
-  const product = products.find(p => p.slug === slug && p.visibleInStore !== false);
   const trackedProductRef = useRef(null);
 
   useEffect(() => {
@@ -128,7 +129,7 @@ const ProductDetail = () => {
       <div className="min-h-screen py-16 flex items-center justify-center">
         {!loading && <ProductSeo key={`missing-${slug}`} product={null} slug={slug} />}
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-primary mb-4">{t('product_detail.not_found')}</h1>
+          <h1 className="text-2xl font-bold text-primary mb-4">{loading ? 'Cargando producto…' : t('product_detail.not_found')}</h1>
           <Link to="/tienda" className="text-primary hover:underline">
             {t('product_detail.back_to_shop')}
           </Link>
@@ -138,6 +139,9 @@ const ProductDetail = () => {
   }
 
   const volumePricingItem = {
+    sku: product.sku,
+    slug: product.slug,
+    inPromotion: product.inPromotion === true,
     price: product.price,
     volumeDiscountConfig: product.volumeDiscount,
     tieredDiscountConfig: product.tieredDiscount,
@@ -153,6 +157,7 @@ const ProductDetail = () => {
   const discountLabel = applicableTier?.label || '';
   const isReservation = isReservationSale(product);
   const isAvailable = product.available !== false && !product.soldOut;
+  const independentPack = getIndependentPackIdentity(product);
   const storefrontNotice = typeof product.storefrontNotice === 'string' ? product.storefrontNotice.trim() : '';
   const storefrontNoticeLinkText = 'aquí';
   const storefrontNoticeLinkIndex = storefrontNotice.indexOf(storefrontNoticeLinkText);
@@ -355,14 +360,15 @@ const ProductDetail = () => {
               </div>
 
               {/* Badges */}
-              {(product.soldOut || (product.badges && product.badges.length > 0)) && (
+              {(product.inPromotion === true || product.soldOut || (product.badges && product.badges.length > 0)) && (
                 <div className="flex flex-wrap gap-2 mb-6">
+                  {product.inPromotion === true && <span className="rounded-full bg-[#f5efe4] px-4 py-2 text-sm font-semibold tracking-wide text-[#1a1a1a]">En promoción</span>}
                   {product.soldOut && (
                     <span className="rounded-full bg-[#1a1a1a] px-4 py-2 text-sm font-semibold uppercase tracking-wide text-white">
                       {product.soldOutMessage || 'Agotado'}
                     </span>
                   )}
-                  {product.badges?.slice(0, 1).map((badge, index) => (
+                  {product.badges?.filter((badge) => badge.text !== 'En promoción').slice(0, 1).map((badge, index) => (
                     <span
                       key={index}
                       className="rounded-full bg-[#f5efe4] px-4 py-2 text-sm font-semibold tracking-wide text-[#1a1a1a]"
@@ -393,6 +399,7 @@ const ProductDetail = () => {
                 <Package className="w-4 h-4" />
                 <span>{t('product_detail.content')}: {product.weight}</span>
               </div>
+              {independentPack && <p className="mb-6 text-sm font-semibold text-primary">1 unidad = 1 pack completo de {independentPack.units} unidades. No se vende suelto desde esta ficha.</p>}
 
               {/* Price */}
               <div className="mb-6 rounded-lg bg-[#f5efe4] p-6">
@@ -621,7 +628,7 @@ const ProductDetail = () => {
               {!hasFixedPackPricing && product.slug !== 'estuche-regalo' && isAvailable && (
               <div className="mb-6">
                 <label className="block text-sm font-semibold text-primary mb-3">
-                  {t('product_detail.quantity')}
+                  {independentPack ? 'Cantidad de packs completos' : t('product_detail.quantity')}
                 </label>
                 <div className="flex items-center gap-3">
                   <button
@@ -918,7 +925,7 @@ const ProductDetail = () => {
                     </div>
                   </div>
                   <div className="p-4">
-                    <h3 className={`font-medium text-primary mb-2 ${getTempranoHarvestIdentity(relatedProduct) ? 'whitespace-normal break-words' : 'line-clamp-2'}`}>{relatedProduct.name}</h3>
+                    <h3 className={`font-medium text-primary mb-2 ${getTempranoHarvestIdentity(relatedProduct) || getIndependentPackIdentity(relatedProduct)?.harvest ? 'whitespace-normal break-words' : 'line-clamp-2'}`}>{relatedProduct.name}</h3>
                     <p className="text-lg font-bold text-price">{formatEuro(relatedProduct.price)}</p>
                   </div>
                 </Link>

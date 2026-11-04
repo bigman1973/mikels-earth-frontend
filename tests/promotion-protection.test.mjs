@@ -19,6 +19,7 @@ import {
   getVolumeDiscountedUnitPrice,
 } from '../src/utils/volumePricing.js';
 import { getCartEventPricing } from '../src/utils/cartTracking.js';
+import { INDEPENDENT_PACKS } from '../src/utils/independentPacks.js';
 
 const read = (relativePath) => readFile(new URL(`../${relativePath}`, import.meta.url), 'utf8');
 const unitPrice = (item) => item.price;
@@ -79,7 +80,7 @@ test('each current single SKU is protected by SKU or by a legacy slug, at every 
 test('SKU matching is exact, normalized, and authoritative over a reused legacy slug', () => {
   assert.equal(isPromotionProtectedItem({ sku: ' mikve5lp ' }), true);
   assert.equal(isPromotionProtectedItem({ sku: 'MIKVET500R' }), false);
-  assert.equal(isPromotionProtectedItem({ sku: 'MIKPARA450BF3', slug: 'paraguayo-almibar' }), false);
+  assert.equal(isPromotionProtectedItem({ sku: 'OTHER-PARA-PACK', slug: 'paraguayo-almibar' }), false);
   assert.equal(isPromotionProtectedItem({ sku: 'OTHER', slug: 'aceite-5l-caja-3' }), false);
 });
 
@@ -164,29 +165,31 @@ test('Pack Completo and explicit protected mixed-pack compositions retain their 
   assert.equal(getCouponDiscountAmount([ordinaryPack], coupon, unitPrice), 5);
 });
 
-test('authorized independent BF pack identities remain unprotected even with protected base components', () => {
-  for (const sku of ['MIKVE5LPBF3', 'MIKBIO19BF6', 'MIKPARA450BF3', 'MIKPARA450BF6']) {
+test('all six independent BF packs retain their own complete price and strip discount metadata', () => {
+  for (const { sku, slug, price } of INDEPENDENT_PACKS) {
     const item = {
-      sku, name: 'Independent draft fixture', price: 96.75, quantity: 1, purchaseType: 'one-time',
+      sku, slug, name: 'Independent draft fixture', price, quantity: 1, purchaseType: 'one-time', inPromotion: true,
       couponProtectedCompositionSkus: ['MIKVE5LP', 'MIKPARA450'], ...legacyPromotions,
     };
-    assert.equal(isPromotionProtectedItem(item), false);
-    assert.equal(normalizePromotionProtectedCartItem(item), item);
-    assert.equal(normalizePromotionProtectedProduct(item), item);
-    assert.equal(getCouponDiscountAmount([item], coupon, unitPrice), 9.675);
-    assert.equal(getFixedPackOptions(item).length, 0, 'percentage fixtures are not fixed packs');
-    assert.equal(applyEditorialOverrides(item).subscriptionDiscount, 10);
+    assert.equal(isPromotionProtectedItem(item), true);
+    assertNoPromotions(normalizePromotionProtectedCartItem(item));
+    assertNoPromotions(normalizePromotionProtectedProduct(item));
+    assert.equal(getCouponDiscountAmount([item], coupon, unitPrice), 0);
+    assert.equal(getFixedPackOptions(item).length, 0);
+    assert.equal(applyEditorialOverrides(item).subscriptionDiscount, undefined);
+    assert.equal(getVolumeDiscountedLineTotal(item, 1), price);
+    assert.equal(normalizePromotionProtectedCartItem(item).quantity, 1);
     assert.equal(products.some((product) => product.sku === sku), false, 'tests must not publish draft products in the fallback');
   }
 });
 
 test('authorized BF packs keep their own independent closed price, not a tier on the base SKU', () => {
   const draftFixture = {
-    sku: 'MIKVE5LPBF3', price: 96.75, quantity: 1,
+    sku: 'BF26-5L3', price: 96.75, quantity: 1, inPromotion: true,
     couponProtectedCompositionSkus: ['MIKVE5LP'],
     tieredDiscountConfig: [{ actualQuantity: 1, price: 96.75, fixedPack: true }],
   };
-  assert.equal(getFixedPackOptions(draftFixture).length, 1);
+  assert.equal(getFixedPackOptions(draftFixture).length, 0);
   assert.equal(getVolumeDiscountedLineTotal(draftFixture, 1), 96.75);
   assert.equal(getVolumeDiscountedLineTotal({ sku: 'MIKVE5LP', price: 43 }, 3), 129);
 });
@@ -242,8 +245,8 @@ test('cart UI keeps coupons available in mixed carts and the shared context prot
   assert.match(drawer, /hasPromotionProtectedItem\(cart\)/);
   assert.match(drawer, /hasCouponEligibleItem\(cart\)/);
   assert.match(drawer, /getDiscountAmount,/);
-  assert.match(drawer, /hasProtectedPromotionLine && !hasEligiblePromotionLine &&/);
-  assert.match(drawer, /hasEligiblePromotionLine && !appliedDiscount &&/);
+  assert.match(drawer, /!hasPromotionLine && hasProtectedPromotionLine && !hasEligiblePromotionLine &&/);
+  assert.match(drawer, /!hasPromotionLine && promotionReviewReady && hasEligiblePromotionLine && !appliedDiscount &&/);
   assert.match(drawer, /El cupón solo se aplica a los demás productos\./);
   assert.match(drawer, /¿Tienes un código\?/);
   assert.match(cartContext, /isPromotionProtectedItem\(cartProduct\) \? 'one-time' : purchaseType/);

@@ -31,6 +31,7 @@ export default function ProductEditor({ product, onClose, onSaved }) {
     award: '',
     active: true,
     visibleInStore: true,
+    inPromotion: false,
     displayOrder: 0,
     shippingCost: 0,
     preparationCost: 0
@@ -75,6 +76,7 @@ export default function ProductEditor({ product, onClose, onSaved }) {
             award: data.award || '',
             active: data.active !== undefined ? data.active : true,
             visibleInStore: data.visibleInStore !== undefined ? data.visibleInStore : true,
+            inPromotion: data.inPromotion === true,
             displayOrder: data.displayOrder || 0,
             shippingCost: data.shippingCost || 0,
             preparationCost: data.preparationCost || 0
@@ -106,6 +108,7 @@ export default function ProductEditor({ product, onClose, onSaved }) {
             award: product.award || '',
             active: product.active !== undefined ? product.active : true,
             visibleInStore: product.visibleInStore !== undefined ? product.visibleInStore : true,
+            inPromotion: product.inPromotion === true,
             displayOrder: product.displayOrder || 0,
             shippingCost: product.shippingCost || product.shipping_cost || 0,
             preparationCost: product.preparationCost || product.preparation_cost || 0
@@ -750,6 +753,7 @@ export default function ProductEditor({ product, onClose, onSaved }) {
                 {[
                   { field: 'active', label: 'Producto activo (se puede vender)', color: 'emerald', desc: 'Controla si el producto puede resolverse y venderse. Un complemento oculto debe permanecer activo para poder añadirse desde otra ficha.' },
                   { field: 'visibleInStore', label: 'Visible en tienda (aparece en el catálogo)', color: 'blue', desc: 'Controla únicamente si aparece en /tienda y tiene ficha pública. Desmárcalo para complementos como el estuche: seguirá vendible desde los aceites, pero no se listará por separado.' },
+                  { field: 'inPromotion', label: 'En promoción', color: 'amber', desc: 'Muestra «En promoción», sin porcentajes. Impide aplicar cualquier cupón al pedido completo que incluya este producto. No activa el producto ni cambia su visibilidad.' },
                   { field: 'soldOut', label: 'Agotado (muestra mensaje de agotado)', color: 'red', desc: 'El producto sigue visible en la web pero no se puede comprar. Se muestra un mensaje personalizable (ej: "En cosecha - Disponible pronto") en lugar del botón de compra.' },
                   { field: 'featured', label: 'Destacado', color: 'amber', desc: 'El producto aparece en la sección de destacados de la página principal. Ideal para promocionar productos nuevos o de temporada.' },
                   { field: 'freeShipping', label: 'Envío gratuito', color: 'blue', desc: 'Se muestra un badge de "Envío gratis" en la ficha del producto. El cliente no paga gastos de envío al comprar este producto.' },

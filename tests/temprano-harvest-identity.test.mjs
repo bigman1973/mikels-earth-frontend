@@ -117,7 +117,7 @@ test('real UI preserves full harvest titles and the cart normalizes both entry p
     read('src/pages/RecoverCart.jsx'), read('src/pages/ProductDetail.jsx'), read('src/services/stripeService.js'),
   ]);
   for (const source of [card, drawer, detail]) {
-    assert.match(source, /getTempranoHarvestIdentity\([\w]+\) \? 'whitespace-normal break-words' : 'line-clamp-2'/);
+    assert.match(source, /getTempranoHarvestIdentity\([\w]+\)(?: \|\| getIndependentPackIdentity\([\w]+\)\?\.harvest)? \? 'whitespace-normal break-words' : 'line-clamp-2'/);
   }
   assert.match(card, /normalizeTempranoHarvestName\(product\)/);
   assert.match(card, /isPreviousHarvest \? getFixedPackOptions\(product\)\[0\] : null/);

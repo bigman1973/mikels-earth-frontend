@@ -8,6 +8,8 @@ import { formatEuro } from '../../utils/formatMoney';
 import { isReservationSale } from '../../utils/reservationSale';
 import { getTempranoHarvestIdentity, normalizeTempranoHarvestName } from '../../utils/tempranoHarvestIdentity';
 import { getFixedPackOptions, getFixedPackPrice } from '../../utils/fixedPackPricing';
+import { getIndependentPackIdentity } from '../../utils/independentPacks';
+import { normalizePromotionProtectedProduct } from '../../utils/promotionProtection';
 
 const getOptimizedProductImage = (url) => {
   if (!url || !url.includes('res.cloudinary.com') || !url.includes('/image/upload/')) {
@@ -21,18 +23,18 @@ const getOptimizedProductImage = (url) => {
 };
 
 const ProductCard = ({ product }) => {
-  product = normalizeTempranoHarvestName(product);
+  product = normalizePromotionProtectedProduct(normalizeTempranoHarvestName(product));
   const { addToCart, setIsCartOpen } = useCart();
   const { t } = useTranslation();
   const productImage = getOptimizedProductImage(product.image || product.images?.[0]);
-  const displayBadge = product.badges?.find((badge) => !badge.detailOnly);
+  const displayBadge = product.badges?.find((badge) => !badge.detailOnly && (!(product.inPromotion === true || getIndependentPackIdentity(product)) || !/%|descuento|rebaja|ahorr|discount|sale/i.test(`${badge.text} ${badge.textKey || ''}`)));
   const badgeText = displayBadge
     ? (displayBadge.textKey ? t(`badges.${displayBadge.textKey}`, displayBadge.text) : displayBadge.text)
     : null;
   const isReservation = isReservationSale(product);
   const cardBadgeText = isReservation
     ? 'RESERVA · COSECHA 2026/27'
-    : badgeText;
+    : product.inPromotion === true ? 'En promoción' : badgeText;
   const isSoldOut = product.soldOut || product.available === false;
   const isPreviousHarvest = getTempranoHarvestIdentity(product)?.sku === 'MIKVET5002526';
   const defaultPack = isPreviousHarvest ? getFixedPackOptions(product)[0] : null;
@@ -90,7 +92,7 @@ const ProductCard = ({ product }) => {
           </div>
         </div>
         <div className="p-5 pb-3">
-          <h3 className={`min-h-[3.5rem] text-lg font-medium text-[#1a1a1a] ${getTempranoHarvestIdentity(product) ? 'whitespace-normal break-words' : 'line-clamp-2'}`}>
+          <h3 className={`min-h-[3.5rem] text-lg font-medium text-[#1a1a1a] ${getTempranoHarvestIdentity(product) || getIndependentPackIdentity(product)?.harvest ? 'whitespace-normal break-words' : 'line-clamp-2'}`}>
             {product.name}
           </h3>
           <p className="mt-2 text-xl font-bold text-price">

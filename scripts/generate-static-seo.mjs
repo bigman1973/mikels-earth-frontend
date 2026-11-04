@@ -15,7 +15,7 @@ import {
 } from '../src/seo/metadata.js';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const DIST = join(ROOT, 'dist');
+const DIST = process.env.FRONTEND_BUILD_OUTDIR ? resolve(ROOT, process.env.FRONTEND_BUILD_OUTDIR) : join(ROOT, 'dist');
 const SITEMAP = join(ROOT, 'public', 'sitemap.xml');
 const API_URL = process.env.SEO_API_URL || 'https://mikels-earth-backend-production.up.railway.app';
 const REQUEST_TIMEOUT_MS = 12_000;

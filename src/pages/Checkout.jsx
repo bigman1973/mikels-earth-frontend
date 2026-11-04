@@ -11,11 +11,13 @@ import { deliveryEligibility } from '../utils/deliveryPolicy';
 import { hasMarketingConsent, trackMetaInitiateCheckout } from '../utils/metaPixel';
 import { trackGA4BeginCheckout } from '../utils/googleAnalytics';
 import { isReservationSale } from '../utils/reservationSale';
+import { getIndependentPackIdentity } from '../utils/independentPacks';
+import { CART_PROMOTION_REVIEW_MESSAGE } from '../utils/cartPromotionValidation';
 
 const Checkout = () => {
   const {
     cart, getCartTotal, getItemPrice, appliedDiscount, getDiscountAmount,
-    updateItemPrices,
+    updateItemPrices, couponMessage, promotionReviewReady, promotionReviewError, retryPromotionReview,
   } = useCart();
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
@@ -101,6 +103,10 @@ const Checkout = () => {
   };
 
   const handleCheckout = async () => {
+    if (!promotionReviewReady) {
+      setError(promotionReviewError || CART_PROMOTION_REVIEW_MESSAGE);
+      return;
+    }
     if (!validateForm()) return;
     
     setLoading(true);
@@ -517,6 +523,8 @@ const Checkout = () => {
                       <p className="text-xs text-gray-500">
                         {t('cart.quantity')}: {item.quantity}
                       </p>
+                      {item.inPromotion === true && <p className="text-xs text-gray-600">En promoción</p>}
+                      {getIndependentPackIdentity(item) && <p className="text-xs text-gray-600">{item.quantity} pack(s) completo(s) · {getIndependentPackIdentity(item).units} unidades por pack</p>}
                     </div>
                     <div className="shrink-0 text-right">
                       <p className="font-bold text-price">
@@ -527,6 +535,8 @@ const Checkout = () => {
                 ))}
               </div>
 
+              {couponMessage && <p role="alert" className="mb-4 text-sm text-primary">{couponMessage}</p>}
+              {!promotionReviewReady && <div role="status" className="mb-4 text-sm text-primary"><p>{promotionReviewError || 'Comprobando el estado de los productos antes del pago…'}</p>{promotionReviewError && <button type="button" onClick={retryPromotionReview} className="mt-2 underline underline-offset-4">Volver a comprobar</button>}</div>}
               <div className="space-y-2 mb-6 pt-4 border-t-2 border-gray-200">
                 <div className="flex justify-between text-gray-700">
                   <span>{t('cart.subtotal')}</span>
@@ -550,7 +560,7 @@ const Checkout = () => {
 
               <button
                 onClick={handleCheckout}
-                disabled={loading}
+                disabled={loading || !promotionReviewReady}
                 className="w-full bg-primary text-white py-4 rounded-lg font-semibold hover:bg-primary/90 transition-all shadow-lg hover:shadow-xl transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {loading ? (

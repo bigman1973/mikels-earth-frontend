@@ -1,3 +1,5 @@
+import { getIndependentPackIdentity, normalizeIndependentPackName } from './independentPacks.js';
+
 export const TEMPRANO_SLUG = 'aceite-temprano-sin-filtrar';
 export const TEMPRANO_SKU = 'MIKVET500';
 export const TEMPRANO_FINAL_PRICE = 19.90;
@@ -12,14 +14,10 @@ const PROTECTED_SINGLE_SKUS_BY_SLUG = Object.freeze({
 });
 const PROTECTED_SINGLE_SKUS = new Set(Object.values(PROTECTED_SINGLE_SKUS_BY_SLUG));
 
-// Identidades autorizadas de packs independientes, NO altas de catálogo ni rutas.
-// Nunca se convierte una cantidad del SKU base en uno de estos packs BF.
-const AUTHORIZED_BF_PACK_SKUS = new Set([
-  'MIKVE5LPBF3',
-  'MIKBIO19BF6',
-  'MIKPARA450BF3',
-  'MIKPARA450BF6',
-]);
+export const PROMOTION_COUPON_MESSAGE = 'Este código no se puede aplicar porque el pedido incluye productos en promoción.';
+export const isInPromotion = (item = {}) => item?.inPromotion === true;
+export const hasInPromotionItem = (cart = []) => Array.isArray(cart) && cart.some(isInPromotion);
+
 const normalizedSku = (sku) => typeof sku === 'string' ? sku.trim().toUpperCase() : '';
 const matchesIdentity = (item = {}, slug, sku) => {
   const suppliedSku = normalizedSku(item?.sku);
@@ -49,10 +47,11 @@ export const isPackCompletoPromotionProtectedItem = (item = {}) => (
 
 export const isPromotionProtectedItem = (item = {}) => {
   const sku = normalizedSku(item?.sku);
-  if (AUTHORIZED_BF_PACK_SKUS.has(sku)) return false;
+  if (isInPromotion(item) || getIndependentPackIdentity(item)) return true;
   const singleSku = sku || PROTECTED_SINGLE_SKUS_BY_SLUG[item?.slug];
   return PROTECTED_SINGLE_SKUS.has(singleSku)
     || isPackCompletoPromotionProtectedItem(item)
+    || matchesIdentity(item, 'pack-temprano-premium', 'MIKPACKTP')
     || getProtectedCompositionSkus(item).some((componentSku) => PROTECTED_SINGLE_SKUS.has(componentSku));
 };
 
@@ -86,6 +85,8 @@ const withoutPromotionMetadata = (item) => Object.fromEntries(
 // conservan el precio normal suministrado por catálogo/API, sin hardcodearlo.
 export const getPromotionProtectedUnitPrice = (item = {}) => {
   if (isTempranoPromotionProtectedItem(item)) return TEMPRANO_FINAL_PRICE;
+  // Promoción y pack independiente ya tienen un precio final del servidor.
+  if (isInPromotion(item) || getIndependentPackIdentity(item)) return Number(item.price) || 0;
   const fullPrice = item.purchaseType === 'subscription' && item.originalPrice != null
     ? item.originalPrice
     : item.price;
@@ -96,6 +97,7 @@ export const getPromotionProtectedUnitPrice = (item = {}) => {
 // Sanea catálogo/API/fallback y productos embebidos de add-ons, sin heredar la
 // protección del producto padre a un complemento ordinario (p. ej. estuche).
 export const normalizePromotionProtectedProduct = (product = {}) => {
+  product = normalizeIndependentPackName(product);
   const normalized = isPromotionProtectedItem(product)
     ? { ...withoutPromotionMetadata(product), price: getPromotionProtectedUnitPrice(product) }
     : product;
@@ -113,12 +115,13 @@ export const normalizePromotionProtectedProduct = (product = {}) => {
 // Cualquier cantidad del SKU base sigue siendo venta normal de unidades
 // sueltas; no es una autorización para recuperar tiers antiguos ni packs BF.
 export const normalizePromotionProtectedCartItem = (item = {}) => {
+  item = normalizeIndependentPackName(item);
   if (!isPromotionProtectedItem(item)) return item;
   const price = getPromotionProtectedUnitPrice(item);
   return {
     ...withoutPromotionMetadata(item),
     price,
-    originalPrice: price,
+    ...(!isInPromotion(item) && !getIndependentPackIdentity(item) ? { originalPrice: price } : {}),
     purchaseType: 'one-time',
     subscriptionFrequency: null,
     selectedPackQuantity: null,
@@ -133,6 +136,7 @@ const couponPercentForItem = (item, appliedDiscount) => (
 
 export const getCouponDiscountAmount = (cart = [], appliedDiscount, getItemPrice) => {
   if (!appliedDiscount || !Array.isArray(cart)) return 0;
+  if (hasInPromotionItem(cart)) return 0;
 
   return cart.reduce((discountAmount, item) => {
     if (isPromotionProtectedItem(item)) return discountAmount;

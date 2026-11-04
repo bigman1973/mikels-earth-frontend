@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { products as localProducts, categories as localCategories } from '../data/products';
 import { applyEditorialOverrides } from '../utils/productEditorialOverrides';
+import { isListedProduct, isPublicFallbackProduct, loadProductDetail } from '../utils/productAccess';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://mikels-earth-backend-production.up.railway.app';
 
@@ -18,7 +19,7 @@ export function useProducts() {
   const currentLang = i18n.language?.substring(0, 2) || 'es';
   
   const [products, setProducts] = useState(() => (
-    localProducts.map((product) => applyEditorialOverrides(product, currentLang))
+    localProducts.filter(isPublicFallbackProduct).map((product) => applyEditorialOverrides(product, currentLang))
   ));
   const [categories, setCategories] = useState(localCategories);
   const [loading, setLoading] = useState(true);
@@ -27,7 +28,7 @@ export function useProducts() {
   useEffect(() => {
     let cancelled = false;
 
-    setProducts(localProducts.map((product) => applyEditorialOverrides(product, currentLang)));
+    setProducts(localProducts.filter(isPublicFallbackProduct).map((product) => applyEditorialOverrides(product, currentLang)));
     setCategories(localCategories);
     setSource('local');
     setLoading(true);
@@ -42,8 +43,8 @@ export function useProducts() {
         
         const data = await response.json();
         
-        if (!cancelled && data.products && data.products.length > 0) {
-          setProducts(data.products.map((product) => applyEditorialOverrides(product, currentLang)));
+        if (!cancelled && Array.isArray(data.products)) {
+          setProducts(data.products.filter(isListedProduct).map((product) => applyEditorialOverrides(product, currentLang)));
           setCategories(data.categories || localCategories);
           setSource('api');
         }
@@ -73,6 +74,24 @@ export function useProducts() {
  * Usa los datos locales como base inmediata (para SSR/primera renderización).
  */
 export function getProductBySlug(slug) {
-  const product = localProducts.find(p => p.slug === slug);
+  const product = localProducts.find(p => p.slug === slug && isPublicFallbackProduct(p));
   return product ? applyEditorialOverrides(product) : null;
+}
+
+// El listado no contiene productos ocultos. El endpoint directo sí puede
+// resolverlos, pero únicamente cuando el servidor confirma que están activos.
+export function useProduct(slug) {
+  const { i18n } = useTranslation();
+  const language = i18n.language?.substring(0, 2) || 'es';
+  const [state, setState] = useState({ slug: null, language: null, product: null, loading: true });
+  useEffect(() => {
+    let cancelled = false;
+    setState({ slug, language, product: null, loading: true });
+    loadProductDetail({ slug, language, apiUrl: API_URL, fallbackProducts: localProducts })
+      .then((product) => {
+        if (!cancelled) setState({ slug, language, product: product ? applyEditorialOverrides(product, language) : null, loading: false });
+      });
+    return () => { cancelled = true; };
+  }, [slug, language]);
+  return state.slug === slug && state.language === language ? state : { product: null, loading: true };
 }

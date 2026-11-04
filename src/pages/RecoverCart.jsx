@@ -34,6 +34,7 @@ const RecoverCart = () => {
               image: item.image,
               price: item.price,
               slug: item.slug || '',
+              promotionValidationPending: true,
               // Mantener propiedades necesarias para el checkout
               subscriptionFrequencies: []
             }, item.quantity, 'one-time', null);

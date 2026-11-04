@@ -11,7 +11,7 @@ import {
 } from '../src/seo/metadata.js';
 
 const ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)));
-const DIST = join(ROOT, 'dist');
+const DIST = process.env.FRONTEND_BUILD_OUTDIR ? resolve(ROOT, process.env.FRONTEND_BUILD_OUTDIR) : join(ROOT, 'dist');
 const SITEMAP = join(ROOT, 'public', 'sitemap.xml');
 const VERCEL_CONFIG = join(ROOT, 'vercel.json');
 const MIDDLEWARE = join(ROOT, 'middleware.js');

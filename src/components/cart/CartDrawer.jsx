@@ -8,8 +8,9 @@ import { useTranslation } from 'react-i18next';
 import { formatEuro } from '../../utils/formatMoney';
 import { getFixedPackForQuantity } from '../../utils/fixedPackPricing';
 import { isReservationSale } from '../../utils/reservationSale';
-import { hasCouponEligibleItem, hasPromotionProtectedItem } from '../../utils/promotionProtection';
+import { hasCouponEligibleItem, hasPromotionProtectedItem, hasInPromotionItem } from '../../utils/promotionProtection';
 import { getTempranoHarvestIdentity } from '../../utils/tempranoHarvestIdentity';
+import { getIndependentPackIdentity } from '../../utils/independentPacks';
 
 const CartDrawer = () => {
   const {
@@ -25,6 +26,10 @@ const CartDrawer = () => {
     appliedDiscount,
     applyDiscountCode,
     removeDiscountCode,
+    couponMessage,
+    promotionReviewReady,
+    promotionReviewError,
+    retryPromotionReview,
   } = useCart();
   const { t } = useTranslation();
   const [codeInput, setCodeInput] = useState('');
@@ -32,6 +37,7 @@ const CartDrawer = () => {
   const [showDiscount, setShowDiscount] = useState(false);
   const hasProtectedPromotionLine = hasPromotionProtectedItem(cart);
   const hasEligiblePromotionLine = hasCouponEligibleItem(cart);
+  const hasPromotionLine = hasInPromotionItem(cart);
   const discountAmount = getDiscountAmount();
 
   const applyCode = async () => {
@@ -119,8 +125,10 @@ const CartDrawer = () => {
                             </div>
                           )}
                           <div className="min-w-0 flex-1 pr-6">
-                            <h3 className={`text-sm font-semibold text-[#1a1a1a] ${getTempranoHarvestIdentity(item) ? 'whitespace-normal break-words' : 'line-clamp-2'}`}>{item.name}</h3>
+                            <h3 className={`text-sm font-semibold text-[#1a1a1a] ${getTempranoHarvestIdentity(item) || getIndependentPackIdentity(item)?.harvest ? 'whitespace-normal break-words' : 'line-clamp-2'}`}>{item.name}</h3>
                             <p className="mt-1 text-sm font-semibold text-price">{formatEuro(unitPrice)}</p>
+                            {item.inPromotion === true && <p className="mt-1 text-xs text-stone-600">En promoción</p>}
+                            {getIndependentPackIdentity(item) && <p className="mt-1 text-xs text-stone-600">{item.quantity} pack(s) completo(s) · {getIndependentPackIdentity(item).units} unidades por pack</p>}
                             {isReservationSale(item) && <p className="mt-1 text-xs text-stone-600">Reserva · cosecha 2026/27</p>}
                             {fixedPack && <p className="mt-1 text-xs text-stone-600">{fixedPack.label} · precio cerrado</p>}
                           </div>
@@ -167,13 +175,20 @@ const CartDrawer = () => {
                   {t('delivery.notice')}
                 </p>
 
-                {hasProtectedPromotionLine && !hasEligiblePromotionLine && (
+                {couponMessage && <p role="alert" className="mt-3 text-sm text-[#1a1a1a]">{couponMessage}</p>}
+                {!promotionReviewReady && (
+                  <div role="status" className="mt-3 text-sm text-[#1a1a1a]">
+                    <p>{promotionReviewError || 'Comprobando el estado de los productos antes del pago…'}</p>
+                    {promotionReviewError && <button type="button" onClick={retryPromotionReview} className="mt-2 underline underline-offset-4">Volver a comprobar</button>}
+                  </div>
+                )}
+                {!hasPromotionLine && hasProtectedPromotionLine && !hasEligiblePromotionLine && (
                   <p className="mt-3 text-sm text-[#1a1a1a]">Este producto no participa en promociones ni cupones.</p>
                 )}
-                {hasProtectedPromotionLine && hasEligiblePromotionLine && (
+                {!hasPromotionLine && hasProtectedPromotionLine && hasEligiblePromotionLine && (
                   <p className="mt-3 text-sm text-[#1a1a1a]">Los productos excluidos mantienen su precio. El cupón solo se aplica a los demás productos.</p>
                 )}
-                {hasEligiblePromotionLine && !appliedDiscount && (
+                {!hasPromotionLine && promotionReviewReady && hasEligiblePromotionLine && !appliedDiscount && (
                   <div className="mt-3">
                     <button
                       type="button"

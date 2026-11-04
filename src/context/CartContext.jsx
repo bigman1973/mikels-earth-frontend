@@ -1,5 +1,5 @@
-import { createContext, useContext, useState, useEffect } from 'react';
-import { CART_STORAGE_KEY, clearStoredCart, loadStoredCart } from '../utils/cartStorage';
+import { createContext, useContext, useState, useEffect, useRef } from 'react';
+import { CART_STORAGE_KEY, clearStoredCart, loadStoredCart, withoutStoredPromotionFields } from '../utils/cartStorage';
 import { getVolumeDiscountedUnitPrice } from '../utils/volumePricing';
 import { getFixedPackForQuantity } from '../utils/fixedPackPricing';
 import { getCartEventPricing } from '../utils/cartTracking';
@@ -9,10 +9,15 @@ import { isReservationSale, normalizeReservationSaleProduct } from '../utils/res
 import { getTempranoHarvestIdentity, normalizeTempranoHarvestName } from '../utils/tempranoHarvestIdentity';
 import {
   getCouponDiscountAmount,
+  hasInPromotionItem,
+  PROMOTION_COUPON_MESSAGE,
   hasCouponEligibleItem,
   isPromotionProtectedItem,
   normalizePromotionProtectedCartItem,
 } from '../utils/promotionProtection';
+import { CART_PROMOTION_REVIEW_MESSAGE, getCartReferenceKey, getCouponItemReferences, reviewCartPromotions } from '../utils/cartPromotionValidation';
+
+const API_URL = import.meta.env.VITE_API_URL || 'https://mikels-earth-backend-production.up.railway.app';
 
 const CartContext = createContext();
 
@@ -32,15 +37,49 @@ export const CartProvider = ({ children }) => {
         .map(normalizeReservationSaleProduct)
         .map(normalizePromotionProtectedCartItem)
         .map(normalizeTempranoHarvestName)
+        .map((item) => ({ ...item, promotionValidationPending: true }))
   ));
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [discountCode, setDiscountCode] = useState('');
-  const [appliedDiscount, setAppliedDiscount] = useState(null);
+  const [savedDiscount, setAppliedDiscount] = useState(null);
+  const [promotionReviewError, setPromotionReviewError] = useState('');
+  const [reviewAttempt, setReviewAttempt] = useState(0);
+  const cartRef = useRef(cart);
+  cartRef.current = cart;
+  const referenceKey = getCartReferenceKey(cart);
+  const promotionReviewPending = cart.some((item) => item.promotionValidationPending);
+  const promotionReviewReady = !promotionReviewPending;
+  // La invalidación es también síncrona en el valor expuesto: ningún render
+  // puede enviar un cupón antiguo con una línea promocionada a checkout.
+  const appliedDiscount = hasInPromotionItem(cart) || !promotionReviewReady ? null : savedDiscount;
+  const couponMessage = hasInPromotionItem(cart) ? PROMOTION_COUPON_MESSAGE : '';
+
+  useEffect(() => {
+    if (!hasInPromotionItem(cart)) return;
+    setAppliedDiscount(null);
+    setDiscountCode('');
+  }, [cart]);
+
+  useEffect(() => {
+    if (!cartRef.current.some((item) => item.promotionValidationPending)) return undefined;
+    const controller = new AbortController();
+    const snapshot = cartRef.current;
+    setPromotionReviewError('');
+    reviewCartPromotions({ cart: snapshot, apiUrl: API_URL, signal: AbortSignal.any([controller.signal, AbortSignal.timeout(5000)]) })
+      .then((flags) => {
+        if (controller.signal.aborted || getCartReferenceKey(cartRef.current) !== referenceKey) return;
+        setCart((current) => current.map((item, index) => normalizePromotionProtectedCartItem({ ...item, ...flags[index], promotionValidationPending: false })));
+      })
+      .catch(() => { if (!controller.signal.aborted) setPromotionReviewError(CART_PROMOTION_REVIEW_MESSAGE); });
+    return () => controller.abort();
+  }, [referenceKey, reviewAttempt]);
+
+  const retryPromotionReview = () => setReviewAttempt((attempt) => attempt + 1);
 
   // El estado se inicializa desde almacenamiento antes del primer render, así
   // que esta escritura nunca reemplaza un carrito existente por [] al recargar.
   useEffect(() => {
-    window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+    window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart.map(withoutStoredPromotionFields)));
   }, [cart]);
 
   const addToCart = (product, quantity = 1, purchaseType = 'one-time', subscriptionFrequency = null) => {
@@ -89,7 +128,12 @@ export const CartProvider = ({ children }) => {
       if (existingItemIndex > -1) {
         // Si el producto ya existe con las mismas opciones, incrementar cantidad
         const newCart = [...prevCart];
-        newCart[existingItemIndex].quantity += requestedQuantity;
+        newCart[existingItemIndex] = normalizePromotionProtectedCartItem({
+          ...newCart[existingItemIndex],
+          inPromotion: cartProduct.inPromotion === true,
+          promotionValidationPending: cartProduct.promotionValidationPending === true,
+          quantity: newCart[existingItemIndex].quantity + requestedQuantity,
+        });
         return newCart;
       } else {
         if (!isAvailable) return prevCart;
@@ -112,6 +156,8 @@ export const CartProvider = ({ children }) => {
           name: cartProduct.name,
           slug: cartProduct.slug,
           image: cartProduct.image,
+          inPromotion: cartProduct.inPromotion === true,
+          promotionValidationPending: cartProduct.promotionValidationPending === true,
           sku: product.sku || '',
           price: price,
           originalPrice: cartProduct.price,
@@ -172,6 +218,12 @@ export const CartProvider = ({ children }) => {
   const applyDiscountCode = async (code) => {
     // Validar código de descuento contra el backend (todos los cupones centralizados)
     const normalizedCode = code.trim();
+    if (hasInPromotionItem(cart)) {
+      setAppliedDiscount(null);
+      setDiscountCode('');
+      return { success: false, message: PROMOTION_COUPON_MESSAGE };
+    }
+    if (!promotionReviewReady) return { success: false, message: promotionReviewError || CART_PROMOTION_REVIEW_MESSAGE };
     if (!normalizedCode) {
       return { success: false, message: 'Introduce un código de descuento' };
     }
@@ -181,16 +233,27 @@ export const CartProvider = ({ children }) => {
     
     try {
       // Validar TODOS los cupones contra el backend (manuales, newsletter, post-compra, etc.)
-      const apiUrl = import.meta.env.VITE_API_URL || 'https://mikels-earth-backend-production.up.railway.app';
-      const response = await fetch(`${apiUrl}/api/coupon/validate`, {
+      const snapshot = cartRef.current;
+      const flags = await reviewCartPromotions({ cart: snapshot, apiUrl: API_URL });
+      if (getCartReferenceKey(cartRef.current) !== getCartReferenceKey(snapshot)) return { success: false, message: 'El carrito ha cambiado. Vuelve a aplicar el código.' };
+      const reviewedCart = snapshot.map((item, index) => normalizePromotionProtectedCartItem({ ...item, ...flags[index] }));
+      setCart(reviewedCart);
+      if (hasInPromotionItem(reviewedCart)) {
+        setAppliedDiscount(null);
+        setDiscountCode('');
+        return { success: false, message: PROMOTION_COUPON_MESSAGE };
+      }
+      const response = await fetch(`${API_URL}/api/coupon/validate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ code: normalizedCode })
+        body: JSON.stringify({ code: normalizedCode, items: getCouponItemReferences(reviewedCart) })
       });
       
       const data = await response.json();
+      if (hasInPromotionItem(cartRef.current)) return { success: false, message: PROMOTION_COUPON_MESSAGE };
+      if (getCartReferenceKey(cartRef.current) !== getCartReferenceKey(snapshot)) return { success: false, message: 'El carrito ha cambiado. Vuelve a aplicar el código.' };
       
       if (data.valid) {
         setDiscountCode(data.coupon.code);
@@ -286,6 +349,10 @@ export const CartProvider = ({ children }) => {
     appliedDiscount,
     applyDiscountCode,
     removeDiscountCode,
+    couponMessage,
+    promotionReviewReady,
+    promotionReviewError,
+    retryPromotionReview,
     getDiscountAmount,
   };
 

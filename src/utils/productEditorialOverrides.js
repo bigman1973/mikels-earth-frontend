@@ -3,6 +3,7 @@ import {
   normalizePromotionProtectedProduct,
 } from './promotionProtection.js';
 import { normalizeTempranoHarvestName } from './tempranoHarvestIdentity.js';
+import { getIndependentPackIdentity } from './independentPacks.js';
 
 const replaceLegacyBrand = (value) => (
   typeof value === 'string'
@@ -28,6 +29,7 @@ const isIncompleteAwardBadge = (text) => (
 export const applyEditorialOverrides = (product, language = 'es') => {
   product = normalizePromotionProtectedProduct(product);
   product = normalizeTempranoHarvestName(product);
+  const noDiscountClaims = product.inPromotion === true || Boolean(getIndependentPackIdentity(product));
   const normalizedProduct = {
     ...product,
     name: stripDecorativeEmoji(replaceLegacyBrand(product.name)),
@@ -37,10 +39,13 @@ export const applyEditorialOverrides = (product, language = 'es') => {
     claims: (product.claims || []).map(stripDecorativeEmoji),
     badges: (product.badges || [])
       .map((badge) => ({ ...badge, text: stripDecorativeEmoji(badge?.text) }))
+      .filter((badge) => !noDiscountClaims || !/%|descuento|rebaja|ahorr|\boferta\b/i.test(`${badge.text} ${badge.textKey || ''}`))
+      .filter((badge) => !/^en promoción$/i.test(badge.text || ''))
       // The award remains approved in principle, but its competition and year
       // must accompany it before it can be published.
       .filter((badge) => !isIncompleteAwardBadge(badge.text)),
   };
+  if (product.inPromotion === true) normalizedProduct.badges.unshift({ text: 'En promoción' });
 
   if (product.slug === 'paraguayo-almibar') {
     const isEnglish = language === 'en';

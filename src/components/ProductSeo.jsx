@@ -1,5 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import { buildProductMetadata } from '../seo/metadata';
+import { isHiddenProduct } from '../utils/productAccess';
 
 const ProductSeo = ({ product, slug }) => {
   if (!product) {
@@ -22,6 +23,7 @@ const ProductSeo = ({ product, slug }) => {
     <Helmet>
       <title>{seo.title}</title>
       <meta name="description" content={seo.description} />
+      <meta name="robots" content={isHiddenProduct(product) ? 'noindex, nofollow' : 'index, follow'} />
       <link rel="canonical" href={canonical} />
       <meta property="og:title" content={seo.title} />
       <meta property="og:description" content={seo.description} />

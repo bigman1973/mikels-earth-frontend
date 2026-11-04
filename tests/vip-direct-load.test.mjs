@@ -7,7 +7,7 @@ import { NONINDEX_STATIC_ROUTE_SEO } from '../src/seo/metadata.js';
 import { SPA_SHELL_ROUTES } from '../src/utils/spaRoutes.js';
 
 const ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)));
-const DIST = join(ROOT, 'dist');
+const DIST = process.env.FRONTEND_BUILD_OUTDIR ? resolve(ROOT, process.env.FRONTEND_BUILD_OUTDIR) : join(ROOT, 'dist');
 const SITEMAP = join(ROOT, 'public', 'sitemap.xml');
 const MIDDLEWARE = join(ROOT, 'middleware.js');
 const SEO_MANAGER = join(ROOT, 'src', 'components', 'SeoManager.jsx');
