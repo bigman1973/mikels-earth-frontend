@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAdminAuth } from '../../context/AdminAuthContext';
 import { API_URL } from '../../config/api';
+import { positionEditorValue, positionOnlyPayload, MAX_CATALOGUE_POSITION } from '../../utils/cataloguePosition';
 
 export default function ProductEditor({ product, onClose, onSaved }) {
   const { authFetch } = useAdminAuth();
@@ -32,7 +33,7 @@ export default function ProductEditor({ product, onClose, onSaved }) {
     active: true,
     visibleInStore: true,
     inPromotion: false,
-    displayOrder: 0,
+    displayOrder: '',
     shippingCost: 0,
     preparationCost: 0
   });
@@ -45,14 +46,17 @@ export default function ProductEditor({ product, onClose, onSaved }) {
   const [newTag, setNewTag] = useState('');
   const [loading, setLoading] = useState(false);
   const [dragOver, setDragOver] = useState(false);
+  const [positionKnown, setPositionKnown] = useState(isNew);
+  const [positionDirty, setPositionDirty] = useState(false);
 
   // Cargar datos completos del producto desde la DB
   useEffect(() => {
     if (product && product.id) {
       setLoading(true);
       authFetch(`${API_URL}/api/admin/web-products/${product.id}`)
-        .then(res => res.json())
+        .then(res => { if (!res?.ok) throw new Error('Producto no disponible'); return res.json(); })
         .then(data => {
+          setPositionKnown(Object.hasOwn(data, 'displayOrder'));
           setForm({
             name: data.name || '',
             slug: data.slug || '',
@@ -77,7 +81,7 @@ export default function ProductEditor({ product, onClose, onSaved }) {
             active: data.active !== undefined ? data.active : true,
             visibleInStore: data.visibleInStore !== undefined ? data.visibleInStore : true,
             inPromotion: data.inPromotion === true,
-            displayOrder: data.displayOrder || 0,
+            displayOrder: positionEditorValue(data),
             shippingCost: data.shippingCost || 0,
             preparationCost: data.preparationCost || 0
           });
@@ -85,6 +89,7 @@ export default function ProductEditor({ product, onClose, onSaved }) {
         })
         .catch(() => {
           // Fallback: usar datos del listado
+          setPositionKnown(Object.hasOwn(product, 'displayOrder'));
           setForm({
             name: product.name || product.web_name || '',
             slug: product.slug || '',
@@ -109,7 +114,7 @@ export default function ProductEditor({ product, onClose, onSaved }) {
             active: product.active !== undefined ? product.active : true,
             visibleInStore: product.visibleInStore !== undefined ? product.visibleInStore : true,
             inPromotion: product.inPromotion === true,
-            displayOrder: product.displayOrder || 0,
+            displayOrder: positionEditorValue(product),
             shippingCost: product.shippingCost || product.shipping_cost || 0,
             preparationCost: product.preparationCost || product.preparation_cost || 0
           });
@@ -120,6 +125,7 @@ export default function ProductEditor({ product, onClose, onSaved }) {
 
   const handleChange = (field, value) => {
     setForm(prev => ({ ...prev, [field]: value }));
+    if (field === 'displayOrder') setPositionDirty(true);
     if (field === 'name' && isNew) {
       const slug = value.toLowerCase()
         .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
@@ -234,21 +240,46 @@ export default function ProductEditor({ product, onClose, onSaved }) {
     return `https://www.mikels.es${path}`;
   };
 
+  // Partial contract: cannot change price, stock, flags or visibility.
+  const handleSavePosition = async () => {
+    if (isNew || !product?.id || !positionKnown || !positionDirty) return;
+    setError(null);
+    let payload;
+    try { payload = positionOnlyPayload(form.displayOrder); }
+    catch (error) { setError(error.message); return; }
+    setSaving(true);
+    try {
+      const res = await authFetch(`${API_URL}/api/admin/web-products/${product.id}`, {
+        method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+      });
+      if (!res?.ok) { const data = await res.json(); throw new Error(data.error || 'Error al guardar posición'); }
+      setPositionDirty(false);
+      setSuccess('Posición guardada. No se han cambiado otros campos.');
+      onSaved();
+    } catch (error) { setError(error.message || 'Error de conexión'); }
+    finally { setSaving(false); }
+  };
+
   const handleSave = async () => {
     setError(null);
     if (!form.name.trim()) { setError('El nombre es obligatorio'); return; }
     if (!form.slug.trim()) { setError('El slug es obligatorio'); return; }
     if (!form.category) { setError('La categoría es obligatoria'); return; }
     if (!form.price || parseFloat(form.price) <= 0) { setError('El precio debe ser mayor que 0'); return; }
+    let positionPayload = {};
+    try { if (positionKnown && (isNew || positionDirty)) positionPayload = positionOnlyPayload(form.displayOrder); }
+    catch (error) { setError(error.message); return; }
     
     setSaving(true);
     try {
+      const otherFields = { ...form };
+      delete otherFields.displayOrder;
       const payload = {
-        ...form,
+        ...otherFields,
+        ...positionPayload,
         price: parseFloat(form.price),
         originalPrice: form.originalPrice ? parseFloat(form.originalPrice) : null,
         stock: parseInt(form.stock) || 0,
-        displayOrder: parseInt(form.displayOrder) || 0,
         shippingCost: parseFloat(form.shippingCost) || 0,
         preparationCost: parseFloat(form.preparationCost) || 0
       };
@@ -678,15 +709,22 @@ export default function ProductEditor({ product, onClose, onSaved }) {
                 />
               </div>
               <div>
-                <label className="text-xs text-gray-400 uppercase tracking-wider font-medium">Orden de visualización</label>
+                <label htmlFor="catalogue-position" className="text-xs text-gray-400 uppercase tracking-wider font-medium">Posición en tienda</label>
                 <input
+                  id="catalogue-position"
                   type="number"
+                  min="1"
+                  max={MAX_CATALOGUE_POSITION}
+                  step="1"
+                  disabled={!positionKnown}
                   value={form.displayOrder}
                   onChange={(e) => handleChange('displayOrder', e.target.value)}
                   className="w-full mt-1 px-3 py-2.5 bg-white/5 border border-white/10 rounded-lg text-sm text-white font-mono focus:outline-none focus:border-emerald-500/50"
-                  placeholder="0 = primero"
+                  placeholder="Sin posición"
                 />
-                <p className="text-[10px] text-gray-600 mt-1">Los productos se ordenan de menor a mayor. 0 aparece primero.</p>
+                <p className="text-[10px] text-gray-400 mt-1">Entero positivo; vacío elimina la posición. Sin posición va detrás. Empates: id estable.</p>
+                {!positionKnown && <p className="text-xs text-amber-400 mt-1">El servidor no ha confirmado este campo; no se enviará ni se sobrescribirá.</p>}
+                {!isNew && <button type="button" onClick={handleSavePosition} disabled={saving || !positionKnown || !positionDirty} className="mt-2 px-3 py-2 bg-blue-500/10 text-blue-400 rounded-lg border border-blue-500/20 disabled:opacity-50 text-xs">Guardar solo posición</button>}
               </div>
             </div>
           )}
@@ -753,7 +791,7 @@ export default function ProductEditor({ product, onClose, onSaved }) {
                 {[
                   { field: 'active', label: 'Producto activo (se puede vender)', color: 'emerald', desc: 'Controla si el producto puede resolverse y venderse. Un complemento oculto debe permanecer activo para poder añadirse desde otra ficha.' },
                   { field: 'visibleInStore', label: 'Visible en tienda (aparece en el catálogo)', color: 'blue', desc: 'Controla únicamente si aparece en /tienda y tiene ficha pública. Desmárcalo para complementos como el estuche: seguirá vendible desde los aceites, pero no se listará por separado.' },
-                  { field: 'inPromotion', label: 'En promoción', color: 'amber', desc: 'Muestra «En promoción», sin porcentajes. Impide aplicar cualquier cupón al pedido completo que incluya este producto. No activa el producto ni cambia su visibilidad.' },
+                  { field: 'inPromotion', label: 'En promoción', color: 'amber', desc: 'La tarjeta muestra «BLACK FRIDAY · PACK», sin porcentajes. Impide aplicar cualquier cupón al pedido completo que incluya este producto. No activa el producto ni cambia su visibilidad.' },
                   { field: 'soldOut', label: 'Agotado (muestra mensaje de agotado)', color: 'red', desc: 'El producto sigue visible en la web pero no se puede comprar. Se muestra un mensaje personalizable (ej: "En cosecha - Disponible pronto") en lugar del botón de compra.' },
                   { field: 'featured', label: 'Destacado', color: 'amber', desc: 'El producto aparece en la sección de destacados de la página principal. Ideal para promocionar productos nuevos o de temporada.' },
                   { field: 'freeShipping', label: 'Envío gratuito', color: 'blue', desc: 'Se muestra un badge de "Envío gratis" en la ficha del producto. El cliente no paga gastos de envío al comprar este producto.' },

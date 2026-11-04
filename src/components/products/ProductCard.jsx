@@ -27,14 +27,18 @@ const ProductCard = ({ product }) => {
   const { addToCart, setIsCartOpen } = useCart();
   const { t } = useTranslation();
   const productImage = getOptimizedProductImage(product.image || product.images?.[0]);
-  const displayBadge = product.badges?.find((badge) => !badge.detailOnly && (!(product.inPromotion === true || getIndependentPackIdentity(product)) || !/%|descuento|rebaja|ahorr|discount|sale/i.test(`${badge.text} ${badge.textKey || ''}`)));
+  const displayBadge = product.badges?.find((badge) => (
+    !badge.detailOnly
+    && !/^BLACK FRIDAY\s*·\s*PACK$/i.test(badge.text || '')
+    && (!(product.inPromotion === true || getIndependentPackIdentity(product)) || !/%|descuento|rebaja|ahorr|discount|sale/i.test(`${badge.text} ${badge.textKey || ''}`))
+  ));
   const badgeText = displayBadge
     ? (displayBadge.textKey ? t(`badges.${displayBadge.textKey}`, displayBadge.text) : displayBadge.text)
     : null;
   const isReservation = isReservationSale(product);
-  const cardBadgeText = isReservation
-    ? 'RESERVA · COSECHA 2026/27'
-    : product.inPromotion === true ? 'En promoción' : badgeText;
+  const cardBadgeText = product.inPromotion === true
+    ? 'BLACK FRIDAY · PACK'
+    : isReservation ? 'RESERVA · COSECHA 2026/27' : badgeText;
   const isSoldOut = product.soldOut || product.available === false;
   const isPreviousHarvest = getTempranoHarvestIdentity(product)?.sku === 'MIKVET5002526';
   const defaultPack = isPreviousHarvest ? getFixedPackOptions(product)[0] : null;

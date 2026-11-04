@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useProducts } from '../hooks/useProducts';
 import ProductCard from '../components/products/ProductCard';
 import { Filter } from 'lucide-react';
+import { sortCatalogueProducts } from '../utils/cataloguePosition';
 
 const REDIRECTED_PRODUCT_SLUGS = new Set([
   'pack-aceite-ecologico-premium-estuche-regalo',
@@ -23,7 +24,7 @@ const Products = () => {
     return product.category.toLowerCase() === selectedCategory.toLowerCase();
   });
 
-  const sortedProducts = [...filteredProducts].sort((a, b) => {
+  const sortedProducts = sortCatalogueProducts(filteredProducts).sort((a, b) => {
     switch (sortBy) {
       case 'default':
         return 0;

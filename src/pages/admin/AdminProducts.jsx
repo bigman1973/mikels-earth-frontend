@@ -4,6 +4,7 @@ import { API_URL } from '../../config/api';
 import AdminLayout from '../../components/admin/AdminLayout';
 import ProductEditor from '../../components/admin/ProductEditor';
 import { calculateMargins } from '../../utils/margins';
+import { getCataloguePosition } from '../../utils/cataloguePosition';
 
 export default function AdminProducts() {
   const { authFetch } = useAdminAuth();
@@ -488,6 +489,7 @@ export default function AdminProducts() {
                                 <p className={`text-sm font-medium truncate max-w-[200px] ${product.active !== false ? 'text-white' : 'text-gray-500 line-through'}`}>{product.name}</p>
                                 <div className="flex items-center gap-2 mt-0.5">
                                   <p className="text-[10px] text-gray-500 font-mono">{product.sku || '—'}</p>
+                                  {Object.hasOwn(product, 'displayOrder') && <span className="text-[10px] text-gray-400">Posición: {getCataloguePosition(product) ?? 'sin posición'}</span>}
                                   {product.tax_status === 'mixed' && (
                                     <span className="text-[9px] px-1.5 py-0.5 bg-amber-500/10 text-amber-400 rounded border border-amber-500/20">IVA MIXTO</span>
                                   )}

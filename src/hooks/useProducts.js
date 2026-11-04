@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { products as localProducts, categories as localCategories } from '../data/products';
 import { applyEditorialOverrides } from '../utils/productEditorialOverrides';
 import { isListedProduct, isPublicFallbackProduct, loadProductDetail } from '../utils/productAccess';
+import { sortCatalogueProducts } from '../utils/cataloguePosition';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://mikels-earth-backend-production.up.railway.app';
 
@@ -19,7 +20,7 @@ export function useProducts() {
   const currentLang = i18n.language?.substring(0, 2) || 'es';
   
   const [products, setProducts] = useState(() => (
-    localProducts.filter(isPublicFallbackProduct).map((product) => applyEditorialOverrides(product, currentLang))
+    sortCatalogueProducts(localProducts.filter(isPublicFallbackProduct).map((product) => applyEditorialOverrides(product, currentLang)))
   ));
   const [categories, setCategories] = useState(localCategories);
   const [loading, setLoading] = useState(true);
@@ -28,7 +29,7 @@ export function useProducts() {
   useEffect(() => {
     let cancelled = false;
 
-    setProducts(localProducts.filter(isPublicFallbackProduct).map((product) => applyEditorialOverrides(product, currentLang)));
+    setProducts(sortCatalogueProducts(localProducts.filter(isPublicFallbackProduct).map((product) => applyEditorialOverrides(product, currentLang))));
     setCategories(localCategories);
     setSource('local');
     setLoading(true);
@@ -44,7 +45,7 @@ export function useProducts() {
         const data = await response.json();
         
         if (!cancelled && Array.isArray(data.products)) {
-          setProducts(data.products.filter(isListedProduct).map((product) => applyEditorialOverrides(product, currentLang)));
+          setProducts(sortCatalogueProducts(data.products.filter(isListedProduct).map((product) => applyEditorialOverrides(product, currentLang))));
           setCategories(data.categories || localCategories);
           setSource('api');
         }
