@@ -155,7 +155,7 @@ test('UI blocks stale coupons before payment, shows exact shared message, and ad
     read('src/context/CartContext.jsx'), read('src/components/cart/CartDrawer.jsx'), read('src/pages/Checkout.jsx'),
     read('src/components/admin/ProductEditor.jsx'), read('src/components/ProductSeo.jsx'), read('src/hooks/useProducts.js'),
   ]);
-  assert.match(context, /const appliedDiscount = hasInPromotionItem\(cart\) \|\| !promotionReviewReady \? null : savedDiscount/);
+  assert.match(context, /const appliedDiscount = hasOrderCouponBlockingItem\(cart\) \|\| !promotionReviewReady \? null : savedDiscount/);
   assert.match(context, /setAppliedDiscount\(null\);\s*setDiscountCode\(''\)/);
   assert.match(context, /items: getCouponItemReferences\(reviewedCart\)/);
   assert.match(context, /JSON.stringify\(cart.map\(withoutStoredPromotionFields\)\)/);

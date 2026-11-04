@@ -30,6 +30,14 @@ export const isTempranoPromotionProtectedItem = (item = {}) => (
   matchesIdentity(item, TEMPRANO_SLUG, TEMPRANO_SKU)
 );
 
+// El veto del pedido también cubre Temprano protegido y los packs BF exactos,
+// sin convertirlos en un flag promocional ni ampliar la política a otros SKU.
+export const hasOrderCouponBlockingItem = (cart = []) => (
+  Array.isArray(cart) && cart.some((item) => (
+    isInPromotion(item) || isTempranoPromotionProtectedItem(item) || Boolean(getIndependentPackIdentity(item))
+  ))
+);
+
 const getProtectedCompositionSkus = (item = {}) => {
   const savedComposition = Array.isArray(item?.couponProtectedCompositionSkus)
     ? item.couponProtectedCompositionSkus.map(normalizedSku)
@@ -136,7 +144,7 @@ const couponPercentForItem = (item, appliedDiscount) => (
 
 export const getCouponDiscountAmount = (cart = [], appliedDiscount, getItemPrice) => {
   if (!appliedDiscount || !Array.isArray(cart)) return 0;
-  if (hasInPromotionItem(cart)) return 0;
+  if (hasOrderCouponBlockingItem(cart)) return 0;
 
   return cart.reduce((discountAmount, item) => {
     if (isPromotionProtectedItem(item)) return discountAmount;

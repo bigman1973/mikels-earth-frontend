@@ -9,7 +9,7 @@ import { isReservationSale, normalizeReservationSaleProduct } from '../utils/res
 import { getTempranoHarvestIdentity, normalizeTempranoHarvestName } from '../utils/tempranoHarvestIdentity';
 import {
   getCouponDiscountAmount,
-  hasInPromotionItem,
+  hasOrderCouponBlockingItem,
   PROMOTION_COUPON_MESSAGE,
   hasCouponEligibleItem,
   isPromotionProtectedItem,
@@ -51,11 +51,11 @@ export const CartProvider = ({ children }) => {
   const promotionReviewReady = !promotionReviewPending;
   // La invalidación es también síncrona en el valor expuesto: ningún render
   // puede enviar un cupón antiguo con una línea promocionada a checkout.
-  const appliedDiscount = hasInPromotionItem(cart) || !promotionReviewReady ? null : savedDiscount;
-  const couponMessage = hasInPromotionItem(cart) ? PROMOTION_COUPON_MESSAGE : '';
+  const appliedDiscount = hasOrderCouponBlockingItem(cart) || !promotionReviewReady ? null : savedDiscount;
+  const couponMessage = hasOrderCouponBlockingItem(cart) ? PROMOTION_COUPON_MESSAGE : '';
 
   useEffect(() => {
-    if (!hasInPromotionItem(cart)) return;
+    if (!hasOrderCouponBlockingItem(cart)) return;
     setAppliedDiscount(null);
     setDiscountCode('');
   }, [cart]);
@@ -218,7 +218,7 @@ export const CartProvider = ({ children }) => {
   const applyDiscountCode = async (code) => {
     // Validar código de descuento contra el backend (todos los cupones centralizados)
     const normalizedCode = code.trim();
-    if (hasInPromotionItem(cart)) {
+    if (hasOrderCouponBlockingItem(cartRef.current)) {
       setAppliedDiscount(null);
       setDiscountCode('');
       return { success: false, message: PROMOTION_COUPON_MESSAGE };
@@ -238,7 +238,7 @@ export const CartProvider = ({ children }) => {
       if (getCartReferenceKey(cartRef.current) !== getCartReferenceKey(snapshot)) return { success: false, message: 'El carrito ha cambiado. Vuelve a aplicar el código.' };
       const reviewedCart = snapshot.map((item, index) => normalizePromotionProtectedCartItem({ ...item, ...flags[index] }));
       setCart(reviewedCart);
-      if (hasInPromotionItem(reviewedCart)) {
+      if (hasOrderCouponBlockingItem(reviewedCart)) {
         setAppliedDiscount(null);
         setDiscountCode('');
         return { success: false, message: PROMOTION_COUPON_MESSAGE };
@@ -252,7 +252,7 @@ export const CartProvider = ({ children }) => {
       });
       
       const data = await response.json();
-      if (hasInPromotionItem(cartRef.current)) return { success: false, message: PROMOTION_COUPON_MESSAGE };
+      if (hasOrderCouponBlockingItem(cartRef.current)) return { success: false, message: PROMOTION_COUPON_MESSAGE };
       if (getCartReferenceKey(cartRef.current) !== getCartReferenceKey(snapshot)) return { success: false, message: 'El carrito ha cambiado. Vuelve a aplicar el código.' };
       
       if (data.valid) {

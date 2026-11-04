@@ -130,3 +130,109 @@ test('real provider retains unresolved hidden pack and blocks payment after auth
   assert.equal(value.cart.length, 1);
   assert.equal(value.cart[0].sku, 'BF26-TEMP6');
 });
+
+const master = {
+  id: 8003, sku: 'MIKVET500', slug: 'aceite-temprano-sin-filtrar',
+  name: 'Nombre antiguo', price: 19.90, active: true, visibleInStore: true, inPromotion: false,
+  volumeDiscount: { minQuantity: 3, discount: 50 },
+  tieredDiscount: [{ minQuantity: 6, discount: 50 }],
+  subscriptionFrequencies: [{ value: 'monthly', discount: 50 }],
+};
+const literalMessage = 'Este código no se puede aplicar porque el pedido incluye productos en promoción.';
+
+for (const [label, blocker] of [['BF26-TEMP6 promoted', pack], ['MIKVET500 protected with catalogue inPromotion false', master]]) {
+  test(`real provider rejects the entire mixed ${label} order before coupon API in both insertion orders`, async () => {
+    for (const order of [[blocker, ordinary], [ordinary, blocker]]) {
+      const harness = createHarness({ catalogue: [blocker, ordinary] });
+      let value = harness.render();
+      for (const item of order) { value.addToCart(item, 1); value = harness.render(); }
+      const before = JSON.stringify(value.cart);
+      const result = await value.applyDiscountCode('NORMAL10');
+      assert.equal(result.success, false);
+      assert.equal(result.message, literalMessage);
+      value = harness.render();
+      assert.equal(value.couponMessage, literalMessage);
+      assert.equal(value.appliedDiscount, null);
+      assert.equal(value.discountCode, '');
+      assert.equal(value.getDiscountAmount(), 0);
+      assert.equal(JSON.stringify(value.cart), before, 'rejection cannot remove or modify lines');
+      assert.equal(Math.round(value.getCartTotal() * 100), Math.round((blocker.price + ordinary.price) * 100));
+      assert.equal(harness.calls.length, 0, 'known protected/promoted mixed carts reject without any API request');
+    }
+  });
+}
+
+test('real provider invalidates a pre-applied coupon synchronously when protected master joins an ordinary order', async () => {
+  const harness = createHarness({ catalogue: [ordinary, master] });
+  let value = harness.render();
+  value.addToCart(ordinary, 1);
+  value = harness.render();
+  assert.equal((await value.applyDiscountCode('NORMAL10')).success, true);
+  value = harness.render();
+  assert.equal(value.getDiscountAmount(), 2);
+  const callsBefore = harness.calls.length;
+  value.addToCart(master, 1);
+  value = harness.render();
+  assert.equal(value.cart.length, 2);
+  assert.equal(value.appliedDiscount, null);
+  assert.equal(value.discountCode, '');
+  assert.equal(value.getDiscountAmount(), 0);
+  assert.equal(Math.round(value.getCartTotal() * 100), 3990);
+  assert.equal((await value.applyDiscountCode('NORMAL10')).message, literalMessage);
+  assert.equal(harness.calls.length, callsBefore, 'rejection performs no new coupon/catalogue API calls');
+});
+
+test('real provider keeps master 19.90 at quantities 1, 3, 6 and 12 without volume or subscription reductions', () => {
+  for (const quantity of [1, 3, 6, 12]) {
+    const harness = createHarness();
+    let value = harness.render();
+    value.addToCart({ ...master, price: 17.50 }, quantity, 'subscription', 'monthly');
+    value = harness.render();
+    const item = value.cart[0];
+    assert.equal(item.sku, 'MIKVET500');
+    assert.equal(item.name, 'Aceite de oliva virgen extra Temprano 2026/27 sin filtrar');
+    assert.equal(item.price, 19.90);
+    assert.equal(item.purchaseType, 'one-time');
+    assert.equal(item.subscriptionFrequency, null);
+    assert.equal(item.selectedPackQuantity, null);
+    assert.equal(item.volumeDiscountConfig, undefined);
+    assert.equal(item.tieredDiscountConfig, undefined);
+    assert.equal(value.getItemPrice(item), 19.90);
+    assert.equal(Math.round(value.getCartTotal() * 100), quantity * 1990);
+  }
+});
+
+test('real provider preserves both full harvest names, old pack 59.70 and no borrowed old-harvest image', () => {
+  const harness = createHarness();
+  let value = harness.render();
+  value.addToCart({ ...pack, image: null }, 1);
+  value = harness.render();
+  value.addToCart(master, 1);
+  value = harness.render();
+  assert.equal(value.cart.length, 2);
+  assert.equal(value.cart[0].name, INDEPENDENT_PACKS[0].name);
+  assert.equal(value.cart[0].image, null);
+  assert.equal(value.getItemPrice(value.cart[0]), 59.70);
+  assert.equal(Math.round(value.getItemPrice(value.cart[0]) / INDEPENDENT_PACKS[0].units * 100), 995);
+  assert.equal(value.cart[1].name, 'Aceite de oliva virgen extra Temprano 2026/27 sin filtrar');
+  assert.equal(value.getItemPrice(value.cart[1]), 19.90);
+  assert.equal(Math.round(value.getCartTotal() * 100), 7960);
+});
+
+test('real provider revalidates a persisted protected master mixed order yet refuses its coupon without validation API', async () => {
+  const harness = createHarness({
+    stored: [master, ordinary].map((item) => ({ ...item, quantity: 1, purchaseType: 'one-time', inPromotion: false })),
+    catalogue: [master, ordinary],
+  });
+  let value = await harness.flush();
+  assert.equal(value.promotionReviewReady, true);
+  assert.equal(value.cart[0].inPromotion, false, 'must not invent a catalogue promotion flag');
+  const result = await value.applyDiscountCode('NORMAL10');
+  assert.equal(result.success, false);
+  assert.equal(result.message, literalMessage);
+  value = harness.render();
+  assert.equal(value.getDiscountAmount(), 0);
+  assert.equal(Math.round(value.getCartTotal() * 100), 3990);
+  assert.equal(value.cart.length, 2);
+  assert.equal(harness.calls.filter((call) => call.url.includes('/api/coupon/validate')).length, 0);
+});

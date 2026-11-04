@@ -6,6 +6,7 @@ import { applyEditorialOverrides } from '../src/utils/productEditorialOverrides.
 import {
   getCouponDiscountAmount,
   hasCouponEligibleItem,
+  hasOrderCouponBlockingItem,
   hasPromotionProtectedItem,
   isPackCompletoPromotionProtectedItem,
   isPromotionProtectedItem,
@@ -213,7 +214,7 @@ test('protected add-ons are sanitized independently and ordinary gift cases stay
   assert.equal(protectedAddon.subscriptionDiscount, 10, 'must not mutate nested inputs');
 });
 
-test('mixed carts discount only eligible lines, irrespective of insertion order or pre-applied coupon', () => {
+test('mixed carts containing protected Temprano veto the whole coupon in either insertion order', () => {
   const ordinary = { sku: 'MIKBIO19', price: 19.90, quantity: 2, purchaseType: 'one-time' };
   const subscription = { sku: 'ORDINARY-SUB', price: 10, quantity: 1, purchaseType: 'subscription' };
   const protectedLines = protectedSingles.map((single) => ({ ...single, quantity: 1, purchaseType: 'one-time' }));
@@ -221,12 +222,29 @@ test('mixed carts discount only eligible lines, irrespective of insertion order 
   for (const cart of [[ordinary, subscription, ...protectedLines, pack], [pack, ...protectedLines, subscription, ordinary]]) {
     assert.equal(hasPromotionProtectedItem(cart), true);
     assert.equal(hasCouponEligibleItem(cart), true);
-    assert.equal(cents(getCouponDiscountAmount(cart, coupon, unitPrice)), 598);
+    assert.equal(hasOrderCouponBlockingItem(cart), true);
+    assert.equal(cents(getCouponDiscountAmount(cart, coupon, unitPrice)), 0);
+    assert.equal(cart.length, 6, 'whole-order rejection preserves every line');
   }
   assert.equal(getCouponDiscountAmount([...protectedLines, pack], coupon, unitPrice), 0);
   assert.equal(hasCouponEligibleItem([]), false);
   assert.equal(hasCouponEligibleItem(null), false);
   assert.equal(hasPromotionProtectedItem(null), false);
+});
+
+test('narrow whole-order veto leaves other legacy protected mixed carts and exact-SKU matching unchanged', () => {
+  const ordinary = { sku: 'MIKBIO19', price: 19.90, quantity: 2, purchaseType: 'one-time' };
+  const subscription = { sku: 'ORDINARY-SUB', price: 10, quantity: 1, purchaseType: 'subscription' };
+  const protectedLines = protectedSingles.slice(1).map((single) => ({ ...single, quantity: 1 }));
+  const cart = [ordinary, subscription, ...protectedLines, { sku: 'MIKPACKF', price: 81.90, quantity: 1 }];
+  assert.equal(hasOrderCouponBlockingItem(cart), false);
+  assert.equal(cents(getCouponDiscountAmount(cart, coupon, unitPrice)), 598);
+  for (const sku of ['MIKVET500R', 'MIKVET5002526', 'BF26-TEMP6-EXTRA']) {
+    assert.equal(hasOrderCouponBlockingItem([{ sku, slug: 'aceite-temprano-sin-filtrar' }]), false);
+  }
+  assert.equal(hasOrderCouponBlockingItem([{ slug: 'aceite-temprano-sin-filtrar' }]), true);
+  assert.equal(hasOrderCouponBlockingItem([]), false);
+  assert.equal(hasOrderCouponBlockingItem(null), false);
 });
 
 test('add-to-cart tracking reports full-price units, never a base-SKU pack discount', () => {
@@ -238,7 +256,7 @@ test('add-to-cart tracking reports full-price units, never a base-SKU pack disco
   }
 });
 
-test('cart UI keeps coupons available in mixed carts and the shared context protects all entry points', async () => {
+test('cart UI keeps the code accordion available for rejection and preserves unrelated protected-line explanations', async () => {
   const [drawer, cartContext, checkout] = await Promise.all([
     read('src/components/cart/CartDrawer.jsx'), read('src/context/CartContext.jsx'), read('src/pages/Checkout.jsx'),
   ]);
@@ -246,7 +264,10 @@ test('cart UI keeps coupons available in mixed carts and the shared context prot
   assert.match(drawer, /hasCouponEligibleItem\(cart\)/);
   assert.match(drawer, /getDiscountAmount,/);
   assert.match(drawer, /!hasPromotionLine && hasProtectedPromotionLine && !hasEligiblePromotionLine &&/);
-  assert.match(drawer, /!hasPromotionLine && promotionReviewReady && hasEligiblePromotionLine && !appliedDiscount &&/);
+  assert.match(drawer, /hasOrderCouponBlockingItem\(cart\)/);
+  assert.match(drawer, /\{!appliedDiscount && \(/);
+  assert.doesNotMatch(drawer, /!hasPromotionLine && promotionReviewReady && hasEligiblePromotionLine && !appliedDiscount/);
+  assert.match(drawer, /codeMessage\.text !== couponMessage/);
   assert.match(drawer, /El cupón solo se aplica a los demás productos\./);
   assert.match(drawer, /¿Tienes un código\?/);
   assert.match(cartContext, /isPromotionProtectedItem\(cartProduct\) \? 'one-time' : purchaseType/);

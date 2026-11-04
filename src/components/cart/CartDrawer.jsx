@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { formatEuro } from '../../utils/formatMoney';
 import { getFixedPackForQuantity } from '../../utils/fixedPackPricing';
 import { isReservationSale } from '../../utils/reservationSale';
-import { hasCouponEligibleItem, hasPromotionProtectedItem, hasInPromotionItem } from '../../utils/promotionProtection';
+import { hasCouponEligibleItem, hasPromotionProtectedItem, hasOrderCouponBlockingItem } from '../../utils/promotionProtection';
 import { getTempranoHarvestIdentity } from '../../utils/tempranoHarvestIdentity';
 import { getIndependentPackIdentity } from '../../utils/independentPacks';
 
@@ -37,7 +37,7 @@ const CartDrawer = () => {
   const [showDiscount, setShowDiscount] = useState(false);
   const hasProtectedPromotionLine = hasPromotionProtectedItem(cart);
   const hasEligiblePromotionLine = hasCouponEligibleItem(cart);
-  const hasPromotionLine = hasInPromotionItem(cart);
+  const hasPromotionLine = hasOrderCouponBlockingItem(cart);
   const discountAmount = getDiscountAmount();
 
   const applyCode = async () => {
@@ -100,6 +100,7 @@ const CartDrawer = () => {
                     const unitPrice = getItemPrice(item);
                     const itemTotal = unitPrice * item.quantity;
                     const fixedPack = getFixedPackForQuantity(item, item.quantity);
+                    const independentPack = getIndependentPackIdentity(item);
                     return (
                       <motion.div
                         key={`${item.id || item.slug || item.name}-${index}`}
@@ -128,7 +129,8 @@ const CartDrawer = () => {
                             <h3 className={`text-sm font-semibold text-[#1a1a1a] ${getTempranoHarvestIdentity(item) || getIndependentPackIdentity(item)?.harvest ? 'whitespace-normal break-words' : 'line-clamp-2'}`}>{item.name}</h3>
                             <p className="mt-1 text-sm font-semibold text-price">{formatEuro(unitPrice)}</p>
                             {item.inPromotion === true && <p className="mt-1 text-xs text-stone-600">En promoción</p>}
-                            {getIndependentPackIdentity(item) && <p className="mt-1 text-xs text-stone-600">{item.quantity} pack(s) completo(s) · {getIndependentPackIdentity(item).units} unidades por pack</p>}
+                            {independentPack && <p className="mt-1 text-xs text-stone-600">{item.quantity} pack(s) completo(s) · {independentPack.units} unidades por pack</p>}
+                            {independentPack?.harvest && <p className="mt-1 text-xs text-stone-600">{formatEuro(unitPrice / independentPack.units)} por botella</p>}
                             {isReservationSale(item) && <p className="mt-1 text-xs text-stone-600">Reserva · cosecha 2026/27</p>}
                             {fixedPack && <p className="mt-1 text-xs text-stone-600">{fixedPack.label} · precio cerrado</p>}
                           </div>
@@ -188,7 +190,7 @@ const CartDrawer = () => {
                 {!hasPromotionLine && hasProtectedPromotionLine && hasEligiblePromotionLine && (
                   <p className="mt-3 text-sm text-[#1a1a1a]">Los productos excluidos mantienen su precio. El cupón solo se aplica a los demás productos.</p>
                 )}
-                {!hasPromotionLine && promotionReviewReady && hasEligiblePromotionLine && !appliedDiscount && (
+                {!appliedDiscount && (
                   <div className="mt-3">
                     <button
                       type="button"
@@ -212,7 +214,7 @@ const CartDrawer = () => {
                         </button>
                       </div>
                     )}
-                    {codeMessage.text && <p className="mt-2 text-xs text-[#1a1a1a]">{codeMessage.text}</p>}
+                    {codeMessage.text && codeMessage.text !== couponMessage && <p role="alert" className="mt-2 text-xs text-[#1a1a1a]">{codeMessage.text}</p>}
                   </div>
                 )}
 
