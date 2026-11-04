@@ -41,7 +41,13 @@ test('VIP direct HTML carries the approved copy before the SPA renders', async (
   const landing = await readRouteHtml('/vip');
   const thanks = await readRouteHtml('/vip/gracias');
   const description = tagContent(landing, /<meta name="description" content="([^"]+)"/i);
-  assert.equal(description, 'Entras el 26 de noviembre, un día antes que nadie. El Temprano de la cosecha 2025/26 —la botella que ganó la Plata en OLIVE JAPAN 2026, en Tokio— a mitad de precio que la cosecha nueva.');
+  const expected = 'Entras en la lista y el 26 de noviembre compras un día antes que nadie. Acceso 24 horas antes de que la oferta se abra al público, y un tarro de nuestra mermelada de regalo con cualquier pack del Black Friday. Hasta agotar existencias.';
+  assert.equal(description, expected);
+  assert.equal(NONINDEX_STATIC_ROUTE_SEO['/vip'].description, expected);
+  assert.equal(tagContent(landing, /<meta property="og:description" content="([^"]+)"/i), expected);
+  assert.equal(tagContent(landing, /<meta name="twitter:description" content="([^"]+)"/i), expected);
+  const flatLanding = await readFile(join(DIST, 'vip.html'), 'utf8');
+  assert.equal(tagContent(flatLanding, /<meta name="description" content="([^"]+)"/i), expected);
   assert.equal(tagContent(thanks, /<meta name="description" content="([^"]+)"/i), 'Ya estás dentro. Revisa tu correo.');
-  assert.doesNotMatch(description, /código de descuento|\d+(?:[.,]\d+)?\s*%|plazas/i);
+  assert.doesNotMatch(description, /c[oó]digo|cup[oó]n|descuento|mitad de precio|\d+(?:[.,]\d+)?\s*%|plazas/i);
 });

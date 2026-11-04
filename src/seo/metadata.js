@@ -66,7 +66,7 @@ export const STATIC_ROUTE_SEO = {
 export const NONINDEX_STATIC_ROUTE_SEO = {
   '/vip': {
     title: "Lista VIP Black Friday | Mikel's Fruit",
-    description: 'Entras el 26 de noviembre, un día antes que nadie. El Temprano de la cosecha 2025/26 —la botella que ganó la Plata en OLIVE JAPAN 2026, en Tokio— a mitad de precio que la cosecha nueva.',
+    description: 'Entras en la lista y el 26 de noviembre compras un día antes que nadie. Acceso 24 horas antes de que la oferta se abra al público, y un tarro de nuestra mermelada de regalo con cualquier pack del Black Friday. Hasta agotar existencias.',
     robots: 'noindex, nofollow',
   },
   '/vip/gracias': {

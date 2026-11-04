@@ -58,8 +58,8 @@ const VipLanding = () => {
             Acceso anticipado al Black Friday de Mikel&apos;s, solo para la lista VIP.
           </h1>
           <p className="mx-auto mt-5 max-w-md text-center text-base leading-7 text-stone-700">
-            <span className="block">Entras el 26 de noviembre, un día antes que nadie.</span>
-            <span className="block">El Temprano de la cosecha 2025/26 —la botella que ganó la Plata en OLIVE JAPAN 2026, en Tokio— a mitad de precio que la cosecha nueva.</span>
+            <span className="block">Entras en la lista y el 26 de noviembre compras un día antes que nadie.</span>
+            <span className="block">Acceso 24 horas antes de que la oferta se abra al público, y un tarro de nuestra mermelada de regalo con cualquier pack del Black Friday. Hasta agotar existencias.</span>
           </p>
 
           <div className="mt-8">

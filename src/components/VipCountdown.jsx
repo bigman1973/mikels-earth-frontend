@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-
-const VIP_ACCESS_START = new Date('2026-11-26T00:00:00+01:00').getTime();
+import { VIP_ACCESS_START } from '../config/vipSchedule';
 
 const getTimeLeft = () => {
   const difference = Math.max(0, VIP_ACCESS_START - Date.now());
