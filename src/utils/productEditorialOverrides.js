@@ -2,6 +2,7 @@ import {
   isTempranoPromotionProtectedItem,
   normalizePromotionProtectedProduct,
 } from './promotionProtection.js';
+import { normalizeTempranoHarvestName } from './tempranoHarvestIdentity.js';
 
 const replaceLegacyBrand = (value) => (
   typeof value === 'string'
@@ -26,6 +27,7 @@ const isIncompleteAwardBadge = (text) => (
 
 export const applyEditorialOverrides = (product, language = 'es') => {
   product = normalizePromotionProtectedProduct(product);
+  product = normalizeTempranoHarvestName(product);
   const normalizedProduct = {
     ...product,
     name: stripDecorativeEmoji(replaceLegacyBrand(product.name)),

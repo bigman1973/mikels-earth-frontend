@@ -21,6 +21,7 @@ import { getFixedPackOptions, getFixedPackPrice, getFixedPackUnitPrice } from '.
 import { trackMetaViewContent } from '../utils/metaPixel';
 import { trackGA4ViewItem } from '../utils/googleAnalytics';
 import { isReservationSale } from '../utils/reservationSale';
+import { getTempranoHarvestIdentity } from '../utils/tempranoHarvestIdentity';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://mikels-earth-backend-production.up.railway.app';
 
@@ -917,7 +918,7 @@ const ProductDetail = () => {
                     </div>
                   </div>
                   <div className="p-4">
-                    <h3 className="font-medium text-primary mb-2 line-clamp-2">{relatedProduct.name}</h3>
+                    <h3 className={`font-medium text-primary mb-2 ${getTempranoHarvestIdentity(relatedProduct) ? 'whitespace-normal break-words' : 'line-clamp-2'}`}>{relatedProduct.name}</h3>
                     <p className="text-lg font-bold text-price">{formatEuro(relatedProduct.price)}</p>
                   </div>
                 </Link>

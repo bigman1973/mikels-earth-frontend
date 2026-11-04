@@ -1,5 +1,6 @@
 import { resolveScheduledSinglePrice } from '../utils/fixedPackPricing.js';
 import { isReservationSale } from '../utils/reservationSale.js';
+import { normalizeTempranoHarvestName } from '../utils/tempranoHarvestIdentity.js';
 
 export const SITE_ORIGIN = 'https://www.mikels.es';
 export const DEFAULT_SOCIAL_IMAGE = `${SITE_ORIGIN}/images/hero-olivos-background.jpeg`;
@@ -262,8 +263,13 @@ const formattedWeight = (weight = '') => String(weight).replace(/(\d)(g|ml|l)$/i
 
 export const getProductSeoContent = (product = {}, slug = product?.slug) => {
   const editorial = EDITORIAL_PRODUCT_CONTENT[slug] || {};
+  const namedProduct = normalizeTempranoHarvestName({
+    ...product,
+    slug,
+    name: editorial.name || product.name || 'Producto artesanal',
+  });
   return {
-    name: currentBrand(editorial.name || product.name || 'Producto artesanal'),
+    name: currentBrand(namedProduct.name),
     description: currentBrand(editorial.description || product.description || ''),
     longDescription: currentBrand(editorial.longDescription || product.longDescription || product.description || ''),
     ingredients: editorial.ingredients || product.ingredients || '',

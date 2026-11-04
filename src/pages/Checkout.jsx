@@ -506,9 +506,9 @@ const Checkout = () => {
 
               <div className="space-y-4 mb-6">
                 {cart.map((item, index) => (
-                  <div key={index} className="flex justify-between items-start pb-4 border-b border-gray-200">
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-primary text-sm">
+                  <div key={index} className="flex justify-between items-start gap-3 pb-4 border-b border-gray-200">
+                    <div className="min-w-0 flex-1">
+                      <h3 className="whitespace-normal break-words font-semibold text-primary text-sm">
                         {item.name}
                       </h3>
                       <p className="text-xs text-gray-600">
@@ -518,7 +518,7 @@ const Checkout = () => {
                         {t('cart.quantity')}: {item.quantity}
                       </p>
                     </div>
-                    <div className="text-right">
+                    <div className="shrink-0 text-right">
                       <p className="font-bold text-price">
                         {formatEuro(getItemPrice(item) * item.quantity)}
                       </p>

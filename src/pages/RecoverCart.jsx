@@ -29,6 +29,7 @@ const RecoverCart = () => {
           for (const item of data.cart.items) {
             addToCart({
               id: item.id,
+              sku: item.sku || '',
               name: item.name,
               image: item.image,
               price: item.price,

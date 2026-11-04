@@ -9,6 +9,7 @@ import { formatEuro } from '../../utils/formatMoney';
 import { getFixedPackForQuantity } from '../../utils/fixedPackPricing';
 import { isReservationSale } from '../../utils/reservationSale';
 import { hasCouponEligibleItem, hasPromotionProtectedItem } from '../../utils/promotionProtection';
+import { getTempranoHarvestIdentity } from '../../utils/tempranoHarvestIdentity';
 
 const CartDrawer = () => {
   const {
@@ -118,7 +119,7 @@ const CartDrawer = () => {
                             </div>
                           )}
                           <div className="min-w-0 flex-1 pr-6">
-                            <h3 className="line-clamp-2 text-sm font-semibold text-[#1a1a1a]">{item.name}</h3>
+                            <h3 className={`text-sm font-semibold text-[#1a1a1a] ${getTempranoHarvestIdentity(item) ? 'whitespace-normal break-words' : 'line-clamp-2'}`}>{item.name}</h3>
                             <p className="mt-1 text-sm font-semibold text-price">{formatEuro(unitPrice)}</p>
                             {isReservationSale(item) && <p className="mt-1 text-xs text-stone-600">Reserva · cosecha 2026/27</p>}
                             {fixedPack && <p className="mt-1 text-xs text-stone-600">{fixedPack.label} · precio cerrado</p>}

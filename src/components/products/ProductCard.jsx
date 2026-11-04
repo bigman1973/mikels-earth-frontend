@@ -6,6 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { useCart } from '../../context/CartContext';
 import { formatEuro } from '../../utils/formatMoney';
 import { isReservationSale } from '../../utils/reservationSale';
+import { getTempranoHarvestIdentity, normalizeTempranoHarvestName } from '../../utils/tempranoHarvestIdentity';
+import { getFixedPackOptions, getFixedPackPrice } from '../../utils/fixedPackPricing';
 
 const getOptimizedProductImage = (url) => {
   if (!url || !url.includes('res.cloudinary.com') || !url.includes('/image/upload/')) {
@@ -19,6 +21,7 @@ const getOptimizedProductImage = (url) => {
 };
 
 const ProductCard = ({ product }) => {
+  product = normalizeTempranoHarvestName(product);
   const { addToCart, setIsCartOpen } = useCart();
   const { t } = useTranslation();
   const productImage = getOptimizedProductImage(product.image || product.images?.[0]);
@@ -31,10 +34,14 @@ const ProductCard = ({ product }) => {
     ? 'RESERVA · COSECHA 2026/27'
     : badgeText;
   const isSoldOut = product.soldOut || product.available === false;
+  const isPreviousHarvest = getTempranoHarvestIdentity(product)?.sku === 'MIKVET5002526';
+  const defaultPack = isPreviousHarvest ? getFixedPackOptions(product)[0] : null;
+  const cardQuantity = isPreviousHarvest ? defaultPack?.actualQuantity : 1;
+  const cardPrice = defaultPack ? getFixedPackPrice(defaultPack) : product.price;
 
   const addProduct = () => {
-    if (isSoldOut) return;
-    addToCart(product, 1);
+    if (isSoldOut || !cardQuantity) return;
+    addToCart(product, cardQuantity);
     setIsCartOpen(true);
   };
 
@@ -83,12 +90,13 @@ const ProductCard = ({ product }) => {
           </div>
         </div>
         <div className="p-5 pb-3">
-          <h3 className="line-clamp-2 min-h-[3.5rem] text-lg font-medium text-[#1a1a1a]">
+          <h3 className={`min-h-[3.5rem] text-lg font-medium text-[#1a1a1a] ${getTempranoHarvestIdentity(product) ? 'whitespace-normal break-words' : 'line-clamp-2'}`}>
             {product.name}
           </h3>
           <p className="mt-2 text-xl font-bold text-price">
-            {formatEuro(product.price)}
+            {formatEuro(cardPrice)}
           </p>
+          {defaultPack && <p className="mt-1 text-xs text-stone-600">{defaultPack.label}</p>}
         </div>
       </Link>
 
@@ -101,6 +109,7 @@ const ProductCard = ({ product }) => {
           <button
             type="button"
             className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary/90"
+            disabled={!cardQuantity}
             onClick={addProduct}
           >
             <ShoppingCart className="h-4 w-4" aria-hidden="true" />

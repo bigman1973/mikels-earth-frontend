@@ -6,6 +6,7 @@ import { getCartEventPricing } from '../utils/cartTracking';
 import { trackMetaAddToCart } from '../utils/metaPixel';
 import { trackGA4AddToCart } from '../utils/googleAnalytics';
 import { isReservationSale, normalizeReservationSaleProduct } from '../utils/reservationSale';
+import { getTempranoHarvestIdentity, normalizeTempranoHarvestName } from '../utils/tempranoHarvestIdentity';
 import {
   getCouponDiscountAmount,
   hasCouponEligibleItem,
@@ -30,6 +31,7 @@ export const CartProvider = ({ children }) => {
       : loadStoredCart(window.localStorage)
         .map(normalizeReservationSaleProduct)
         .map(normalizePromotionProtectedCartItem)
+        .map(normalizeTempranoHarvestName)
   ));
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [discountCode, setDiscountCode] = useState('');
@@ -44,7 +46,8 @@ export const CartProvider = ({ children }) => {
   const addToCart = (product, quantity = 1, purchaseType = 'one-time', subscriptionFrequency = null) => {
     const isAvailable = product.available !== false && !product.soldOut;
     const requestedQuantity = Math.max(1, Number(quantity) || 1);
-    const cartProduct = normalizePromotionProtectedCartItem(normalizeReservationSaleProduct(product));
+    const cartProduct = normalizeTempranoHarvestName(normalizePromotionProtectedCartItem(normalizeReservationSaleProduct(product)));
+    const harvestIdentity = getTempranoHarvestIdentity(cartProduct);
     const effectivePurchaseType = isPromotionProtectedItem(cartProduct) ? 'one-time' : purchaseType;
     const effectiveSubscriptionFrequency = effectivePurchaseType === 'subscription'
       ? subscriptionFrequency
@@ -75,6 +78,7 @@ export const CartProvider = ({ children }) => {
       const existingItemIndex = prevCart.findIndex(
         item => 
           item.id === product.id && 
+          (!harvestIdentity || getTempranoHarvestIdentity(item)?.sku === harvestIdentity.sku) &&
           item.purchaseType === effectivePurchaseType &&
           item.subscriptionFrequency === effectiveSubscriptionFrequency &&
           (item.selectedPackQuantity || null) === effectiveSelectedPackQuantity &&
@@ -122,7 +126,7 @@ export const CartProvider = ({ children }) => {
           reservationOnly: isReservationSale(cartProduct),
           reservationMessage: cartProduct.reservationMessage || '',
           volumeDiscountConfig: cartProduct.volumeDiscount || null,
-          tieredDiscountConfig: cartProduct.tieredDiscount || null
+          tieredDiscountConfig: cartProduct.tieredDiscount || cartProduct.tieredDiscountConfig || null
         })];
       }
     });
