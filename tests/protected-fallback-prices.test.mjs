@@ -17,7 +17,8 @@ for (const [slug, price] of [['aceite-5l-caja-3', 43], ['paraguayo-almibar', 17.
 }
 
 test('private Black Friday packs are not inserted in the public fallback catalogue', () => {
-  const draftSKUs = new Set(['MIKBIO19BF6', 'MIKBIO19BF12', 'MIKPARA450BF3', 'MIKPARA450BF6', 'MIKVE5LPBF3']);
+  const draftSKUs = new Set(['MIKBIO19BF6', 'MIKPARA450BF3', 'MIKPARA450BF6', 'MIKVE5LPBF3']);
   assert.equal(products.some((product) => draftSKUs.has(product.sku)), false);
+  assert.equal(products.some((product) => product.sku === 'MIKBIO19BF12'), false);
   assert.equal(products.some((product) => product.slug?.startsWith('black-friday-')), false);
 });

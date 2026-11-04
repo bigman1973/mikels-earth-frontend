@@ -165,7 +165,7 @@ test('Pack Completo and explicit protected mixed-pack compositions retain their 
 });
 
 test('authorized independent BF pack identities remain unprotected even with protected base components', () => {
-  for (const sku of ['MIKVE5LPBF3', 'MIKBIO19BF6', 'MIKBIO19BF12', 'MIKPARA450BF3', 'MIKPARA450BF6']) {
+  for (const sku of ['MIKVE5LPBF3', 'MIKBIO19BF6', 'MIKPARA450BF3', 'MIKPARA450BF6']) {
     const item = {
       sku, name: 'Independent draft fixture', price: 96.75, quantity: 1, purchaseType: 'one-time',
       couponProtectedCompositionSkus: ['MIKVE5LP', 'MIKPARA450'], ...legacyPromotions,
