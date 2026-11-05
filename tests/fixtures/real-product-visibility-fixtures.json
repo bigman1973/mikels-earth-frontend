@@ -1,0 +1,59 @@
+{
+  "hidden": {
+    "available": true,
+    "category": "Packs",
+    "currency": "EUR",
+    "description": null,
+    "displayOrder": null,
+    "id": 1,
+    "image": "/images/fixture.webp",
+    "images": [],
+    "inPromotion": true,
+    "ingredients": null,
+    "longDescription": null,
+    "name": "Aceite de Oliva Virgen Extra Temprano sin filtrar · Cosecha 2025/26 · Pack de 6",
+    "nutritionalInfo": null,
+    "price": 59.7,
+    "sku": "BF26-TEMP6",
+    "slug": "aceite-temprano-sin-filtrar-cosecha-2025-26-pack-6",
+    "subscriptionAvailable": false,
+    "tags": [],
+    "visibleInStore": false,
+    "weight": null
+  },
+  "inactive": {
+    "body": {
+      "error": "Producto no encontrado"
+    },
+    "http": 404
+  },
+  "listed": {
+    "available": true,
+    "category": "Packs",
+    "currency": "EUR",
+    "description": null,
+    "displayOrder": null,
+    "id": 1,
+    "image": "/images/fixture.webp",
+    "images": [],
+    "inPromotion": true,
+    "ingredients": null,
+    "longDescription": null,
+    "name": "Aceite de Oliva Virgen Extra Temprano sin filtrar · Cosecha 2025/26 · Pack de 6",
+    "nutritionalInfo": null,
+    "price": 59.7,
+    "sku": "BF26-TEMP6",
+    "slug": "aceite-temprano-sin-filtrar-cosecha-2025-26-pack-6",
+    "subscriptionAvailable": false,
+    "tags": [],
+    "visibleInStore": true,
+    "weight": null
+  },
+  "provenance": {
+    "generator": "Flask test_client /api/products/<slug>; WebProduct.to_frontend_dict; SQLite-only data",
+    "no_live_activation": true,
+    "no_production_stock_or_customer_data": true,
+    "requests_mocked": true,
+    "serializer_sha256": "186e8cb75b26eae683ccce19836d3ff55590bee3d58366424fed22e267858b89"
+  }
+}

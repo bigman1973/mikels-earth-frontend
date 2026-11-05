@@ -1,9 +1,8 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate } from 'react-router-dom';
 import VipCountdown from '../components/VipCountdown';
 import { API_URL } from '../config/api';
-import { getRateLimitMessage, normalizeFormEmail } from '../utils/formProtection';
 import useVipPageview from '../hooks/useVipPageview';
 
 const VipLanding = () => {
@@ -15,23 +14,14 @@ const VipLanding = () => {
   const [marketingConsent, setMarketingConsent] = useState(false);
   const [status, setStatus] = useState({ type: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const submittingRef = useRef(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (submittingRef.current) return;
     if (!marketingConsent) {
       setStatus({ type: 'error', message: 'Debes aceptar recibir comunicaciones comerciales para entrar en la lista VIP.' });
       return;
     }
 
-    const normalizedEmail = normalizeFormEmail(email);
-    if (!normalizedEmail || event.currentTarget.elements.email.validity.typeMismatch) {
-      setStatus({ type: 'error', message: 'Introduce un correo electrónico válido.' });
-      return;
-    }
-
-    submittingRef.current = true;
     setIsSubmitting(true);
     setStatus({ type: '', message: '' });
     try {
@@ -39,20 +29,14 @@ const VipLanding = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          email: normalizedEmail,
+          email,
           first_name: firstName,
           marketing_consent: true,
           website,
         }),
       });
       const data = await response.json().catch(() => ({}));
-      if (response.status === 429) {
-        throw new Error(getRateLimitMessage(response.headers.get('Retry-After')));
-      }
-      if (response.status === 503) {
-        throw new Error('El formulario no está disponible temporalmente. Inténtalo de nuevo más tarde.');
-      }
-      // The generic 200 response deliberately does not identify a discarded or duplicate request.
+      // A neutral honeypot response is not an accepted signup/conversion.
       if (response.status === 200 && data.success && !data.signup_id) {
         navigate('/vip/gracias', { replace: true });
         return;
@@ -64,11 +48,8 @@ const VipLanding = () => {
       window.sessionStorage.setItem(`mikels:vip-signup:${signupId}`, '1');
       navigate(`/vip/gracias?signup=${encodeURIComponent(signupId)}`, { replace: true });
     } catch (error) {
-      setStatus({ type: 'error', message: error instanceof TypeError
-        ? 'No se ha podido conectar. Comprueba tu conexión e inténtalo de nuevo.'
-        : error.message || 'No se ha podido completar el alta. Inténtalo de nuevo más tarde.' });
+      setStatus({ type: 'error', message: error.message || 'No se ha podido completar el alta. Inténtalo de nuevo más tarde.' });
     } finally {
-      submittingRef.current = false;
       setIsSubmitting(false);
     }
   };

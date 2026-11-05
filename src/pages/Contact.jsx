@@ -1,8 +1,8 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { Send } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import CompanyLegalBlock from '../components/CompanyLegalBlock';
-import { getPhoneValidationMessage, getRateLimitMessage, normalizeFormEmail } from '../utils/formProtection';
+import { getPhoneValidationMessage } from '../utils/formProtection';
 
 const Contact = () => {
   const { t } = useTranslation();
@@ -24,20 +24,14 @@ const Contact = () => {
 
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const submittingRef = useRef(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (submittingRef.current) return;
-    setSubmitted(false);
     const phoneError = getPhoneValidationMessage(formData.phone);
     if (phoneError) {
-      setErrorMessage(phoneError);
+      alert(phoneError);
       return;
     }
-    setErrorMessage('');
-    submittingRef.current = true;
     setLoading(true);
     
     try {
@@ -49,7 +43,6 @@ const Contact = () => {
         },
         body: JSON.stringify({
           ...formData,
-          email: normalizeFormEmail(formData.email),
           _hp: formData.company,
           _ts: formStartTime
         }),
@@ -66,17 +59,13 @@ const Contact = () => {
         });
         setTimeout(() => setSubmitted(false), 5000);
       } else {
-        const data = await response.json().catch(() => ({}));
-        setErrorMessage(response.status === 429
-          ? getRateLimitMessage(response.headers.get('Retry-After'))
-          : response.status === 503
-          ? 'El formulario no está disponible temporalmente. Inténtalo de nuevo más tarde.'
-          : data.error || 'Hubo un error al enviar tu mensaje. Por favor, inténtalo de nuevo.');
+        console.error('Error enviando mensaje');
+        alert('Hubo un error al enviar tu mensaje. Por favor, inténtalo de nuevo.');
       }
-    } catch {
-      setErrorMessage('No se ha podido conectar. Comprueba tu conexión e inténtalo de nuevo.');
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Hubo un error al enviar tu mensaje. Por favor, inténtalo de nuevo.');
     } finally {
-      submittingRef.current = false;
       setLoading(false);
     }
   };
@@ -194,10 +183,6 @@ const Contact = () => {
                   placeholder="Escribe tu mensaje aquí..."
                 ></textarea>
               </div>
-
-              {errorMessage && (
-                <p role="alert" className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800">{errorMessage}</p>
-              )}
 
               {submitted ? (
                 <div className="bg-green-50 border border-green-500 rounded-lg p-4 text-center">

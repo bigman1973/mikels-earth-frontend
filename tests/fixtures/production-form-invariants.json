@@ -1,0 +1,10 @@
+{
+  "productionCommit": "6cf0ee0c3ae9e3586532eb865cf57487684b7ff4",
+  "algorithm": "sha256",
+  "files": {
+    "src/pages/VipLanding.jsx": "1ee962adab15b527736c7ae98535ccee68cbe0e773549706f66a5bf7caae2be0",
+    "src/pages/Contact.jsx": "b434f8031f5086f539a97471aa4ef5a00af4186b7b4c0dac9dc00f34bd4586b3",
+    "src/utils/formProtection.js": "8dc880146f26596c5b022599adcbce0aa9eb51ad673c8a560719be5393039ae3",
+    "tests/form-protection.test.mjs": "078969b4b7c671d1d542f1a7e1ed1c48476a4ac128bf05baf638bf337f2420a5"
+  }
+}
