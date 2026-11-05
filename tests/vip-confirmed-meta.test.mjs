@@ -80,15 +80,15 @@ test('false/indeterminate/forged/malformed/mismatched confirmations permanently 
   for (const [body, status] of [
     [{ confirmed: false }, 200], [{}, 200], [confirmed({ confirmed: 'true' }), 200],
     [confirmed({ event_id: 'different-id' }), 200], [confirmed({ event_name: 'Lead' }), 200],
-    [confirmed(), 500], [{ confirmed: false }, 403], [{ confirmed: false }, 401],
+    [confirmed(), 500], [confirmed(), 202], [confirmed(), 201], [{ confirmed: false }, 403], [{ confirmed: false }, 401],
   ]) {
     const s = await ready(); s.fetch = async () => jsonResponse(body, status);
-    const stop = s.watch(); await drain(); s.fire(); await s.advance(10000);
+    const stop = s.watch(); await drain(); s.fire(); await s.advance(s.conversion.RETRY_WINDOW_MS);
     assert.equal(s.requests.length, 1, JSON.stringify(body));
     assert.equal(s.customEvents().length, 0); await finish(stop);
   }
   const s = await ready(); s.fetch = async () => new Response('not-json');
-  const stop = s.watch(); await drain(); s.fire(); await s.advance(10000);
+  const stop = s.watch(); await drain(); s.fire(); await s.advance(s.conversion.RETRY_WINDOW_MS);
   assert.equal(s.requests.length, 1); assert.equal(s.customEvents().length, 0); await finish(stop);
 });
 
@@ -130,12 +130,13 @@ test('temporary 202/408/425/429/5xx and network errors retry at most three times
   for (const status of [202, 408, 425, 429, 503, 'network']) {
     const s = await ready();
     s.fetch = async () => { if (status === 'network') throw new Error('offline'); return jsonResponse({ confirmed: false }, status); };
-    const stop = s.watch(); await drain(); s.fire(); await s.advance(1000); await s.advance(3000);
-    s.fire(); await s.advance(60000);
-    assert.equal(s.requests.length, 3, String(status));
+    const stop = s.watch(); await drain(); s.fire();
+    for (const delay of s.conversion.RETRY_DELAYS_MS) await s.advance(delay);
+    s.fire(); await s.advance(s.conversion.RETRY_WINDOW_MS);
+    assert.equal(s.requests.length, s.conversion.MAX_ATTEMPTS, String(status));
     assert.deepEqual(s.requests.map(([, init]) => JSON.parse(init.body).token), [proof.token, proof.token, proof.token]);
     assert.equal(s.customEvents().length, 0); await finish(stop);
-    const refreshed = await runtime({ storage: s.storage }); const stopRefresh = refreshed.watch(); await drain();
+    const refreshed = await runtime({ storage: s.storage, clockStart: s.clockNow() }); const stopRefresh = refreshed.watch(); await drain();
     assert.equal(refreshed.requests.length, 0); await finish(stopRefresh);
   }
 });
@@ -144,7 +145,8 @@ test('temporary failure followed by confirmation emits once without treating fal
   const s = await ready(); let n = 0;
   s.fetch = async () => ++n === 1 ? jsonResponse({ confirmed: false }, 202) : jsonResponse(confirmed());
   const stop = s.watch(); await drain(); assert.equal(s.customEvents().length, 0);
-  await s.advance(1000); assert.equal(s.requests.length, 2); assert.equal(s.customEvents().length, 1); await finish(stop);
+  await s.advance(s.conversion.RETRY_DELAYS_MS[0]);
+  assert.equal(s.requests.length, 2); assert.equal(s.customEvents().length, 1); await finish(stop);
 });
 
 test('real unmount aborts in-flight request and prevents late response or scheduled retry', async () => {
@@ -167,7 +169,10 @@ test('consent withdrawal aborts request and forbids late Pixel; acceptance can r
   assert.equal(s.requests[0][1].signal.aborted, true);
   resolve(jsonResponse(confirmed())); await drain(); assert.equal(s.customEvents().length, 0);
   s.fetch = async () => jsonResponse(confirmed());
-  s.window.Cookiebot.consent.marketing = true; s.fire(); await s.advance(6000);
+  s.window.Cookiebot.consent.marketing = true; s.fire();
+  const retryWait = s.conversion.REQUEST_TIMEOUT_MS + s.conversion.RETRY_DELAYS_MS[0];
+  await s.advance(retryWait - 1); assert.equal(s.requests.length, 1); assert.equal(s.customEvents().length, 0);
+  await s.advance(1);
   assert.equal(s.requests.length, 2); assert.equal(s.customEvents().length, 1); await finish(stop);
 });
 
@@ -175,8 +180,17 @@ test('request timeout is bounded, retryable and cancelled on unmount', async () 
   const s = await ready(); s.fetch = (_url, init) => new Promise((_resolve, reject) => {
     init.signal.addEventListener('abort', () => reject(new Error('aborted')));
   });
-  const stop = s.watch(); await drain(); await s.advance(17000);
-  assert.equal(s.requests.length, 3); assert.equal(s.customEvents().length, 0); await finish(stop);
+  const stop = s.watch(); await drain();
+  await s.advance(s.conversion.REQUEST_TIMEOUT_MS - 1);
+  assert.equal(s.requests.length, 1); assert.equal(s.requests[0][1].signal.aborted, false);
+  await s.advance(1); assert.equal(s.requests[0][1].signal.aborted, true);
+  await s.advance(s.conversion.RETRY_DELAYS_MS[0] - 1); assert.equal(s.requests.length, 1);
+  await s.advance(1); assert.equal(s.requests.length, 2);
+  await s.advance(s.conversion.RETRY_WINDOW_MS - s.conversion.REQUEST_TIMEOUT_MS - s.conversion.RETRY_DELAYS_MS[0]);
+  assert.equal(s.requests[1][1].signal.aborted, true);
+  assert.equal(s.requests.length, 2); assert.equal(s.customEvents().length, 0); assert.equal(s.timers.size, 0);
+  s.fire(); await s.advance(s.conversion.RETRY_WINDOW_MS); assert.equal(s.requests.length, 2);
+  await finish(stop);
   assert.equal(s.timers.size, 0);
 });
 
@@ -212,4 +226,169 @@ test('cleanup without StrictMode reattachment blocks even an immediately resolve
   s.fetch = () => new Promise(done => { resolve = done; });
   const stop = s.watch(); stop(); resolve(jsonResponse(confirmed())); await drain();
   assert.equal(s.customEvents().length, 0); assert.equal(s.listenerCount(), 0);
+});
+
+const budgetState = s => JSON.parse(s.storage.get(`mikels:meta-vip-attempts:${proof.event_id}`));
+const timerTimes = s => [...s.timers.values()].map(timer => timer.at).sort((a, b) => a - b);
+const abortablePending = (_url, init) => new Promise((_resolve, reject) => {
+  init.signal.addEventListener('abort', () => reject(new Error('aborted')));
+});
+
+test('async contract fixes maximum three attempts, 25s timeout, 10s/20s backoff and a 60s total window', async () => {
+  const s = await runtime();
+  assert.equal(s.conversion.MAX_ATTEMPTS, 3);
+  assert.equal(s.conversion.REQUEST_TIMEOUT_MS, 25000);
+  assert.deepEqual(plain(s.conversion.RETRY_DELAYS_MS), [10000, 20000]);
+  assert.equal(s.conversion.RETRY_WINDOW_MS, 60000);
+});
+
+test('201 candidate then 202 pending -> 202 pending -> 200 confirmed on third uses same token/ID, zero early Pixel and one final event', async () => {
+  const s = await ready(); let resolveThird;
+  s.fetch = () => s.requests.length < s.conversion.MAX_ATTEMPTS
+    ? Promise.resolve(jsonResponse({ confirmed: false, pending: true }, 202))
+    : new Promise(resolve => { resolveThird = resolve; });
+  const started = s.clockNow();
+  assert.equal(s.customEvents().length, 0, 'Storing a signup candidate is not proof of membership');
+  const first = s.watch(); first(); const stop = s.watch(); await drain();
+  assert.equal(s.requests.length, 1); assert.equal(s.customEvents().length, 0);
+  assert.equal(s.listenerCount(), 3);
+  for (const [index, delay] of s.conversion.RETRY_DELAYS_MS.entries()) {
+    for (let i = 0; i < 10; i++) s.fire();
+    await s.advance(delay - 1);
+    assert.equal(s.requests.length, index + 1); assert.equal(s.customEvents().length, 0);
+    await s.advance(1);
+    assert.equal(s.requests.length, index + 2); assert.equal(s.customEvents().length, 0);
+  }
+  // Allow the backend's GET + CAPI + SQL latency, rather than aborting at the old 5s.
+  await s.advance(22000);
+  assert.equal(s.requests[2][1].signal.aborted, false); assert.equal(s.customEvents().length, 0);
+  resolveThird(jsonResponse(confirmed())); await drain();
+  assert.equal(s.clockNow() - started, s.conversion.RETRY_DELAYS_MS.reduce((sum, delay) => sum + delay, 0) + 22000);
+  assert.deepEqual(s.requests.map(([, init]) => JSON.parse(init.body)), Array.from({ length: 3 }, () => ({ token: proof.token, meta_marketing_consent: true })));
+  assert.equal(s.customEvents().length, 1); assert.equal(s.customEvents()[0][3].eventID, proof.event_id);
+  assert.equal(s.storage.get(`mikels:meta-vip-confirmed:${proof.event_id}`), '1');
+  assert.equal(budgetState(s).deadline, started + s.conversion.RETRY_WINDOW_MS);
+  s.fire(); await s.advance(s.conversion.RETRY_WINDOW_MS);
+  assert.equal(s.requests.length, 3); assert.equal(s.customEvents().length, 1);
+  await finish(stop); assert.equal(s.listenerCount(), 0); assert.equal(s.timers.size, 0);
+});
+
+test('202 pending plus consent revocation cancels backoff and emits zero events through deadline', async () => {
+  const s = await ready(); s.fetch = async () => jsonResponse({ confirmed: false, pending: true }, 202);
+  const stop = s.watch(); await drain(); assert.equal(s.timers.size, 1);
+  s.window.Cookiebot.consent.marketing = false; s.fire('CookiebotOnDecline');
+  assert.equal(s.timers.size, 0);
+  s.fire(); await s.advance(s.conversion.RETRY_WINDOW_MS);
+  assert.equal(s.requests.length, 1); assert.equal(s.customEvents().length, 0);
+  assert.equal(s.storage.has(`mikels:meta-vip-confirmed:${proof.event_id}`), false);
+  await finish(stop); assert.equal(s.listenerCount(), 0);
+});
+
+test('202 pending then consent revoked during retry forbids a late confirmed response and further attempts', async () => {
+  const s = await ready(); let resolve;
+  s.fetch = () => s.requests.length === 1
+    ? Promise.resolve(jsonResponse({ confirmed: false, pending: true }, 202))
+    : new Promise(done => { resolve = done; });
+  const stop = s.watch(); await drain(); await s.advance(s.conversion.RETRY_DELAYS_MS[0]);
+  assert.equal(s.requests.length, 2); assert.equal(s.customEvents().length, 0);
+  s.window.Cookiebot.consent.marketing = false; s.fire('CookiebotOnDecline');
+  assert.equal(s.requests[1][1].signal.aborted, true);
+  resolve(jsonResponse(confirmed())); await drain(); await s.advance(s.conversion.RETRY_WINDOW_MS);
+  assert.equal(s.requests.length, 2); assert.equal(s.customEvents().length, 0); assert.equal(s.timers.size, 0);
+  await finish(stop); assert.equal(s.listenerCount(), 0);
+});
+
+test('slow pending responses cap third request to the remaining 15s and abort exactly at the 60s deadline', async () => {
+  const s = await ready(); let resolve;
+  s.fetch = () => s.requests.length < s.conversion.MAX_ATTEMPTS
+    ? new Promise(done => { resolve = done; }) : abortablePending(...s.requests.at(-1));
+  const started = s.clockNow(); const stop = s.watch(); await drain();
+  await s.advance(5000); resolve(jsonResponse({ confirmed: false, pending: true }, 202)); await drain();
+  await s.advance(s.conversion.RETRY_DELAYS_MS[0]); assert.equal(s.requests.length, 2);
+  await s.advance(10000); resolve(jsonResponse({ confirmed: false, pending: true }, 202)); await drain();
+  await s.advance(s.conversion.RETRY_DELAYS_MS[1]); assert.equal(s.requests.length, 3);
+  const deadline = started + s.conversion.RETRY_WINDOW_MS;
+  assert.deepEqual(timerTimes(s), [deadline]); assert.equal(budgetState(s).next_retry_at, deadline);
+  await s.advance(deadline - s.clockNow() - 1); assert.equal(s.requests[2][1].signal.aborted, false);
+  await s.advance(1); assert.equal(s.clockNow(), deadline); assert.equal(s.requests[2][1].signal.aborted, true);
+  assert.equal(s.customEvents().length, 0); assert.equal(s.timers.size, 0);
+  s.fire(); await s.advance(s.conversion.RETRY_WINDOW_MS); assert.equal(s.requests.length, 3);
+  await finish(stop);
+});
+
+test('refresh preserves token, attempts and deadline and caps a remaining third request to 8s', async () => {
+  const s = await ready(); const started = s.clockNow();
+  s.storage.set(`mikels:meta-vip-attempts:${proof.event_id}`, JSON.stringify({ attempts: 2, next_retry_at: started + 52000, deadline: started + s.conversion.RETRY_WINDOW_MS, terminal: false }));
+  const refreshed = await runtime({ storage: s.storage, clockStart: started + 52000 });
+  refreshed.fetch = abortablePending;
+  const stop = refreshed.watch(); await drain();
+  assert.equal(refreshed.requests.length, 1); assert.equal(budgetState(refreshed).attempts, s.conversion.MAX_ATTEMPTS);
+  assert.equal(JSON.parse(refreshed.requests[0][1].body).token, proof.token);
+  assert.deepEqual(timerTimes(refreshed), [started + s.conversion.RETRY_WINDOW_MS]);
+  await refreshed.advance(7999); assert.equal(refreshed.requests[0][1].signal.aborted, false);
+  await refreshed.advance(1); assert.equal(refreshed.requests[0][1].signal.aborted, true);
+  assert.equal(refreshed.customEvents().length, 0); assert.equal(refreshed.timers.size, 0);
+  assert.equal(budgetState(refreshed).deadline, started + s.conversion.RETRY_WINDOW_MS);
+  await finish(stop);
+  const expired = await runtime({ storage: refreshed.storage, clockStart: refreshed.clockNow() });
+  const stopExpired = expired.watch(); expired.fire(); await drain();
+  assert.equal(expired.requests.length, 0); assert.equal(expired.customEvents().length, 0); await finish(stopExpired);
+});
+
+test('refresh after unmount retains conservative in-flight retry time without restarting the 60s budget', async () => {
+  const s = await ready(); s.fetch = abortablePending;
+  const started = s.clockNow(); const stop = s.watch(); await drain(); await s.advance(2000); await finish(stop);
+  assert.equal(s.requests[0][1].signal.aborted, true); assert.equal(s.timers.size, 0); assert.equal(s.listenerCount(), 0);
+  const refreshed = await runtime({ storage: s.storage, clockStart: s.clockNow() }); refreshed.fetch = abortablePending;
+  const stopRefresh = refreshed.watch(); refreshed.fire(); await drain(); assert.equal(refreshed.requests.length, 0);
+  const nextRetry = started + s.conversion.REQUEST_TIMEOUT_MS + s.conversion.RETRY_DELAYS_MS[0];
+  assert.equal(budgetState(refreshed).next_retry_at, nextRetry);
+  await refreshed.advance(nextRetry - refreshed.clockNow() - 1); assert.equal(refreshed.requests.length, 0);
+  await refreshed.advance(1); assert.equal(refreshed.requests.length, 1); assert.equal(budgetState(refreshed).attempts, 2);
+  assert.deepEqual(timerTimes(refreshed), [started + s.conversion.RETRY_WINDOW_MS]);
+  await refreshed.advance(s.conversion.RETRY_WINDOW_MS - (nextRetry - started));
+  assert.equal(refreshed.requests[0][1].signal.aborted, true); assert.equal(refreshed.customEvents().length, 0);
+  assert.equal(refreshed.timers.size, 0); assert.equal(budgetState(refreshed).deadline, started + s.conversion.RETRY_WINDOW_MS);
+  await finish(stopRefresh);
+});
+
+test('a 20s pending backoff near expiry is capped to deadline and cannot leave timers or start another request', async () => {
+  const s = await ready(); let resolve;
+  s.fetch = () => new Promise(done => { resolve = done; });
+  const started = s.clockNow(); const stop = s.watch(); await drain();
+  await s.advance(s.conversion.REQUEST_TIMEOUT_MS - 1000);
+  resolve(jsonResponse({ confirmed: false, pending: true }, 202)); await drain();
+  await s.advance(s.conversion.RETRY_DELAYS_MS[0]); assert.equal(s.requests.length, 2);
+  await s.advance(s.conversion.REQUEST_TIMEOUT_MS - 1000);
+  resolve(jsonResponse({ confirmed: false, pending: true }, 202)); await drain();
+  const deadline = started + s.conversion.RETRY_WINDOW_MS;
+  assert.deepEqual(timerTimes(s), [deadline]); assert.equal(budgetState(s).next_retry_at, deadline);
+  await s.advance(deadline - s.clockNow());
+  assert.equal(s.requests.length, 2); assert.equal(s.timers.size, 0); assert.equal(s.customEvents().length, 0);
+  s.fire(); await s.advance(s.conversion.RETRY_WINDOW_MS); assert.equal(s.requests.length, 2);
+  await finish(stop);
+});
+
+test('remaining 26s still caps a request at 25s rather than expanding its timeout to the window remainder', async () => {
+  const s = await ready(); const started = s.clockNow();
+  s.storage.set(`mikels:meta-vip-attempts:${proof.event_id}`, JSON.stringify({ attempts: 1, next_retry_at: started + 34000, deadline: started + s.conversion.RETRY_WINDOW_MS, terminal: false }));
+  const refreshed = await runtime({ storage: s.storage, clockStart: started + 34000 }); refreshed.fetch = abortablePending;
+  const stop = refreshed.watch(); await drain();
+  assert.deepEqual(timerTimes(refreshed), [refreshed.clockNow() + s.conversion.REQUEST_TIMEOUT_MS]);
+  await refreshed.advance(s.conversion.REQUEST_TIMEOUT_MS - 1); assert.equal(refreshed.requests[0][1].signal.aborted, false);
+  await refreshed.advance(1); assert.equal(refreshed.requests[0][1].signal.aborted, true);
+  assert.deepEqual(timerTimes(refreshed), [started + s.conversion.RETRY_WINDOW_MS]);
+  await refreshed.advance(1000); assert.equal(refreshed.requests.length, 1); assert.equal(refreshed.timers.size, 0);
+  assert.equal(refreshed.customEvents().length, 0); await finish(stop);
+});
+
+test('unmount during the extended 25s request clears timer/listeners and never retries or emits a late confirmation', async () => {
+  const s = await ready(); let resolve;
+  s.fetch = () => new Promise(done => { resolve = done; });
+  const stop = s.watch(); await drain(); await s.advance(s.conversion.REQUEST_TIMEOUT_MS - 1);
+  assert.equal(s.requests[0][1].signal.aborted, false);
+  await finish(stop); assert.equal(s.requests[0][1].signal.aborted, true);
+  assert.equal(s.timers.size, 0); assert.equal(s.listenerCount(), 0);
+  resolve(jsonResponse(confirmed())); await drain(); await s.advance(s.conversion.RETRY_WINDOW_MS);
+  assert.equal(s.requests.length, 1); assert.equal(s.customEvents().length, 0); assert.equal(s.timers.size, 0);
 });

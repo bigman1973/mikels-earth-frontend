@@ -21,8 +21,8 @@ export async function compiledModule(path, imports, globals = {}) {
   return module.exports;
 }
 
-export async function runtime({ storage = new Map(), consent = { method: 'explicit', marketing: true, statistics: true }, pixel = 'offline-pixel', ga = 'offline-ga' } = {}) {
-  let now = 100000;
+export async function runtime({ storage = new Map(), consent = { method: 'explicit', marketing: true, statistics: true }, pixel = 'offline-pixel', ga = 'offline-ga', clockStart = 100000 } = {}) {
+  let now = clockStart;
   let serial = 0;
   const timers = new Map();
   const listeners = new Map();
@@ -56,6 +56,7 @@ export async function runtime({ storage = new Map(), consent = { method: 'explic
   const conversion = await compiledModule('src/utils/vipMetaConversion.js', { './metaPixel': meta }, globals);
   Object.assign(state, {
     window, globals, meta, analytics, conversion,
+    clockNow: () => now,
     customEvents: () => metaCalls.filter(args => args[0] === 'trackCustom'),
     gaEvents: () => gaCalls.filter(args => args[0] === 'event'),
     fire: (name = 'CookiebotOnAccept') => [...(listeners.get(name) || [])].forEach(fn => fn()),

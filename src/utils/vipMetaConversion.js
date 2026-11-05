@@ -1,10 +1,10 @@
 import { hasMarketingConsent, trackMetaVipSignupConfirmed } from './metaPixel';
 
 export const VIP_CONVERSION_EVENT = 'VIPSignupConfirmed';
-const MAX_ATTEMPTS = 3;
-const REQUEST_TIMEOUT_MS = 5000;
-const RETRY_DELAYS_MS = [1000, 3000];
-const RETRY_WINDOW_MS = 60000;
+export const MAX_ATTEMPTS = 3;
+export const REQUEST_TIMEOUT_MS = 25000;
+export const RETRY_DELAYS_MS = [10000, 20000];
+export const RETRY_WINDOW_MS = 60000;
 const CONSENT_EVENTS = ['CookiebotOnConsentReady', 'CookiebotOnAccept', 'CookiebotOnDecline'];
 // One coordinator per server event, not per render or Cookiebot callback.
 const jobs = new Map();
@@ -99,17 +99,18 @@ export const watchMetaVipSignupConfirmation = (signupId, apiUrl) => {
       if (!eligible() || job.controller || job.timer) return;
       const wait = state.next_retry_at - Date.now();
       if (wait > 0) {
-        job.timer = setTimeout(() => { job.timer = null; run(); }, wait);
+        job.timer = setTimeout(() => { job.timer = null; run(); }, Math.min(wait, state.deadline - Date.now()));
         return;
       }
       state.deadline ||= Date.now() + RETRY_WINDOW_MS;
+      const requestTimeout = Math.min(REQUEST_TIMEOUT_MS, state.deadline - Date.now());
       state.attempts += 1;
-      state.next_retry_at = Date.now() + REQUEST_TIMEOUT_MS + (RETRY_DELAYS_MS[state.attempts - 1] || 0);
+      state.next_retry_at = Math.min(state.deadline, Date.now() + requestTimeout + (RETRY_DELAYS_MS[state.attempts - 1] || 0));
       if (!saveState()) return;
       const controller = new AbortController();
       job.controller = controller;
       let timedOut = false;
-      const timeout = setTimeout(() => { timedOut = true; controller.abort(); }, REQUEST_TIMEOUT_MS);
+      const timeout = setTimeout(() => { timedOut = true; controller.abort(); }, requestTimeout);
       job.requestTimer = timeout;
       let temporary = false;
       try {
@@ -120,8 +121,8 @@ export const watchMetaVipSignupConfirmation = (signupId, apiUrl) => {
           signal: controller.signal,
         });
         const data = await response.json().catch(() => null);
-        if (job.cancelled || !job.subscribers.size || controller.signal.aborted) return;
-        if (response.ok && data?.confirmed === true
+        if (job.cancelled || !job.subscribers.size || controller.signal.aborted || Date.now() >= state.deadline) return;
+        if (response.status === 200 && data?.confirmed === true
             && data.event_name === VIP_CONVERSION_EVENT && data.event_id === eventId) {
           // capi_sent reports transport, not membership. A CAPI send failure does
           // not invalidate a genuine confirmation or change the shared event ID.
@@ -151,7 +152,7 @@ export const watchMetaVipSignupConfirmation = (signupId, apiUrl) => {
         job.requestTimer = null;
         job.controller = null;
         if (temporary && !job.cancelled) {
-          state.next_retry_at = Date.now() + (RETRY_DELAYS_MS[state.attempts - 1] || 0);
+          state.next_retry_at = Math.min(state.deadline, Date.now() + (RETRY_DELAYS_MS[state.attempts - 1] || 0));
           saveState();
           run();
         }
