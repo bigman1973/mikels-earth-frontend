@@ -3,8 +3,10 @@ import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate } from 'react-router-dom';
 import VipCountdown from '../components/VipCountdown';
 import { API_URL } from '../config/api';
+import useVipPageview from '../hooks/useVipPageview';
 
 const VipLanding = () => {
+  useVipPageview();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState('');
