@@ -11,7 +11,7 @@ import { getVolumeDiscountedLineTotal } from '../src/utils/volumePricing.js';
 import { getFixedPackOptions } from '../src/utils/fixedPackPricing.js';
 import { loadStoredCart, withoutStoredPromotionFields } from '../src/utils/cartStorage.js';
 import { getCartReferenceKey, getCouponItemReferences, reviewCartPromotions } from '../src/utils/cartPromotionValidation.js';
-import { buildProductMetadata, buildProductStructuredData } from '../src/seo/metadata.js';
+import { buildProductMetadata, buildProductStructuredData, NONINDEX_STATIC_ROUTE_SEO } from '../src/seo/metadata.js';
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), 'utf8');
 const response = (product, status = 200) => ({ ok: status === 200, status, json: async () => ({ product }) });
@@ -172,14 +172,16 @@ test('UI blocks stale coupons before payment, shows exact shared message, and ad
   assert.match(hook, /localProducts.filter\(isPublicFallbackProduct\)/);
 });
 
-test('existing sitemap contains only 23 routes and no draft pack static files are produced', async () => {
+test('existing sitemap contains only 23 routes and BF26 static files remain noindex outside it', async () => {
   const sitemap = await read('public/sitemap.xml');
   assert.equal([...sitemap.matchAll(/<loc>/g)].length, 23);
   const dist = process.env.FRONTEND_BUILD_OUTDIR;
   for (const pack of INDEPENDENT_PACKS) {
     assert.equal(sitemap.includes(`/producto/${pack.slug}<`), false);
+    assert.equal(NONINDEX_STATIC_ROUTE_SEO[`/producto/${pack.slug}`].robots, 'noindex, nofollow');
     if (dist) for (const path of [`producto/${pack.slug}.html`, `producto/${pack.slug}/index.html`]) {
-      await assert.rejects(access(resolve(dist, path)), { code: 'ENOENT' });
+      await access(resolve(dist, path));
+      assert.match(await readFile(resolve(dist, path), 'utf8'), /<meta name="robots" content="noindex, nofollow"/);
     }
   }
 });

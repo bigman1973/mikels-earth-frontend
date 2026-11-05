@@ -75,6 +75,36 @@ export const NONINDEX_STATIC_ROUTE_SEO = {
     description: 'Ya estás dentro. Revisa tu correo.',
     robots: 'noindex, nofollow',
   },
+  '/producto/aceite-temprano-sin-filtrar-cosecha-2025-26-pack-6': {
+    title: "Temprano 2025/26 · Pack de 6 | Mikel's Fruit",
+    description: 'Aceite de oliva virgen extra Temprano sin filtrar · Cosecha 2025/26 · Pack de 6 botellas de 500 ml.',
+    robots: 'noindex, nofollow',
+  },
+  '/producto/aceite-temprano-sin-filtrar-cosecha-2025-26-caja-12': {
+    title: "Temprano 2025/26 · Caja de 12 | Mikel's Fruit",
+    description: 'Aceite de oliva virgen extra Temprano sin filtrar · Cosecha 2025/26 · Caja de 12 botellas de 500 ml.',
+    robots: 'noindex, nofollow',
+  },
+  '/producto/black-friday-aceite-ecologico-pack-6': {
+    title: "Aceite ecológico · Pack de 6 | Mikel's Fruit",
+    description: 'Aceite de oliva virgen extra ecológico · Pack de 6 botellas de 500 ml.',
+    robots: 'noindex, nofollow',
+  },
+  '/producto/black-friday-paraguayo-720g-pack-3': {
+    title: "Paraguayo en Almíbar 720 g · Pack de 3 | Mikel's Fruit",
+    description: 'Paraguayo en almíbar · Pack de 3 tarros de 720 g.',
+    robots: 'noindex, nofollow',
+  },
+  '/producto/black-friday-paraguayo-720g-pack-6': {
+    title: "Paraguayo en Almíbar 720 g · Pack de 6 | Mikel's Fruit",
+    description: 'Paraguayo en almíbar · Pack de 6 tarros de 720 g.',
+    robots: 'noindex, nofollow',
+  },
+  '/producto/black-friday-aceite-5l-caja-3': {
+    title: "Aceite virgen extra PET 5 L · Caja de 3 | Mikel's Fruit",
+    description: 'Aceite de oliva virgen extra en garrafa PET de 5 L · Caja de 3 garrafas.',
+    robots: 'noindex, nofollow',
+  },
 };
 
 const PRODUCT_SEO = {

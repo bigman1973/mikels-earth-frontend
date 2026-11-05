@@ -22,7 +22,8 @@ test('VIP routes load directly with a static noindex head and self-referencing c
     readFile(SEO_MANAGER, 'utf8'),
   ]);
 
-  for (const [pathname, policy] of Object.entries(NONINDEX_STATIC_ROUTE_SEO)) {
+  for (const pathname of ['/vip', '/vip/gracias']) {
+    const policy = NONINDEX_STATIC_ROUTE_SEO[pathname];
     const html = await readRouteHtml(pathname);
     const canonical = tagContent(html, /<link rel="canonical" href="([^"]+)"/i);
     const robots = tagContent(html, /<meta name="robots" content="([^"]+)"/i);
