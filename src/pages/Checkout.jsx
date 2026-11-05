@@ -18,6 +18,7 @@ const Checkout = () => {
   const {
     cart, getCartTotal, getItemPrice, appliedDiscount, getDiscountAmount,
     updateItemPrices, couponMessage, promotionReviewReady, promotionReviewError, retryPromotionReview,
+    revalidateDiscountForCheckout,
   } = useCart();
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
@@ -114,6 +115,9 @@ const Checkout = () => {
     setPriceMismatchWarning(null);
     
     try {
+      const couponValidation = await revalidateDiscountForCheckout();
+      if (!couponValidation.success) throw new Error(couponValidation.message);
+
       trackMetaInitiateCheckout(cart, getCartTotal(), getItemPrice);
       trackGA4BeginCheckout(cart, getCartTotal(), getItemPrice);
 

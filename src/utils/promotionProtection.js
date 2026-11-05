@@ -8,6 +8,14 @@ export const PACK_COMPLETO_SLUG = 'pack-navidad-completo';
 export const PACK_COMPLETO_SKU = 'MIKPACKF';
 
 export const PROMOTION_COUPON_MESSAGE = 'Este código no se puede aplicar porque el pedido incluye productos en promoción.';
+const PROMOTION_COLLABORATOR_CODES = new Set(['IRVIANCESTRAL', 'DR.GEMMAVALLS']);
+export const normalizeCouponCode = (code) => typeof code === 'string' ? code.trim().toUpperCase() : '';
+// Solo se pasa aquí un cupón validado por el servidor, nunca localStorage.
+export const isPromotionAuthorizedCoupon = (coupon) => (
+  coupon?.valid_in_promotion === true
+  && PROMOTION_COLLABORATOR_CODES.has(normalizeCouponCode(coupon?.code))
+);
+
 // Veto de cupones únicamente: no modifica catálogo, precios ni packs/volumen.
 const BF26_COUPON_PROTECTED_SKUS = new Set([
   'BF26-TEMP6', 'BF26-TEMP12', 'BF26-ECO6',
@@ -41,7 +49,7 @@ export const isTempranoPromotionProtectedItem = (item = {}) => (
 );
 
 // El veto completo conserva las identidades aprobadas y ambos flags.
-export const hasOrderCouponBlockingItem = (cart = []) => hasPromotionProtectedItem(cart);
+export const hasOrderCouponBlockingItem = (cart = [], options) => hasPromotionProtectedItem(cart, options);
 
 const getProtectedCompositionSkus = (item = {}) => {
   const savedComposition = Array.isArray(item?.couponProtectedCompositionSkus)
@@ -71,19 +79,45 @@ export const isPromotionProtectedItem = (item = {}) => {
 
 // Los flags son señales conservadoras, nunca permisos: false no anula identidad.
 // El servidor resuelve la promoción real por persistencia e identidad.
-export const isCouponProtectedItem = (item = {}) => (
-  isPromotionProtectedItem(item)
-  || Boolean(item?.inPromotion || item?.in_promotion)
-  || BF26_COUPON_PROTECTED_SKUS.has(normalizedSku(item?.sku))
+// La protección de precio de un pack BF26/promoción no es un veto absoluto:
+// los colaboradores siguen necesitando autorización booleana del servidor.
+export const isUnconditionallyCouponProtectedItem = (item = {}) => {
+  const sku = normalizedSku(item?.sku);
+  if (AUTHORIZED_BF_PACK_SKUS.has(sku)) return false;
+  const singleSku = sku || PROTECTED_SINGLE_SKUS_BY_SLUG[item?.slug];
+  return PROTECTED_SINGLE_SKUS.has(singleSku)
+    || isPackCompletoPromotionProtectedItem(item)
+    || matchesIdentity(item, 'pack-temprano-premium', 'MIKPACKTP')
+    || getProtectedCompositionSkus(item).some((componentSku) => PROTECTED_SINGLE_SKUS.has(componentSku));
+};
+
+export const hasUnconditionallyCouponProtectedItem = (cart = []) => (
+  Array.isArray(cart) && cart.some(isUnconditionallyCouponProtectedItem)
 );
 
-export const hasPromotionProtectedItem = (cart = []) => (
-  Array.isArray(cart) && cart.some(isCouponProtectedItem)
+export const isCouponProtectedItem = (item = {}, { authorizedCoupon } = {}) => (
+  isUnconditionallyCouponProtectedItem(item)
+  || (!isPromotionAuthorizedCoupon(authorizedCoupon) && (
+    Boolean(item?.inPromotion || item?.in_promotion)
+    || Boolean(getIndependentPackIdentity(item))
+    || BF26_COUPON_PROTECTED_SKUS.has(normalizedSku(item?.sku))
+  ))
 );
 
-export const hasCouponEligibleItem = (cart = []) => (
+export const hasPromotionProtectedItem = (cart = [], options) => (
+  Array.isArray(cart) && cart.some((item) => isCouponProtectedItem(item, options))
+);
+
+export const hasCouponEligibleItem = (cart = [], options) => (
   Array.isArray(cart)
-  && !hasPromotionProtectedItem(cart)
+  && !hasPromotionProtectedItem(cart, options)
+  && cart.some((item) => Number(item?.quantity) > 0)
+);
+
+// La promoción global no debe ocultar el formulario ni impedir llegar al API.
+export const canValidateCouponForCart = (cart = []) => (
+  Array.isArray(cart)
+  && !hasUnconditionallyCouponProtectedItem(cart)
   && cart.some((item) => Number(item?.quantity) > 0)
 );
 
@@ -158,7 +192,7 @@ const couponPercentForItem = (item, appliedDiscount) => (
 );
 
 export const getCouponDiscountAmount = (cart = [], appliedDiscount, getItemPrice) => {
-  if (!appliedDiscount || !hasCouponEligibleItem(cart)) return 0;
+  if (!appliedDiscount || !hasCouponEligibleItem(cart, { authorizedCoupon: appliedDiscount })) return 0;
 
   return cart.reduce((discountAmount, item) => {
     const unitPrice = Number(getItemPrice(item)) || 0;

@@ -14,7 +14,7 @@ const bundle = await build({
   external: ['react', 'react/jsx-runtime'], define: { 'import.meta.env': '{}' },
 });
 
-const createHarness = ({ stored = [], catalogue = [] } = {}) => {
+const createHarness = ({ stored = [], catalogue = [], coupon = { code: 'NORMAL10', discount_percentage: 10 } } = {}) => {
   const hooks = [];
   const pendingEffects = [];
   const calls = [];
@@ -51,7 +51,7 @@ const createHarness = ({ stored = [], catalogue = [] } = {}) => {
     window: { localStorage: { getItem: (key) => storage.get(key) || null, setItem: (key, data) => storage.set(key, data), removeItem: (key) => storage.delete(key) } },
     fetch: async (url, options = {}) => {
       calls.push({ url, options });
-      if (url.includes('/api/coupon/validate')) return { ok: true, json: async () => ({ valid: true, coupon: { code: 'NORMAL10', discount_percentage: 10 } }) };
+      if (url.includes('/api/coupon/validate')) return { ok: true, json: async () => ({ valid: true, coupon }) };
       const slug = decodeURIComponent(new URL(url).pathname.split('/').pop());
       const product = catalogue.find((item) => item.slug === slug);
       return { ok: Boolean(product), status: product ? 200 : 404, json: async () => ({ product }) };
@@ -141,7 +141,7 @@ const master = {
 const literalMessage = 'Este código no se puede aplicar porque el pedido incluye productos en promoción.';
 
 for (const [label, blocker] of [['BF26-TEMP6 promoted', pack], ['MIKVET500 protected with catalogue inPromotion false', master]]) {
-  test(`real provider rejects the entire mixed ${label} order before coupon API in both insertion orders`, async () => {
+  test(`real provider rejects the entire mixed ${label} order, with promoted packs reaching coupon API and protected masters blocked`, async () => {
     for (const order of [[blocker, ordinary], [ordinary, blocker]]) {
       const harness = createHarness({ catalogue: [blocker, ordinary] });
       let value = harness.render();
@@ -157,7 +157,9 @@ for (const [label, blocker] of [['BF26-TEMP6 promoted', pack], ['MIKVET500 prote
       assert.equal(value.getDiscountAmount(), 0);
       assert.equal(JSON.stringify(value.cart), before, 'rejection cannot remove or modify lines');
       assert.equal(Math.round(value.getCartTotal() * 100), Math.round((blocker.price + ordinary.price) * 100));
-      assert.equal(harness.calls.length, 0, 'known protected/promoted mixed carts reject without any API request');
+      const expectedValidation = blocker.sku === 'MIKVET500' ? 0 : 1;
+      assert.equal(harness.calls.filter(call => call.url.includes('/api/coupon/validate')).length, expectedValidation, 'global promotions reach server validation; protected master never does');
+      assert.equal(harness.calls.filter(call => call.url.includes('/api/products/')).length, expectedValidation * 2, 'promoted carts retain authoritative review of both identities');
     }
   });
 }
@@ -235,4 +237,80 @@ test('real provider revalidates a persisted protected master mixed order yet ref
   assert.equal(Math.round(value.getCartTotal() * 100), 3990);
   assert.equal(value.cart.length, 2);
   assert.equal(harness.calls.filter((call) => call.url.includes('/api/coupon/validate')).length, 0);
+});
+
+
+test('real provider keeps all six independent pack prices while server-approved collaborators discount and revalidate checkout', async () => {
+  for (const code of ['IRVIANCESTRAL', 'dr.gemmavalls']) {
+    for (const [index, definition] of INDEPENDENT_PACKS.entries()) {
+      const promoted = { ...definition, id: 9000 + index, active: true, visibleInStore: false, inPromotion: true };
+      const harness = createHarness({
+        catalogue: [ordinary, promoted],
+        coupon: { code, discount_percentage: 10, valid_in_promotion: true },
+      });
+      let value = harness.render();
+      value.addToCart(promoted, 1);
+      value = harness.render();
+      value.addToCart(ordinary, 1);
+      value = harness.render();
+      const before = JSON.stringify(value.cart);
+      assert.equal((await value.applyDiscountCode(code)).success, true);
+      value = harness.render();
+      assert.equal(value.appliedDiscount.valid_in_promotion, true);
+      assert.equal(value.cart[0].sku, definition.sku);
+      assert.equal(value.cart[0].quantity, 1);
+      assert.equal(value.getItemPrice(value.cart[0]), definition.price);
+      assert.equal(JSON.stringify(value.cart), before, 'coupon does not modify identity, quantity or final price');
+      assert.equal(Math.round(value.getDiscountAmount() * 100), Math.round((definition.price + ordinary.price) * 10));
+      assert.equal((await value.revalidateDiscountForCheckout()).success, true);
+      value = harness.render();
+      const validations = harness.calls.filter(call => call.url.includes('/api/coupon/validate'));
+      assert.equal(validations.length, 2);
+      for (const call of validations) {
+        assert.deepEqual(JSON.parse(call.options.body), {
+          code,
+          items: [promoted, ordinary].map(({ id, slug, sku }) => ({ id, slug, sku })),
+        });
+      }
+      assert.equal(value.cart[0].price, definition.price);
+      if (definition.harvest) assert.match(value.cart[0].name, /2025\/26/);
+    }
+  }
+});
+
+test('real authoritative review cannot disguise protected persisted identity with forged SKU/id, including an add-on line', async () => {
+  for (const protectedProduct of [
+    master,
+    { ...ordinary, id: 9301, sku: 'MIKVE5LP', slug: 'aceite-5l-caja-3' },
+    { ...ordinary, id: 9302, sku: 'MIKPARA450', slug: 'paraguayo-almibar' },
+    { ...ordinary, id: 9303, sku: 'MIKPACKF', slug: 'pack-navidad-completo' },
+    { ...ordinary, id: 9304, sku: 'MIKPACKTP', slug: 'pack-temprano-premium' },
+  ]) {
+    for (const forged of [
+      { ...protectedProduct, sku: 'BF26-ECO6', inPromotion: false },
+      { ...protectedProduct, id: ordinary.id, sku: 'ORDINARY-FORGED', inPromotion: false, isAddon: true },
+    ]) {
+      const harness = createHarness({ catalogue: [ordinary, protectedProduct], coupon: { code: 'IRVIANCESTRAL', discount_percentage: 10, valid_in_promotion: true } });
+      let value = harness.render();
+      value.addToCart(ordinary, 1);
+      value = harness.render();
+      value.addToCart(forged, 1);
+      value = harness.render();
+      const before = JSON.stringify(value.cart);
+      assert.equal((await value.applyDiscountCode('IRVIANCESTRAL')).success, false);
+      value = harness.render();
+      assert.equal(value.appliedDiscount, null);
+      assert.equal(value.getDiscountAmount(), 0);
+      assert.equal(JSON.stringify(value.cart), before);
+      assert.equal(harness.calls.filter(call => call.url.includes('/api/coupon/validate')).length, 0, 'conflicting protected references never reach coupon validation');
+    }
+    const harness = createHarness({ catalogue: [ordinary], coupon: { code: 'IRVIANCESTRAL', discount_percentage: 10, valid_in_promotion: true } });
+    let value = harness.render();
+    value.addToCart({ ...ordinary, sku: protectedProduct.sku, isAddon: true }, 1);
+    value = harness.render();
+    assert.equal((await value.applyDiscountCode('IRVIANCESTRAL')).message, literalMessage);
+    value = harness.render();
+    assert.equal(value.getDiscountAmount(), 0);
+    assert.equal(harness.calls.length, 0, 'explicit protected SKU remains an absolute whole-coupon gate despite conflicting slug/id');
+  }
 });
