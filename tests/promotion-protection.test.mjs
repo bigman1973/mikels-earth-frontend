@@ -221,7 +221,7 @@ test('mixed carts containing protected Temprano veto the whole coupon in either 
   const pack = { sku: 'MIKPACKF', price: 81.90, quantity: 1 };
   for (const cart of [[ordinary, subscription, ...protectedLines, pack], [pack, ...protectedLines, subscription, ordinary]]) {
     assert.equal(hasPromotionProtectedItem(cart), true);
-    assert.equal(hasCouponEligibleItem(cart), true);
+    assert.equal(hasCouponEligibleItem(cart), false);
     assert.equal(hasOrderCouponBlockingItem(cart), true);
     assert.equal(cents(getCouponDiscountAmount(cart, coupon, unitPrice)), 0);
     assert.equal(cart.length, 6, 'whole-order rejection preserves every line');
@@ -232,13 +232,13 @@ test('mixed carts containing protected Temprano veto the whole coupon in either 
   assert.equal(hasPromotionProtectedItem(null), false);
 });
 
-test('narrow whole-order veto leaves other legacy protected mixed carts and exact-SKU matching unchanged', () => {
+test('whole-order veto includes inherited protected mixed carts and keeps exact-SKU matching unchanged', () => {
   const ordinary = { sku: 'MIKBIO19', price: 19.90, quantity: 2, purchaseType: 'one-time' };
   const subscription = { sku: 'ORDINARY-SUB', price: 10, quantity: 1, purchaseType: 'subscription' };
   const protectedLines = protectedSingles.slice(1).map((single) => ({ ...single, quantity: 1 }));
   const cart = [ordinary, subscription, ...protectedLines, { sku: 'MIKPACKF', price: 81.90, quantity: 1 }];
-  assert.equal(hasOrderCouponBlockingItem(cart), false);
-  assert.equal(cents(getCouponDiscountAmount(cart, coupon, unitPrice)), 598);
+  assert.equal(hasOrderCouponBlockingItem(cart), true);
+  assert.equal(cents(getCouponDiscountAmount(cart, coupon, unitPrice)), 0);
   for (const sku of ['MIKVET500R', 'MIKVET5002526', 'BF26-TEMP6-EXTRA']) {
     assert.equal(hasOrderCouponBlockingItem([{ sku, slug: 'aceite-temprano-sin-filtrar' }]), false);
   }
@@ -256,22 +256,49 @@ test('add-to-cart tracking reports full-price units, never a base-SKU pack disco
   }
 });
 
-test('cart UI keeps the code accordion available for rejection and preserves unrelated protected-line explanations', async () => {
+test('cart UI keeps the code accordion available for whole-order rejection without partial-discount explanations', async () => {
   const [drawer, cartContext, checkout] = await Promise.all([
     read('src/components/cart/CartDrawer.jsx'), read('src/context/CartContext.jsx'), read('src/pages/Checkout.jsx'),
   ]);
-  assert.match(drawer, /hasPromotionProtectedItem\(cart\)/);
   assert.match(drawer, /hasCouponEligibleItem\(cart\)/);
   assert.match(drawer, /getDiscountAmount,/);
-  assert.match(drawer, /!hasPromotionLine && hasProtectedPromotionLine && !hasEligiblePromotionLine &&/);
+  assert.match(drawer, /couponError &&/);
+  assert.match(drawer, /role="alert"[^>]*>\{couponError\}/);
   assert.match(drawer, /hasOrderCouponBlockingItem\(cart\)/);
   assert.match(drawer, /\{!appliedDiscount && \(/);
   assert.doesNotMatch(drawer, /!hasPromotionLine && promotionReviewReady && hasEligiblePromotionLine && !appliedDiscount/);
   assert.match(drawer, /codeMessage\.text !== couponMessage/);
-  assert.match(drawer, /El cupón solo se aplica a los demás productos\./);
+  assert.doesNotMatch(drawer, /El cupón solo se aplica a los demás productos\./);
   assert.match(drawer, /¿Tienes un código\?/);
   assert.match(cartContext, /isPromotionProtectedItem\(cartProduct\) \? 'one-time' : purchaseType/);
   assert.match(cartContext, /if \(!hasCouponEligibleItem\(cart\)\)/);
   assert.match(cartContext, /getCouponDiscountAmount\(cart, appliedDiscount, getItemPrice\)/);
   assert.match(checkout, /appliedDiscount && getDiscountAmount\(\) > 0/);
+});
+
+test('authorized independent BF pack identities remain unprotected even with protected base components', () => {
+  for (const sku of ['MIKVE5LPBF3', 'MIKBIO19BF6', 'MIKPARA450BF3', 'MIKPARA450BF6']) {
+    const item = {
+      sku, name: 'Independent draft fixture', price: 96.75, quantity: 1, purchaseType: 'one-time',
+      couponProtectedCompositionSkus: ['MIKVE5LP', 'MIKPARA450'], ...legacyPromotions,
+    };
+    assert.equal(isPromotionProtectedItem(item), false);
+    assert.equal(normalizePromotionProtectedCartItem(item), item);
+    assert.equal(normalizePromotionProtectedProduct(item), item);
+    assert.equal(getCouponDiscountAmount([item], coupon, unitPrice), 9.675);
+    assert.equal(getFixedPackOptions(item).length, 0, 'percentage fixtures are not fixed packs');
+    assert.equal(applyEditorialOverrides(item).subscriptionDiscount, 10);
+    assert.equal(products.some((product) => product.sku === sku), false, 'tests must not publish draft products in the fallback');
+  }
+});
+
+test('published legacy BF identities also retain their independent closed price, not a tier on the base SKU', () => {
+  const draftFixture = {
+    sku: 'MIKVE5LPBF3', price: 96.75, quantity: 1,
+    couponProtectedCompositionSkus: ['MIKVE5LP'],
+    tieredDiscountConfig: [{ actualQuantity: 1, price: 96.75, fixedPack: true }],
+  };
+  assert.equal(getFixedPackOptions(draftFixture).length, 1);
+  assert.equal(getVolumeDiscountedLineTotal(draftFixture, 1), 96.75);
+  assert.equal(getVolumeDiscountedLineTotal({ sku: 'MIKVE5LP', price: 43 }, 3), 129);
 });

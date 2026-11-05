@@ -2,7 +2,7 @@ import { isActiveProduct } from './productAccess.js';
 
 export const CART_PROMOTION_REVIEW_MESSAGE = 'No se ha podido comprobar el estado de los productos. Vuelve a intentarlo antes de aplicar un código o continuar al pago.';
 export const getCartReferenceKey = (cart = []) => JSON.stringify(cart.map(({ id, sku, slug, quantity, purchaseType, selectedVariant }) => [id ?? null, sku || '', slug || '', quantity, purchaseType || '', selectedVariant || '']));
-export const getCouponItemReferences = (cart = []) => cart.map(({ id, sku, slug, quantity }) => ({ id, sku: sku || '', slug: slug || '', quantity }));
+export const getCouponItemReferences = (cart = []) => cart.map(({ id, slug, sku }) => ({ id, slug: slug || '', sku: sku || '' }));
 
 // No utiliza el catálogo de /tienda (que excluye ocultos) ni campos persistidos.
 // Ante error/inactivo/referencias contradictorias conserva las líneas del

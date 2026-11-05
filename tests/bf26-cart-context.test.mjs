@@ -51,7 +51,7 @@ const createHarness = ({ stored = [], catalogue = [] } = {}) => {
     window: { localStorage: { getItem: (key) => storage.get(key) || null, setItem: (key, data) => storage.set(key, data), removeItem: (key) => storage.delete(key) } },
     fetch: async (url, options = {}) => {
       calls.push({ url, options });
-      if (url.includes('/api/coupon/validate')) return { json: async () => ({ valid: true, coupon: { code: 'NORMAL10', discount_percentage: 10 } }) };
+      if (url.includes('/api/coupon/validate')) return { ok: true, json: async () => ({ valid: true, coupon: { code: 'NORMAL10', discount_percentage: 10 } }) };
       const slug = decodeURIComponent(new URL(url).pathname.split('/').pop());
       const product = catalogue.find((item) => item.slug === slug);
       return { ok: Boolean(product), status: product ? 200 : 404, json: async () => ({ product }) };
@@ -103,7 +103,7 @@ test('real provider invalidates a previously applied coupon immediately when add
   const persisted = JSON.parse(harness.storage.get('mikels_cart'));
   assert.equal('inPromotion' in persisted[1], false);
   const validation = harness.calls.find((call) => call.url.includes('/api/coupon/validate'));
-  assert.deepEqual(JSON.parse(validation.options.body).items, [{ id: ordinary.id, sku: ordinary.sku, slug: ordinary.slug, quantity: 1 }]);
+  assert.deepEqual(JSON.parse(validation.options.body).items, [{ id: ordinary.id, sku: ordinary.sku, slug: ordinary.slug }]);
 });
 
 test('real provider refuses persisted false flags and recovers the true generic catalogue state before payment', async () => {

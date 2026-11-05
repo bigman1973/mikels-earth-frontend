@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { formatEuro } from '../../utils/formatMoney';
 import { getFixedPackForQuantity } from '../../utils/fixedPackPricing';
 import { isReservationSale } from '../../utils/reservationSale';
-import { hasCouponEligibleItem, hasPromotionProtectedItem, hasOrderCouponBlockingItem } from '../../utils/promotionProtection';
+import { hasCouponEligibleItem, hasOrderCouponBlockingItem } from '../../utils/promotionProtection';
 import { getTempranoHarvestIdentity } from '../../utils/tempranoHarvestIdentity';
 import { getIndependentPackIdentity } from '../../utils/independentPacks';
 
@@ -24,6 +24,7 @@ const CartDrawer = () => {
     getItemPrice,
     getDiscountAmount,
     appliedDiscount,
+    couponError,
     applyDiscountCode,
     removeDiscountCode,
     couponMessage,
@@ -35,7 +36,6 @@ const CartDrawer = () => {
   const [codeInput, setCodeInput] = useState('');
   const [codeMessage, setCodeMessage] = useState({ text: '', type: '' });
   const [showDiscount, setShowDiscount] = useState(false);
-  const hasProtectedPromotionLine = hasPromotionProtectedItem(cart);
   const hasEligiblePromotionLine = hasCouponEligibleItem(cart);
   const hasPromotionLine = hasOrderCouponBlockingItem(cart);
   const discountAmount = getDiscountAmount();
@@ -177,18 +177,14 @@ const CartDrawer = () => {
                   {t('delivery.notice')}
                 </p>
 
-                {couponMessage && <p role="alert" className="mt-3 text-sm text-[#1a1a1a]">{couponMessage}</p>}
+                {couponError && (
+                  <p role="alert" className="mt-3 text-sm text-[#1a1a1a]">{couponError}</p>
+                )}
                 {!promotionReviewReady && (
                   <div role="status" className="mt-3 text-sm text-[#1a1a1a]">
                     <p>{promotionReviewError || 'Comprobando el estado de los productos antes del pago…'}</p>
                     {promotionReviewError && <button type="button" onClick={retryPromotionReview} className="mt-2 underline underline-offset-4">Volver a comprobar</button>}
                   </div>
-                )}
-                {!hasPromotionLine && hasProtectedPromotionLine && !hasEligiblePromotionLine && (
-                  <p className="mt-3 text-sm text-[#1a1a1a]">Este producto no participa en promociones ni cupones.</p>
-                )}
-                {!hasPromotionLine && hasProtectedPromotionLine && hasEligiblePromotionLine && (
-                  <p className="mt-3 text-sm text-[#1a1a1a]">Los productos excluidos mantienen su precio. El cupón solo se aplica a los demás productos.</p>
                 )}
                 {!appliedDiscount && (
                   <div className="mt-3">
@@ -214,7 +210,7 @@ const CartDrawer = () => {
                         </button>
                       </div>
                     )}
-                    {codeMessage.text && codeMessage.text !== couponMessage && <p role="alert" className="mt-2 text-xs text-[#1a1a1a]">{codeMessage.text}</p>}
+                    {!couponError && codeMessage.text && codeMessage.text !== couponMessage && <p role="alert" className="mt-2 text-xs text-[#1a1a1a]">{codeMessage.text}</p>}
                   </div>
                 )}
 

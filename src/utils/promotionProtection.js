@@ -7,14 +7,24 @@ export const TEMPRANO_FINAL_PRICE = 19.90;
 export const PACK_COMPLETO_SLUG = 'pack-navidad-completo';
 export const PACK_COMPLETO_SKU = 'MIKPACKF';
 
+export const PROMOTION_COUPON_MESSAGE = 'Este código no se puede aplicar porque el pedido incluye productos en promoción.';
+// Veto de cupones únicamente: no modifica catálogo, precios ni packs/volumen.
+const BF26_COUPON_PROTECTED_SKUS = new Set([
+  'BF26-TEMP6', 'BF26-TEMP12', 'BF26-ECO6',
+  'BF26-PARA3', 'BF26-PARA6', 'BF26-5L3',
+]);
+
 const PROTECTED_SINGLE_SKUS_BY_SLUG = Object.freeze({
   [TEMPRANO_SLUG]: TEMPRANO_SKU,
   'aceite-5l-caja-3': 'MIKVE5LP',
   'paraguayo-almibar': 'MIKPARA450',
 });
 const PROTECTED_SINGLE_SKUS = new Set(Object.values(PROTECTED_SINGLE_SKUS_BY_SLUG));
+// Identidades heredadas publicadas: preserva su precio/configuración original.
+const AUTHORIZED_BF_PACK_SKUS = new Set([
+  'MIKVE5LPBF3', 'MIKBIO19BF6', 'MIKPARA450BF3', 'MIKPARA450BF6',
+]);
 
-export const PROMOTION_COUPON_MESSAGE = 'Este código no se puede aplicar porque el pedido incluye productos en promoción.';
 export const isInPromotion = (item = {}) => item?.inPromotion === true;
 export const hasInPromotionItem = (cart = []) => Array.isArray(cart) && cart.some(isInPromotion);
 
@@ -30,13 +40,8 @@ export const isTempranoPromotionProtectedItem = (item = {}) => (
   matchesIdentity(item, TEMPRANO_SLUG, TEMPRANO_SKU)
 );
 
-// El veto del pedido también cubre Temprano protegido y los packs BF exactos,
-// sin convertirlos en un flag promocional ni ampliar la política a otros SKU.
-export const hasOrderCouponBlockingItem = (cart = []) => (
-  Array.isArray(cart) && cart.some((item) => (
-    isInPromotion(item) || isTempranoPromotionProtectedItem(item) || Boolean(getIndependentPackIdentity(item))
-  ))
-);
+// El veto completo conserva las identidades aprobadas y ambos flags.
+export const hasOrderCouponBlockingItem = (cart = []) => hasPromotionProtectedItem(cart);
 
 const getProtectedCompositionSkus = (item = {}) => {
   const savedComposition = Array.isArray(item?.couponProtectedCompositionSkus)
@@ -55,6 +60,7 @@ export const isPackCompletoPromotionProtectedItem = (item = {}) => (
 
 export const isPromotionProtectedItem = (item = {}) => {
   const sku = normalizedSku(item?.sku);
+  if (AUTHORIZED_BF_PACK_SKUS.has(sku)) return false;
   if (isInPromotion(item) || getIndependentPackIdentity(item)) return true;
   const singleSku = sku || PROTECTED_SINGLE_SKUS_BY_SLUG[item?.slug];
   return PROTECTED_SINGLE_SKUS.has(singleSku)
@@ -63,13 +69,22 @@ export const isPromotionProtectedItem = (item = {}) => {
     || getProtectedCompositionSkus(item).some((componentSku) => PROTECTED_SINGLE_SKUS.has(componentSku));
 };
 
+// Los flags son señales conservadoras, nunca permisos: false no anula identidad.
+// El servidor resuelve la promoción real por persistencia e identidad.
+export const isCouponProtectedItem = (item = {}) => (
+  isPromotionProtectedItem(item)
+  || Boolean(item?.inPromotion || item?.in_promotion)
+  || BF26_COUPON_PROTECTED_SKUS.has(normalizedSku(item?.sku))
+);
+
 export const hasPromotionProtectedItem = (cart = []) => (
-  Array.isArray(cart) && cart.some(isPromotionProtectedItem)
+  Array.isArray(cart) && cart.some(isCouponProtectedItem)
 );
 
 export const hasCouponEligibleItem = (cart = []) => (
   Array.isArray(cart)
-  && cart.some((item) => !isPromotionProtectedItem(item) && Number(item?.quantity) > 0)
+  && !hasPromotionProtectedItem(cart)
+  && cart.some((item) => Number(item?.quantity) > 0)
 );
 
 const PROMOTION_METADATA = new Set([
@@ -143,12 +158,9 @@ const couponPercentForItem = (item, appliedDiscount) => (
 );
 
 export const getCouponDiscountAmount = (cart = [], appliedDiscount, getItemPrice) => {
-  if (!appliedDiscount || !Array.isArray(cart)) return 0;
-  if (hasOrderCouponBlockingItem(cart)) return 0;
+  if (!appliedDiscount || !hasCouponEligibleItem(cart)) return 0;
 
   return cart.reduce((discountAmount, item) => {
-    if (isPromotionProtectedItem(item)) return discountAmount;
-
     const unitPrice = Number(getItemPrice(item)) || 0;
     const quantity = Math.max(0, Number(item.quantity) || 0);
     return discountAmount + (unitPrice * quantity * (couponPercentForItem(item, appliedDiscount) / 100));

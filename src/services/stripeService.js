@@ -109,7 +109,7 @@ export const createSubscriptionCheckout = async (item, customerInfo) => {
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.error || 'Error al crear la suscripción');
+      throw new Error(error.message || error.error || 'Error al crear la suscripción');
     }
 
     const { sessionId, url, subscription_number } = await response.json();

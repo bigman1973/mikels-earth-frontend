@@ -71,7 +71,7 @@ test('six packs strip original price, subscription/volume tiers and discount bad
   }
 });
 
-test('badge and whole-coupon veto use the strict generic field, not the six-SKU whitelist', () => {
+test('badge uses strict generic field while coupon veto also conservatively rejects supplied truthy flags', () => {
   for (const promotion of [fixture(INDEPENDENT_PACKS[0]), { ...ordinary, sku: 'FUTURE-NON-BF-PRODUCT', inPromotion: true }]) {
     for (const cart of [[promotion, ordinary], [ordinary, promotion]]) {
       assert.equal(hasInPromotionItem(cart), true);
@@ -82,7 +82,7 @@ test('badge and whole-coupon veto use the strict generic field, not the six-SKU 
   }
   for (const flag of [undefined, false, 'true', 'false', 1]) {
     assert.equal(hasInPromotionItem([{ ...ordinary, inPromotion: flag }]), false);
-    assert.equal(getCouponDiscountAmount([{ ...ordinary, inPromotion: flag }], coupon, (item) => item.price), 1);
+    assert.equal(getCouponDiscountAmount([{ ...ordinary, inPromotion: flag }], coupon, (item) => item.price), flag ? 0 : 1);
   }
   assert.equal(PROMOTION_COUPON_MESSAGE, 'Este código no se puede aplicar porque el pedido incluye productos en promoción.');
 });
@@ -146,7 +146,7 @@ test('cart review fails closed on inactive, unavailable, conflicting identifiers
   ]) await assert.rejects(reviewCartPromotions({ cart: [item], apiUrl: 'http://local-test', fetchImpl }));
   await assert.rejects(reviewCartPromotions({ cart: [{ ...item, slug: '' }], apiUrl: 'http://local-test', fetchImpl: async () => response(item) }));
   assert.equal(item.quantity, 1);
-  assert.deepEqual(getCouponItemReferences([item]), [{ id: item.id, sku: item.sku, slug: item.slug, quantity: 1 }]);
+  assert.deepEqual(getCouponItemReferences([item]), [{ id: item.id, sku: item.sku, slug: item.slug }]);
   assert.notEqual(getCartReferenceKey([item]), getCartReferenceKey([{ ...item, quantity: 2 }]));
 });
 
@@ -159,7 +159,9 @@ test('UI blocks stale coupons before payment, shows exact shared message, and ad
   assert.match(context, /setAppliedDiscount\(null\);\s*setDiscountCode\(''\)/);
   assert.match(context, /items: getCouponItemReferences\(reviewedCart\)/);
   assert.match(context, /JSON.stringify\(cart.map\(withoutStoredPromotionFields\)\)/);
-  for (const ui of [drawer, checkout]) assert.match(ui, /couponMessage && <p role="alert"/);
+  assert.match(drawer, /couponError &&/);
+  assert.match(drawer, /role="alert"[^>]*>\{couponError\}/);
+  assert.match(checkout, /couponMessage && <p role="alert"/);
   assert.match(checkout, /if \(!promotionReviewReady\)/);
   assert.match(checkout, /disabled=\{loading \|\| !promotionReviewReady\}/);
   assert.match(editor, /inPromotion: false/);
