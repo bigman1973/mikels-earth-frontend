@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
 import { readFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -49,12 +50,27 @@ test('BF26 routes are additional to VIP and remain outside the original sitemap'
   assert.equal(Object.keys(NONINDEX_STATIC_ROUTE_SEO).length, CASES.length + 2);
 });
 
-test('static-route invariants keep Vercel, middleware, VIP, sitemap and the reviewed cart byte-identical', async () => {
+test('static-route invariants keep infrastructure byte-identical and VIP UI unchanged with only block A tracking', async () => {
   // The cart hash includes the separately authorized rejection-message fix.
-  // Every other static-route invariant remains on its original reviewed hash.
+  // Keep every original snapshot hash; verify VIP originals before comparing
+  // the full unchanged render/form, since block A authorizes tracking logic.
   const hashes = JSON.parse(await readFile(join(ROOT, 'tests/fixtures/bf26-static-invariants.json'), 'utf8'));
   for (const [name, expected] of Object.entries(hashes)) {
     const bytes = await readFile(join(ROOT, name));
+    if (['src/pages/VipLanding.jsx', 'src/pages/VipThanks.jsx'].includes(name)) {
+      const base = execFileSync('git', ['show', `4b3d9d74252f997824a5bb0b9d244186a1bf5799:${name}`], { cwd: ROOT });
+      assert.equal(createHash('sha256').update(base).digest('hex'), expected, `${name} original snapshot`);
+      const current = bytes.toString();
+      if (name.endsWith('VipLanding.jsx')) {
+        assert.equal(current.replace("import { storeVipConversionProof } from '../utils/vipMetaConversion';\n", '').replace('      storeVipConversionProof(signupId, data.conversion, response.status);\n', ''), base.toString());
+      } else {
+        const render = source => source.slice(source.indexOf('\n  return (\n'));
+        assert.equal(render(current), render(base.toString()), `${name} full render`);
+        assert.match(current, /watchMetaVipSignupConfirmation\(signupId, API_URL\)/);
+        assert.match(current, /mikels:ga4-vip-lead:/);
+      }
+      continue;
+    }
     assert.equal(createHash('sha256').update(bytes).digest('hex'), expected, `${name} is outside this release`);
   }
 });

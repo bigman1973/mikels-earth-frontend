@@ -177,6 +177,13 @@ export const trackMetaLead = (eventId) => {
   return track('Lead', { content_name: 'Black Friday VIP 2026' }, { eventID: eventId });
 };
 
+export const trackMetaVipSignupConfirmed = (eventId) => {
+  if (typeof eventId !== 'string' || !/^[A-Za-z0-9_-]{1,200}$/.test(eventId)) return false;
+  if (!syncMetaPixelConsent() || !isMetaTrackingEnabled()) return false;
+  window.fbq('trackCustom', 'VIPSignupConfirmed', { content_name: 'Black Friday VIP 2026' }, { eventID: eventId });
+  return true;
+};
+
 export const trackMetaPurchase = (receipt) => {
   const orderNumber = String(receipt?.order_number || '').trim();
   if (!orderNumber) return false;

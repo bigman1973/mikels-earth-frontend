@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import VipCountdown from '../components/VipCountdown';
 import { API_URL } from '../config/api';
 import useVipPageview from '../hooks/useVipPageview';
+import { storeVipConversionProof } from '../utils/vipMetaConversion';
 
 const VipLanding = () => {
   useVipPageview();
@@ -46,6 +47,7 @@ const VipLanding = () => {
       }
       const signupId = String(data.signup_id);
       window.sessionStorage.setItem(`mikels:vip-signup:${signupId}`, '1');
+      storeVipConversionProof(signupId, data.conversion, response.status);
       navigate(`/vip/gracias?signup=${encodeURIComponent(signupId)}`, { replace: true });
     } catch (error) {
       setStatus({ type: 'error', message: error.message || 'No se ha podido completar el alta. Inténtalo de nuevo más tarde.' });

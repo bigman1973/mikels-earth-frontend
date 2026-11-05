@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link, useSearchParams } from 'react-router-dom';
-import { trackMetaLead } from '../utils/metaPixel';
 import { trackGA4GenerateLead } from '../utils/googleAnalytics';
+import { API_URL } from '../config/api';
+import { watchMetaVipSignupConfirmation } from '../utils/vipMetaConversion';
 
 const VipThanks = () => {
   const [searchParams] = useSearchParams();
@@ -11,19 +12,27 @@ const VipThanks = () => {
   useEffect(() => {
     if (!signupId) return;
     const confirmedSignupKey = `mikels:vip-signup:${signupId}`;
-    if (window.sessionStorage.getItem(confirmedSignupKey) !== '1') return;
-    const storageKey = `mikels:vip-lead:${signupId}`;
+    try {
+      if (window.sessionStorage.getItem(confirmedSignupKey) !== '1') return;
+    } catch {
+      return;
+    }
+    const storageKey = `mikels:ga4-vip-lead:${signupId}`;
     const trackLead = () => {
-      if (window.sessionStorage.getItem(storageKey)) return;
-      const trackedByMeta = trackMetaLead(`vip-${signupId}`);
-      const trackedByGA4 = trackGA4GenerateLead();
-      if (trackedByMeta || trackedByGA4) window.sessionStorage.setItem(storageKey, '1');
+      try {
+        if (window.sessionStorage.getItem(storageKey)) return;
+        if (trackGA4GenerateLead()) window.sessionStorage.setItem(storageKey, '1');
+      } catch {
+        // Analytics storage failure must not alter the thank-you page.
+      }
     };
 
     trackLead();
+    const stopMetaConfirmation = watchMetaVipSignupConfirmation(signupId, API_URL);
     window.addEventListener('CookiebotOnConsentReady', trackLead);
     window.addEventListener('CookiebotOnAccept', trackLead);
     return () => {
+      stopMetaConfirmation();
       window.removeEventListener('CookiebotOnConsentReady', trackLead);
       window.removeEventListener('CookiebotOnAccept', trackLead);
     };

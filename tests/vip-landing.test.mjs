@@ -129,11 +129,14 @@ test('VIP conversion events happen only after a confirmed signup on the thank-yo
 
   assert.match(landing, /mikels:vip-signup:/);
   assert.match(landing, /navigate\(`\/vip\/gracias\?signup=/);
-  assert.match(thanks, /trackMetaLead\(`vip-\$\{signupId\}`\)/);
+  assert.match(landing, /storeVipConversionProof\(signupId, data\.conversion, response\.status\)/);
+  assert.match(thanks, /watchMetaVipSignupConfirmation\(signupId, API_URL\)/);
+  assert.doesNotMatch(thanks, /trackMetaLead|vip-\$\{signupId\}/);
   assert.match(thanks, /trackGA4GenerateLead\(\)/);
-  assert.match(thanks, /mikels:vip-lead:/);
+  assert.match(thanks, /mikels:ga4-vip-lead:/);
   assert.match(thanks, /mikels:vip-signup:/);
   assert.match(thanks, /content="noindex, nofollow"/);
   assert.match(meta, /track\('Lead'/);
+  assert.match(meta, /fbq\('trackCustom', 'VIPSignupConfirmed'/);
   assert.match(analytics, /track\('generate_lead'/);
 });

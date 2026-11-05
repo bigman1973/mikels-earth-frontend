@@ -7,6 +7,7 @@ import { getPhoneValidationMessage } from '../src/utils/formProtection.js';
 
 const vipSource = await readFile(new URL('../src/pages/VipLanding.jsx', import.meta.url), 'utf8');
 const contactSource = await readFile(new URL('../src/pages/Contact.jsx', import.meta.url), 'utf8');
+const currentThanks = await readFile(new URL('../src/pages/VipThanks.jsx', import.meta.url), 'utf8');
 const extract = source => source.match(/const handleSubmit = async[\s\S]*?\n  };/)[0];
 const event = () => ({ preventDefault() {} });
 
@@ -16,6 +17,7 @@ function vip(overrides = {}) {
     email: 'fixture@example.invalid', firstName: 'Prueba', marketingConsent: true, website: '',
     API_URL: 'https://forms.invalid', setStatus: value => { state.status = value; }, setIsSubmitting() {},
     navigate: (...args) => state.navigations.push(args),
+    storeVipConversionProof() { return false; }, // Existing fixture intentionally has no conversion proof.
     window: { sessionStorage: { setItem: (...args) => state.storage.push(args) } },
     fetch: async (_url, init) => {
       state.requests.push(JSON.parse(init.body));
@@ -110,8 +112,12 @@ test('VIP approved copy, noindex, consent checkbox and privacy binding unchanged
     const section = source => source.slice(source.indexOf(start), source.indexOf(end));
     assert.equal(section(vipSource), section(base));
   }
-  const clock = execFileSync('git', ['diff', '446ed95fbfe4a05725646ed7040b38cf430c8283', '--', 'src/components/VipCountdown.jsx', 'src/pages/VipThanks.jsx'], { encoding: 'utf8' });
+  const clock = execFileSync('git', ['diff', '446ed95fbfe4a05725646ed7040b38cf430c8283', '--', 'src/components/VipCountdown.jsx'], { encoding: 'utf8' });
   assert.equal(clock, '');
+  // Block A explicitly replaces only the thank-you tracking logic, not its JSX.
+  const thanksBase = execFileSync('git', ['show', '446ed95fbfe4a05725646ed7040b38cf430c8283:src/pages/VipThanks.jsx'], { encoding: 'utf8' });
+  const render = source => source.slice(source.indexOf('\n  return (\n'));
+  assert.equal(render(currentThanks), render(thanksBase));
   assert.match(vipSource, /aria-hidden="true"/);
   assert.match(vipSource, /tabIndex=\{-1\}/);
   assert.match(vipSource, /autoComplete="off"/);
