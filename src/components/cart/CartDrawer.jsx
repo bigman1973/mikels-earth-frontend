@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { formatEuro } from '../../utils/formatMoney';
 import { getFixedPackForQuantity } from '../../utils/fixedPackPricing';
 import { isReservationSale } from '../../utils/reservationSale';
-import { hasCouponEligibleItem } from '../../utils/promotionProtection';
+import { canValidateCouponForCart } from '../../utils/promotionProtection';
 import { getTempranoHarvestIdentity } from '../../utils/tempranoHarvestIdentity';
 
 const CartDrawer = () => {
@@ -31,7 +31,7 @@ const CartDrawer = () => {
   const [codeInput, setCodeInput] = useState('');
   const [codeMessage, setCodeMessage] = useState({ text: '', type: '' });
   const [showDiscount, setShowDiscount] = useState(false);
-  const hasEligiblePromotionLine = hasCouponEligibleItem(cart);
+  const hasEligiblePromotionLine = canValidateCouponForCart(cart);
   const discountAmount = getDiscountAmount();
 
   const applyCode = async () => {

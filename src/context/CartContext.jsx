@@ -8,10 +8,13 @@ import { trackGA4AddToCart } from '../utils/googleAnalytics';
 import { isReservationSale, normalizeReservationSaleProduct } from '../utils/reservationSale';
 import { getTempranoHarvestIdentity, normalizeTempranoHarvestName } from '../utils/tempranoHarvestIdentity';
 import {
+  canValidateCouponForCart,
   getCouponDiscountAmount,
-  hasCouponEligibleItem,
   hasPromotionProtectedItem,
+  hasUnconditionallyCouponProtectedItem,
+  isPromotionAuthorizedCoupon,
   isPromotionProtectedItem,
+  normalizeCouponCode,
   normalizePromotionProtectedCartItem,
   PROMOTION_COUPON_MESSAGE,
 } from '../utils/promotionProtection';
@@ -42,7 +45,7 @@ export const CartProvider = ({ children }) => {
   const cartRef = useRef(cart);
   const couponRequestRef = useRef(0);
   cartRef.current = cart;
-  const hasProtectedPromotionLine = hasPromotionProtectedItem(cart);
+  const hasProtectedPromotionLine = hasPromotionProtectedItem(cart, { authorizedCoupon: appliedDiscount });
 
   // Anular el código entero; el valor expuesto y el cálculo se bloquean ya en
   // este render, incluso antes del efecto y antes de entrar en checkout.
@@ -203,13 +206,13 @@ export const CartProvider = ({ children }) => {
       return { success: false, message: 'Introduce un código de descuento' };
     }
     const requestId = ++couponRequestRef.current;
-    if (hasPromotionProtectedItem(cartRef.current)) {
+    if (hasUnconditionallyCouponProtectedItem(cartRef.current)) {
       setDiscountCode('');
       setAppliedDiscount(null);
       setCouponError(PROMOTION_COUPON_MESSAGE);
       return { success: false, message: PROMOTION_COUPON_MESSAGE };
     }
-    if (!hasCouponEligibleItem(cart)) {
+    if (!canValidateCouponForCart(cart)) {
       return { success: false, message: 'Estos productos no participan en promociones ni cupones.' };
     }
     
@@ -231,7 +234,7 @@ export const CartProvider = ({ children }) => {
       
       const data = await response.json();
 
-      if (hasPromotionProtectedItem(cartRef.current)) {
+      if (hasUnconditionallyCouponProtectedItem(cartRef.current)) {
         return { success: false, message: PROMOTION_COUPON_MESSAGE };
       }
       if (requestId !== couponRequestRef.current || cartRef.current !== cart) {
@@ -240,21 +243,36 @@ export const CartProvider = ({ children }) => {
       if (data.error === 'PROMOTION_NOT_AVAILABLE' || data.message === PROMOTION_COUPON_MESSAGE) {
         setDiscountCode('');
         setAppliedDiscount(null);
-        setCouponError(data.message || PROMOTION_COUPON_MESSAGE);
-        return { success: false, message: data.message || PROMOTION_COUPON_MESSAGE };
+        setCouponError(PROMOTION_COUPON_MESSAGE);
+        return { success: false, message: PROMOTION_COUPON_MESSAGE };
       }
       
-      if (response.ok && data.valid) {
-        setCouponError('');
-        setDiscountCode(data.coupon.code);
-        setAppliedDiscount({
+      if (response.ok && data.valid === true && data.coupon) {
+        const validatedDiscount = {
           code: data.coupon.code,
           oneTimeDiscount: data.coupon.discount_percentage,
           subscriptionDiscount: 0,
-          email: data.coupon.email
-        });
-        return { success: true, message: 'Cupón aplicado correctamente' };
+          email: data.coupon.email,
+          valid_in_promotion: isPromotionAuthorizedCoupon(data.coupon)
+            && normalizeCouponCode(data.coupon.code) === normalizeCouponCode(normalizedCode),
+        };
+        if (hasPromotionProtectedItem(cartRef.current, { authorizedCoupon: validatedDiscount })) {
+          setDiscountCode('');
+          setAppliedDiscount(null);
+          setCouponError(PROMOTION_COUPON_MESSAGE);
+          return { success: false, message: PROMOTION_COUPON_MESSAGE };
+        }
+        setCouponError('');
+        setDiscountCode(data.coupon.code);
+        setAppliedDiscount(validatedDiscount);
+        return { success: true, message: 'Cupón aplicado correctamente', validatedDiscount };
       } else {
+        if (hasPromotionProtectedItem(cartRef.current)) {
+          setDiscountCode('');
+          setAppliedDiscount(null);
+          setCouponError(PROMOTION_COUPON_MESSAGE);
+          return { success: false, message: PROMOTION_COUPON_MESSAGE };
+        }
         return { success: false, message: data.message || 'Cupón no válido' };
       }
     } catch (error) {
@@ -270,6 +288,27 @@ export const CartProvider = ({ children }) => {
     couponRequestRef.current += 1;
   };
 
+  // Las señales guardadas del producto no prueban la promoción vigente. Antes
+  // de checkout se vuelve a validar el código con todas las identidades actuales.
+  const revalidateDiscountForCheckout = async () => {
+    if (!appliedDiscount || hasProtectedPromotionLine) return { success: true };
+    const result = await applyDiscountCode(appliedDiscount.code);
+    if (result.success && (
+      normalizeCouponCode(result.validatedDiscount.code) !== normalizeCouponCode(appliedDiscount.code)
+      || Number(result.validatedDiscount.oneTimeDiscount) !== Number(appliedDiscount.oneTimeDiscount)
+      || result.validatedDiscount.valid_in_promotion !== appliedDiscount.valid_in_promotion
+    )) {
+      // El render/handler actual todavía contiene los valores anteriores.
+      return { success: false, message: 'El cupón ha cambiado. Revisa el total y vuelve a continuar.' };
+    }
+    if (!result.success) {
+      setDiscountCode('');
+      setAppliedDiscount(null);
+      setCouponError(result.message);
+    }
+    return result;
+  };
+
   // Calcular precio de un item con descuento por volumen si aplica
   const getItemPrice = (item) => {
     item = normalizePromotionProtectedCartItem(item);
@@ -280,8 +319,7 @@ export const CartProvider = ({ children }) => {
   const getCartTotal = () => {
     let total = cart.reduce((sum, item) => sum + (getItemPrice(item) * item.quantity), 0);
     
-    // El servidor confirma vigencia y vinculación; nunca se calcula una
-    // fracción del cupón si el pedido contiene una línea en promoción.
+    // El servidor confirma vigencia y vinculación; un veto anula todo el cupón.
     if (appliedDiscount) {
       total -= getCouponDiscountAmount(cart, appliedDiscount, getItemPrice);
     }
@@ -341,6 +379,7 @@ export const CartProvider = ({ children }) => {
     couponError: hasProtectedPromotionLine ? PROMOTION_COUPON_MESSAGE : couponError,
     applyDiscountCode,
     removeDiscountCode,
+    revalidateDiscountForCheckout,
     getDiscountAmount,
   };
 

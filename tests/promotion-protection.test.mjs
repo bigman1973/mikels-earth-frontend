@@ -239,7 +239,7 @@ test('cart UI shows the complete coupon veto inline and the shared context prote
   const [drawer, cartContext, checkout] = await Promise.all([
     read('src/components/cart/CartDrawer.jsx'), read('src/context/CartContext.jsx'), read('src/pages/Checkout.jsx'),
   ]);
-  assert.match(drawer, /hasCouponEligibleItem\(cart\)/);
+  assert.match(drawer, /canValidateCouponForCart\(cart\)/);
   assert.match(drawer, /getDiscountAmount,/);
   assert.match(drawer, /couponError &&/);
   assert.match(drawer, /role="alert"[^>]*>\{couponError\}/);
@@ -247,7 +247,7 @@ test('cart UI shows the complete coupon veto inline and the shared context prote
   assert.doesNotMatch(drawer, /El cupón solo se aplica a los demás productos\./);
   assert.match(drawer, /¿Tienes un código\?/);
   assert.match(cartContext, /isPromotionProtectedItem\(cartProduct\) \? 'one-time' : purchaseType/);
-  assert.match(cartContext, /if \(!hasCouponEligibleItem\(cart\)\)/);
+  assert.match(cartContext, /if \(!canValidateCouponForCart\(cart\)\)/);
   assert.match(cartContext, /getCouponDiscountAmount\(cart, appliedDiscount, getItemPrice\)/);
   assert.match(checkout, /appliedDiscount && getDiscountAmount\(\) > 0/);
 });
