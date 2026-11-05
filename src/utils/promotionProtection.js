@@ -77,31 +77,17 @@ export const isPromotionProtectedItem = (item = {}) => {
     || getProtectedCompositionSkus(item).some((componentSku) => PROTECTED_SINGLE_SKUS.has(componentSku));
 };
 
-// Los flags son señales conservadoras, nunca permisos: false no anula identidad.
-// El servidor resuelve la promoción real por persistencia e identidad.
-// La protección de precio de un pack BF26/promoción no es un veto absoluto:
-// los colaboradores siguen necesitando autorización booleana del servidor.
-export const isUnconditionallyCouponProtectedItem = (item = {}) => {
-  const sku = normalizedSku(item?.sku);
-  if (AUTHORIZED_BF_PACK_SKUS.has(sku)) return false;
-  const singleSku = sku || PROTECTED_SINGLE_SKUS_BY_SLUG[item?.slug];
-  return PROTECTED_SINGLE_SKUS.has(singleSku)
-    || isPackCompletoPromotionProtectedItem(item)
-    || matchesIdentity(item, 'pack-temprano-premium', 'MIKPACKTP')
-    || getProtectedCompositionSkus(item).some((componentSku) => PROTECTED_SINGLE_SKUS.has(componentSku));
-};
-
-export const hasUnconditionallyCouponProtectedItem = (cart = []) => (
-  Array.isArray(cart) && cart.some(isUnconditionallyCouponProtectedItem)
-);
-
+// Elegibilidad de cupones separada de precio/tiers/suscripción: los artículos
+// normales, incluido Temprano y los packs antiguos, admiten cupones vigentes.
+// Ni isPromotionProtectedItem ni la composición de un pack vetan un cupón.
+// Los flags son señales conservadoras; el servidor resuelve la promoción real
+// y solo los dos colaboradores exactos con autorización validada la permiten.
 export const isCouponProtectedItem = (item = {}, { authorizedCoupon } = {}) => (
-  isUnconditionallyCouponProtectedItem(item)
-  || (!isPromotionAuthorizedCoupon(authorizedCoupon) && (
+  !isPromotionAuthorizedCoupon(authorizedCoupon) && (
     Boolean(item?.inPromotion || item?.in_promotion)
     || Boolean(getIndependentPackIdentity(item))
     || BF26_COUPON_PROTECTED_SKUS.has(normalizedSku(item?.sku))
-  ))
+  )
 );
 
 export const hasPromotionProtectedItem = (cart = [], options) => (
@@ -117,7 +103,6 @@ export const hasCouponEligibleItem = (cart = [], options) => (
 // La promoción global no debe ocultar el formulario ni impedir llegar al API.
 export const canValidateCouponForCart = (cart = []) => (
   Array.isArray(cart)
-  && !hasUnconditionallyCouponProtectedItem(cart)
   && cart.some((item) => Number(item?.quantity) > 0)
 );
 

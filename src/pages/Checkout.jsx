@@ -13,18 +13,34 @@ import { trackGA4BeginCheckout } from '../utils/googleAnalytics';
 import { isReservationSale } from '../utils/reservationSale';
 import { getIndependentPackIdentity } from '../utils/independentPacks';
 import { CART_PROMOTION_REVIEW_MESSAGE } from '../utils/cartPromotionValidation';
+import { canValidateCouponForCart } from '../utils/promotionProtection';
 
 const Checkout = () => {
   const {
     cart, getCartTotal, getItemPrice, appliedDiscount, getDiscountAmount,
     updateItemPrices, couponMessage, promotionReviewReady, promotionReviewError, retryPromotionReview,
     revalidateDiscountForCheckout,
+    applyDiscountCode, removeDiscountCode, couponError,
   } = useCart();
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [priceMismatchWarning, setPriceMismatchWarning] = useState(null);
+  const [codeInput, setCodeInput] = useState('');
+  const [codeMessage, setCodeMessage] = useState('');
+  const [validatingCoupon, setValidatingCoupon] = useState(false);
+
+  const applyCode = async () => {
+    setValidatingCoupon(true);
+    try {
+      const result = await applyDiscountCode(codeInput);
+      setCodeMessage(result.message);
+      if (result.success) setCodeInput('');
+    } finally {
+      setValidatingCoupon(false);
+    }
+  };
   
   const [formData, setFormData] = useState({
     name: '',
@@ -562,9 +578,36 @@ const Checkout = () => {
                 </div>
               </div>
 
+              {couponError && couponError !== couponMessage && <p role="alert" className="mb-3 text-sm text-[#1a1a1a]">{couponError}</p>}
+              {canValidateCouponForCart(cart) && !appliedDiscount && (
+                <div className="mb-6">
+                  <label htmlFor="checkout-coupon" className="mb-2 block text-sm font-medium text-[#1a1a1a]">¿Tienes un código?</label>
+                  <div className="flex gap-2">
+                    <input
+                      id="checkout-coupon"
+                      type="text"
+                      value={codeInput}
+                      onChange={(event) => setCodeInput(event.target.value.toUpperCase())}
+                      placeholder="Introduce tu código"
+                      disabled={loading || validatingCoupon}
+                      className="min-w-0 flex-1 rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm outline-none focus:border-[#1a1a1a] focus:ring-2 focus:ring-black/10"
+                    />
+                    <button type="button" onClick={applyCode} disabled={loading || validatingCoupon} className="rounded-lg border border-[#1a1a1a] px-3 py-2 text-sm font-semibold text-[#1a1a1a] disabled:opacity-50">
+                      {t('checkout.apply')}
+                    </button>
+                  </div>
+                  {!couponError && codeMessage && <p role="status" className="mt-2 text-sm text-[#1a1a1a]">{codeMessage}</p>}
+                </div>
+              )}
+              {appliedDiscount && (
+                <button type="button" onClick={() => { removeDiscountCode(); setCodeMessage(''); }} disabled={loading || validatingCoupon} className="mb-4 text-sm text-[#1a1a1a] underline underline-offset-2">
+                  {t('cart.remove')} {appliedDiscount.code}
+                </button>
+              )}
+
               <button
                 onClick={handleCheckout}
-                disabled={loading || !promotionReviewReady}
+                disabled={loading || validatingCoupon || !promotionReviewReady}
                 className="w-full bg-primary text-white py-4 rounded-lg font-semibold hover:bg-primary/90 transition-all shadow-lg hover:shadow-xl transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {loading ? (

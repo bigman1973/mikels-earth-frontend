@@ -163,7 +163,7 @@ test('UI blocks stale coupons before payment, shows exact shared message, and ad
   assert.match(drawer, /role="alert"[^>]*>\{couponError\}/);
   assert.match(checkout, /couponMessage && <p role="alert"/);
   assert.match(checkout, /if \(!promotionReviewReady\)/);
-  assert.match(checkout, /disabled=\{loading \|\| !promotionReviewReady\}/);
+  assert.match(checkout, /disabled=\{loading \|\| validatingCoupon \|\| !promotionReviewReady\}/);
   assert.match(editor, /inPromotion: false/);
   assert.match(editor, /inPromotion: data.inPromotion === true/);
   assert.match(editor, /field: 'inPromotion', label: 'En promoción'/);

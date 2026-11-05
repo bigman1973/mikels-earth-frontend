@@ -66,8 +66,8 @@ test('each current single SKU is protected by SKU or by a legacy slug, at every 
       for (const quantity of [1, 2, 3, 6, 12]) {
         const item = { ...identity, price: single.price, quantity, purchaseType: 'one-time', ...legacyPromotions };
         assert.equal(isPromotionProtectedItem(item), true);
-        assert.equal(getCouponDiscountAmount([item], coupon, unitPrice), 0);
-        assert.equal(hasCouponEligibleItem([item]), false);
+        assert.equal(cents(getCouponDiscountAmount([item], coupon, unitPrice)), cents(single.price * quantity * 0.10));
+        assert.equal(hasCouponEligibleItem([item]), true, 'price protection is not coupon exclusion');
         assert.equal(getApplicableVolumeTier(item, quantity), null);
         assert.deepEqual(getFixedPackOptions(item), []);
         assert.equal(getVolumeDiscountedUnitPrice(item, quantity), single.price);
@@ -154,7 +154,7 @@ test('Pack Completo and explicit protected mixed-pack compositions retain their 
   for (const identity of items) {
     const item = { ...identity, price: 81.90, quantity: 1, purchaseType: 'one-time', ...legacyPromotions };
     assert.equal(isPromotionProtectedItem(item), true);
-    assert.equal(getCouponDiscountAmount([item], coupon, unitPrice), 0);
+    assert.equal(cents(getCouponDiscountAmount([item], coupon, unitPrice)), 819, 'composition protects price, not coupons');
     assertNoPromotions(normalizePromotionProtectedProduct(item));
     assert.equal(normalizePromotionProtectedCartItem(item).price, 81.90);
     assert.deepEqual(getFixedPackOptions(item), []);
@@ -214,35 +214,46 @@ test('protected add-ons are sanitized independently and ordinary gift cases stay
   assert.equal(protectedAddon.subscriptionDiscount, 10, 'must not mutate nested inputs');
 });
 
-test('mixed carts containing protected Temprano veto the whole coupon in either insertion order', () => {
+test('ordinary mixed carts accept coupons, while a real promotion vetoes the entire coupon in either order', () => {
   const ordinary = { sku: 'MIKBIO19', price: 19.90, quantity: 2, purchaseType: 'one-time' };
   const subscription = { sku: 'ORDINARY-SUB', price: 10, quantity: 1, purchaseType: 'subscription' };
   const protectedLines = protectedSingles.map((single) => ({ ...single, quantity: 1, purchaseType: 'one-time' }));
   const pack = { sku: 'MIKPACKF', price: 81.90, quantity: 1 };
   for (const cart of [[ordinary, subscription, ...protectedLines, pack], [pack, ...protectedLines, subscription, ordinary]]) {
-    assert.equal(hasPromotionProtectedItem(cart), true);
-    assert.equal(hasCouponEligibleItem(cart), false);
-    assert.equal(hasOrderCouponBlockingItem(cart), true);
-    assert.equal(cents(getCouponDiscountAmount(cart, coupon, unitPrice)), 0);
-    assert.equal(cart.length, 6, 'whole-order rejection preserves every line');
+    assert.equal(hasPromotionProtectedItem(cart), false);
+    assert.equal(hasOrderCouponBlockingItem(cart), false);
+    assert.equal(cart.length, 6, 'coupon permission preserves every line');
+    assert.equal(hasCouponEligibleItem(cart), true);
+    const expected = cart.reduce((sum, item) => sum + item.price * item.quantity * (item.purchaseType === 'subscription' ? 0.20 : 0.10), 0);
+    assert.equal(cents(getCouponDiscountAmount(cart, coupon, unitPrice)), cents(expected));
+    for (const promotion of [{ sku: 'BF26-ECO6', price: 50, quantity: 1 }, { ...ordinary, inPromotion: true }, { ...ordinary, in_promotion: true }]) {
+      for (const mixed of [[...cart, promotion], [promotion, ...cart]]) {
+        assert.equal(hasPromotionProtectedItem(mixed), true);
+        assert.equal(hasCouponEligibleItem(mixed), false);
+        assert.equal(getCouponDiscountAmount(mixed, coupon, unitPrice), 0);
+      }
+    }
   }
-  assert.equal(getCouponDiscountAmount([...protectedLines, pack], coupon, unitPrice), 0);
+  assert.equal(getCouponDiscountAmount([...protectedLines, pack], coupon, unitPrice) > 0, true);
   assert.equal(hasCouponEligibleItem([]), false);
   assert.equal(hasCouponEligibleItem(null), false);
   assert.equal(hasPromotionProtectedItem(null), false);
 });
 
-test('whole-order veto includes inherited protected mixed carts and keeps exact-SKU matching unchanged', () => {
+test('ordinary inherited mixed carts accept coupons and exact promotion identities still veto the whole order', () => {
   const ordinary = { sku: 'MIKBIO19', price: 19.90, quantity: 2, purchaseType: 'one-time' };
   const subscription = { sku: 'ORDINARY-SUB', price: 10, quantity: 1, purchaseType: 'subscription' };
   const protectedLines = protectedSingles.slice(1).map((single) => ({ ...single, quantity: 1 }));
   const cart = [ordinary, subscription, ...protectedLines, { sku: 'MIKPACKF', price: 81.90, quantity: 1 }];
-  assert.equal(hasOrderCouponBlockingItem(cart), true);
-  assert.equal(cents(getCouponDiscountAmount(cart, coupon, unitPrice)), 0);
+  assert.equal(hasOrderCouponBlockingItem(cart), false);
+  assert.equal(cents(getCouponDiscountAmount(cart, coupon, unitPrice)), cents(cart.reduce((sum, item) => sum + item.price * item.quantity * (item.purchaseType === 'subscription' ? 0.20 : 0.10), 0)));
+  assert.equal(hasOrderCouponBlockingItem([...cart, { sku: 'BF26-TEMP6' }]), true);
+  assert.equal(getCouponDiscountAmount([...cart, { sku: 'BF26-TEMP6' }], coupon, unitPrice), 0);
   for (const sku of ['MIKVET500R', 'MIKVET5002526', 'BF26-TEMP6-EXTRA']) {
     assert.equal(hasOrderCouponBlockingItem([{ sku, slug: 'aceite-temprano-sin-filtrar' }]), false);
   }
-  assert.equal(hasOrderCouponBlockingItem([{ slug: 'aceite-temprano-sin-filtrar' }]), true);
+  assert.equal(hasOrderCouponBlockingItem([{ slug: 'aceite-temprano-sin-filtrar' }]), false);
+  assert.equal(hasOrderCouponBlockingItem([{ slug: INDEPENDENT_PACKS[0].slug }]), true);
   assert.equal(hasOrderCouponBlockingItem([]), false);
   assert.equal(hasOrderCouponBlockingItem(null), false);
 });
@@ -274,6 +285,9 @@ test('cart UI keeps the code accordion available for whole-order rejection witho
   assert.match(cartContext, /if \(!canValidateCouponForCart\(cart\)\)/);
   assert.match(cartContext, /getCouponDiscountAmount\(cart, appliedDiscount, getItemPrice\)/);
   assert.match(checkout, /appliedDiscount && getDiscountAmount\(\) > 0/);
+  assert.match(checkout, /canValidateCouponForCart\(cart\) && !appliedDiscount/);
+  assert.match(checkout, /htmlFor="checkout-coupon"/);
+  assert.match(checkout, /await applyDiscountCode\(codeInput\)/);
 });
 
 test('authorized independent BF pack identities remain unprotected even with protected base components', () => {

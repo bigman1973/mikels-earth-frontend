@@ -12,7 +12,6 @@ import {
   getCouponDiscountAmount,
   hasOrderCouponBlockingItem,
   hasPromotionProtectedItem,
-  hasUnconditionallyCouponProtectedItem,
   isPromotionAuthorizedCoupon,
   isPromotionProtectedItem,
   normalizeCouponCode,
@@ -244,11 +243,10 @@ export const CartProvider = ({ children }) => {
       setCouponError(PROMOTION_COUPON_MESSAGE);
       return { success: false, message: PROMOTION_COUPON_MESSAGE };
     };
-    if (hasUnconditionallyCouponProtectedItem(cartRef.current)) return rejectPromotion();
     if (!promotionReviewReady) return { success: false, message: promotionReviewError || CART_PROMOTION_REVIEW_MESSAGE };
     if (!normalizedCode) return { success: false, message: 'Introduce un código de descuento' };
     if (!canValidateCouponForCart(cart)) {
-      return { success: false, message: 'Estos productos no participan en promociones ni cupones.' };
+      return { success: false, message: 'Añade productos al carrito para aplicar un cupón.' };
     }
     const snapshot = cartRef.current;
     const snapshotKey = getCartReferenceKey(snapshot);
@@ -259,7 +257,6 @@ export const CartProvider = ({ children }) => {
       }
       const reviewedCart = snapshot.map((item, index) => normalizePromotionProtectedCartItem({ ...item, ...flags[index], promotionValidationPending: false }));
       setCart(reviewedCart);
-      if (hasUnconditionallyCouponProtectedItem(reviewedCart)) return rejectPromotion();
       const response = await fetch(`${API_URL}/api/coupon/validate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -267,7 +264,6 @@ export const CartProvider = ({ children }) => {
         body: JSON.stringify({ code: normalizedCode, items: getCouponItemReferences(reviewedCart) })
       });
       const data = await response.json();
-      if (hasUnconditionallyCouponProtectedItem(cartRef.current)) return rejectPromotion();
       if (requestId !== couponRequestRef.current || getCartReferenceKey(cartRef.current) !== snapshotKey) {
         return { success: false, message: 'El carrito ha cambiado. Vuelve a aplicar el código.' };
       }

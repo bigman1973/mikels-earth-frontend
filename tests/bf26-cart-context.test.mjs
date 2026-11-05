@@ -140,31 +140,32 @@ const master = {
 };
 const literalMessage = 'Este código no se puede aplicar porque el pedido incluye productos en promoción.';
 
-for (const [label, blocker] of [['BF26-TEMP6 promoted', pack], ['MIKVET500 protected with catalogue inPromotion false', master]]) {
-  test(`real provider rejects the entire mixed ${label} order, with promoted packs reaching coupon API and protected masters blocked`, async () => {
+for (const [label, blocker] of [['BF26-TEMP6 promoted', pack], ['MIKVET500 normal with catalogue inPromotion false', master]]) {
+  test(`real provider validates the entire mixed ${label} order; only actual promotion vetoes the coupon`, async () => {
     for (const order of [[blocker, ordinary], [ordinary, blocker]]) {
       const harness = createHarness({ catalogue: [blocker, ordinary] });
       let value = harness.render();
       for (const item of order) { value.addToCart(item, 1); value = harness.render(); }
       const before = JSON.stringify(value.cart);
       const result = await value.applyDiscountCode('NORMAL10');
-      assert.equal(result.success, false);
-      assert.equal(result.message, literalMessage);
+      const promoted = blocker.sku === 'BF26-TEMP6';
+      assert.equal(result.success, !promoted);
+      if (promoted) assert.equal(result.message, literalMessage);
       value = harness.render();
-      assert.equal(value.couponMessage, literalMessage);
-      assert.equal(value.appliedDiscount, null);
-      assert.equal(value.discountCode, '');
-      assert.equal(value.getDiscountAmount(), 0);
-      assert.equal(JSON.stringify(value.cart), before, 'rejection cannot remove or modify lines');
-      assert.equal(Math.round(value.getCartTotal() * 100), Math.round((blocker.price + ordinary.price) * 100));
-      const expectedValidation = blocker.sku === 'MIKVET500' ? 0 : 1;
-      assert.equal(harness.calls.filter(call => call.url.includes('/api/coupon/validate')).length, expectedValidation, 'global promotions reach server validation; protected master never does');
-      assert.equal(harness.calls.filter(call => call.url.includes('/api/products/')).length, expectedValidation * 2, 'promoted carts retain authoritative review of both identities');
+      assert.equal(value.couponMessage, promoted ? literalMessage : '');
+      assert.equal(value.appliedDiscount?.code ?? null, promoted ? null : 'NORMAL10');
+      assert.equal(value.discountCode, promoted ? '' : 'NORMAL10');
+      const subtotal = blocker.price + ordinary.price;
+      assert.equal(Math.round(value.getDiscountAmount() * 100), promoted ? 0 : Math.round(subtotal * 10));
+      assert.equal(JSON.stringify(value.cart), before, 'coupon permission or rejection never changes line identity or pricing');
+      assert.equal(Math.round(value.getCartTotal() * 100), promoted ? Math.round(subtotal * 100) : Math.round(subtotal * 90));
+      assert.equal(harness.calls.filter(call => call.url.includes('/api/coupon/validate')).length, 1);
+      assert.equal(harness.calls.filter(call => call.url.includes('/api/products/')).length, 2, 'both products retain authoritative review');
     }
   });
 }
 
-test('real provider invalidates a pre-applied coupon synchronously when protected master joins an ordinary order', async () => {
+test('real provider keeps a pre-applied coupon when ordinary current Temprano joins and revalidates all current identities', async () => {
   const harness = createHarness({ catalogue: [ordinary, master] });
   let value = harness.render();
   value.addToCart(ordinary, 1);
@@ -172,16 +173,19 @@ test('real provider invalidates a pre-applied coupon synchronously when protecte
   assert.equal((await value.applyDiscountCode('NORMAL10')).success, true);
   value = harness.render();
   assert.equal(value.getDiscountAmount(), 2);
-  const callsBefore = harness.calls.length;
   value.addToCart(master, 1);
   value = harness.render();
   assert.equal(value.cart.length, 2);
-  assert.equal(value.appliedDiscount, null);
-  assert.equal(value.discountCode, '');
-  assert.equal(value.getDiscountAmount(), 0);
-  assert.equal(Math.round(value.getCartTotal() * 100), 3990);
-  assert.equal((await value.applyDiscountCode('NORMAL10')).message, literalMessage);
-  assert.equal(harness.calls.length, callsBefore, 'rejection performs no new coupon/catalogue API calls');
+  assert.equal(value.appliedDiscount.code, 'NORMAL10');
+  assert.equal(value.discountCode, 'NORMAL10');
+  assert.equal(Math.round(value.getDiscountAmount() * 100), 399);
+  assert.equal(Math.round(value.getCartTotal() * 100), 3591);
+  assert.equal(value.getItemPrice(value.cart[1]), 19.90);
+  assert.equal((await value.revalidateDiscountForCheckout()).success, true);
+  value = harness.render();
+  const calls = harness.calls.filter(call => call.url.includes('/api/coupon/validate'));
+  assert.equal(calls.length, 2);
+  assert.deepEqual(JSON.parse(calls[1].options.body).items, [ordinary, master].map(({ id, sku, slug }) => ({ id, sku, slug })));
 });
 
 test('real provider keeps master 19.90 at quantities 1, 3, 6 and 12 without volume or subscription reductions', () => {
@@ -221,7 +225,7 @@ test('real provider preserves both full harvest names, old pack 59.70 and no bor
   assert.equal(Math.round(value.getCartTotal() * 100), 7960);
 });
 
-test('real provider revalidates a persisted protected master mixed order yet refuses its coupon without validation API', async () => {
+test('real provider revalidates a persisted normal master mixed order and accepts current valid coupons through the API', async () => {
   const harness = createHarness({
     stored: [master, ordinary].map((item) => ({ ...item, quantity: 1, purchaseType: 'one-time', inPromotion: false })),
     catalogue: [master, ordinary],
@@ -230,13 +234,14 @@ test('real provider revalidates a persisted protected master mixed order yet ref
   assert.equal(value.promotionReviewReady, true);
   assert.equal(value.cart[0].inPromotion, false, 'must not invent a catalogue promotion flag');
   const result = await value.applyDiscountCode('NORMAL10');
-  assert.equal(result.success, false);
-  assert.equal(result.message, literalMessage);
+  assert.equal(result.success, true);
+  assert.equal(result.message, 'Cupón aplicado correctamente');
   value = harness.render();
-  assert.equal(value.getDiscountAmount(), 0);
-  assert.equal(Math.round(value.getCartTotal() * 100), 3990);
+  assert.equal(Math.round(value.getDiscountAmount() * 100), 399);
+  assert.equal(Math.round(value.getCartTotal() * 100), 3591);
+  assert.equal(value.getItemPrice(value.cart[0]), 19.90);
   assert.equal(value.cart.length, 2);
-  assert.equal(harness.calls.filter((call) => call.url.includes('/api/coupon/validate')).length, 0);
+  assert.equal(harness.calls.filter((call) => call.url.includes('/api/coupon/validate')).length, 1);
 });
 
 
@@ -308,9 +313,36 @@ test('real authoritative review cannot disguise protected persisted identity wit
     let value = harness.render();
     value.addToCart({ ...ordinary, sku: protectedProduct.sku, isAddon: true }, 1);
     value = harness.render();
-    assert.equal((await value.applyDiscountCode('IRVIANCESTRAL')).message, literalMessage);
+    const result = await value.applyDiscountCode('IRVIANCESTRAL');
+    assert.equal(result.success, false);
+    assert.equal(result.message, 'Error al validar el cupón. Inténtalo de nuevo.');
     value = harness.render();
     assert.equal(value.getDiscountAmount(), 0);
-    assert.equal(harness.calls.length, 0, 'explicit protected SKU remains an absolute whole-coupon gate despite conflicting slug/id');
+    assert.equal(harness.calls.filter(call => call.url.includes('/api/coupon/validate')).length, 0, 'contradictory references remain rejected before coupon validation');
+    assert.equal(harness.calls.filter(call => call.url.includes('/api/products/')).length, 1, 'even ordinary SKUs must be authoritatively resolved');
+    assert.equal(value.cart.length, 1, 'failure retains the unresolved line');
+  }
+});
+
+
+test('real reviewed BF plus current Temprano mixed carts accept only exact currently server-authorized collaborators and preserve base prices', async () => {
+  for (const code of ['IRVIANCESTRAL', 'dr.gemmavalls', 'MIKELSFRIENDS', 'NEWSLETTER-LOCAL']) {
+    for (const valid_in_promotion of [true, false]) for (const reverse of [false, true]) {
+      const harness = createHarness({ catalogue: [master, pack], coupon: { code, discount_percentage: 10, valid_in_promotion } });
+      let value = harness.render();
+      for (const item of reverse ? [master, pack] : [pack, master]) { value.addToCart(item, 1); value = harness.render(); }
+      const before = JSON.stringify(value.cart);
+      const allowed = valid_in_promotion && ['IRVIANCESTRAL', 'dr.gemmavalls'].includes(code);
+      assert.equal((await value.applyDiscountCode(code)).success, allowed);
+      value = harness.render();
+      assert.equal(JSON.stringify(value.cart), before);
+      assert.equal(Math.round(value.getDiscountAmount() * 100), allowed ? 796 : 0);
+      assert.equal(Math.round(value.getCartTotal() * 100), allowed ? 7164 : 7960);
+      assert.equal(value.getItemPrice(value.cart.find(item => item.sku === 'MIKVET500')), 19.90);
+      assert.equal(value.getItemPrice(value.cart.find(item => item.sku === 'BF26-TEMP6')), 59.70);
+      assert.equal(harness.calls.filter(call => call.url.includes('/api/coupon/validate')).length, 1);
+      if (allowed) assert.equal((await value.revalidateDiscountForCheckout()).success, true);
+      else assert.equal(value.couponMessage, literalMessage);
+    }
   }
 });
