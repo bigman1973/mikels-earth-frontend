@@ -8,6 +8,7 @@ const VipLanding = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState('');
+  const [website, setWebsite] = useState('');
   const [marketingConsent, setMarketingConsent] = useState(false);
   const [status, setStatus] = useState({ type: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -29,9 +30,15 @@ const VipLanding = () => {
           email,
           first_name: firstName,
           marketing_consent: true,
+          website,
         }),
       });
       const data = await response.json().catch(() => ({}));
+      // A neutral honeypot response is not an accepted signup/conversion.
+      if (response.status === 200 && data.success && !data.signup_id) {
+        navigate('/vip/gracias', { replace: true });
+        return;
+      }
       if (!response.ok || !data.success || !data.signup_id) {
         throw new Error(data.error || 'No se ha podido completar el alta. Inténtalo de nuevo más tarde.');
       }
@@ -68,6 +75,18 @@ const VipLanding = () => {
 
           <form className="mt-10 space-y-5" onSubmit={handleSubmit} noValidate>
             <div>
+              <div style={{ position: 'absolute', left: '-9999px', opacity: 0, height: 0, overflow: 'hidden' }} aria-hidden="true">
+                <label htmlFor="vip-website">Website</label>
+                <input
+                  id="vip-website"
+                  name="website"
+                  type="text"
+                  value={website}
+                  onChange={(event) => setWebsite(event.target.value)}
+                  tabIndex={-1}
+                  autoComplete="off"
+                />
+              </div>
               <label className="mb-2 block text-sm font-medium text-[#1a1a1a]" htmlFor="vip-email">Correo electrónico</label>
               <input
                 id="vip-email"

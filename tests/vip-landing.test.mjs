@@ -89,7 +89,7 @@ test('VIP signup keeps mandatory explicit consent, exact privacy link and base r
   assert.match(landing, /<Link to="\/politica-privacidad" className="font-medium text-\[#7f1d2d\] underline underline-offset-2">política de privacidad<\/Link>\./);
   assert.match(landing, /method: 'POST'/);
   assert.match(landing, /headers: \{ 'Content-Type': 'application\/json' \}/);
-  assert.match(landing, /body: JSON\.stringify\(\{\s*email,\s*first_name: firstName,\s*marketing_consent: true,\s*\}\)/);
+  assert.match(landing, /body: JSON\.stringify\(\{\s*email,\s*first_name: firstName,\s*marketing_consent: true,\s*website,\s*\}\)/);
   assert.match(landing, /if \(!response\.ok \|\| !data\.success \|\| !data\.signup_id\)/);
   assert.match(landing, /disabled=\{isSubmitting\}/);
   assert.doesNotMatch(landing, /captcha|turnstile|trackMetaLead|trackGA4GenerateLead|x-forwarded-for|client_ip|ip_address/i);

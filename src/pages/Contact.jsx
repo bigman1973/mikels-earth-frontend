@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Send } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import CompanyLegalBlock from '../components/CompanyLegalBlock';
+import { getPhoneValidationMessage } from '../utils/formProtection';
 
 const Contact = () => {
   const { t } = useTranslation();
@@ -26,6 +27,11 @@ const Contact = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const phoneError = getPhoneValidationMessage(formData.phone);
+    if (phoneError) {
+      alert(phoneError);
+      return;
+    }
     setLoading(true);
     
     try {
@@ -48,7 +54,8 @@ const Contact = () => {
           name: '',
           email: '',
           phone: '',
-          message: ''
+          message: '',
+          company: ''
         });
         setTimeout(() => setSubmitted(false), 5000);
       } else {
