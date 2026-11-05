@@ -206,13 +206,112 @@ const assertInlineVeto = (h) => {
   assert.equal(nodes(tree).some((node) => node.props?.role === 'alert' && node.props.children.includes(MESSAGE)), true);
   assert.doesNotMatch(JSON.stringify(tree), /El cupón solo se aplica/);
 };
+const assertNoCouponAlert = (h) => {
+  assert.equal(h.value.couponError, '');
+  assert.equal(h.value.couponMessage, '');
+  const tree = renderDrawer({ ...h.value, isCartOpen: true });
+  assert.equal(nodes(tree).some((node) => node.props?.role === 'alert'), false);
+  assert.equal(JSON.stringify(tree).includes(MESSAGE), false);
+};
 const assertVeto = (h) => {
   assert.equal(h.value.appliedDiscount, null);
   assert.equal(h.value.discountCode, '');
   assert.equal(h.value.getDiscountAmount(), 0);
   assert.equal(h.value.couponError, MESSAGE);
+  assert.equal(h.value.couponMessage, MESSAGE);
   assertInlineVeto(h);
 };
+
+test('adding each exact BF26 pack without any coupon leaves no alert, error or message and preserves totals before and after effects', () => {
+  for (const definition of independent.INDEPENDENT_PACKS) {
+    const h = cartHarness();
+    const promoted = { ...ordinary, ...definition, id: `no-coupon-${definition.sku}`, inPromotion: true };
+    const before = clone(promoted);
+    h.value.addToCart(promoted, 3);
+    for (const flushEffects of [false, true]) {
+      h.render(flushEffects);
+      assertNoCouponAlert(h);
+      assert.equal(h.value.appliedDiscount, null);
+      assert.equal(h.value.discountCode, '');
+      assert.equal(h.value.getDiscountAmount(), 0);
+      assert.equal(h.value.cart.length, 1);
+      assert.equal(h.value.cart[0].sku, definition.sku);
+      assert.equal(h.value.cart[0].quantity, 3);
+      assert.equal(h.value.cart[0].price, definition.price);
+      assert.equal(h.value.getItemPrice(h.value.cart[0]), definition.price);
+      assert.equal(Math.round(h.value.getCartTotal() * 100), Math.round(definition.price * 3 * 100));
+    }
+    assert.deepEqual(promoted, before, 'adding a promo does not mutate its identity or price');
+    assert.equal(h.calls.length, 0, 'no coupon attempt means no coupon validation request');
+  }
+});
+
+test('restored promotion carts without a coupon attempt show no coupon alert while pending review or after review', async () => {
+  const promoted = [
+    ...independent.INDEPENDENT_PACKS.map((definition) => ({ ...ordinary, ...definition, id: `restored-${definition.sku}` })),
+    { ...ordinary, id: 'restored-camel-promo', inPromotion: true },
+    { ...ordinary, id: 'restored-snake-promo', in_promotion: true },
+  ];
+  for (const item of promoted) {
+    const h = cartHarness([item]);
+    const before = clone(h.value.cart);
+    const subtotal = h.value.getCartTotal();
+    assert.equal(h.value.promotionReviewReady, false);
+    assertNoCouponAlert(h);
+    await h.ready();
+    assert.equal(h.value.promotionReviewReady, true);
+    assert.equal(protection.isCouponProtectedItem(h.value.cart[0]), true);
+    assertNoCouponAlert(h);
+    assert.equal(h.value.appliedDiscount, null);
+    assert.equal(h.value.discountCode, '');
+    assert.equal(h.value.getDiscountAmount(), 0);
+    assert.equal(h.value.getCartTotal(), subtotal);
+    for (const field of ['id', 'sku', 'slug', 'quantity', 'price']) assert.equal(h.value.cart[0][field], before[0][field]);
+    assert.equal(h.calls.length, 0);
+  }
+});
+
+test('a real promotion denial remains inline across renders; removing the coupon or a valid collaborator success clears the error', async () => {
+  for (const code of ['IRVIANCESTRAL', 'DR.GEMMAVALLS']) {
+    const definition = independent.INDEPENDENT_PACKS[0];
+    const h = cartHarness([{ ...ordinary, ...definition, id: 'denied-promo', inPromotion: true }],
+      async (_url, init) => success(JSON.parse(init.body).code, true));
+    await h.ready();
+    assertNoCouponAlert(h);
+    const before = clone(h.value.cart);
+    const subtotal = h.value.getCartTotal();
+    assert.deepEqual(clone(await h.value.applyDiscountCode('MANUAL-LOCAL')), { success: false, message: MESSAGE });
+    h.render(); assertVeto(h);
+    h.render(); assertVeto(h);
+    assert.equal(h.calls.length, 1);
+    assert.equal(h.value.getCartTotal(), subtotal);
+    assert.deepEqual(clone(h.value.cart), before);
+    h.value.removeDiscountCode(); h.render();
+    assertNoCouponAlert(h);
+    assert.equal(h.value.getDiscountAmount(), 0);
+    assert.equal(h.value.getCartTotal(), subtotal);
+    assert.deepEqual(clone(h.value.cart), before);
+    assert.equal(h.calls.length, 1, 'removal clears errors without a request');
+    assert.equal((await h.value.applyDiscountCode('MANUAL-LOCAL')).success, false);
+    h.render(); assertVeto(h);
+    assert.equal((await h.value.applyDiscountCode(code)).success, true);
+    h.render(); assertNoCouponAlert(h);
+    assert.equal(h.value.discountCode, code);
+    assert.equal(h.value.appliedDiscount.valid_in_promotion, true);
+    assert.equal(Math.round(h.value.getDiscountAmount() * 100), Math.round(subtotal * 10));
+    assert.equal(Math.round(h.value.getCartTotal() * 100), Math.round(subtotal * 90));
+    assert.deepEqual(clone(h.value.cart), before);
+    assert.equal(h.calls.length, 3);
+    for (const [, init] of h.calls) assert.deepEqual(JSON.parse(init.body).items,
+      before.map(({ id, slug, sku }) => ({ id, slug, sku })));
+    h.value.removeDiscountCode(); h.render();
+    assertNoCouponAlert(h);
+    assert.equal(h.value.appliedDiscount, null);
+    assert.equal(h.value.discountCode, '');
+    assert.equal(h.value.getDiscountAmount(), 0);
+    assert.equal(h.value.getCartTotal(), subtotal);
+  }
+});
 
 test('only six exact BF26 identities and both promotion flags veto coupons; ordinary price protections do not', () => {
   assert.equal(protection.PROMOTION_COUPON_MESSAGE, MESSAGE);
@@ -322,6 +421,7 @@ test('coupon then protected addition invalidates immediately, remains zero and n
     await h.ready();
     await h.value.applyDiscountCode('MANUAL-LOCAL'); h.render();
     assert.equal(h.value.getDiscountAmount(), 4);
+    assertNoCouponAlert(h);
     h.value.addToCart(item, 3);
     h.render(false); // Before effects: checkout consumers already receive null, not a fraction.
     assertVeto(h);
@@ -332,8 +432,10 @@ test('coupon then protected addition invalidates immediately, remains zero and n
     h.value.removeFromCart(1); h.render();
     assert.equal(h.value.appliedDiscount, null);
     assert.equal(h.value.getDiscountAmount(), 0);
+    assertVeto(h);
     assert.equal((await h.value.applyDiscountCode('MANUAL-LOCAL')).success, true);
     h.render(); assert.equal(h.value.getDiscountAmount(), 4);
+    assertNoCouponAlert(h);
   }
 });
 
@@ -391,12 +493,15 @@ test('late successful validation cannot reapply a coupon after protected additio
     else if (action === 'quantity-change') h.value.updateQuantity(0, 7);
     else h.value.addToCart({ ...ordinary, id: 'late-local', sku: action === 'protected' ? 'BF26-ECO6' : 'OTHER-LOCAL' });
     h.render();
+    if (action === 'protected') assertNoCouponAlert(h);
     resolve(success('MANUAL-LOCAL'));
     const result = await pending; h.render();
     assert.equal(result.success, false);
+    assert.equal(result.message, 'El carrito ha cambiado. Vuelve a aplicar el código.');
     assert.equal(h.value.appliedDiscount, null);
     assert.equal(h.value.getDiscountAmount(), 0);
-    if (action === 'protected') assertVeto(h);
+    assert.equal(h.calls.length, 1);
+    if (action === 'protected') assertNoCouponAlert(h);
   }
 });
 
@@ -423,6 +528,7 @@ test('both exact collaborators can validate and discount all six promotion packs
     const h = cartHarness([promoted, ordinary], async (_url, init) => success(JSON.parse(init.body).code, true));
     await h.ready();
     assert.match(JSON.stringify(renderDrawer({ ...h.value, isCartOpen: true })), /¿Tienes un código\?/);
+    assertNoCouponAlert(h);
     assert.equal((await h.value.applyDiscountCode(` ${code} `)).success, true);
     h.render();
     assert.equal(h.calls.length, 1, 'the global promotion must not stop backend validation');
@@ -431,6 +537,7 @@ test('both exact collaborators can validate and discount all six promotion packs
     assert.equal(h.value.getDiscountAmount(), 8);
     assert.equal(h.value.getCartTotal(), 72);
     assert.equal(h.value.couponError, '');
+    assertNoCouponAlert(h);
     assert.deepEqual(JSON.parse(h.calls[0][1].body).items,
       [promoted, ordinary].map(({ id, slug, sku }) => ({ id, slug, sku })));
   }

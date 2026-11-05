@@ -49,7 +49,9 @@ test('BF26 routes are additional to VIP and remain outside the original sitemap'
   assert.equal(Object.keys(NONINDEX_STATIC_ROUTE_SEO).length, CASES.length + 2);
 });
 
-test('the static-route release keeps Vercel, middleware, VIP, cart and sitemap byte-identical', async () => {
+test('static-route invariants keep Vercel, middleware, VIP, sitemap and the reviewed cart byte-identical', async () => {
+  // The cart hash includes the separately authorized rejection-message fix.
+  // Every other static-route invariant remains on its original reviewed hash.
   const hashes = JSON.parse(await readFile(join(ROOT, 'tests/fixtures/bf26-static-invariants.json'), 'utf8'));
   for (const [name, expected] of Object.entries(hashes)) {
     const bytes = await readFile(join(ROOT, name));

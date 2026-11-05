@@ -58,7 +58,11 @@ export const CartProvider = ({ children }) => {
   // puede enviar un cupón antiguo con una línea promocionada a checkout.
   const appliedDiscount = hasOrderCouponBlockingItem(cart, { authorizedCoupon: savedDiscount }) || !promotionReviewReady ? null : savedDiscount;
   const hasProtectedPromotionLine = hasOrderCouponBlockingItem(cart, { authorizedCoupon: savedDiscount });
-  const couponMessage = hasProtectedPromotionLine ? PROMOTION_COUPON_MESSAGE : '';
+  // Tener una promoción no es un intento de cupón. El aviso sólo corresponde
+  // a un rechazo registrado o a la retirada inmediata de un cupón ya aplicado.
+  const invalidatedCoupon = hasProtectedPromotionLine && Boolean(savedDiscount || discountCode);
+  const visibleCouponError = invalidatedCoupon ? PROMOTION_COUPON_MESSAGE : couponError;
+  const couponMessage = visibleCouponError === PROMOTION_COUPON_MESSAGE ? PROMOTION_COUPON_MESSAGE : '';
 
   useEffect(() => {
     if (!hasOrderCouponBlockingItem(cart, { authorizedCoupon: savedDiscount })) return;
@@ -68,6 +72,7 @@ export const CartProvider = ({ children }) => {
     couponRequestRef.current += 1;
     setAppliedDiscount(null);
     setDiscountCode('');
+    setCouponError(PROMOTION_COUPON_MESSAGE);
   }, [cart, savedDiscount, discountCode]);
 
   useEffect(() => {
@@ -387,7 +392,7 @@ export const CartProvider = ({ children }) => {
     setIsCartOpen,
     discountCode: hasProtectedPromotionLine ? '' : discountCode,
     appliedDiscount: hasProtectedPromotionLine ? null : appliedDiscount,
-    couponError: hasProtectedPromotionLine ? PROMOTION_COUPON_MESSAGE : couponError,
+    couponError: visibleCouponError,
     applyDiscountCode,
     removeDiscountCode,
     couponMessage,

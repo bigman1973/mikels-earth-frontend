@@ -111,11 +111,14 @@ test('real provider refuses persisted false flags and recovers the true generic 
   const harness = createHarness({ stored: [{ ...ordinary, quantity: 1, purchaseType: 'one-time', inPromotion: false, promotionValidationPending: false }], catalogue: [genericPromotion] });
   let value = harness.render();
   assert.equal(value.promotionReviewReady, false);
+  assert.equal(value.couponError, '');
+  assert.equal(value.couponMessage, '');
   assert.equal((await value.applyDiscountCode('NORMAL10')).success, false);
   value = await harness.flush();
   assert.equal(value.promotionReviewReady, true);
   assert.equal(value.cart[0].inPromotion, true);
-  assert.equal(value.couponMessage, PROMOTION_COUPON_MESSAGE);
+  assert.equal(value.couponError, '');
+  assert.equal(value.couponMessage, '', 'pending review is not a real coupon denial');
   assert.equal(value.cart.length, 1);
   assert.equal(harness.calls.some((call) => call.url.includes('/api/coupon/validate')), false);
 });
@@ -126,6 +129,8 @@ test('real provider retains unresolved hidden pack and blocks payment after auth
   assert.equal(value.promotionReviewReady, false);
   value = await harness.flush();
   assert.equal(value.promotionReviewReady, false);
+  assert.equal(value.couponError, '');
+  assert.equal(value.couponMessage, '');
   assert.ok(value.promotionReviewError);
   assert.equal(value.cart.length, 1);
   assert.equal(value.cart[0].sku, 'BF26-TEMP6');
