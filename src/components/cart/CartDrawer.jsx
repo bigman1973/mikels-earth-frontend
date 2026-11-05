@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { formatEuro } from '../../utils/formatMoney';
 import { getFixedPackForQuantity } from '../../utils/fixedPackPricing';
 import { isReservationSale } from '../../utils/reservationSale';
-import { hasCouponEligibleItem, hasPromotionProtectedItem } from '../../utils/promotionProtection';
+import { hasCouponEligibleItem } from '../../utils/promotionProtection';
 import { getTempranoHarvestIdentity } from '../../utils/tempranoHarvestIdentity';
 
 const CartDrawer = () => {
@@ -23,6 +23,7 @@ const CartDrawer = () => {
     getItemPrice,
     getDiscountAmount,
     appliedDiscount,
+    couponError,
     applyDiscountCode,
     removeDiscountCode,
   } = useCart();
@@ -30,7 +31,6 @@ const CartDrawer = () => {
   const [codeInput, setCodeInput] = useState('');
   const [codeMessage, setCodeMessage] = useState({ text: '', type: '' });
   const [showDiscount, setShowDiscount] = useState(false);
-  const hasProtectedPromotionLine = hasPromotionProtectedItem(cart);
   const hasEligiblePromotionLine = hasCouponEligibleItem(cart);
   const discountAmount = getDiscountAmount();
 
@@ -167,11 +167,8 @@ const CartDrawer = () => {
                   {t('delivery.notice')}
                 </p>
 
-                {hasProtectedPromotionLine && !hasEligiblePromotionLine && (
-                  <p className="mt-3 text-sm text-[#1a1a1a]">Este producto no participa en promociones ni cupones.</p>
-                )}
-                {hasProtectedPromotionLine && hasEligiblePromotionLine && (
-                  <p className="mt-3 text-sm text-[#1a1a1a]">Los productos excluidos mantienen su precio. El cupón solo se aplica a los demás productos.</p>
+                {couponError && (
+                  <p role="alert" className="mt-3 text-sm text-[#1a1a1a]">{couponError}</p>
                 )}
                 {hasEligiblePromotionLine && !appliedDiscount && (
                   <div className="mt-3">
@@ -197,7 +194,7 @@ const CartDrawer = () => {
                         </button>
                       </div>
                     )}
-                    {codeMessage.text && <p className="mt-2 text-xs text-[#1a1a1a]">{codeMessage.text}</p>}
+                    {!couponError && codeMessage.text && <p className="mt-2 text-xs text-[#1a1a1a]">{codeMessage.text}</p>}
                   </div>
                 )}
 
