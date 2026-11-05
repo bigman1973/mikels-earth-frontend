@@ -177,12 +177,14 @@ const CartDrawer = () => {
                       onClick={() => setShowDiscount((current) => !current)}
                       className="text-sm text-[#1a1a1a] underline underline-offset-4"
                       aria-expanded={showDiscount}
+                      aria-controls="cart-coupon-form"
                     >
                       ¿Tienes un código?
                     </button>
                     {showDiscount && (
-                      <div className="mt-2 flex gap-2">
+                      <div id="cart-coupon-form" className="mt-2 flex gap-2">
                         <input
+                          aria-label="Código de descuento"
                           type="text"
                           value={codeInput}
                           onChange={(event) => setCodeInput(event.target.value.toUpperCase())}

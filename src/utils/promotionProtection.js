@@ -71,23 +71,16 @@ export const isPromotionProtectedItem = (item = {}) => {
     || getProtectedCompositionSkus(item).some((componentSku) => PROTECTED_SINGLE_SKUS.has(componentSku));
 };
 
-// Los flags son señales conservadoras, nunca permisos: false no anula identidad.
-// El servidor resuelve la promoción real por persistencia e identidad.
-export const isUnconditionallyCouponProtectedItem = (item = {}) => (
-  isPromotionProtectedItem(item)
-  || normalizedSku(item?.sku) === 'MIKPACKTP'
-);
-
-export const hasUnconditionallyCouponProtectedItem = (cart = []) => (
-  Array.isArray(cart) && cart.some(isUnconditionallyCouponProtectedItem)
-);
-
+// Elegibilidad de cupones separada de precio/tiers/suscripción: los artículos
+// normales, incluido Temprano y los packs antiguos, admiten cupones vigentes.
+// Ni isPromotionProtectedItem ni la composición de un pack vetan un cupón.
+// Los flags son señales conservadoras; el servidor resuelve la promoción real
+// y solo los dos colaboradores exactos con autorización validada la permiten.
 export const isCouponProtectedItem = (item = {}, { authorizedCoupon } = {}) => (
-  isUnconditionallyCouponProtectedItem(item)
-  || (!isPromotionAuthorizedCoupon(authorizedCoupon) && (
+  !isPromotionAuthorizedCoupon(authorizedCoupon) && (
     Boolean(item?.inPromotion || item?.in_promotion)
     || BF26_COUPON_PROTECTED_SKUS.has(normalizedSku(item?.sku))
-  ))
+  )
 );
 
 export const hasPromotionProtectedItem = (cart = [], options) => (
@@ -103,7 +96,6 @@ export const hasCouponEligibleItem = (cart = [], options) => (
 // La promoción global no debe ocultar el formulario ni impedir llegar al API.
 export const canValidateCouponForCart = (cart = []) => (
   Array.isArray(cart)
-  && !hasUnconditionallyCouponProtectedItem(cart)
   && cart.some((item) => Number(item?.quantity) > 0)
 );
 

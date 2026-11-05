@@ -11,7 +11,6 @@ import {
   canValidateCouponForCart,
   getCouponDiscountAmount,
   hasPromotionProtectedItem,
-  hasUnconditionallyCouponProtectedItem,
   isPromotionAuthorizedCoupon,
   isPromotionProtectedItem,
   normalizeCouponCode,
@@ -206,14 +205,8 @@ export const CartProvider = ({ children }) => {
       return { success: false, message: 'Introduce un código de descuento' };
     }
     const requestId = ++couponRequestRef.current;
-    if (hasUnconditionallyCouponProtectedItem(cartRef.current)) {
-      setDiscountCode('');
-      setAppliedDiscount(null);
-      setCouponError(PROMOTION_COUPON_MESSAGE);
-      return { success: false, message: PROMOTION_COUPON_MESSAGE };
-    }
     if (!canValidateCouponForCart(cart)) {
-      return { success: false, message: 'Estos productos no participan en promociones ni cupones.' };
+      return { success: false, message: 'Añade productos al carrito para aplicar un cupón.' };
     }
     
     try {
@@ -234,9 +227,6 @@ export const CartProvider = ({ children }) => {
       
       const data = await response.json();
 
-      if (hasUnconditionallyCouponProtectedItem(cartRef.current)) {
-        return { success: false, message: PROMOTION_COUPON_MESSAGE };
-      }
       if (requestId !== couponRequestRef.current || cartRef.current !== cart) {
         return { success: false, message: 'El carrito ha cambiado. Vuelve a aplicar el código.' };
       }
