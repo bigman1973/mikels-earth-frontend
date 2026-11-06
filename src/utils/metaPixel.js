@@ -46,6 +46,10 @@ const installPixelQueue = () => {
   script.async = true;
   script.src = 'https://connect.facebook.net/en_US/fbevents.js';
   script.dataset.mikelsMetaPixel = 'true';
+  // The SDK can stop draining at the queued revoke before reaching init/grant.
+  // Recheck current explicit consent after load: grant unlocks it, withdrawal
+  // stays revoked even if marketing was accepted when the SDK was requested.
+  script.addEventListener('load', () => syncMetaPixelConsent());
   window.document.head.appendChild(script);
 };
 
