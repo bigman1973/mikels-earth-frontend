@@ -13,6 +13,7 @@ import * as tracking from '../src/utils/cartTracking.js';
 import * as money from '../src/utils/formatMoney.js';
 import * as review from '../src/utils/cartPromotionValidation.js';
 import * as independent from '../src/utils/independentPacks.js';
+import * as unitReference from '../src/utils/campaignUnitReference.js';
 import { applyEditorialOverrides } from '../src/utils/productEditorialOverrides.js';
 import * as delivery from '../src/utils/deliveryPolicy.js';
 import { products as catalogue } from '../src/data/products.js';
@@ -182,6 +183,8 @@ function uiHarness(code, getCart, extra = {}) {
     '../utils/tempranoHarvestIdentity': harvest, '../../utils/tempranoHarvestIdentity': harvest,
     '../utils/volumePricing': volume, '../utils/deliveryPolicy': delivery,
     '../utils/independentPacks': independent, '../../utils/independentPacks': independent,
+    '../utils/campaignUnitReference': unitReference,
+    '../components/products/CampaignUnitReference': 'CampaignUnitReference',
     '../utils/cartPromotionValidation': review,
     '../utils/metaPixel': { hasMarketingConsent: () => false, trackMetaInitiateCheckout() {}, trackMetaViewContent() {} },
     '../utils/googleAnalytics': { trackGA4BeginCheckout() {}, trackGA4ViewItem() {} },

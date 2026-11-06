@@ -10,6 +10,8 @@ import { getTempranoHarvestIdentity, normalizeTempranoHarvestName } from '../../
 import { getFixedPackOptions, getFixedPackPrice } from '../../utils/fixedPackPricing';
 import { getIndependentPackIdentity } from '../../utils/independentPacks';
 import { normalizePromotionProtectedProduct } from '../../utils/promotionProtection';
+import CampaignUnitReference from './CampaignUnitReference';
+import { getCampaignUnitReference } from '../../utils/campaignUnitReference';
 
 const getOptimizedProductImage = (url) => {
   if (!url || !url.includes('res.cloudinary.com') || !url.includes('/image/upload/')) {
@@ -44,6 +46,7 @@ const ProductCard = ({ product }) => {
   const defaultPack = isPreviousHarvest ? getFixedPackOptions(product)[0] : null;
   const cardQuantity = isPreviousHarvest ? defaultPack?.actualQuantity : 1;
   const cardPrice = defaultPack ? getFixedPackPrice(defaultPack) : product.price;
+  const unitReference = getCampaignUnitReference(product);
 
   const addProduct = () => {
     if (isSoldOut || !cardQuantity) return;
@@ -99,7 +102,9 @@ const ProductCard = ({ product }) => {
           <h3 className={`min-h-[3.5rem] text-lg font-medium text-[#1a1a1a] ${getTempranoHarvestIdentity(product) || getIndependentPackIdentity(product)?.harvest ? 'whitespace-normal break-words' : 'line-clamp-2'}`}>
             {product.name}
           </h3>
-          <p className="mt-2 text-xl font-bold text-price">
+          {unitReference && <div className="mt-3"><CampaignUnitReference product={product} compact /></div>}
+          <p className={unitReference ? 'mt-3 text-base font-semibold text-price' : 'mt-2 text-xl font-bold text-price'}>
+            {unitReference && 'Pack completo: '}
             {formatEuro(cardPrice)}
           </p>
           {defaultPack && <p className="mt-1 text-xs text-stone-600">{defaultPack.label}</p>}

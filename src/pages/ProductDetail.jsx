@@ -23,6 +23,8 @@ import { trackGA4ViewItem } from '../utils/googleAnalytics';
 import { isReservationSale } from '../utils/reservationSale';
 import { getTempranoHarvestIdentity } from '../utils/tempranoHarvestIdentity';
 import { getIndependentPackIdentity } from '../utils/independentPacks';
+import CampaignUnitReference from '../components/products/CampaignUnitReference';
+import { getCampaignUnitReference } from '../utils/campaignUnitReference';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://mikels-earth-backend-production.up.railway.app';
 
@@ -158,6 +160,7 @@ const ProductDetail = () => {
   const isReservation = isReservationSale(product);
   const isAvailable = product.available !== false && !product.soldOut;
   const independentPack = getIndependentPackIdentity(product);
+  const unitReference = getCampaignUnitReference(product);
   const storefrontNotice = typeof product.storefrontNotice === 'string' ? product.storefrontNotice.trim() : '';
   const storefrontNoticeLinkText = 'aquí';
   const storefrontNoticeLinkIndex = storefrontNotice.indexOf(storefrontNoticeLinkText);
@@ -405,7 +408,9 @@ const ProductDetail = () => {
               <div className="mb-6 rounded-lg bg-[#f5efe4] p-6">
                 {!hasFixedPackPricing && (
                   <>
-                    <div className="mb-2 text-4xl font-bold text-price">
+                    {unitReference && <CampaignUnitReference product={product} />}
+                    <div className={unitReference ? 'mt-4 text-xl font-bold text-price' : 'mb-2 text-4xl font-bold text-price'}>
+                      {unitReference && 'Pack completo: '}
                       {formatEuro(currentPrice || product.price)}
                     </div>
                     {hasDiscount && (

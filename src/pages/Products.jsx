@@ -5,6 +5,7 @@ import { useProducts } from '../hooks/useProducts';
 import ProductCard from '../components/products/ProductCard';
 import { Filter } from 'lucide-react';
 import { sortCatalogueProducts } from '../utils/cataloguePosition';
+import { CAMPAIGN_DISCOUNT_HEADLINE, getCampaignUnitReference } from '../utils/campaignUnitReference';
 
 const REDIRECTED_PRODUCT_SLUGS = new Set([
   'pack-aceite-ecologico-premium-estuche-regalo',
@@ -108,6 +109,12 @@ const Products = () => {
               : t('products.products_count', { count: sortedProducts.length })}
           </p>
         </div>
+
+        {sortedProducts.some(getCampaignUnitReference) && (
+          <h2 className="mb-6 rounded-lg bg-primary px-5 py-4 text-center text-xl font-bold tracking-wide text-white">
+            {CAMPAIGN_DISCOUNT_HEADLINE}
+          </h2>
+        )}
 
         {/* Products grid */}
         {sortedProducts.length === 0 ? (
