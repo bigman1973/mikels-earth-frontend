@@ -8,7 +8,7 @@ import { runInNewContext } from 'node:vm';
 import { runtime, compiledModule, proofFixture, jsonResponse, drain } from './helpers/vip-conversion-harness.mjs';
 
 const { Helmet, HelmetProvider } = helmetModule;
-const landingSource = await readFile(new URL('../src/pages/VipLanding.jsx', import.meta.url), 'utf8');
+const landingSource = await readFile(new URL('../src/components/VipSignup.jsx', import.meta.url), 'utf8');
 async function thanks(state, signup = '42', captureEffects = true) {
   const effects = [];
   const imports = {
@@ -36,7 +36,7 @@ function submit(state, body, status = 201, overrides = {}) {
   const handler = landingSource.match(/const handleSubmit = async[\s\S]*?\n  };/)[0];
   const fn = runInNewContext(`${handler}\nhandleSubmit;`, {
     ...state.globals, email: 'fixture@example.invalid', firstName: 'Fixture', website: '', marketingConsent: true,
-    API_URL: 'https://offline.invalid', setStatus: value => alerts.push(value), setIsSubmitting() {},
+    submittingRef: { current: false }, markKnownVipSignup() {}, API_URL: 'https://offline.invalid', setStatus: value => alerts.push(value), setIsSubmitting() {},
     navigate: (...args) => navigations.push(args), storeVipConversionProof: state.conversion.storeVipConversionProof,
     fetch: async (...args) => { calls.push(args); return jsonResponse(body, status); }, ...overrides,
   });

@@ -13,6 +13,7 @@ import './App.css';
 
 const CartDrawer = lazy(() => import('./components/cart/CartDrawer'));
 const CartRoute = lazy(() => import('./pages/CartRoute'));
+const VipEntryPopup = lazy(() => import('./components/VipEntryPopup'));
 const NewsletterPopup = lazy(() => import('./components/NewsletterPopup'));
 const VipLanding = lazy(() => import('./pages/VipLanding'));
 const VipThanks = lazy(() => import('./pages/VipThanks'));
@@ -147,6 +148,7 @@ function App() {
                   <SeoManager />
                   <Footer />
                   <Suspense fallback={null}>
+                    <VipEntryPopup />
                     <NewsletterPopup />
                   </Suspense>
                   <DeferredCartDrawer />

@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 import test from 'node:test';
 import { NONINDEX_STATIC_ROUTE_SEO } from '../src/seo/metadata.js';
 import middleware from '../middleware.js';
+import { assertVipExtraction } from './helpers/vip-extraction.mjs';
 
 const ROOT = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const DIST = process.env.FRONTEND_BUILD_OUTDIR ? resolve(ROOT, process.env.FRONTEND_BUILD_OUTDIR) : join(ROOT, 'dist');
@@ -62,7 +63,7 @@ test('static-route invariants keep infrastructure byte-identical and VIP UI unch
       assert.equal(createHash('sha256').update(base).digest('hex'), expected, `${name} original snapshot`);
       const current = bytes.toString();
       if (name.endsWith('VipLanding.jsx')) {
-        assert.equal(current.replace("import { storeVipConversionProof } from '../utils/vipMetaConversion';\n", '').replace('      storeVipConversionProof(signupId, data.conversion, response.status);\n', ''), base.toString());
+        await assertVipExtraction();
       } else {
         const render = source => source.slice(source.indexOf('\n  return (\n'));
         assert.equal(render(current), render(base.toString()), `${name} full render`);

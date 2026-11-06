@@ -18,8 +18,9 @@ test('newsletter popup waits for a resolved Cookiebot response', () => {
   assert.match(popup, /CookiebotOnConsentReady/);
   assert.match(popup, /CookiebotOnAccept/);
   assert.match(popup, /CookiebotOnDecline/);
-  assert.match(popup, /25_000/);
-  assert.match(popup, /window\.scrollY \/ maxScroll >= 0\.5/);
+  assert.match(popup, /document\.addEventListener\('mouseout', onExit\)/);
+  assert.match(popup, /hover: hover.*pointer: fine/);
+  assert.doesNotMatch(popup, /25_000|window\.scrollY|addEventListener\('scroll'/);
 });
 
 test('only unblocks explicitly configured Previews when Cookiebot cannot show an authorized banner', () => {

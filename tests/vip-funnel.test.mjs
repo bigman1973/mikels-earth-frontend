@@ -65,7 +65,7 @@ test('Rejected or synchronously failed telemetry is swallowed with no signup dep
   const landing = read('src/pages/VipLanding.jsx');
   assert.match(landing, /useVipPageview\(\)/);
   assert.doesNotMatch(landing, /await useVipPageview|await sendVipPageview|api\/vip\/pageview/);
-  assert.match(landing, /fetch\(`\$\{API_URL\}\/api\/vip\/signup`/);
+  assert.match(read('src/components/VipSignup.jsx'), /fetch\(`\$\{API_URL\}\/api\/vip\/signup`/);
 });
 
 test('Minimal mobile page reuses private admin auth, no secrets in query, no public marketing calls', () => {

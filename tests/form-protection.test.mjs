@@ -3,9 +3,10 @@ import { readFile } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
 import test from 'node:test';
 import { runInNewContext } from 'node:vm';
+import { assertVipExtraction } from './helpers/vip-extraction.mjs';
 import { getPhoneValidationMessage } from '../src/utils/formProtection.js';
 
-const vipSource = await readFile(new URL('../src/pages/VipLanding.jsx', import.meta.url), 'utf8');
+const vipSource = await readFile(new URL('../src/components/VipSignup.jsx', import.meta.url), 'utf8');
 const contactSource = await readFile(new URL('../src/pages/Contact.jsx', import.meta.url), 'utf8');
 const currentThanks = await readFile(new URL('../src/pages/VipThanks.jsx', import.meta.url), 'utf8');
 const extract = source => source.match(/const handleSubmit = async[\s\S]*?\n  };/)[0];
@@ -17,6 +18,7 @@ function vip(overrides = {}) {
     email: 'fixture@example.invalid', firstName: 'Prueba', marketingConsent: true, website: '',
     API_URL: 'https://forms.invalid', setStatus: value => { state.status = value; }, setIsSubmitting() {},
     navigate: (...args) => state.navigations.push(args),
+    submittingRef: { current: false }, markKnownVipSignup() {},
     storeVipConversionProof() { return false; }, // Existing fixture intentionally has no conversion proof.
     window: { sessionStorage: { setItem: (...args) => state.storage.push(args) } },
     fetch: async (_url, init) => {
@@ -106,12 +108,8 @@ test('contact accepted optional phones retain all fields and reset the honeypot'
   }
 });
 
-test('VIP approved copy, noindex, consent checkbox and privacy binding unchanged from safe production', () => {
-  const base = execFileSync('git', ['show', '446ed95fbfe4a05725646ed7040b38cf430c8283:src/pages/VipLanding.jsx'], { encoding: 'utf8' });
-  for (const [start, end] of [['      <Helmet>', '          <form'], ['            <label className="flex items-start', '            {status.message'], ['          <p className="mt-3', 'export default']]) {
-    const section = source => source.slice(source.indexOf(start), source.indexOf(end));
-    assert.equal(section(vipSource), section(base));
-  }
+test('VIP approved copy, noindex, consent checkbox and privacy binding unchanged from safe production', async () => {
+  await assertVipExtraction();
   const clock = execFileSync('git', ['diff', '446ed95fbfe4a05725646ed7040b38cf430c8283', '--', 'src/components/VipCountdown.jsx'], { encoding: 'utf8' });
   assert.equal(clock, '');
   // Block A explicitly replaces only the thank-you tracking logic, not its JSX.

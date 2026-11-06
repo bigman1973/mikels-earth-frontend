@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { API_URL } from '../config/api';
 import { useCart } from '../context/CartContext';
 import { isNewsletterPopupAllowedPath } from '../utils/newsletterPopupPaths';
+import { MARKETING_POPUP_CHANGE_EVENT, claimMarketingPopup, getMarketingPopupOwner, isDesktopTopExit, releaseMarketingPopup } from '../utils/marketingPopup';
 
 const POPUP_STORAGE_KEY = 'mikels_newsletter_popup_v2';
 const POPUP_TTL_MS = 30 * 24 * 60 * 60 * 1000;
@@ -48,6 +49,7 @@ const NewsletterPopup = () => {
   const { isCartOpen } = useCart();
   const [isCookieConsentResolved, setIsCookieConsentResolved] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [popupOwner, setPopupOwner] = useState(getMarketingPopupOwner);
   const [email, setEmail] = useState('');
   const [privacyPolicyAccepted, setPrivacyPolicyAccepted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -55,7 +57,23 @@ const NewsletterPopup = () => {
   const shownRef = useRef(false);
   const manuallyRequestedRef = useRef(false);
 
-  const allowedContext = isNewsletterPopupAllowedPath(location.pathname) && !isCartOpen;
+  const allowedContext = isNewsletterPopupAllowedPath(location.pathname) && !isCartOpen && popupOwner !== 'vip';
+  useEffect(() => {
+    const update = () => setPopupOwner(getMarketingPopupOwner());
+    window.addEventListener(MARKETING_POPUP_CHANGE_EVENT, update);
+    return () => { window.removeEventListener(MARKETING_POPUP_CHANGE_EVENT, update); releaseMarketingPopup('newsletter'); };
+  }, []);
+  useEffect(() => {
+    if (!allowedContext) { setIsOpen(false); releaseMarketingPopup('newsletter'); }
+  }, [allowedContext]);
+  useEffect(() => {
+    if (!isOpen) return undefined;
+    const onEscape = event => {
+      if (event.key === 'Escape') { persistPopupRecord(); setIsOpen(false); releaseMarketingPopup('newsletter'); }
+    };
+    window.addEventListener('keydown', onEscape);
+    return () => window.removeEventListener('keydown', onEscape);
+  }, [isOpen]);
 
   useEffect(() => {
     const markConsentResolved = () => {
@@ -81,7 +99,8 @@ const NewsletterPopup = () => {
   }, []);
 
   const showPopup = useCallback(() => {
-    if (shownRef.current || hasValidPopupRecord()) return;
+    if (shownRef.current || hasValidPopupRecord() || getMarketingPopupOwner() === 'vip') return;
+    if (!claimMarketingPopup('newsletter')) return;
     shownRef.current = true;
     persistPopupRecord();
     setIsOpen(true);
@@ -106,17 +125,14 @@ const NewsletterPopup = () => {
 
   useEffect(() => {
     if (!isCookieConsentResolved || !allowedContext || hasValidPopupRecord()) return undefined;
-    const timer = window.setTimeout(showPopup, 25_000);
-    const onScroll = () => {
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      if (maxScroll > 0 && window.scrollY / maxScroll >= 0.5) showPopup();
+    // No timer/scroll/mobile approximation: only a fine, hover-capable mouse
+    // actually leaving the viewport at its top edge. Original routes/TTL stay.
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return undefined;
+    const onExit = event => {
+      if (isDesktopTopExit(event, window.innerWidth)) showPopup();
     };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-    return () => {
-      window.clearTimeout(timer);
-      window.removeEventListener('scroll', onScroll);
-    };
+    document.addEventListener('mouseout', onExit);
+    return () => document.removeEventListener('mouseout', onExit);
   }, [allowedContext, isCookieConsentResolved, showPopup]);
 
   const handleSubmit = async (event) => {
@@ -170,7 +186,7 @@ const NewsletterPopup = () => {
           exit={{ opacity: 0, x: 400 }}
           transition={{ type: 'spring', stiffness: 300, damping: 28 }}
         >
-          <button type="button" onClick={() => { persistPopupRecord(); setIsOpen(false); }} className="absolute right-3 top-3 rounded-full p-2 text-stone-500 hover:bg-stone-100" aria-label={t('newsletter_popup.close')}>
+          <button type="button" onClick={() => { persistPopupRecord(); setIsOpen(false); releaseMarketingPopup('newsletter'); }} className="absolute right-3 top-3 rounded-full p-2 text-stone-500 hover:bg-stone-100" aria-label={t('newsletter_popup.close')}>
             <X className="h-5 w-5" />
           </button>
           <div className="mb-4 pr-8">
@@ -182,7 +198,7 @@ const NewsletterPopup = () => {
           {message.type === 'success' ? (
             <div className="space-y-4">
               <p className="rounded-lg border border-stone-200 bg-[#f5efe4] p-3 text-sm text-[#1a1a1a]">{message.text}</p>
-              <button type="button" onClick={() => { persistPopupRecord(); setIsOpen(false); }} className="w-full rounded-lg bg-primary px-4 py-3 font-semibold text-white hover:bg-primary/90">
+              <button type="button" onClick={() => { persistPopupRecord(); setIsOpen(false); releaseMarketingPopup('newsletter'); }} className="w-full rounded-lg bg-primary px-4 py-3 font-semibold text-white hover:bg-primary/90">
                 {t('newsletter_popup.close')}
               </button>
             </div>

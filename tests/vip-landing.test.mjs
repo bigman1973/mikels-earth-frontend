@@ -7,7 +7,7 @@ import { runInNewContext } from 'node:vm';
 import { VIP_ACCESS_START, PUBLIC_ACCESS_START } from '../src/config/vipSchedule.js';
 
 const root = dirname(fileURLToPath(new URL('../package.json', import.meta.url)));
-const read = (relativePath) => readFile(join(root, relativePath), 'utf8');
+const read = async (relativePath) => readFile(join(root, relativePath), 'utf8').then(async source => relativePath === 'src/pages/VipLanding.jsx' ? source + await readFile(join(root, 'src/components/VipSignup.jsx'), 'utf8') : source);
 
 test('VIP landing is a mobile-first, noindex signup without discount percentages', async () => {
   const [app, landing, countdown] = await Promise.all([
