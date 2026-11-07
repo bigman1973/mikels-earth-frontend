@@ -75,15 +75,37 @@ test('positions never make an inactive/hidden product public and local fallback 
 });
 
 test('real card badge uses strict generic promotion flag, never SKU or persisted badge text', () => {
+  const staleBadgeTexts = ['BLACK FRIDAY · PACK', 'BLACK FRIDAY · 26'];
   for (const sku of ['FUTURE-PROMO-NOT-BF', 'BF26-TEMP6', 'MIKVET500']) {
     for (const flag of [false, undefined, null, 'true', 1]) {
-      const card = ProductCard({ product: { ...ordinary, sku, inPromotion: flag, badges: [{ text: 'BLACK FRIDAY · PACK' }] } });
-      assert.equal(text(card).includes('BLACK FRIDAY · PACK'), false, sku + ':' + flag);
+      for (const staleText of staleBadgeTexts) {
+        const card = ProductCard({ product: { ...ordinary, sku, inPromotion: flag, badges: [{ text: staleText }] } });
+        assert.doesNotMatch(text(card), /BLACK FRIDAY/, sku + ':' + flag + ':' + staleText);
+      }
     }
-    const card = ProductCard({ product: { ...ordinary, sku, inPromotion: true, badges: [{ text: 'ANTES 999 €' }] } });
-    assert.equal(nodes(card).filter((n) => n.type === 'span' && text(n) === 'BLACK FRIDAY · PACK').length, 1);
-    assert.equal(nodes(card).some((n) => n.type === 'img' && /BLACK FRIDAY/.test(n.props.src || '')), false);
+    for (const badges of [undefined, [{ text: 'ANTES 999 €' }], ...staleBadgeTexts.map((value) => [{ text: value }])]) {
+      const image = '/images/products/generic-ordinary.webp';
+      const card = ProductCard({ product: { ...ordinary, sku, image, inPromotion: true, badges } });
+      const badgeNodes = nodes(card).filter((n) => n.type === 'span' && text(n) === 'BLACK FRIDAY · 26');
+      assert.equal(badgeNodes.length, 1, 'exact new label once when strict flag is true');
+      assert.equal(card.props.children.includes(badgeNodes[0]), true, 'badge remains separate from the image/link');
+      assert.equal(badgeNodes[0].props.style?.fontFamily, undefined, 'no inline font override');
+      assert.doesNotMatch(badgeNodes[0].props.className, /font-(?:sans|serif|mono|\[)/, 'inherit existing Montserrat font');
+      assert.doesNotMatch(text(card), /BLACK FRIDAY · PACK/);
+      assert.deepEqual(nodes(card).filter((n) => n.type === 'img').map((n) => n.props.src), [image], 'product image remains unchanged, never a badge image');
+    }
   }
+});
+
+test('disabled promotion skips both stale badge literals and preserves the next ordinary badge', () => {
+  for (const staleText of ['BLACK FRIDAY · PACK', 'BLACK FRIDAY · 26', 'black friday·pack', 'black friday·26']) {
+    const card = ProductCard({ product: { ...ordinary, inPromotion: false, badges: [{ text: staleText }, { text: 'Destacado' }] } });
+    assert.doesNotMatch(text(card), /BLACK FRIDAY/i);
+    assert.equal(nodes(card).filter((n) => n.type === 'span' && text(n) === 'Destacado').length, 1);
+  }
+  const card = ProductCard({ product: { ...ordinary, inPromotion: false, badges: [{ text: 'BLACK FRIDAY · PACK' }, { text: 'BLACK FRIDAY · 26' }, { text: 'Destacado' }] } });
+  assert.doesNotMatch(text(card), /BLACK FRIDAY/);
+  assert.equal(nodes(card).filter((n) => n.type === 'span' && text(n) === 'Destacado').length, 1);
 });
 
 test('all six real cards show literal badge, approved price and full harvest names without rebates', () => {
@@ -91,7 +113,7 @@ test('all six real cards show literal badge, approved price and full harvest nam
     const product = applyEditorialOverrides({ ...fixturePack(pack, index), originalPrice: 999, badges: [{ text: '-50 %' }, { text: 'Antes 999 € / ahora 10 €' }] });
     const card = ProductCard({ product });
     const cardText = text(card);
-    assert.match(cardText, /BLACK FRIDAY · PACK/);
+    assert.match(cardText, /BLACK FRIDAY · 26/);
     assert.equal(cardText.includes(formatEuro(pack.price)), true, 'preserve exact approved pack price');
     assert.doesNotMatch(cardText, /%|antes|ahora|rebaja|descuento|oferta|999/i);
     assert.equal(nodes(card).some((n) => n.type === 's' || n.type === 'del'), false);

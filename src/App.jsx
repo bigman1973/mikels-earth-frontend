@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-d
 import { useTranslation } from 'react-i18next';
 import { CartProvider, useCart } from './context/CartContext';
 import { AdminAuthProvider } from './context/AdminAuthContext';
-import Header from './components/layout/Header';
+import PublicMasthead from './components/layout/PublicMasthead';
 import Footer from './components/layout/Footer';
 import SeoManager from './components/SeoManager';
 import ScrollRestoration from './components/ScrollRestoration';
@@ -110,7 +110,7 @@ function App() {
               {/* ====== TIENDA PÚBLICA (con Header/Footer) ====== */}
               <Route path="/*" element={
                 <div className="flex flex-col min-h-screen">
-                  <Header />
+                  <PublicMasthead />
                   <main className="flex-grow">
                     <Routes>
                       <Route path="/" element={<Home />} />

@@ -108,6 +108,9 @@ const VipEntryPopup = () => {
             compact
             popupHeader={
               <>
+                <p className="mb-2 text-center text-base font-bold leading-6 text-[#7f1d2d]">
+                  Black Friday 2026
+                </p>
                 <h2 className="text-center text-[26px] font-bold leading-tight text-[#7f1d2d] sm:text-3xl">
                   HASTA EL 50 % DE DESCUENTO
                 </h2>
@@ -120,7 +123,7 @@ const VipEntryPopup = () => {
               </>
             }
             submitLabel="QUIERO ENTRAR EN LA LISTA"
-            footerText="Hasta agotar existencias."
+            footerText={<strong className="font-bold">Hasta acabar existencias, stock limitado!</strong>}
           />
         </Dialog.Content>
       </Dialog.Portal>

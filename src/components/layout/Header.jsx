@@ -23,7 +23,7 @@ const Header = () => {
   ];
 
   return (
-    <header className="sticky top-0 z-40 border-b border-stone-200 bg-[#f5efe4]/95 backdrop-blur">
+    <header className="relative z-40 border-b border-stone-200 bg-[#f5efe4]/95 backdrop-blur">
       <div className="container mx-auto flex h-16 items-center gap-4 px-4 md:h-18">
         <Link to="/" className="flex shrink-0 items-center" aria-label="Mikel's Fruit">
           <img src={logoMikelsFruit} alt="Mikel's Fruit" className="h-11 w-auto md:h-12" />

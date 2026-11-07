@@ -48,6 +48,31 @@ const css = (await Promise.all(cssFiles.map(file => readFile(join(cssDir, file),
 assert.ok(css.trim(), 'Empty CSS must not bypass the mobile layout regression');
 const compactSubmitLabel = 'QUIERO ENTRAR EN LA LISTA';
 const originalSubmitLabel = 'Quiero entrar en la lista VIP';
+const compactTitle = 'Black Friday 2026';
+const compactFooter = 'Hasta acabar existencias, stock limitado!';
+
+async function assertPopupBoldCopy(page) {
+  await page.evaluate(() => document.fonts.ready);
+  const dialog = page.getByRole('dialog');
+  const title = dialog.locator('p').filter({ hasText: new RegExp(`^${compactTitle}$`) });
+  const footer = dialog.locator('form + p > strong');
+  assert.equal(await title.count(), 1, 'The bold popup title is a paragraph, not a heading');
+  assert.equal(await title.innerText(), compactTitle);
+  assert.equal(await footer.count(), 1, 'Only the popup footer is rendered as strong');
+  assert.equal(await footer.innerText(), compactFooter);
+  assert.equal(await dialog.locator('form + p').innerText(), compactFooter);
+  assert.equal(await dialog.getByText('Hasta agotar existencias.', { exact: true }).count(), 0);
+  for (const [label, locator] of [['title', title], ['footer', footer]]) {
+    const style = await locator.evaluate(node => ({
+      weight: Number.parseInt(getComputedStyle(node).fontWeight, 10),
+      family: getComputedStyle(node).fontFamily,
+    }));
+    assert.ok(style.weight >= 700, `${label} must be visually bold: ${JSON.stringify(style)}`);
+    assert.match(style.family, /Montserrat/, `${label} uses the existing Montserrat typography`);
+  }
+  assert.equal(await title.evaluate(node => node.nextElementSibling?.tagName), 'H2', 'The new title sits immediately above the unchanged percentage heading');
+  assert.equal(await dialog.getByRole('heading', { name: 'HASTA EL 50 % DE DESCUENTO', exact: true }).count(), 1);
+}
 
 async function assertMobileFitsWithoutScroll(page) {
   await page.evaluate(() => document.fonts.ready);
@@ -55,8 +80,9 @@ async function assertMobileFitsWithoutScroll(page) {
     const dialog = document.querySelector('[role="dialog"]');
     const rect = node => { const r = node.getBoundingClientRect(); return { x: r.x, y: r.y, width: r.width, height: r.height, right: r.right, bottom: r.bottom }; };
     const selectors = {
+      title: 'p:has(+ h2)', heading: 'p + h2',
       email: '#vip-email', checkbox: '#vip-marketing-consent', consent: 'label[for="vip-marketing-consent"]',
-      submit: 'button[type="submit"]', close: 'button:not([type="submit"])', footer: 'form + p',
+      submit: 'button[type="submit"]', close: 'button:not([type="submit"])', footer: 'form + p', boldFooter: 'form + p > strong',
     };
     return {
       viewport: { width: window.innerWidth, height: window.innerHeight },
@@ -83,6 +109,7 @@ async function assertMobileFitsWithoutScroll(page) {
     inside(rect, { x: 0, y: 0, right: 390, bottom: 844 }, `${name}/viewport`);
     inside(rect, geometry.dialog, `${name}/dialog`);
   }
+  await assertPopupBoldCopy(page);
   assert.equal(await page.locator('#vip-marketing-consent').isChecked(), false);
   return geometry;
 }
@@ -164,9 +191,10 @@ test('local browser VIP entry and exit-intent runtime with real React StrictMode
       await page.getByRole('dialog').waitFor();
       await mkdir(evidence, { recursive: true }); await page.screenshot({ path: join(evidence, 'vip-entry-desktop.png'), fullPage: true });
       assert.equal(await page.getByRole('heading', { name: 'HASTA EL 50 % DE DESCUENTO', exact: true }).count(), 1);
-      for (const copy of ['El 26 de noviembre, un día antes que nadie.', 'Y un tarro de mermelada de regalo con cualquier pack.', 'Hasta agotar existencias.']) {
+      for (const copy of [compactTitle, 'El 26 de noviembre, un día antes que nadie.', 'Y un tarro de mermelada de regalo con cualquier pack.', compactFooter]) {
         assert.equal(await page.getByRole('dialog').getByText(copy, { exact: true }).count(), 1, copy);
       }
+      await assertPopupBoldCopy(page);
       assert.equal(await page.getByRole('button', { name: compactSubmitLabel, exact: true }).count(), 1);
       assert.equal(await page.locator('#vip-first-name').count(), 0);
       assert.equal(await page.locator('[aria-label="Cuenta atrás para el acceso VIP"]').count(), 0);

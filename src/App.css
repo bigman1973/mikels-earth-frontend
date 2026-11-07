@@ -361,3 +361,11 @@ html {
 .text-price {
   color: var(--mikels-red);
 }
+
+/* BF26 acquisition band: brand skin/earth tones, not the red primary.
+   Cream on this brown has a 4.94:1 contrast ratio. Typography inherits Montserrat. */
+.bf26-top-band {
+  background-color: #786354;
+  background-color: color-mix(in srgb, var(--mikels-skin-line) 40%, var(--mikels-clothes-dark));
+  color: #f5efe4;
+}

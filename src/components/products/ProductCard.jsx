@@ -31,7 +31,7 @@ const ProductCard = ({ product }) => {
   const productImage = getOptimizedProductImage(product.image || product.images?.[0]);
   const displayBadge = product.badges?.find((badge) => (
     !badge.detailOnly
-    && !/^BLACK FRIDAY\s*·\s*PACK$/i.test(badge.text || '')
+    && !/^BLACK FRIDAY\s*·\s*(?:PACK|26)$/i.test(badge.text || '')
     && (!(product.inPromotion === true || getIndependentPackIdentity(product)) || !/%|descuento|rebaja|ahorr|discount|sale/i.test(`${badge.text} ${badge.textKey || ''}`))
   ));
   const badgeText = displayBadge
@@ -39,7 +39,7 @@ const ProductCard = ({ product }) => {
     : null;
   const isReservation = isReservationSale(product);
   const cardBadgeText = product.inPromotion === true
-    ? 'BLACK FRIDAY · PACK'
+    ? 'BLACK FRIDAY · 26'
     : isReservation ? 'RESERVA · COSECHA 2026/27' : badgeText;
   const isSoldOut = product.soldOut || product.available === false;
   const isPreviousHarvest = getTempranoHarvestIdentity(product)?.sku === 'MIKVET5002526';
