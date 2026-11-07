@@ -5,6 +5,7 @@ import { dirname, join } from 'node:path';
 import test from 'node:test';
 import { runInNewContext } from 'node:vm';
 import { VIP_ACCESS_START, PUBLIC_ACCESS_START } from '../src/config/vipSchedule.js';
+import { renderVipSignup } from './helpers/vip-extraction.mjs';
 
 const root = dirname(fileURLToPath(new URL('../package.json', import.meta.url)));
 const read = async (relativePath) => readFile(join(root, relativePath), 'utf8').then(async source => relativePath === 'src/pages/VipLanding.jsx' ? source + await readFile(join(root, 'src/components/VipSignup.jsx'), 'utf8') : source);
@@ -75,8 +76,27 @@ test('VIP landing uses the literal gift promise without synonyms and keeps the n
   assert.equal(landing.split(offer).length - 1, 1);
   assert.ok(landing.includes(price));
   assert.equal(landing.split(price).length - 1, 1);
-  assert.match(landing, /<\/form>\s*<p className="[^"]*text-sm[^"]*">\s*El Temprano de la cosecha 2026\/27 mantiene su precio de 19,90 €\.\s*<\/p>/);
+  assert.match(await renderVipSignup(), /<\/form>\s*<p class="[^"]*text-sm[^"]*">\s*El Temprano de la cosecha 2026\/27 mantiene su precio de 19,90 €\.\s*<\/p>/);
   assert.doesNotMatch(landing, /Recibirás acceso 24 horas antes que el resto|tu código de descuento por correo/);
+});
+
+test('default VIP SSR retains original optional name, countdown, unchecked explicit consent and no compact copy', async () => {
+  const html = await renderVipSignup();
+  assert.match(html, /Acceso anticipado al Black Friday de Mikel&#x27;s, solo para la lista VIP\./);
+  assert.match(html, /Entras en la lista y el 26 de noviembre compras un día antes que nadie\./);
+  assert.match(html, /Acceso 24 horas antes de que la oferta se abra al público, y un tarro de nuestra mermelada de regalo con cualquier pack del Black Friday\. Hasta agotar existencias\./);
+  assert.match(html, /Nombre <span[^>]*>\(opcional\)<\/span>/);
+  const name = html.match(/<input[^>]*id="vip-first-name"[^>]*>/)?.[0];
+  assert.ok(name); assert.match(name, /name="first_name"/); assert.match(name, /autoComplete="given-name"/);
+  assert.match(name, /maxLength="120"/); assert.doesNotMatch(name, /required/);
+  const consent = html.match(/<input[^>]*id="vip-marketing-consent"[^>]*>/)?.[0];
+  assert.ok(consent); assert.match(consent, /type="checkbox"/); assert.match(consent, /required/);
+  assert.doesNotMatch(consent, /checked/);
+  assert.match(html, /aria-label="Cuenta atrás para el acceso VIP"/);
+  for (const unit of ['días', 'horas', 'minutos', 'segundos']) assert.ok(html.includes(`>${unit}</p>`), unit);
+  assert.match(html, /href="\/politica-privacidad"/);
+  assert.match(html, />Quiero entrar en la lista VIP<\/button>/);
+  assert.doesNotMatch(html, /HASTA EL|\d+(?:[.,]\d+)?\s*%|QUIERO ENTRAR EN LA LISTA|El 26 de noviembre, un día antes que nadie\.|Y un tarro de mermelada de regalo con cualquier pack\./);
 });
 
 test('VIP signup keeps mandatory explicit consent, exact privacy link and base request contract without captcha', async () => {

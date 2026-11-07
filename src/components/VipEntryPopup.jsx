@@ -104,7 +104,24 @@ const VipEntryPopup = () => {
               Cerrar <X className="h-5 w-5" aria-hidden="true" />
             </Dialog.Close>
           </div>
-          <VipSignup />
+          <VipSignup
+            compact
+            popupHeader={
+              <>
+                <h2 className="text-center text-[26px] font-bold leading-tight text-[#7f1d2d] sm:text-3xl">
+                  HASTA EL 50 % DE DESCUENTO
+                </h2>
+                <p className="mt-4 text-center text-base leading-6 text-stone-700">
+                  El 26 de noviembre, un día antes que nadie.
+                </p>
+                <p className="mt-2 text-center text-base leading-6 text-stone-700">
+                  Y un tarro de mermelada de regalo con cualquier pack.
+                </p>
+              </>
+            }
+            submitLabel="QUIERO ENTRAR EN LA LISTA"
+            footerText="Hasta agotar existencias."
+          />
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
